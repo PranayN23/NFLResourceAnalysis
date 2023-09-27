@@ -1,11 +1,7 @@
-# Ignore all files except Python, CSV, and PNG files
+# Ignore all files
 *
 
-# Allow Python files
+# Except for Python (.py), PNG (.png), and CSV (.csv) files
 !*.py
-
-# Allow CSV files
-!*.csv
-
-# Allow PNG files
 !*.png
+!*.csv
