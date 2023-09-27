@@ -1,0 +1,11 @@
+# Exclude the venv directory
+venv/
+
+# Include Python scripts (*.py)
+*.py
+
+# Include PNG files (*.png)
+*.png
+
+# Include CSV files (*.csv)
+*.csv
