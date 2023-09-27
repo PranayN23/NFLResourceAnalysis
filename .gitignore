@@ -1,7 +1,0 @@
-# Ignore all files
-*
-
-# Except for Python (.py), PNG (.png), and CSV (.csv) files
-!*.py
-!*.png
-!*.csv
