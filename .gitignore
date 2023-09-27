@@ -6,6 +6,3 @@ venv/
 
 # Include PNG files (*.png)
 *.png
-
-# Include CSV files (*.csv)
-*.csv
