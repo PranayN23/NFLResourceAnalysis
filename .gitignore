@@ -1,11 +1,11 @@
-# Ignore all files except Python, CSV, and PNG files
-*
+# Exclude the venv directory
+venv/
 
-# Allow Python files
-!*.py
+# Include Python scripts (*.py)
+*.py
 
-# Allow CSV files
-!*.csv
+# Include PNG files (*.png)
+*.png
 
-# Allow PNG files
-!*.png
+# Include CSV files (*.csv)
+*.csv
