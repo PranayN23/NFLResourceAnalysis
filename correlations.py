@@ -1,3 +1,10 @@
+import pandas as pd
+import re
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+ 
 """ 
 
 team_stats = pd.read_csv('nfl_stats.csv')
