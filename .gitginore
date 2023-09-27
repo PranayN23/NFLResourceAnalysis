@@ -1,0 +1,11 @@
+# Ignore all files except Python, CSV, and PNG files
+*
+
+# Allow Python files
+!*.py
+
+# Allow CSV files
+!*.csv
+
+# Allow PNG files
+!*.png
