@@ -3,6 +3,3 @@ venv/
 
 # Include Python scripts (*.py)
 *.py
-
-# Include PNG files (*.png)
-*.png
