@@ -288,6 +288,7 @@ def web_scrape_data(year):
     # we remove the city name from the team name
     cap_data['Team'] = cap_data['Team'].apply(lambda x: x.split()[len(x.split()) - 1])
     # we return the cap data
+    cap_data = cap_data[['QB', "RB/FB", 'WR', 'TE', 'OL', 'DL', 'LB', 'DB', 'K/P/LS', 'Team']]
     return cap_data
 
 
