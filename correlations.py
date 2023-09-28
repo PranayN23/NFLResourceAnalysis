@@ -27,9 +27,20 @@ def main():
     # we get the correlations of each resource dataset with winning
     # in the year it relates to
     corrs = correlations(datasets)
+    ylabels = ['%% of Cap Space Spent', '%% of Cap Space Spent)', '%% of draft capital spent', '%% of draft capital spent']
+    titles = ['Percentage of Cap Space Spent vs Winning Percentage (2022)',
+              'Percentage of Cap Space Spent vs Winning Percentage (2021)',
+              'Percentage of Draft Capital Spent vs Winning Percentage',
+              'Percentage of Draft Capital Spent vs Winning Percentage Over The Last 4 Years']
     # we print the corrleation data frames
-    for cor in corrs:
-        print(cor)
+    for i in range(len(corrs)):
+        fig, ax = plt.subplots(1, figsize=(15,7))
+        ax.bar(corrs[i].index, corrs[i]['win_pct'])
+        ax.set_title(titles[i])
+        ax.set_xlabel('Position')
+        ax.set_ylabel(ylabels[i])
+        plt.savefig(titles[i] + '.png')
+
 
 def correlations(datasets):
     """
@@ -46,7 +57,6 @@ def correlations(datasets):
         else:
             team_stats = pd.read_csv('nfl_stats.csv')
         count += 1
-        print(team_stats)
         team_stats = team_stats[['team', 'win_pct']]
         merged2022 = data.merge(team_stats, left_on='Team', right_on='team')
         numeric_columns = merged2022.select_dtypes(include=['number'])
