@@ -38,7 +38,7 @@ def main():
         ax.bar(corrs[i].index, corrs[i]['win_pct'])
         ax.set_title(titles[i])
         ax.set_xlabel('Position')
-        ax.set_ylabel(ylabels[i])
+        ax.set_ylabel('Correlation with Winning')
         plt.savefig(titles[i] + '.png')
 
 
