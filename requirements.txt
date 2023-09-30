@@ -6,3 +6,5 @@ numpy==1.26.0
 matplotlib==3.8.0
 seaborn==0.12.2
 scipy==1.11.3
+webdriver-manager==4.0.1
+selenium==4.13.0
