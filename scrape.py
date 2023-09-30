@@ -8,12 +8,19 @@ This required the use of many libraries including urllib (web scraping), regex (
 pandas (CSV processing), numpy (data manipulation)
 BeautifulSoup (html parsing), requests (web scraping). 
 """
+import math
 from bs4 import BeautifulSoup
 import requests
 from urllib.parse import urljoin
 import pandas as pd
 import re
 import numpy as np
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 def main():
     """
@@ -28,6 +35,7 @@ def web_scrape():
     """
     # we use one method to scrape cap space data 
     # and another for draft dara
+    """
     cap_data2022 = web_scrape_data('2022')
     cap_data2022.to_csv('cap_data2022.csv')
     cap_data2021 = web_scrape_data('2021')
@@ -36,12 +44,22 @@ def web_scrape():
     cap_data2022.to_csv('cap_data2020.csv')
     cap_data2021 = web_scrape_data('2019')
     cap_data2021.to_csv('cap_data2019.csv')
-    draft_data = web_scrape_rosters(False)
-    draft_data.to_csv('draft_data.csv')
-    draft_data = web_scrape_rosters(True)
-    draft_data.to_csv('draft_data_last_4.csv')
+    """
+    s = set()
+    draft2022, value2022 = web_scrape_rosters(2022, s)
+    draft2022.to_csv('draft_data_2022.csv')
+    value2022.to_csv('value_data_2022.csv')
+    draft2021, value2021 = web_scrape_rosters(2021, s)
+    draft2021.to_csv('draft_data_2021.csv')
+    value2021.to_csv('value_data_2021.csv')
+    draft2020, value2020 = web_scrape_rosters(2020, s)
+    draft2020.to_csv('draft_data_2020.csv')
+    value2020.to_csv('value_data_2020.csv')
+    draft2019, value2019 = web_scrape_rosters(2019, s)
+    draft2019.to_csv('draft_data_2019.csv')
+    value2019.to_csv('value_data_2019.csv')
 
-def web_scrape_rosters(last_4):
+def web_scrape_rosters(year, s):
     """
     Here we webscrape every team's roster
     for their draft data
@@ -51,18 +69,22 @@ def web_scrape_rosters(last_4):
     on each position
     """
     # we make a list of every team's shorthand
-    nfl_teams = ["ARZ", "ATL", "BAL", "BUF", "CAR", "CHI", "CIN", "CLE", 
-                 "DAL", "DEN", "DET", "GB", "HOU", "IND", "JAX", "KC", 
-                 "LV", "LAC", "LAR", "MIA", "MIN", "NE", "NO", "NYG",
-                   "NYJ", "PHI", "PIT", "SF", "SEA", "TB", "TEN", "WAS"]
+    nfl_teams = [ "Cardinals", "Falcons", "Ravens", "Bills", "Panthers", "Bears",
+    "Bengals", "Browns", "Cowboys", "Broncos", "Lions", "Packers", "Texans", "Colts",
+    "Jaguars", "Chiefs", "Raiders", "Chargers", "Rams", "Dolphins", "Vikings", 
+    "Patriots", "Saints", "Giants", "Jets", "Eagles", "Steelers", "49ers",
+    "Seahawks", "Buccaneers", "Titans", "Commanders"]
     # we loop through every team and scrape their roster page
-    dataframes = []
+    draft = []
+    value = []
     for team in nfl_teams:
-        dataframes.append(add_roster(team, last_4))
-    return convert_dataframes(dataframes)
+        draftDF, valueDF = add_roster(team, year)
+        draft.append(draftDF)
+        value.append(valueDF)
+    return convert_dataframes(draft, s), convert_dataframes(value, s)
     
     
-def convert_dataframes(dataframes):
+def convert_dataframes(dataframes, s):
     """
     Takes a list of each teams roster data and 
     returns it as one dataframe with the corrected positional information
@@ -70,151 +92,131 @@ def convert_dataframes(dataframes):
     on each position
     """
     draft_data = pd.concat(dataframes, ignore_index=True)
+    s.update(draft_data.columns.tolist())
     # we fill empty values
     draft_data.replace('', np.nan, inplace=True)
     draft_data.fillna(0, inplace=True)
     # we rework each position's definition to match our desired output
-    draft_data['RB/FB'] = draft_data["RB"] + draft_data['FB']
-    draft_data['TE'] = draft_data["TE"] + draft_data['TE/FB']
-    draft_data["OL"] = draft_data["OC"] + draft_data['OC/OG'] + draft_data['OT/OC'] 
-    + draft_data['OG/OC'] + draft_data["OT/OG"] + draft_data["OG/OT"]
-    + draft_data["OG"] + draft_data["OT"] 
-    draft_data['DL'] = draft_data['DT'] + draft_data['DE'] + draft_data['NT']
-    draft_data['LB'] = draft_data['LB'] + draft_data['ILB'] + draft_data['OLB']
-    draft_data['DB'] = draft_data['S'] + draft_data['CB'] + draft_data['FS']
-    draft_data["K/P/LS"] = draft_data['PK'] + draft_data['PT'] + draft_data['LS']
+    draft_data['RB/FB'] = draft_data.get("RB", 0) + draft_data.get('FB', 0)
+    draft_data["OL"] = draft_data.get('T', 0) + draft_data.get('OL', 0) 
+    + draft_data.get('G', 0) + draft_data.get('LG/C', 0)
+    + draft_data.get('RT/LT', 0) + draft_data.get('RT', 0)
+    + draft_data.get('RG/C', 0) + draft_data.get('C', 0)
+    + draft_data.get('LG', 0) + draft_data.get('C/LG', 0)
+    + draft_data.get('RG', 0) + draft_data.get('OT', 0)
+    + draft_data.get('LT/RT', 0) + draft_data.get('LT', 0)
+    draft_data['DL'] = draft_data.get('DT', 0) + draft_data.get('DE', 0) 
+    + draft_data.get('RDT/LDT', 0) + draft_data.get('NT', 0)
+    + draft_data.get('RDE', 0) + draft_data.get('LDT', 0)
+    + draft_data.get('LDE', 0) + draft_data.get('LDE/RDE', 0)
+    + draft_data.get('DL', 0) + draft_data.get('RDT', 0)
+    + draft_data.get('RDE/LDE', 0) + draft_data.get('LDT/RDT', 0)
+    draft_data['LB'] = draft_data.get('LB', 0) + draft_data.get('OLB', 0) 
+    + draft_data.get('LOLB', 0) + draft_data.get('LLB', 0) 
+    + draft_data.get('LILB', 0) + draft_data.get('RLB', 0)
+    + draft_data.get('LILB/RILB', 0) + + draft_data.get('MLB/RLB', 0)
+    + draft_data.get('MLB', 0) + draft_data.get('ROLB/RILB', 0)
+    + draft_data.get('RILB', 0) + draft_data.get('RLB/LLB', 0)
+    draft_data['DB'] = draft_data.get('S', 0) + draft_data.get('CB', 0) 
+    + draft_data.get('SS/FS', 0) + draft_data.get('LCB/RCB', 0)
+    + draft_data.get('RCB/LCB', 0) + draft_data.get('FS', 0)
+    + draft_data.get('LCB', 0) + draft_data.get('RCB', 0)
+    + draft_data.get("DB", 0) + draft_data.get("SS", 0)
+    + draft_data.get('FS/SS', 0)
+    draft_data["K/P/LS"] = draft_data['K'] + draft_data['P'] + draft_data['LS']
     # we remove excess columns
     draft_data = draft_data[['Team', 'QB', 'RB/FB', 'WR', "TE", "OL", "DL", "LB", "DB", "K/P/LS"]]
     return draft_data
 
 
-def add_roster(team, last_4):
-    """
-    Scrapes a teams roster
-    @param team - the team's roster to scrape
-    @param last_4 - a boolean representing whether or not we want the last 4
-    years only or all draft data
-    returns a dataframe of a team's draft info
-    """
-    # we get our website and set up beautiful soup
-    url = 'https://www.ourlads.com/nfldepthcharts/roster/' + team
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    table = soup.find('table')
-    headers = []
-    data = []
-    # we get our headers/column names
-    for th in table.find('thead').find_all('th'):
-        headers.append(th.text.strip())
-    # we process each row here
-    for row in table.find('tbody').find_all('tr'):
-        row_data = []
-        for td in row.find_all('td'):
-            t = td.text.strip()
-            # we prevent edge breaks
-            if (t != 'Active Players' and t != 'Reserves' and t != 'Practice Squad'):
-                row_data.append(t)
-                data.append(row_data)
-    # we make sure each row is unique
-    unique_lists = list(set(tuple(x) for x in data))
-    # Convert the lists back to their original format (optional)
-    data = [list(x) for x in unique_lists]
-    # we convert our data to a dataframe
-    roster_data = pd.DataFrame(data, columns=headers)
-    return clean_roster_data(roster_data, team, last_4)
+def add_roster(team, year):
+    path = 'rosters/' + str(year) + '/' + team + '.csv'
+    return clean_roster_data(pd.read_csv(path), team, year)
 
-def clean_roster_data(roster_data, team, last_4):
+def clean_roster_data(roster_data, team, year):
     """
-    Cleans a specific teams roster
+    Cleans a specific team's roster
     @param roster_data - the team's scraped roster info 
     @param team - the name of the team 
     @param last_4 - a boolean representing whether or not we want the last 4
     years only or all draft data
-    returns a cleaned dataframe of a team's draft info
+    returns a cleaned DataFrame of a team's draft info
     """
-    # we remove dupicates and na values
-    roster_data = roster_data.drop_duplicates()
-    roster_data.dropna()
-    # we filter down to data we want
-    roster_data = roster_data[['Player', 'Pos.', 'Orig. Team', 'Draft Status']] 
-    # we get the draft year for each player 
-    roster_data['Draft Year'] = roster_data['Draft Status'].apply(getYear) 
-    # if we want only the last 4 years of data
-    if (last_4):
-        # we make sure the team has actually drafted that player
-        # we filter down to only include the draft years we want
-        roster_data = roster_data[roster_data['Orig. Team'].str.contains(team)]
-        roster_data = roster_data[(roster_data['Draft Year'] >= 19) & (roster_data['Draft Year'] <= 22)]
-    # we get the draft value
-    roster_data['Draft Value'] = roster_data['Draft Status'].apply(getValue)
-    # we convert the draft value to be a percentage
-    total_value = roster_data['Draft Value'].sum()
-    grouped = roster_data.groupby('Pos.')['Draft Value'].sum()
-    grouped = grouped / total_value * 100
+    # Remove rows with missing values in the DataFrame
+    # Create a copy of the DataFrame to avoid SettingWithCopyWarning
+    roster_data = roster_data.copy()
+    roster_data.replace('', np.nan, inplace=True)
+    roster_data.fillna(0, inplace=True)
+    # Select specific columns from the DataFrame
+    roster_data = roster_data[['Player', 'Pos', 'AV', 'Drafted (tm/rnd/yr)']]
+    # Extract the draft year for each player using .loc
+    roster_data['Draft Year'] = roster_data['Drafted (tm/rnd/yr)'].apply(getYear)
+    # Extract the team each player was drafted for using .loc
+    roster_data['Orig. Team'] = roster_data['Drafted (tm/rnd/yr)'].apply(getOGTeam, args=(team,))
+    # Convert 'Draft Year' to numeric and filter based on it
+    # Filter the DataFrame based on 'Draft Year' and 'Orig. Team'
+    appx = roster_data.copy()
+    roster_data = roster_data[(roster_data['Draft Year'] >= (year - 3)) & (roster_data['Draft Year'] <= year)]
+    roster_data = roster_data[roster_data['Orig. Team'] == team]
+    # Calculate the 'Draft Value' for each player
+    roster_data['Draft Value'] = roster_data['Drafted (tm/rnd/yr)'].apply(getValue)
+    # Calculate 'draft' and 'appx' using the 'getData' function
+    draft = getData(roster_data, 'Draft Value', team)
+    appx = getData(appx, 'AV', team)
+    return draft, appx
+
+
+def getData(data, column_name, team):
+    if column_name == 'Draft Value':
+        total_value = data[column_name].sum()
+        grouped = data.groupby('Pos')[column_name].sum()
+        grouped = grouped / total_value * 100
+    else:
+        grouped = data.groupby('Pos')[column_name].sum()
     # we pivot the index and make the index of each row the team name
     # instead of the player
     grouped = grouped.reset_index()
     grouped['Team'] = pd.Series(team, index=range(len(grouped)))
-    grouped = grouped.pivot(index='Team', columns='Pos.', values='Draft Value')
+    grouped = grouped.pivot(index='Team', columns='Pos', values=column_name)
     grouped.reset_index(inplace=True)
     grouped = grouped.fillna(0)
     # Renamed the columns to match your desired format
-    grouped.columns.name = None  
-    grouped.columns = grouped.columns.str.replace(' ', '')  # Remove spaces in column names
-    # we convert back from our shortened team name to our longer one
-    team_mapping = {
-        'ARZ': 'Cardinals',
-        'ATL': 'Falcons',
-        'BAL': 'Ravens',
-        'BUF': 'Bills',
-        'CAR': 'Panthers',
-        'CHI': 'Bears',
-        'CIN': 'Bengals',
-        'CLE': 'Browns',
-        'DAL': 'Cowboys',
-        'DEN': 'Broncos',
-        'DET': 'Lions',
-        'GB': 'Packers',
-        'HOU': 'Texans',
-        'IND': 'Colts',
-        'JAX': 'Jaguars',
-        'KC': 'Chiefs',
-        'LAC': 'Chargers',
-        'LAR': 'Rams',
-        'LV': 'Raiders',
-        'MIA': 'Dolphins',
-        'MIN': 'Vikings',
-        'NE': 'Patriots',
-        'NO': 'Saints',
-        'NYG': 'Giants',
-        'NYJ': 'Jets',
-        'PHI': 'Eagles',
-        'PIT': 'Steelers',
-        'SF': '49ers',
-        'SEA': 'Seahawks',
-        'TB': 'Buccaneers',
-        'TEN': 'Titans',
-        'WAS': 'Commanders'
-    }
-    # Map the 'Team' column to full names using the mapping dictionary
-    grouped['Team'] = grouped['Team'].map(team_mapping)
+    grouped.columns.name = None
+    grouped.columns = grouped.columns.str.replace(' ', '')
     return grouped
-    
+
+def getOGTeam(info, team):
+    """
+    we get the year value
+    @param info - the draft infor for each player
+    returns the year the player was drafted
+    """
+    if isinstance(info, str) and len(info.strip()) > 0:
+        if ('Washington' in info):
+            return 'Commanders'
+        else:
+            l = info.split()
+            index = l.index('/')
+            return l[index - 1]
+    else:
+        return team
+
+
 def getYear(info):
     """
     we get the year value
     @param info - the draft infor for each player
     returns the year the player was drafted
     """
-    year = info.split()[0]
-    # our first 2 conditionals are edge cases we handle
-    # from malformed data input
-    if year == '22/7':
-        return 22
-    elif year == 'SF23':
-        return 23
+    if isinstance(info, str) and len(info.strip()) > 0:
+        l = info.split()
+        try:
+            r =  int(l[len(l) - 1])
+        except ValueError:
+            r = int(l[len(l) - 2])
+        return r
     else:
-        return int(year)
+        return 0
 
 def getValue(info):
     """
@@ -222,22 +224,21 @@ def getValue(info):
     @param info - the draft info for each player
     returns the draft value invested in that player
     """
-    tokens = info.split(' ')
     # we read in our pick values dataframe
     pick_value = pd.read_csv('nfl_pick_value.csv')
     # for any malformed inout, we return 0 as they are
     # undrafted free agents
     try:
-        if len(tokens) == 2 or len(tokens) == 0 or tokens[0] == '22/7' or tokens[2] == '' or tokens[2] == '020R':
-            return 0
+        tokens = info.split(' ')
+        index = tokens.index('/')
+        pick_str = tokens[index + 3]
+        pick_str = pick_str[:len(pick_str) - 2]
+        pick = int(pick_str)
+        if (pick < len(pick_value)):
+            return pick_value.loc[pick, 'Value']
         else:
-            # we get the pick and return the value
-            pick = int(tokens[2])
-            if (pick < len(pick_value)):
-                return pick_value.loc[pick, 'Value']
-            else:
-                return 0
-    except IndexError as e:
+            return 0
+    except Exception as e:
         return 0
 
 def web_scrape_data(year):
