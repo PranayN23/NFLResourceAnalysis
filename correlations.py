@@ -21,8 +21,8 @@ def main():
     """
     cap_data2022 = pd.read_csv('cap_data2022.csv')
     cap_data2021 = pd.read_csv('cap_data2021.csv')
-    draft_data = pd.read_csv('draft_data.csv')
-    draft_data_last_4 = pd.read_csv('draft_data_last_4.csv')
+    draft_data = pd.read_csv('draft_data_2022.csv')
+    draft_data_last_4 = pd.read_csv('draft_data_2021.csv')
     datasets = [cap_data2022, cap_data2021, draft_data, draft_data_last_4]
     # we get the correlations of each resource dataset with winning
     # in the year it relates to
@@ -30,8 +30,8 @@ def main():
     ylabels = ['%% of Cap Space Spent', '%% of Cap Space Spent)', '%% of draft capital spent', '%% of draft capital spent']
     titles = ['Percentage of Cap Space Spent vs Winning Percentage (2022)',
               'Percentage of Cap Space Spent vs Winning Percentage (2021)',
-              'Percentage of Draft Capital Spent vs Winning Percentage',
-              'Percentage of Draft Capital Spent vs Winning Percentage Over The Last 4 Years']
+              'Percentage of Draft Capital Spent vs Winning Percentage (2022)',
+              'Percentage of Draft Capital Spent vs Winning Percentage (2021)']
     # we print the corrleation data frames
     for i in range(len(corrs)):
         fig, ax = plt.subplots(1, figsize=(15,7))
