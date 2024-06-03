@@ -1,5 +1,2 @@
 # Exclude the venv directory
 venv/
-
-# Include Python scripts (*.py)
-*.py
