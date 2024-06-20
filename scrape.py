@@ -58,7 +58,7 @@ def web_scrape():
     draft2019, value2019 = web_scrape_rosters(2019, s)
     draft2019.to_csv('draft_data_2019.csv')
     value2019.to_csv('value_data_2019.csv')
-
+    
 def web_scrape_rosters(year, s):
     """
     Here we webscrape every team's roster
@@ -156,10 +156,10 @@ def clean_roster_data(roster_data, team, year):
     # Convert 'Draft Year' to numeric and filter based on it
     # Filter the DataFrame based on 'Draft Year' and 'Orig. Team'
     appx = roster_data.copy()
-    roster_data = roster_data[(roster_data['Draft Year'] >= (year - 3)) & (roster_data['Draft Year'] <= year)]
-    roster_data = roster_data[roster_data['Orig. Team'] == team]
+    # roster_data = roster_data[(roster_data['Draft Year'] >= (year - 3)) & (roster_data['Draft Year'] <= year)]
+    # roster_data = roster_data[roster_data['Orig. Team'] == team]
     # Calculate the 'Draft Value' for each player
-    roster_data['Draft Value'] = roster_data['Drafted (tm/rnd/yr)'].apply(getValue)
+    roster_data['Draft Value'] = roster_data['Drafted (tm/rnd/yr)'].apply(getValue, year = year)
     # Calculate 'draft' and 'appx' using the 'getData' function
     draft = getData(roster_data, 'Draft Value', team)
     appx = getData(appx, 'AV', team)
@@ -170,7 +170,7 @@ def getData(data, column_name, team):
     if column_name == 'Draft Value':
         total_value = data[column_name].sum()
         grouped = data.groupby('Pos')[column_name].sum()
-        grouped = grouped / total_value * 100
+        # grouped = grouped / total_value * 100
     else:
         grouped = data.groupby('Pos')[column_name].sum()
     # we pivot the index and make the index of each row the team name
@@ -218,7 +218,7 @@ def getYear(info):
     else:
         return 0
 
-def getValue(info):
+def getValue(info, year):
     """
     Gets the draft value for a particular pick
     @param info - the draft info for each player
@@ -234,8 +234,10 @@ def getValue(info):
         pick_str = tokens[index + 3]
         pick_str = pick_str[:len(pick_str) - 2]
         pick = int(pick_str)
+        year_diff = year - int(tokens[-1])
+        k = 1 / 7
         if (pick < len(pick_value)):
-            return pick_value.loc[pick, 'Value']
+            return pick_value.loc[pick - 1, 'Value'] * np.exp(-k * year_diff)
         else:
             return 0
     except Exception as e:
