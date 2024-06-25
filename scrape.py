@@ -84,48 +84,54 @@ def web_scrape_rosters(year, s):
     return convert_dataframes(draft, s), convert_dataframes(value, s)
     
     
+import pandas as pd
+import numpy as np
+
 def convert_dataframes(dataframes, s):
     """
-    Takes a list of each teams roster data and 
+    Takes a list of each team's roster data and 
     returns it as one dataframe with the corrected positional information
-    returns a dataframe of each team's releative draft resources spent
-    on each position
+    returns a dataframe of each team's relative draft resources spent
+    on each position.
     """
     draft_data = pd.concat(dataframes, ignore_index=True)
     s.update(draft_data.columns.tolist())
-    # we fill empty values
+    # Fill empty values
     draft_data.replace('', np.nan, inplace=True)
     draft_data.fillna(0, inplace=True)
-    # we rework each position's definition to match our desired output
+    
+    # Rework each position's definition to match our desired output
     draft_data['RB/FB'] = draft_data.get("RB", 0) + draft_data.get('FB', 0)
-    draft_data["OL"] = draft_data.get('T', 0) + draft_data.get('OL', 0) 
-    + draft_data.get('G', 0) + draft_data.get('LG/C', 0)
-    + draft_data.get('RT/LT', 0) + draft_data.get('RT', 0)
-    + draft_data.get('RG/C', 0) + draft_data.get('C', 0)
-    + draft_data.get('LG', 0) + draft_data.get('C/LG', 0)
-    + draft_data.get('RG', 0) + draft_data.get('OT', 0)
-    + draft_data.get('LT/RT', 0) + draft_data.get('LT', 0)
-    draft_data['DL'] = draft_data.get('DT', 0) + draft_data.get('DE', 0) 
-    + draft_data.get('RDT/LDT', 0) + draft_data.get('NT', 0)
-    + draft_data.get('RDE', 0) + draft_data.get('LDT', 0)
-    + draft_data.get('LDE', 0) + draft_data.get('LDE/RDE', 0)
-    + draft_data.get('DL', 0) + draft_data.get('RDT', 0)
-    + draft_data.get('RDE/LDE', 0) + draft_data.get('LDT/RDT', 0)
-    draft_data['LB'] = draft_data.get('LB', 0) + draft_data.get('OLB', 0) 
-    + draft_data.get('LOLB', 0) + draft_data.get('LLB', 0) 
-    + draft_data.get('LILB', 0) + draft_data.get('RLB', 0)
-    + draft_data.get('LILB/RILB', 0) + + draft_data.get('MLB/RLB', 0)
-    + draft_data.get('MLB', 0) + draft_data.get('ROLB/RILB', 0)
-    + draft_data.get('RILB', 0) + draft_data.get('RLB/LLB', 0)
-    draft_data['DB'] = draft_data.get('S', 0) + draft_data.get('CB', 0) 
-    + draft_data.get('SS/FS', 0) + draft_data.get('LCB/RCB', 0)
-    + draft_data.get('RCB/LCB', 0) + draft_data.get('FS', 0)
-    + draft_data.get('LCB', 0) + draft_data.get('RCB', 0)
-    + draft_data.get("DB", 0) + draft_data.get("SS", 0)
-    + draft_data.get('FS/SS', 0)
-    draft_data["K/P/LS"] = draft_data['K'] + draft_data['P'] + draft_data['LS']
-    # we remove excess columns
+    draft_data["OL"] = (draft_data.get('T', 0) + draft_data.get('OL', 0) 
+                        + draft_data.get('G', 0) + draft_data.get('LG/C', 0)
+                        + draft_data.get('RT/LT', 0) + draft_data.get('RT', 0)
+                        + draft_data.get('RG/C', 0) + draft_data.get('C', 0)
+                        + draft_data.get('LG', 0) + draft_data.get('C/LG', 0)
+                        + draft_data.get('RG', 0) + draft_data.get('OT', 0)
+                        + draft_data.get('LT/RT', 0) + draft_data.get('LT', 0))
+    draft_data['DL'] = (draft_data.get('DT', 0) + draft_data.get('DE', 0) 
+                        + draft_data.get('RDT/LDT', 0) + draft_data.get('NT', 0)
+                        + draft_data.get('RDE', 0) + draft_data.get('LDT', 0)
+                        + draft_data.get('LDE', 0) + draft_data.get('LDE/RDE', 0)
+                        + draft_data.get('DL', 0) + draft_data.get('RDT', 0)
+                        + draft_data.get('RDE/LDE', 0) + draft_data.get('LDT/RDT', 0))
+    draft_data['LB'] = (draft_data.get('LB', 0) + draft_data.get('OLB', 0) 
+                        + draft_data.get('LOLB', 0) + draft_data.get('LLB', 0) 
+                        + draft_data.get('LILB', 0) + draft_data.get('RLB', 0)
+                        + draft_data.get('LILB/RILB', 0) + draft_data.get('MLB/RLB', 0)
+                        + draft_data.get('MLB', 0) + draft_data.get('ROLB/RILB', 0)
+                        + draft_data.get('RILB', 0) + draft_data.get('RLB/LLB', 0))
+    draft_data['DB'] = (draft_data.get('S', 0) + draft_data.get('CB', 0) 
+                        + draft_data.get('SS/FS', 0) + draft_data.get('LCB/RCB', 0)
+                        + draft_data.get('RCB/LCB', 0) + draft_data.get('FS', 0)
+                        + draft_data.get('LCB', 0) + draft_data.get('RCB', 0)
+                        + draft_data.get('DB', 0) + draft_data.get('SS', 0)
+                        + draft_data.get('FS/SS', 0))
+    draft_data["K/P/LS"] = draft_data.get('K', 0) + draft_data.get('P', 0) + draft_data.get('LS', 0)
+    
+    # Remove excess columns
     draft_data = draft_data[['Team', 'QB', 'RB/FB', 'WR', "TE", "OL", "DL", "LB", "DB", "K/P/LS"]]
+    
     return draft_data
 
 
