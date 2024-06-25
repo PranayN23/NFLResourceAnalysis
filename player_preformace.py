@@ -4,6 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
+from scipy.stats import linregress
+
+def sanitize_filename(filename):
+    """Sanitize filenames by replacing problematic characters."""
+    return re.sub(r'[^\w\-_\. ]', '_', filename)
+
 
 def main():
 
@@ -16,26 +22,39 @@ def main():
     merged = cap2019.merge(value2019, on="Team")
     merged = merged.merge(draft2019, on="Team")
 
-    # Filter out rows with 0 values
-    merged = merged[(merged["QB_x"] != 0) & (merged["QB_y"] != 0) & (merged["QB"] != 0)]
+    ## List of positions to analyze
+    positions = ["QB", "RB/FB", "WR", "TE", "OL", "DL", "LB", "DB", "K/P/LS"]
 
-    # Plot Quarterback Investment vs Performance 2019
-    plt.figure(figsize=(8, 6))
-    sns.regplot(data=merged, x="QB_x", y="QB_y")
-    plt.title('Quarterback Investment vs Performance 2019')
-    plt.xlabel('Percentage of Cap Space Invested in QB')
-    plt.ylabel('QB Performance')
-    plt.savefig('Quarterback Investment vs Performance 2019.png')
-
-    # Plot Quarterback Draft Investment vs Performance 2019
-    plt.figure(figsize=(8, 6))
-    sns.regplot(data=merged, x="QB", y="QB_y")
-    plt.title('Quarterback Draft Investment vs Performance 2019')
-    plt.xlabel('Percentage of Draft Capital Invested in QB')
-    plt.ylabel('QB Performance')
-    plt.savefig('Quarterback Draft Investment vs Performance 2019.png')
-
-    plt.show()
+    for position in positions:
+        # Filter out rows with 0 values for the current position
+        filtered = merged[(merged[f"{position}_x"] != 0) & (merged[f"{position}_y"] != 0) & (merged[position] != 0)]
+        
+        # Plot Cap Space Investment vs Performance
+        plt.figure(figsize=(8, 6))
+        sns.regplot(data=filtered, x=f"{position}_x", y=f"{position}_y")
+        plt.title(f'{position} Investment vs Performance 2019')
+        plt.xlabel(f'Percentage of Cap Space Invested in {position}')
+        plt.ylabel(f'{position} Performance')
+        if position == 'RB/FB':
+            plt.savefig('RB Investment vs Performance 2019.png')
+        elif position == "K/P/LS":
+             plt.savefig('ST Investment vs Performance 2019.png')
+        else:
+            plt.savefig(f'{position} Investment vs Performance 2019.png')
+        plt.close()
+        # Plot Draft Investment vs Performance
+        plt.figure(figsize=(8, 6))
+        sns.regplot(data=filtered, x=position, y=f"{position}_y")
+        plt.title(f'{position} Draft Investment vs Performance 2019')
+        plt.xlabel(f'Percentage of Draft Capital Invested in {position}')
+        plt.ylabel(f'{position} Performance')
+        if position == 'RB/FB':
+            plt.savefig('RB Draft Investment vs Performance 2019.png')
+        elif position == "K/P/LS":
+             plt.savefig('ST Draft Investment vs Performance 2019.png')
+        else:
+            plt.savefig(f'{position} Draft Investment vs Performance 2019.png')
+        plt.close()
 
 if __name__ == "__main__":
     main()
