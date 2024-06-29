@@ -39,7 +39,5 @@ def main():
             plt.savefig(f'{position} Investment vs Performance 2021.png')
         plt.close()
 
-        #print(clean_cap.head())
-        #print(clean_value.head())
 if __name__ == "__main__":
     main()
