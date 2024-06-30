@@ -12,49 +12,50 @@ def sanitize_filename(filename):
 
 
 def main():
-
+    years = [2019, 2020, 2021, 2022]
+    for year in years:
     # Read data
-    cap2019 = pd.read_csv("cap_data2019.csv")
-    value2019 = pd.read_csv("value_data_2019.csv")
-    draft2019 = pd.read_csv("draft_data_2019.csv")
+        cap2019 = pd.read_csv(f'cap_data{year}.csv')
+        value2019 = pd.read_csv(f"value_data_{year}.csv")
+        draft2019 = pd.read_csv(f"draft_data_{year}.csv")
 
-    # Merge dataframes
-    merged = cap2019.merge(value2019, on="Team")
-    merged = merged.merge(draft2019, on="Team")
+        # Merge dataframes
+        merged = cap2019.merge(value2019, on="Team")
+        merged = merged.merge(draft2019, on="Team")
 
-    ## List of positions to analyze
-    positions = ["QB", "RB/FB", "WR", "TE", "OL", "DL", "LB", "DB", "K/P/LS"]
+        ## List of positions to analyze
+        positions = ["QB", "RB/FB", "WR", "TE", "OL", "DL", "LB", "DB", "K/P/LS"]
 
-    for position in positions:
-        # Filter out rows with 0 values for the current position
-        filtered = merged[(merged[f"{position}_x"] != 0) & (merged[f"{position}_y"] != 0) & (merged[position] != 0)]
-        
-        # Plot Cap Space Investment vs Performance
-        plt.figure(figsize=(8, 6))
-        sns.regplot(data=filtered, x=f"{position}_x", y=f"{position}_y")
-        plt.title(f'{position} Investment vs Performance 2019')
-        plt.xlabel(f'Percentage of Cap Space Invested in {position}')
-        plt.ylabel(f'{position} Performance')
-        if position == 'RB/FB':
-            plt.savefig('RB Investment vs Performance 2019.png')
-        elif position == "K/P/LS":
-             plt.savefig('ST Investment vs Performance 2019.png')
-        else:
-            plt.savefig(f'{position} Investment vs Performance 2019.png')
-        plt.close()
-        # Plot Draft Investment vs Performance
-        plt.figure(figsize=(8, 6))
-        sns.regplot(data=filtered, x=position, y=f"{position}_y")
-        plt.title(f'{position} Draft Investment vs Performance 2019')
-        plt.xlabel(f'Percentage of Draft Capital Invested in {position}')
-        plt.ylabel(f'{position} Performance')
-        if position == 'RB/FB':
-            plt.savefig('RB Draft Investment vs Performance 2019.png')
-        elif position == "K/P/LS":
-             plt.savefig('ST Draft Investment vs Performance 2019.png')
-        else:
-            plt.savefig(f'{position} Draft Investment vs Performance 2019.png')
-        plt.close()
+        for position in positions:
+            # Filter out rows with 0 values for the current position
+            filtered = merged[(merged[f"{position}_x"] != 0) & (merged[f"{position}_y"] != 0) & (merged[position] != 0)]
+            
+            # Plot Cap Space Investment vs Performance
+            plt.figure(figsize=(8, 6))
+            sns.regplot(data=filtered, x=f"{position}_x", y=f"{position}_y")
+            plt.title(f'{position} Investment vs Performance {year}')
+            plt.xlabel(f'Percentage of Cap Space Invested in {position}')
+            plt.ylabel(f'{position} Performance')
+            if position == 'RB/FB':
+                plt.savefig(f'RB Investment vs Performance {year}.png')
+            elif position == "K/P/LS":
+                plt.savefig(f'ST Investment vs Performance {year}.png')
+            else:
+                plt.savefig(f'{position} Investment vs Performance {year}.png')
+            plt.close()
+            # Plot Draft Investment vs Performance
+            plt.figure(figsize=(8, 6))
+            sns.regplot(data=filtered, x=position, y=f"{position}_y")
+            plt.title(f'{position} Draft Investment vs Performance {year}')
+            plt.xlabel(f'Percentage of Draft Capital Invested in {position}')
+            plt.ylabel(f'{position} Performance')
+            if position == 'RB/FB':
+                plt.savefig(f'RB Draft Investment vs Performance {year}.png')
+            elif position == "K/P/LS":
+                plt.savefig(f'ST Draft Investment vs Performance {year}.png')
+            else:
+                plt.savefig(f'{position} Draft Investment vs Performance {year}.png')
+            plt.close()
 
 if __name__ == "__main__":
     main()
