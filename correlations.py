@@ -19,23 +19,18 @@ def main():
     """
     We get our data and call our correlations method
     """
-    cap_data2022 = pd.read_csv('cap_data2022.csv')
-    cap_data2021 = pd.read_csv('cap_data2021.csv')
-    draft_data = pd.read_csv('draft_data_2022.csv')
-    draft_data_last_4 = pd.read_csv('draft_data_2021.csv')
-    datasets = [cap_data2022, cap_data2021, draft_data, draft_data_last_4]
+    value2022 = pd.read_csv('value_data_2022.csv')
+    value2021 = pd.read_csv('value_data_2021.csv')
+    datasets = [value2022, value2021]
     # we get the correlations of each resource dataset with winning
     # in the year it relates to
     corrs = correlations(datasets)
-    ylabels = ['%% of Cap Space Spent', '%% of Cap Space Spent)', '%% of draft capital spent', '%% of draft capital spent']
-    titles = ['Percentage of Cap Space Spent vs Winning Percentage (2022)',
-              'Percentage of Cap Space Spent vs Winning Percentage (2021)',
-              'Percentage of Draft Capital Spent vs Winning Percentage (2022)',
-              'Percentage of Draft Capital Spent vs Winning Percentage (2021)']
+    titles = ['Positional Success Correlation with Winning Percentage (2022)',
+              'Positional Success Correlation with Winning Percentage (2021)']
     # we print the corrleation data frames
     for i in range(len(corrs)):
         fig, ax = plt.subplots(1, figsize=(15,7))
-        ax.bar(corrs[i].index, corrs[i]['win_pct'])
+        ax.bar(corrs[i].index, corrs[i]['win-loss-pct'])
         ax.set_title(titles[i])
         ax.set_xlabel('Position')
         ax.set_ylabel('Correlation with Winning')
@@ -53,15 +48,16 @@ def correlations(datasets):
     correlations = []
     for data in datasets:
         if (count == 1):
-            team_stats = pd.read_csv('nfl2021.csv')
+            team_stats = pd.read_csv('team_success_2021.csv')
+            print(team_stats.columns)
         else:
-            team_stats = pd.read_csv('nfl_stats.csv')
+            team_stats = pd.read_csv('team_success_2022.csv')
         count += 1
-        team_stats = team_stats[['team', 'win_pct']]
-        merged2022 = data.merge(team_stats, left_on='Team', right_on='team')
+        team_stats = team_stats[['TEAM', 'win-loss-pct']]
+        merged2022 = data.merge(team_stats, left_on='Team', right_on='TEAM')
         numeric_columns = merged2022.select_dtypes(include=['number'])
-        correlation = numeric_columns.corr()[['win_pct']]
-        correlation = correlation.drop(['Unnamed: 0', 'win_pct'], axis=0)
+        correlation = numeric_columns.corr()[['win-loss-pct']]
+        correlation = correlation.drop(['Unnamed: 0', 'win-loss-pct'], axis=0)
         correlations.append(correlation)
     return correlations
 
