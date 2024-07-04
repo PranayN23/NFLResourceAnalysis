@@ -112,7 +112,7 @@ def convert_dataframes(dataframes, s):
                         + draft_data.get('RDE', 0) + draft_data.get('LDT', 0)
                         + draft_data.get('LDE', 0) + draft_data.get('LDE/RDE', 0)
                         + draft_data.get('DL', 0) + draft_data.get('RDT', 0)
-                        + draft_data.get('RDE/LDE', 0) + draft_data.get('LDT/RDT', 0))
+                        + draft_data.get('RDE/LDE', 0) + draft_data.get('LDT/RDT', 0) + + draft_data.get('OLB', 0) )
     draft_data['LB'] = (draft_data.get('LB', 0)
                         + draft_data.get('LOLB', 0) + draft_data.get('LLB', 0) 
                         + draft_data.get('LILB', 0) + draft_data.get('RLB', 0)
@@ -124,7 +124,7 @@ def convert_dataframes(dataframes, s):
                         + draft_data.get('RCB/LCB', 0) + draft_data.get('FS', 0)
                         + draft_data.get('LCB', 0) + draft_data.get('RCB', 0)
                         + draft_data.get('DB', 0) + draft_data.get('SS', 0)
-                        + draft_data.get('FS/SS', 0) + draft_data.get('OLB', 0) )
+                        + draft_data.get('FS/SS', 0))
     draft_data["K/P/LS"] = draft_data.get('K', 0) + draft_data.get('P', 0) + draft_data.get('LS', 0)
     
     # Remove excess columns
