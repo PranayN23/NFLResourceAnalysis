@@ -53,6 +53,9 @@ def web_scrape():
     draft2019, value2019 = web_scrape_rosters(2019, s)
     draft2019.to_csv('draft_data_2019.csv')
     value2019.to_csv('value_data_2019.csv')
+    draft2018, value2018 = web_scrape_rosters(2018, s)
+    draft2018.to_csv('draft_data_2018.csv')
+    value2018.to_csv('value_data_2018.csv')
     
 def web_scrape_rosters(year, s):
     """
@@ -236,7 +239,7 @@ def getValue(info, year):
         pick_str = pick_str[:len(pick_str) - 2]
         pick = int(pick_str)
         year_diff = year - int(tokens[-1])
-        k = 1 / 7
+        k = 1 / 4
         if (pick < len(pick_value)):
             return pick_value.loc[pick - 1, 'Value'] * np.exp(-k * year_diff)
         else:
