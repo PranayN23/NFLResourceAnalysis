@@ -19,23 +19,37 @@ def main():
     """
     We get our data and call our correlations method
     """
-    years = [2019, 2020, 2021, 2022]
-    for year in years:
-        value = pd.read_csv(f'value_data_{year}.csv')
-        # we get the correlations of each resource dataset with winning
-        # in the year it relates to
-        corrs = correlations(value, year)
-        title = f'Positional Success Correlation with Winning Percentage ({year})'
-        # we print the corrleation data frames
-        fig, ax = plt.subplots(1, figsize=(15,7))
-        ax.bar(corrs.index, corrs['win-loss-pct'])
-        ax.set_title(title)
-        ax.set_xlabel('Position')
-        ax.set_ylabel('Correlation with Winning')
-        plt.savefig(title + '.png')
+    cols = ['TOTAL DVOA', 'win-loss-pct', 'Net EPA']
+    count = 0
+    for col in cols:
+        years = [2019, 2020, 2021, 2022]
+        for year in years:
+            value = pd.read_csv(f'value_data_{year}.csv')
+            # we get the correlations of each resource dataset with winning
+            # in the year it relates to
+            corrs = correlations(value, year, col)
+            if count == 0:
+                title = f'Positional Success Correlation with DVOA ({year})'
+            elif count == 1:
+                title = f'Positional Success Correlation with Winning ({year})'
+            else:
+                title = f'Positional Success Correlation with EPA ({year})'
+            # we print the corrleation data frames
+            fig, ax = plt.subplots(1, figsize=(15,7))
+            ax.bar(corrs.index, corrs[col])
+            ax.set_title(title)
+            ax.set_xlabel('Position')
+            if count == 0:
+                ax.set_ylabel('Correlation with DVOA')
+            elif count == 1:
+                ax.set_ylabel('Correlation with Winning')
+            else:
+                ax.set_ylabel('Correlation with DVOA')
+            plt.savefig(title + '.png')
+        count += 1
 
 
-def correlations(data, year):
+def correlations(data, year, col):
     """
     We get the correlation between each of our datasets 
     and the respectvie stats for that year
@@ -43,11 +57,12 @@ def correlations(data, year):
     returns a list of correlation dataframes
     """
     team_stats = pd.read_csv(f'team_success_{year}.csv')
-    team_stats = team_stats[['TEAM', 'win-loss-pct']]
+    team_stats['TOTAL DVOA'] = team_stats['TOTAL DVOA'].str.rstrip('%').astype('float') / 100
+    team_stats = team_stats[['TEAM', col]]
     merged2022 = data.merge(team_stats, left_on='Team', right_on='TEAM')
     numeric_columns = merged2022.select_dtypes(include=['number'])
-    correlation = numeric_columns.corr()[['win-loss-pct']]
-    correlation = correlation.drop(['Unnamed: 0', 'win-loss-pct'], axis=0)
+    correlation = numeric_columns.corr()[[col]]
+    correlation = correlation.drop(['Unnamed: 0', col], axis=0)
     return correlation
 
 
