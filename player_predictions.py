@@ -37,22 +37,17 @@ def decision_tree(df):
     test_predictions = model.predict(features_test)
     print('Tree Test  Accuracy:', accuracy_score(labels_test, test_predictions))
 
-    from sklearn.neural_network import MLPClassifier
 
-    mlp = MLPClassifier(hidden_layer_sizes=(50,), 
-                        max_iter=10, verbose=10, random_state=1)
-    MLPClassifier(activation='relu', alpha=0.0001, batch_size='auto', beta_1=0.9,
-              beta_2=0.999, early_stopping=False, epsilon=1e-08,
-              hidden_layer_sizes=(50,), learning_rate='constant',
-              learning_rate_init=0.001, max_fun=15000, max_iter=10,
-              momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True,
-              power_t=0.5, random_state=1, shuffle=True, solver='adam',
-              tol=0.0001, validation_fraction=0.1, verbose=10,
-              warm_start=False)
-    mlp.fit(features_train, labels_train)
-    print('Training score', mlp.score(features_train, labels_train))
-    print('Testing score', mlp.score(features_test, labels_test))
-
+    learning_rates = [0.001, 0.01, 0.5]
+    sizes = [(10,), (50,), (10, 10, 10, 10),]
+    for learning_rate in learning_rates:
+        for size in sizes:
+            print(f'Learning Rate {learning_rate}, Size {size}')
+            mlp = MLPRegressor(hidden_layer_sizes=size, max_iter=10,
+                                random_state=1, learning_rate_init=learning_rate)
+            mlp.fit(features_train, labels_train)
+            print("    Training set score: %f" % mlp.score(features_train, labels_train))
+            print("    Test set score: %f" % mlp.score(features_test, labels_test))
 
 
 
