@@ -30,16 +30,18 @@ def web_scrape():
     """
     # we use one method to scrape cap space data 
     # and another for draft dara
-    """
+    
     cap_data2022 = web_scrape_data('2022')
     cap_data2022.to_csv('cap_data2022.csv')
     cap_data2021 = web_scrape_data('2021')
     cap_data2021.to_csv('cap_data2021.csv')
-    cap_data2022 = web_scrape_data('2020')
-    cap_data2022.to_csv('cap_data2020.csv')
-    cap_data2021 = web_scrape_data('2019')
-    cap_data2021.to_csv('cap_data2019.csv')
-    """
+    cap_data2020 = web_scrape_data('2020')
+    cap_data2020.to_csv('cap_data2020.csv')
+    cap_data2019 = web_scrape_data('2019')
+    cap_data2019.to_csv('cap_data2019.csv')
+    cap_data2018 = web_scrape_data('2018')
+    cap_data2018.to_csv('cap_data2018.csv')
+    
     s = set()
     draft2022, value2022 = web_scrape_rosters(2022, s)
     draft2022.to_csv('draft_data_2022.csv')
@@ -254,7 +256,7 @@ def web_scrape_data(year):
     returns a cleaned dataframe containing cap space info
     """
     # scrape the website using Beautiful Soup
-    url = 'https://www.spotrac.com/nfl/positional/breakdown/' + year + '/'
+    url = 'https://www.spotrac.com/nfl/position/_/year/' + year + '/'
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
     table = soup.find('table')
@@ -269,10 +271,12 @@ def web_scrape_data(year):
         for td in row.find_all('td'):
             t = td.text.strip()
             # we remove the Million symbol for money rows
-            if ('M' in t and 'Miami' not in t and 'Minnesota' not in t):
+            if ('M' in t and 'MIA' not in t and 'MIN' not in t):
                 # we convert the text to a float
-                t = t.split(' ')[0]
-                t = float(t)
+                t = t.replace('$', '').replace('M', '')
+    
+                # Convert to float and multiply by 1,000,000
+                t = float(t) * 1_000_000
                 # we get the percentage of the cap spent on that position 
                 # and change the total number by year as the cap space number changes 
                 if (year == '2022'):
@@ -281,8 +285,10 @@ def web_scrape_data(year):
                     t = t / 182500000 * 100
                 elif (year == '2020'):
                     t = t / 198200000 * 100
-                else:
+                elif (year == '2019'):
                     t = t / 188200000 * 100
+                else:
+                    t = t / 177200000 * 100
                 row_data.append(t)
             else:
                 row_data.append(td.text.strip())
@@ -295,7 +301,48 @@ def web_scrape_data(year):
     # we remove the city name from the team name
     cap_data['Team'] = cap_data['Team'].apply(lambda x: x.split()[len(x.split()) - 1])
     # we return the cap data
+    cap_data = cap_data[['QB', "RB", 'WR', 'TE', 'OL', 'DL', 'LB', 'SEC', 'K', 'P', 'LS', 'Team']]
+    cap_data = cap_data.replace('-', 0)
+    cap_data['K/P/LS'] = cap_data['K'] + cap_data['P'] + cap_data['LS']
+    cap_data['RB/FB'] = cap_data['RB']
+    cap_data['DB'] = cap_data['SEC']
     cap_data = cap_data[['QB', "RB/FB", 'WR', 'TE', 'OL', 'DL', 'LB', 'DB', 'K/P/LS', 'Team']]
+    team_mapping = {
+    'ARI': 'Cardinals',
+    'ATL': 'Falcons',
+    'BAL': 'Ravens',
+    'BUF': 'Bills',
+    'CAR': 'Panthers',
+    'CHI': 'Bears',
+    'CIN': 'Bengals',
+    'CLE': 'Browns',
+    'DAL': 'Cowboys',
+    'DEN': 'Broncos',
+    'DET': 'Lions',
+    'GB': 'Packers',
+    'HOU': 'Texans',
+    'IND': 'Colts',
+    'JAX': 'Jaguars',
+    'KC': 'Chiefs',
+    'LV': 'Raiders',
+    'LAC': 'Chargers',
+    'LAR': 'Rams',
+    'MIA': 'Dolphins',
+    'MIN': 'Vikings',
+    'NE': 'Patriots',
+    'NO': 'Saints',
+    'NYG': 'Giants',
+    'NYJ': 'Jets',
+    'PHI': 'Eagles',
+    'PIT': 'Steelers',
+    'SF': '49ers',
+    'SEA': 'Seahawks',
+    'TB': 'Buccaneers',
+    'TEN': 'Titans',
+    'WAS': 'Commanders',
+    'OAK': 'Raiders'
+}
+    cap_data['Team'] = cap_data['Team'].map(team_mapping)
     return cap_data
 
 
