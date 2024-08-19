@@ -9,9 +9,13 @@ from sklearn.preprocessing import StandardScaler
 
 def main():
     df = pd.read_csv('data.csv')
-    decision_tree(df)
-    sklearn_mlp(df)
-    tensorflow_mlp(df)
+    positions = ['QB', 'RB/FB', 'WR', 'TE', 'OL', 'DL', 'LB', 'DB', 'K/P/LS']
+    for position in positions:
+      print(f'Position: {position}')
+      decision_tree(df, position)
+      sklearn_mlp(df, position)
+      tensorflow_mlp(df, position)
+      print()
 
 def decision_tree(df):
     from sklearn.tree import DecisionTreeRegressor
