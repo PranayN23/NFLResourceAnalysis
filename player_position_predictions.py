@@ -20,7 +20,7 @@ def main():
 def decision_tree(df):
     from sklearn.tree import DecisionTreeRegressor
     
-    features = df[['Year', 'Position', 'Value_cap_space', 'Value_draft_data', 'Previous_AV']]
+    features = df[['Year', 'Value_cap_space', 'Value_draft_data', 'Previous_AV']]
     features = pd.get_dummies(features)
     labels = df['Current_AV']
     features_train, features_test = features[:864], features[864:]
