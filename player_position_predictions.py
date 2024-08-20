@@ -20,11 +20,13 @@ def main():
 def decision_tree(df):
     from sklearn.tree import DecisionTreeRegressor
     
-    features = df[['Year', 'Value_cap_space', 'Value_draft_data', 'Previous_AV']]
-    features = pd.get_dummies(features)
-    labels = df['Current_AV']
-    features_train, features_test = features[:864], features[864:]
-    labels_train, labels_test = labels[:864], labels[864:]
+    features = df[df['Position'] == position]
+    features = features[['Year', 'Value_cap_space', 'Value_draft_data', 'Previous_AV']]
+    labels = df[df['Position'] == position]
+    labels = labels[['Year', 'Current_AV']]
+    
+    features_train, features_test = features[features['Year'] == 2020], features[features['Year'] == 2021]
+    labels_train, labels_test = labels[labels['Year'] != 2021], labels[labels['Year'] == 2021]
     
     model = DecisionTreeRegressor()
     model.fit(features_train, labels_train)
