@@ -9,24 +9,21 @@ from sklearn.preprocessing import StandardScaler
 
 def main():
     df = pd.read_csv('data.csv')
-    positions = ['QB', 'RB/FB', 'WR', 'TE', 'OL', 'DL', 'LB', 'DB', 'K/P/LS']
-    for position in positions:
-      print(f'Position: {position}')
-      decision_tree(df, position)
-      sklearn_mlp(df, position)
-      tensorflow_mlp(df, position)
-      print()
+    df = df[df['Position'] == "QB"]
+    metrics = ['PFF', 'AV']
+    for metric in metrics:
+        decision_tree(df, metric)
+        sklearn_mlp(df, metric)
+        tensorflow_mlp(df, metric)
 
-def decision_tree(df, position):
+def decision_tree(df, metric):
     from sklearn.tree import DecisionTreeRegressor
     
-    features = df[df['Position'] == position]
-    features = features[['Year', 'Value_cap_space', 'Value_draft_data', 'Previous_AV']]
-    labels = df[df['Position'] == position]
-    labels = labels[['Year', 'Current_AV']]
-    
-    features_train, features_test = features[features['Year'] == 2020], features[features['Year'] == 2021]
-    labels_train, labels_test = labels[labels['Year'] != 2021], labels[labels['Year'] == 2021]
+    features = df[['Year', 'Position', 'Value_cap_space', 'Value_draft_data', 'Previous_' + metric]]
+    features = pd.get_dummies(features)
+    labels = df['Current_' + metric]
+    features_train, features_test = features[:96], features[96:]
+    labels_train, labels_test = labels[:96], labels[96:]
     
     model = DecisionTreeRegressor()
     model.fit(features_train, labels_train)
@@ -38,22 +35,22 @@ def decision_tree(df, position):
     train_r2 = r2_score(labels_train, train_predictions)
     test_r2 = r2_score(labels_test, test_predictions)
     
-    print(f'Decision Tree - Train R²: {train_r2:.2f}')
-    print(f'Decision Tree - Test R²: {test_r2:.2f}')
+    print(f'Decision Tree ' + metric + '- Train R²: {train_r2:.2f}')
+    print(f'Decision Tree ' + metric + '- Test R²: {test_r2:.2f}')
 
-def sklearn_mlp(df):
-    features = df[['Year', 'Position', 'Value_cap_space', 'Value_draft_data', 'Previous_AV']]
+def sklearn_mlp(df, metric):
+    features = df[['Year', 'Position', 'Value_cap_space', 'Value_draft_data', 'Previous_' + metric]]
     features = pd.get_dummies(features)
-    labels = df['Current_AV']
-    features_train, features_test = features[:864], features[864:]
-    labels_train, labels_test = labels[:864], labels[864:]
+    labels = df['Current_' + metric]
+    features_train, features_test = features[:96], features[96:]
+    labels_train, labels_test = labels[:96], labels[96:]
     
     learning_rates = [0.001, 0.01, 0.5]
     sizes = [(10,), (50,), (10, 10, 10, 10)]
     
     for learning_rate in learning_rates:
         for size in sizes:
-            print(f'Scikit-learn MLP - Learning Rate {learning_rate}, Size {size}')
+            print(f'Scikit-learn MLP ' + metric + '- Learning Rate {learning_rate}, Size {size}')
             mlp = MLPRegressor(hidden_layer_sizes=size, max_iter=200,  # Increase max_iter
                                random_state=1, learning_rate_init=learning_rate)
             mlp.fit(features_train, labels_train)
@@ -68,9 +65,9 @@ def sklearn_mlp(df):
             print(f'    Training set R²: {train_r2:.2f}')
             print(f'    Test set R²: {test_r2:.2f}')
 
-def tensorflow_mlp(df):
-    features = df[['Year', 'Position', 'Value_cap_space', 'Value_draft_data', 'Previous_AV']]
-    labels = df['Current_AV'].values  # Ensure labels are numpy arrays
+def tensorflow_mlp(df, metric):
+    features = df[['Year', 'Position', 'Value_cap_space', 'Value_draft_data', 'Previous_' + metric]]
+    labels = df['Current_' + metric].values  # Ensure labels are numpy arrays
     
     # Convert categorical features to numeric
     features = pd.get_dummies(features)
@@ -79,15 +76,15 @@ def tensorflow_mlp(df):
     scaler = StandardScaler()
     features = scaler.fit_transform(features)
 
-    features_train, features_test = features[:864], features[864:]
-    labels_train, labels_test = labels[:864], labels[864:]
+    features_train, features_test = features[:96], features[96:]
+    labels_train, labels_test = labels[:96], labels[96:]
 
     learning_rates = [0.001, 0.01, 0.5]
     sizes = [(10,), (50,), (10, 10, 10, 10)]
     
     for learning_rate in learning_rates:
         for size in sizes:
-            print(f'TensorFlow MLP - Learning Rate {learning_rate}, Size {size}')
+            print(f'TensorFlow MLP - Learning Rate {learning_rate}, Size {size} Metric {metric}')
             
             # Create the model
             model = tf.keras.Sequential()
