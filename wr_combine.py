@@ -67,5 +67,6 @@ def get_pff():
         pff.append(wr_grouped)
     pd.concat(pff)
     result = pd.concat(pff, ignore_index=True)
+    result.rename(columns={'position': 'Position'}, inplace=True)
     result.to_csv("wrPFF.csv")
 get_pff()
