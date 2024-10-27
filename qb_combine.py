@@ -67,6 +67,10 @@ def get_pff():
         qb_grouped['Year'] = year
         pff.append(qb_grouped)
     pd.concat(pff)
+        
+
     result = pd.concat(pff, ignore_index=True)
+    for column in columns:
+        result['Previous_' + column] = result.groupby(['Team', 'position'])['weighted_avg_' + column].shift(1)
     result.to_csv("QBPFF.csv")
 get_pff()
