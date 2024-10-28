@@ -10,35 +10,48 @@ from sklearn.preprocessing import StandardScaler
 def main():
     df = pd.read_csv('data.csv')
     df = df[df['Position'] == "QB"]
-    metrics = ['PFF', 'AV']
-    for metric in metrics:
-        #check_correlation(df, metric)
-        sklearn_mlp(df, metric)
-        tensorflow_mlp(df, metric)
-
-def check_correlation(df, metric):
-    
-    features = ['Year', 'Value_cap_space', 'Value_draft_data', 'Previous_PFF', 'Previous_AV', 'Current_' + metric, 'Total DVOA', 'win-loss-pct', 'Net EPA']
+    data = pd.read_csv('QBPFF.csv')
+    data = data.rename(columns={'weighted_avg_grades_offense': 'Current_PFF', 'position' : 'Position'})
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+    df = df.loc[:, df.columns != '']
+    data = data.loc[:, ~data.columns.str.contains('^Unnamed')]
+    data = data.loc[:, data.columns != '']
+    df = df.merge(data, on=['Team', 'Year', 'Current_PFF', 'Position'])
     df['Total DVOA'] = df['Total DVOA'].astype(str).str.rstrip('%').astype(float) / 100.0
 
+    metrics = ['Total DVOA','win-loss-pct','Net EPA']
+    features = ['weighted_avg_qb_rating', 'Current_AV', 'Current_PFF', 'weighted_avg_grades_pass', 'weighted_avg_big_time_throws', 'Value_cap_space', 'weighted_avg_sack_percent', 
+                'weighted_avg_twp_rate']
+    for metric in metrics:
+        #check_correlation(df, metric)
+        sklearn_mlp(df, metric, features)
+        tensorflow_mlp(df, metric, features)
+
+def check_correlation(df, metric):
+    pd.set_option('display.max_rows', None)
+
+    features = [col for col in df.columns if col != 'weighted_avg_franchise_id' and col != 'weighted_avg_spikes' and col != 'Team' and col != 'Year' and col != 'Position']
     # Filter only the relevant columns
     corr_df = df[features]
-    
+        
     # Compute the correlation matrix
     corr_matrix = corr_df.corr()
-    
-    # Print the correlation matrix
-    print(f'Correlation Matrix for {metric}:\n', corr_matrix, '\n')
 
-def sklearn_mlp(df, metric):
-    features_train = df[df['Year'] <= 2021][['Value_cap_space', 'Previous_PFF', 'Previous_AV', 'Total DVOA', 'win-loss-pct', 'Net EPA']]
-    features_train['Total DVOA'] = features_train['Total DVOA'].astype(str).str.rstrip('%').astype(float) / 100.0
-    
-    labels_train = df[df['Year'] <= 2021]['Current_' + metric]
+    target_corr = corr_matrix[[metric]].drop(metric).sort_values(by = metric, ascending = False)  # Select correlation with 'metric' and exclude itself
+
+        # Print the correlation matrix
+    print(f'Correlation Matrix for {metric}:\n', target_corr, '\n')
+    pd.reset_option('display.max_rows')
+
+
+def sklearn_mlp(df, metric, features):
+    features_train = df[df['Year'] <= 2021][features]
+
+    labels_train = df[df['Year'] <= 2021][metric]
 
     # For testing, use data from 2022
-    features_test = df[df['Year'] == 2022][['Value_cap_space', 'Previous_PFF', 'Previous_AV']]
-    labels_test = df[df['Year'] == 2022]['Current_' + metric]
+    features_test = df[df['Year'] == 2022][features]
+    labels_test = df[df['Year'] == 2022][metric]
 
     # Apply one-hot encoding to any categorical features if necessary (e.g., if you have 'Team')
     features_train = pd.get_dummies(features_train)
@@ -73,15 +86,14 @@ def sklearn_mlp(df, metric):
             print(f'    Training set R²: {train_r2:.2f}')
             print(f'    Test set R²: {test_r2:.2f}')
 
-def tensorflow_mlp(df, metric):
-    features_train = df[df['Year'] <= 2021][['Value_cap_space', 'Previous_PFF', 'Previous_AV', 'Total DVOA', 'win-loss-pct', 'Net EPA']]
-    features_train['Total DVOA'] = features_train['Total DVOA'].astype(str).str.rstrip('%').astype(float) / 100.0
+def tensorflow_mlp(df, metric, features):
+    features_train = df[df['Year'] <= 2021][features]
 
-    labels_train = df[df['Year'] <= 2021]['Current_' + metric]
+    labels_train = df[df['Year'] <= 2021][metric]
 
     # For testing, use data from 2022
-    features_test = df[df['Year'] == 2022][['Value_cap_space', 'Previous_PFF', 'Previous_AV', 'Total DVOA', 'win-loss-pct', 'Net EPA']]
-    labels_test = df[df['Year'] == 2022]['Current_' + metric]
+    features_test = df[df['Year'] == 2022][features]
+    labels_test = df[df['Year'] == 2022][metric]
 
     # Apply one-hot encoding to any categorical features if necessary (e.g., if you have 'Team')
     features_train = pd.get_dummies(features_train)
