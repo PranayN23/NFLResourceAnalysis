@@ -22,4 +22,4 @@ rb_combined_df = pd.merge(rb_combined_df, rb_21_df, on='player', how='outer', su
 rb_combined_df = pd.merge(rb_combined_df, rb_22_df, on='player', how='outer', suffixes=('', '_2022'))
 
 #creates csv with combined df
-rb_combined_df.to_csv('RB19-22.csv',index=False)
+rb_combined_df.to_csv('RB18-22.csv',index=False)
