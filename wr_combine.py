@@ -15,7 +15,7 @@ def get_pff():
             'first_downs', 'franchise_id', 'fumbles', 'grades_hands_drop', 'grades_hands_fumble',
             'grades_offense', 'grades_pass_block', 'grades_pass_route', 'inline_rate',
             'interceptions', 'longest', 'pass_block_rate', 'pass_blocks', 'pass_plays',
-            'penalties,receptions', 'route_rate', 'routes', 'slot_rate', 'targeted_wr_rating',
+            'penalties', 'receptions', 'route_rate', 'routes', 'slot_rate', 'targeted_qb_rating',
             'targets', 'touchdowns', 'wide_rate', 'yards', 'yards_after_catch',
             'yards_after_catch_per_reception', 'yards_per_reception', 'yprr'
         ]
@@ -67,6 +67,8 @@ def get_pff():
         pff.append(wr_grouped)
     pd.concat(pff)
     result = pd.concat(pff, ignore_index=True)
+    for column in columns:
+        result['Previous_' + column] = result.groupby(['Team', 'position'])['weighted_avg_' + column].shift(1)
     result.rename(columns={'position': 'Position'}, inplace=True)
     result.to_csv("wrPFF.csv")
 get_pff()
