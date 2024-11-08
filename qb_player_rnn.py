@@ -1,129 +1,83 @@
-import pandas as pd
-import numpy as np
 import tensorflow as tf
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
-import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import r2_score
+import numpy as np
 
+def attention_layer(inputs):
+    """Simple attention mechanism."""
+    # Using dot-product attention without softmax (not needed for regression)
+    attention = tf.keras.layers.Attention()([inputs, inputs])
+    return tf.reduce_sum(attention, axis=1)
 
+def tensorflow_rnn(df, metric):
+    features_train = df[df['Year'] <= 2021][['Previous_twp_rate', 'Previous_ypa', 'Previous_qb_rating', 'Previous_grades_pass', 'Value_cap_space', 'Previous_PFF', 'Previous_AV']]
+    labels_train = df[df['Year'] <= 2021]['Current_' + metric]
 
+    # For testing, use data from 2022
+    features_test = df[df['Year'] == 2022][['Previous_twp_rate', 'Previous_ypa', 'Previous_qb_rating', 'Previous_grades_pass', 'Value_cap_space', 'Previous_PFF', 'Previous_AV']]
+    labels_test = df[df['Year'] == 2022]['Current_' + metric]
 
-# Load the dataset
-file_path = 'Combined_QB.csv'
-df = pd.read_csv(file_path)
+    # Apply one-hot encoding to any categorical features if necessary (e.g., if you have 'Team')
+    features_train = pd.get_dummies(features_train)
+    features_test = pd.get_dummies(features_test)
 
+    # Ensure that both training and test sets have the same number of features after encoding
+    features_train, features_test = features_train.align(features_test, join='left', axis=1, fill_value=0)
 
-# Define input features and target output
-input_features = [col for col in df.columns if col.startswith('weighted_')]
-output_column = 'Current_PFF'  # Modify this if predicting a different metric
+    # Standardize the features
+    scaler = StandardScaler()
+    features_train = scaler.fit_transform(features_train)
+    features_test = scaler.transform(features_test)
 
+    # Reshape the features for RNN input (samples, time steps, features)
+    features_train = features_train.reshape((features_train.shape[0], 1, features_train.shape[1]))
+    features_test = features_test.reshape((features_test.shape[0], 1, features_test.shape[1]))
 
-# Filter columns
-df = df[input_features + [output_column, 'Year']]
+    learning_rates = [0.001, 0.01, 0.5]
+    sizes = [(10,), (50,), (10, 10, 10, 10)]
 
+    for learning_rate in learning_rates:
+        for size in sizes:
+            print(f'TensorFlow RNN with Attention - Learning Rate {learning_rate}, Size {size} Metric {metric}')
 
-# Split data into training and testing sets
-train_data = df[df['Year'].isin([2019, 2020, 2021])].drop(columns=['Year'])
-test_data = df[df['Year'] == 2022].drop(columns=['Year'])
+            # Create the model
+            model = tf.keras.Sequential()
 
+            # Add RNN Layer (LSTM or GRU)
+            model.add(tf.keras.layers.LSTM(50, activation='relu', input_shape=(features_train.shape[1], features_train.shape[2]), return_sequences=True))
+            
+            # Add Attention Layer
+            model.add(tf.keras.layers.Lambda(attention_layer))
+            
+            # Add Dense Output Layer (No activation function for regression)
+            model.add(tf.keras.layers.Dense(1))  # Output layer
 
-# Normalize the data
-scaler_x = MinMaxScaler()
-scaler_y = MinMaxScaler()
+            # Compile the model
+            model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
+                          loss='mean_squared_error')
 
+            # Train the model
+            early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 
-X_train = scaler_x.fit_transform(train_data[input_features])
-y_train = scaler_y.fit_transform(train_data[[output_column]])
+            history = model.fit(features_train, labels_train, epochs=200, batch_size=32, 
+                                validation_split=0.2, callbacks=[early_stopping], verbose=0)
 
+            # Predict and calculate R² score
+            train_predictions = model.predict(features_train).flatten()  # Flatten to match the expected shape
+            test_predictions = model.predict(features_test).flatten()    # Flatten to match the expected shape
 
-X_test = scaler_x.transform(test_data[input_features])
-y_test_actual = test_data[output_column].values  # for later comparison
+            train_r2 = r2_score(labels_train, train_predictions)
+            test_r2 = r2_score(labels_test, test_predictions)
 
+            print(f'    Training set R²: {train_r2:.2f}')
+            print(f'    Test set R²: {test_r2:.2f}')
 
-# Reshape for RNN input (samples, time steps, features)
-X_train = np.reshape(X_train, (X_train.shape[0], 1, X_train.shape[1]))
-X_test = np.reshape(X_test, (X_test.shape[0], 1, X_test.shape[1]))
+def main():
+    # Example: load your data into `df`
+    df = pd.read_csv('Combined_QB.csv')  # Replace with your actual data
+    metric = 'PFF'  # Specify the metric you want to predict
+    tensorflow_rnn(df, metric)
 
-
-# Build the RNN model using tf.keras
-model = tf.keras.Sequential([
-   tf.keras.layers.LSTM(100, activation='relu', input_shape=(X_train.shape[1], X_train.shape[2]), return_sequences=True),
-   tf.keras.layers.Dropout(0.2),
-   tf.keras.layers.LSTM(50, activation='relu'),
-   tf.keras.layers.Dense(1)
-])
-
-
-
-
-# Compile the model
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='mse')
-
-
-# Train the model
-history = model.fit(X_train, y_train, epochs=200, batch_size=32, validation_data=(X_test, y_test_actual))
-
-
-# Store loss values for plotting
-train_loss = history.history['loss']
-val_loss = history.history['val_loss']  # Optional: if you want to compare train vs validation loss
-
-
-
-
-# Make predictions
-y_train_pred = model.predict(X_train)
-y_test_pred = model.predict(X_test)
-
-
-# Inverse transform predictions to original scale
-y_train_pred = scaler_y.inverse_transform(y_train_pred)
-y_test_pred = scaler_y.inverse_transform(y_test_pred)
-
-
-# Print R² scores for training and test data
-r2_train = r2_score(y_train, y_train_pred)
-r2_test = r2_score(y_test_actual, y_test_pred)
-mse = mean_squared_error(y_test_actual, y_test_pred)
-mae = mean_absolute_error(y_test_actual, y_test_pred)
-
-
-
-
-print(f"Training R²: {r2_train}")
-print(f"Testing R²: {r2_test}")
-
-
-print(f"MSE: {mse}")
-print(f"MAE: {mae}")
-
-
-
-
-# Save predictions with actual values in a new CSV file
-test_data['Predicted_PFF'] = y_test_pred
-test_data['Actual_PFF'] = y_test_actual
-test_data.to_csv('predictions_with_actuals.csv', index=False)
-
-
-print("Predictions saved in 'predictions_with_actuals.csv'")
-
-
-# Plot the actual vs predicted values for the test set
-plt.figure(figsize=(10, 6))
-plt.scatter(y_test_actual, y_test_pred, color='blue', alpha=0.5)
-plt.plot([min(y_test_actual), max(y_test_actual)], [min(y_test_actual), max(y_test_actual)], color='red', linewidth=2)
-plt.xlabel('Actual PFF')
-plt.ylabel('Predicted PFF')
-plt.title('Actual vs Predicted PFF for Test Set')
-plt.grid(True)
-plt.show()
-plt.plot(train_loss, label='Training Loss')
-if 'val_loss' in history.history:
-   plt.plot(val_loss, label='Validation Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.title('Model Loss During Training')
-plt.legend()
-plt.show()
-
+if __name__ == "__main__":
+    main()
