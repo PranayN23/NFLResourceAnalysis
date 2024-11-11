@@ -4,6 +4,10 @@ import numpy as np
 def main():
     get_pff()
     result = collect_data()
+    position_mapping = {
+            'RB/FB': 'HB',
+        }
+    result['Position'] = result['Position'].map(position_mapping).fillna(result['Position'])
     result.to_csv('data.csv')
     
 
@@ -82,9 +86,12 @@ def get_pff():
         rb['weighted_avg_grades'] = rb['weighted_avg_grades'] / rb['total_snaps']
 
         # Drop the 'total_snaps' column if you only want the weighted average in the final result
-        rb = rb.drop(columns=['total_snaps']).reset_index()
+        rb = rb.drop(columns=['total_snaps']).reset_index()        
+        position_mapping = {
+            'HB': 'RB/FB',
+        }
+        rb['position'] = rb['position'].map(position_mapping)
 
-        
         catchers = pd.read_csv('PFF/Receiving' + str(year) + '.csv')
         catchers['snap_counts_offense'] = catchers['slot_snaps'] + catchers['wide_snaps'] + catchers['inline_snaps']
         catchers = catchers[['player', 'position', 'team_name', 'grades_offense', 'snap_counts_offense']]
