@@ -10,14 +10,14 @@ from sklearn.preprocessing import StandardScaler
 
 def main():
     df = pd.read_csv('data.csv')
-    df = df[df['Position'] == "HB"]
+    df = df[df['Position'].isin(['C', 'G', 'T', 'TE'])]
     #print(df.head)
-    data = pd.read_csv('RBPFF.csv')
+    data = pd.read_csv('OLPFF.csv')
     data = data.rename(columns={'weighted_avg_grades_offense': 'Current_PFF', 'position': 'Position'})
     #print(data.head)
     df = df.merge(data, on=['Team', 'Year', 'Position'])
     #print(df.columns)
-    df.to_csv("Combined_RB.csv")
+    df.to_csv("Combined_OL.csv")
     check_correlation(df, 'PFF_x')
 
     metrics = ['PFF', 'AV']
@@ -67,16 +67,16 @@ def current_tensorflow_mlp(df, metric):
 
     # Proceed with your code using the resolved `metric_column`
     features_train = df[df['Year'] <= 2021][
-        ['weighted_avg_grades_run', 'weighted_avg_yards', 'weighted_avg_designed_yards', 'weighted_avg_first_downs',
-         'weighted_avg_explosive', 'Current_PFF_y', 'Current_AV']
+        ['Total DVOA', 'weighted_avg_grades_run_block', 'win-loss-pct', 'Net EPA',
+         'Value_cap_space', 'Current_PFF_y', 'Current_AV']
     ]
 
     labels_train = df[df['Year'] <= 2021][metric_column]
 
     # For testing, use data from 2022
     features_test = df[df['Year'] == 2022][
-        ['weighted_avg_grades_run', 'weighted_avg_yards', 'weighted_avg_designed_yards', 'weighted_avg_first_downs',
-         'weighted_avg_explosive', 'Current_PFF_y', 'Current_AV']
+        ['Total DVOA', 'weighted_avg_grades_run_block', 'win-loss-pct', 'Net EPA',
+         'Value_cap_space', 'Current_PFF_y', 'Current_AV']
     ]
     labels_test = df[df['Year'] == 2022][metric_column]
 
@@ -149,15 +149,15 @@ def previous_tensorflow_mlp(df, metric):
 
     # Proceed with using the resolved column names in the DataFrame
     features_train = df[df['Year'] <= 2021][
-        ['Previous_grades_offense', 'Previous_yco_attempt', 'Previous_grades_run', 'Previous_elusive_rating',
-         'Previous_ypa', pff_column, av_column]
+        ['Previous_grades_offense', 'Previous_grades_run_block', 'Previous_snap_counts_lt', 'Previous_snap_counts_rt',
+         'Previous_declined_penalties', pff_column, av_column]
     ]
     labels_train = df[df['Year'] <= 2021][metric_column]
 
     # For testing, use data from 2022
     features_test = df[df['Year'] == 2022][
-        ['Previous_grades_offense', 'Previous_yco_attempt', 'Previous_grades_run', 'Previous_elusive_rating',
-         'Previous_ypa', pff_column, av_column]
+        ['Previous_grades_offense', 'Previous_grades_run_block', 'Previous_snap_counts_lt', 'Previous_snap_counts_rt',
+         'Previous_declined_penalties', pff_column, av_column]
     ]
     labels_test = df[df['Year'] == 2022][metric_column]
 
