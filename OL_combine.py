@@ -69,6 +69,51 @@ def get_pff():
         result['Previous_' + column] = result.groupby(['Team', 'position'])['weighted_avg_' + column].shift(1)
     file_path = "/Users/vihaanchadha/downloads/OLPFF.csv"
     result.to_csv(file_path)
+    rename_mapping = {'C': 'OL', 'G' : 'OL', 'T' : 'OL', 'TE' : 'OL'}
+    result['position'] = result['position'].replace(rename_mapping);
+
+    def weighted_avg(group):
+        total_snap_counts = group['weighted_avg_snap_counts_offense'].sum()
+        weighted_data = {
+            'Year': group['Year'].iloc[0],
+            'Team': group['Team'].iloc[0],
+            'Position': 'OL',  # Set Position to DB for combined rows
+            'weighted_avg_snap_counts_offense': total_snap_counts
+        }
+
+        # Calculate weighted average for each metric
+        weighted_columns = [col for col in group.columns if col.startswith('weighted_avg_')]
+        for col in weighted_columns:
+            weighted_data[col] = (group[col] * group[
+                'weighted_avg_snap_counts_offense']).sum() / total_snap_counts if total_snap_counts > 0 else 0
+
+        return pd.Series(weighted_data)
+
+    # Group by Year and Team, applying weighted average
+    result = result.groupby(['Year', 'Team']).apply(weighted_avg).reset_index(drop=True)
+    # Standardize column names for merging
+    result = result.rename(columns={
+        'position': 'Position',  # Standardize to 'Position' for merging
+        'weighted_avg_grades_defense': 'Current_PFF'  # Rename grade column for merging
+    })
+
+    # Load additional data and filter for DB position
+    additional_data = pd.read_csv('data.csv')
+    additional_data = additional_data[additional_data['Position'] == "OL"]
+
+    # Remove any unnamed or blank columns
+    # secondary_data = secondary_data.loc[:, ~secondary_data.columns.str.contains('^Unnamed')]
+    # secondary_data = secondary_data.loc[:, secondary_data.columns != '']
+    # additional_data = additional_data.loc[:, ~additional_data.columns.str.contains('^Unnamed')]
+    # additional_data = additional_data.loc[:, additional_data.columns != '']
+
+    # Merge additional data with the weighted-averaged secondary data on key columns
+    for column in columns:
+        result['Previous_' + column] = result.groupby(['Team', 'Position'])['weighted_avg_' + column].shift(1)
+    result = result.merge(
+        additional_data,
+        on=['Team', 'Year', 'Position']
+    )
     result.to_csv("OLPFF.csv")
 
 
