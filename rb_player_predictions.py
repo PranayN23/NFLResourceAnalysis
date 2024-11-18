@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -95,6 +96,8 @@ def current_tensorflow_mlp(df, metric):
     learning_rates = [0.001, 0.01, 0.5]
     sizes = [(10,), (50,), (10, 10, 10, 10)]
 
+    r2_results_current = {'Training': [], 'Testing': []}
+
     for learning_rate in learning_rates:
         for size in sizes:
             print(f'TensorFlow MLP - Learning Rate {learning_rate}, Size {size} Metric {metric}')
@@ -123,8 +126,15 @@ def current_tensorflow_mlp(df, metric):
             train_r2 = r2_score(labels_train, train_predictions)
             test_r2 = r2_score(labels_test, test_predictions)
 
+            # Append R² values to the dictionary
+            r2_results_current['Training'].append(train_r2)
+            r2_results_current['Testing'].append(test_r2)
+
+
             print(f'    Training set R²: {train_r2:.2f} (Current)')
             print(f'    Test set R²: {test_r2:.2f} (Current)')
+
+            plot_r2_bargraph(r2_results_current, ['Training', 'Testing'])
 
 def previous_tensorflow_mlp(df, metric):
     # Define column names for dynamic selection
@@ -176,6 +186,8 @@ def previous_tensorflow_mlp(df, metric):
     learning_rates = [0.001, 0.01, 0.5]
     sizes = [(10,), (50,), (10, 10, 10, 10)]
 
+    r2_results_previous = {'Training': [], 'Testing': []}
+
     for learning_rate in learning_rates:
         for size in sizes:
             print(f'TensorFlow MLP - Learning Rate {learning_rate}, Size {size} Metric {metric}')
@@ -204,8 +216,23 @@ def previous_tensorflow_mlp(df, metric):
             train_r2 = r2_score(labels_train, train_predictions)
             test_r2 = r2_score(labels_test, test_predictions)
 
+            # Append R² values to the dictionary
+            r2_results_previous['Training'].append(train_r2)
+            r2_results_previous['Testing'].append(test_r2)
+
             print(f'    Training set R²: {train_r2:.2f} (Previous)')
             print(f'    Test set R²: {test_r2:.2f} (Previous)')
+
+            plot_r2_bargraph(r2_results_previous, ['Training', 'Testing'])
+
+def plot_r2_bargraph(r2_results, categories):
+    averages = [np.mean(r2_results[cat]) for cat in categories]
+
+    plt.figure(figsize=(8, 6))
+    plt.bar(categories, averages, color=['skyblue', 'orange'])
+    plt.ylabel('Average R²')
+    plt.title('Average R² Scores for Training and Testing Sets')
+    plt.show()
 
 
 if __name__ == "__main__":
