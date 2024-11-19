@@ -16,7 +16,7 @@ def main():
                 'weighted_avg_yards_after_catch']
     for metric in metrics:
         #check_correlation(df, metric)
-        sklearn_mlp(df, metric, features)
+        #sklearn_mlp(df, metric, features)
         tensorflow_mlp(df, metric, features)
 
 def check_correlation(df, metric):
