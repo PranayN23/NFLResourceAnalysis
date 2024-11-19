@@ -25,12 +25,15 @@ def main():
             'snap_counts_defense': total_snap_counts
         }
         
-        # Calculate weighted average for each metric
+        # Calculate weighted average for each metric, including both weighted and previous columns
         weighted_columns = [col for col in group.columns if col.startswith('weighted_avg_')]
-        for col in weighted_columns:
+        previous_columns = [col for col in group.columns if col.startswith('Previous_')]
+        
+        for col in weighted_columns + previous_columns:
             weighted_data[col] = (group[col] * group['snap_counts_defense']).sum() / total_snap_counts if total_snap_counts > 0 else 0
         
         return pd.Series(weighted_data)
+
 
     # Group by Year and Team, applying weighted average
     secondary_data = secondary_data.groupby(['Year', 'Team']).apply(weighted_avg).reset_index(drop=True)
@@ -58,10 +61,11 @@ def main():
         secondary_data,
         on=['Team', 'Year', 'Position']
     )
+    # Select relevant columns for the final combined_data DataFrame, including Previous_ columns
     combined_data = combined_data[
-        [
+    [
         'Team', 'Year', 'Position', 'Value_cap_space', 'Value_draft_data', 
-        'Previous_AV', 'Current_AV', 'Previous_PFF', 'Current_PFF_x', 'Total DVOA', 
+        'Current_AV', 'Current_PFF_x', 'Total DVOA', 
         'win-loss-pct', 'Net EPA', 'snap_counts_defense', 'weighted_avg_player', 
         'weighted_avg_player_id', 'weighted_avg_player_game_count', 'weighted_avg_assists', 
         'weighted_avg_batted_passes', 'weighted_avg_catch_rate', 'weighted_avg_declined_penalties', 
@@ -80,17 +84,13 @@ def main():
         'weighted_avg_snap_counts_slot', 'weighted_avg_stops', 'weighted_avg_tackles', 'weighted_avg_tackles_for_loss', 
         'weighted_avg_targets', 'weighted_avg_total_pressures', 'weighted_avg_touchdowns', 'weighted_avg_yards', 
         'weighted_avg_yards_after_catch', 'weighted_avg_yards_per_reception'
-        ]
-    ]   
+    ] + [col for col in combined_data.columns if col.startswith('Previous_')]
+]
+
     combined_data = combined_data.rename(columns={'Current_PFF_x': 'Current_PFF'})
+    combined_data = combined_data.rename(columns={'Previous_grades_defense': 'Previous_PFF'})
     # Save the final combined data to a CSV
     combined_data.to_csv("Combined_Secondary_Defense.csv")
-    # Define metrics to predict
-    metrics = ['PFF', 'AV']
-    for metric in metrics:
-        # Perform analysis and predictions
-        sklearn_mlp(combined_data, metric)
-        tensorflow_mlp(combined_data, metric)
 
 def sklearn_mlp(df, metric):
     # Selecting features and target variable
