@@ -4,11 +4,13 @@ def get_secondary_defense_data():
     # Starting from 2019 with 2018 as baseline for previous year data
     years = [2018, 2019, 2020, 2021, 2022]
     defense_data = []
-    positions_of_interest = ['CB', 'S']
+    positions_of_interest = ['CB', 'S', 'ED', 'LB', 'DI']
     
     for year in years:
         # Load the CSV for the current year
         df = pd.read_csv(f'PFF/Defense{year}.csv')
+
+        df = df.drop(columns=['catch_rate', 'yards_per_reception', 'longest', 'yards_after_catch'])
         
         # Filter for positions of interest
         df = df[df['position'].isin(positions_of_interest)]
