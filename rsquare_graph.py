@@ -5,6 +5,8 @@ r_square_val_dict = {
 
     "RB": 0.724,
 
+    "WR": 0.17,
+
     "TE": 0.83,
 
     "OL": 0.87,
@@ -16,11 +18,12 @@ positions = list(r_square_val_dict.keys())
 r_square_values = list(r_square_val_dict.values())
 # Define colors for each position group
 colors = {
-    "QB": "#5DADE2",  # Light Blue
-    "RB": "#76D7C4",  # Mint Green
-    "TE": "#E74C3C",  # Neon Red
-    "OL": "#AF7AC5",  # Purple
-    "Defense": "#58D68D"  # Neon Green
+    "QB": "#5DADE2",       # Light Blue
+    "RB": "#76D7C4",       # Mint Green
+    "WR": "#DDFF03",       # Neon Green
+    "TE": "#E74C3C",       # Neon Red
+    "OL": "#AF7AC5",       # Purple
+    "Defense": "#58D68D"   # Neon
 }
 bar_colors = [colors[pos] for pos in positions]  # Map colors to positions
 
@@ -31,7 +34,7 @@ bars = plt.bar(positions, r_square_values, color=bar_colors, edgecolor='black')
 # Add labels and title
 plt.xlabel('Position Groups', fontsize=12)
 plt.ylabel('R² Value', fontsize=12)
-plt.title('Player Performance R² Model Values by Position Group Using RNN (2022)', fontsize=14)
+plt.title('Player Performance R² Model Values by Position Group for RNN (2022)', fontsize=14)
 plt.ylim(0, 1.1)  # Set y-axis limit to show the full range of R² values
 
 plt.grid(axis='y', linestyle='--', alpha=0.7)
