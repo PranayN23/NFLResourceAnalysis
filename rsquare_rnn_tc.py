@@ -9,7 +9,7 @@ r_square_val_dict = {
 
     "TE": 0.197,
 
-    "OL": 0.87,
+    "OL": 0.90,
 
     "Defense": 0.68
 }
