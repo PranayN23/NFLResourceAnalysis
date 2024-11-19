@@ -5,8 +5,7 @@ r_square_val_dict = {
 
     "RB": 0.6524,
 
-    "WR": 0.4846,
-
+    "WR": 0.6969,
     "TE": 0.19778399995219131, # check with Suhaas later
 
     "OL": 0.8418,
