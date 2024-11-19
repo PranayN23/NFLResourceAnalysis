@@ -1,15 +1,15 @@
 import matplotlib.pyplot as plt
 
 r_square_val_dict = {
-    "QB": 0.7464,
+    "QB": 0.8584,
 
     "RB": 0.72,
 
-    "WR": 0.6969,
+    "WR": 0.7320,
 
     "TE": 0.197,
 
-    "OL": 0.87,
+    "OL": 0.90,
 
     "Defense": 0.68
 }
