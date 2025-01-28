@@ -1,13 +1,20 @@
 "NFL Success Metrics: Unveiling the Winning Formula"
 
-Our GitHub project delves into the intricate dynamics of NFL success, employing a comprehensive analysis of salary cap, draft value, player statistics, and team performance data. Through meticulous examination, we aim to unravel the pivotal positions that dictate triumph in the NFL and identify the strategic allocations of resources such as salary cap space and draft picks.
+Our GitHub project explores the complex dynamics of NFL success, combining in-depth analysis of salary cap, draft value, player statistics, and team performance data. By examining these factors, we aim to uncover the key positions and strategic decisions that drive success in the NFL and provide insights on resource allocation, such as salary cap utilization and draft pick investments.
 
-Our objectives:
+New Addition: Offseason Simulator
+We are excited to introduce a web-based Offseason Simulator that empowers users to experience the decision-making process of NFL front offices. This interactive tool allows you to simulate an offseason by signing free agents, drafting players, and managing trades. Leveraging our predictive models, the simulator will:
 
-Position Importance Assessment: By scrutinizing historical data, we seek to determine which positions wield the greatest influence on team success in the NFL landscape.
-Return on Investment Analysis: We delve into the correlation between salary cap expenditure, draft value, and team performance to discern the positions and strategies that offer the most significant returns.
-Resource Allocation Guidance: Armed with insights gleaned from our analysis, we endeavor to provide actionable recommendations for general managers and coaches on resource allocation strategies, including cap space utilization and draft pick investments.
-Predictive Modeling for Team Success: Leveraging our findings, we aim to develop predictive models to forecast team success in upcoming NFL seasons, offering valuable foresight to stakeholders.
-Throughout the spring semester, we will meticulously analyze data sets, employ advanced statistical methodologies, and leverage machine learning techniques to extract meaningful patterns and insights. Our ultimate aim is to empower decision-makers in the NFL fraternity with actionable intelligence to enhance team performance and drive success in the forthcoming seasons.
+Grade Moves: Evaluate each decision’s impact on your team, considering salary cap efficiency, player potential, and positional needs.
+Predict Player Performance: Forecast changes in individual player performance based on your offseason moves.
+Assess Team Success: Project your team’s overall performance for the upcoming season based on the roster you’ve constructed.
+Project Objectives
+Position Importance Assessment: Analyze historical data to determine which positions have the greatest influence on team success.
+Return on Investment Analysis: Explore the relationship between salary cap spending, draft value, and team performance to identify strategies that yield the highest returns.
+Resource Allocation Guidance: Offer actionable recommendations for general managers and coaches on cap space utilization and draft investments.
+Predictive Modeling for Team Success: Use advanced machine learning models to forecast team success in future NFL seasons.
+Interactive Decision-Making Tool: Enable users to test strategies and see the tangible outcomes of their decisions in our Offseason Simulator.
+Methodology
+Throughout the spring semester, we will analyze extensive data sets, apply advanced statistical techniques, and leverage machine learning to extract patterns and insights. By combining this analysis with our interactive simulator, we aim to provide a comprehensive framework for understanding NFL success.
 
-Join us on this journey as we unravel the secrets behind NFL triumph and chart the course for strategic excellence in professional football.
+Join us as we uncover the keys to NFL triumph, simulate impactful decisions, and pave the way for smarter, data-driven strategies in professional football!
