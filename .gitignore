@@ -1,2 +1,5 @@
 # Exclude the venv directory
 venv/
+
+.DS_Store
+.idea/
