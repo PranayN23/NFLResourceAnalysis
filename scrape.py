@@ -248,6 +248,7 @@ def getValue(info, year):
             return 0
     except Exception as e:
         return 0
+    # value = value^(curr- drafted) 1/4
 
 def web_scrape_data(year):
     """
