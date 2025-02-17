@@ -12,7 +12,7 @@ def main():
     
 
 def get_pff():
-    years = [2018, 2019, 2020, 2021, 2022]
+    years = list(range(2010, 2023))
     for year in years:
         pff = []
         defense = pd.read_csv('PFF/Defense' + str(year) + '.csv')
@@ -128,21 +128,7 @@ def get_pff():
 
         # Drop the 'total_snaps' column if you only want the weighted average in the final result
         qb = qb.drop(columns=['total_snaps']).reset_index()
-        k = pd.read_csv('PFF/K' + str(year) + '.csv')
-        k = k[['player', 'position', 'team_name', 'grades_fgep_kicker']]
-        k.rename(columns={'grades_fgep_kicker': 'weighted_avg_grades'}, inplace=True)
-        p = pd.read_csv('PFF/P' + str(year) + '.csv')
-        p = p[['player', 'position', 'team_name', 'grades_punter']]
-        p.rename(columns={'grades_punter': 'weighted_avg_grades'}, inplace=True)
-        specialists = pd.concat([k, p], axis = 0)
-        position_mapping = {
-            'K': 'K/P/ST',
-            'P': 'K/P/ST',
-        }
-        specialists['position'] = specialists['position'].replace(position_mapping)
-        specialists = specialists.groupby(['team_name', 'position']).mean(numeric_only=True)
-        specialists = specialists.reset_index()
-        result = pd.concat([defense, ol, rb, catchers, qb, specialists], axis=0)
+        result = pd.concat([defense, ol, rb, catchers, qb], axis=0)
         team_mapping = {
     'WAS': 'Commanders',
     'TEN': 'Titans',
