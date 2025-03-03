@@ -12,7 +12,7 @@ def main():
     
 
 def get_pff():
-    years = list(range(2010, 2023))
+    years = list(range(2010, 2025))
     for year in years:
         pff = []
         defense = pd.read_csv('PFF/Defense' + str(year) + '.csv')
@@ -140,6 +140,8 @@ def get_pff():
     'NYJ': 'Jets',
     'NYG': 'Giants',
     'NO': 'Saints',
+    'SL': 'Saints',
+    'SD' : 'Chargers',
     'NE': 'Patriots',
     'MIN': 'Vikings',
     'MIA': 'Dolphins',
