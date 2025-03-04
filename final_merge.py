@@ -6,7 +6,6 @@ from rapidfuzz import process, fuzz
 
 
 data = pd.read_csv("non_pff.csv")
-data = data[['Team', 'Year', 'Player', 'player_id', 'adjusted_value', 'Cap_Space', 'position']]
 positions = ['QB', 'HB', 'WR', 'TE', 'T', 'G', 'C', 'DI', 'ED', 'LB', 'CB', 'S']
 # Drop columns safely (only if they exist in the DataFrame)
 # Merge each position's PFF data using an outer join
@@ -23,42 +22,43 @@ for pos in positions:
         'Year_x', 'merge_player_x', 'fuzzy_matched_player', 'final_player_name',
         'Unnamed: 0_y', 'player', 'team_name'
     ]
-    # Drop specified columns
-    pff.drop(columns=columns_to_drop, inplace=True)
-    pff.rename(columns={'player_id_x': 'player_id'}, inplace=True)
-    pff.rename(columns={'position_x': 'position'}, inplace=True)
-    pff.rename(columns={'season': 'Year'}, inplace=True)
+
 
 
     
     if pos == 'QB':
-        pos_data = data[data['position'] == 'QB']
+        pos_data = data[data['Position'] == 'QB']
+        pos_data.loc[data['player_name'] == "Terrelle Pryor", 'Position'] = 'QB'
     if pos == 'HB':
-        pos_data = data[data['position'] == 'RB']
+        pos_data = data[data['Position'] == 'RB']
     if pos == 'WR':
-        pos_data = data[data['position'] == 'WR']
+        pos_data = data[data['Position'] == 'WR']
     if pos == 'TE':
-        pos_data = data[data['position'] == 'TE']
+        pos_data = data[data['Position'] == 'TE']
     if pos == 'T':
-        pos_data = data[data['position'] == 'OL']
+        pos_data = data[data['Position'].isin(['LT/T', 'LT', 'T', 'RT', 'RT/T', 'RT/G', 'T/G', 'T/RT', 
+                                                        'T/C', 'T/RT', 'LT/G', 'TE/T'])]
     if pos == 'G':
-        pos_data = data[data['position']== 'OL']
+        pos_data = data[data['Position'].isin(['G', 'G/C', 'G/LT', 'G/RT', 'G/T', 'LT/G'])]
     if pos == 'C':
-        pos_data = data[data['position']== 'OL']
+        pos_data = data[data['Position'].isin(['C', 'C/G'])]
     if pos == 'DI':
-        pos_data = data[data['position']== 'DL']
+        pos_data = data[data['Position'].isin(['DT', 'DT/FB', 'DT/DE', 'DE/DT', 'DE'])]
     if pos == 'ED':
-        pos_data = data[data['position'].isin(['DL', 'LB'])]
+        pos_data = data[data['Position'].isin(['DE', 'OLB/DE', 'DE/LB', 'OLB', 'DE/OLB', 'DE/DT'])]
     if pos == 'LB':
-        pos_data = data[data['position'] == 'LB']
+        pos_data = data[data['Position'].isin(['ILB', 'OLB', 'OLB/LB', 'LB', 'ILB/LB', 'OLB/S', 'ILB/S'])]
     if pos == 'CB':
-        pos_data = data[data['position'] == 'CB']
+        pos_data = data[data['Position'].isin(['CB', 'CB/FS', 'CB/PR', 'CB/S'])]
     if pos == 'S':
-        pos_data = data[data['position'] == 'S']
+        pos_data = data[data['Position'].isin(['SS/S', 'S', 'FS/S', 'SS', 'FS', 'SS/CB', 'FS/CB', 'SS/LB', 'S/CB'])]
 
     # Merge using fuzzy-matched names
     position_df = pos_data.merge(pff, left_on=['player_id', 'Team', 'Year'], 
-                                right_on=['player_id', 'Team', 'Year'], how='inner')
+                                right_on=['player_id', 'Team', 'Year'], how='left')
+    position_df.drop(columns=['Unnamed: 0', 'age_x', 'Net EPA_x', 'Win %_x', 'Position', 'player_name', 'pff_id_x', 'pff_id_y'
+                              ,'adjusted_value_x'], inplace=True)
+    position_df.rename(columns={'position_y' : 'position', 'age_y': 'age', 'adjusted_value_y' : 'adjusted_value', 'Net EPA_y' : 'Net EPA', 'Win %_y' : 'Win %'}, inplace=True)
 
     # Add a column to count NaN values in each row
     position_df['nan_count'] = position_df.isna().sum(axis=1)

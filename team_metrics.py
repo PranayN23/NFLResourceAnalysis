@@ -25,6 +25,8 @@ draft.fillna("MISSING", inplace=True)
 print('Draft:', len(draft))
 data = draft.merge(team, left_on=['season', 'team'], right_on=['Year', 'Team'], how='outer')
 print('Data:', len(data))
+data.drop(columns=['Unnamed: 0', 'season', 'team', 'years_exp', 'entry_year', 'rookie_year', 'draft_club', 
+    'pick', 'pff', 'stuart', 'johnson', 'hill', 'otc'], inplace=True)
 data.to_csv("draft.csv")
 
 
@@ -153,6 +155,8 @@ data["final_player_name"] = data["fuzzy_matched_player"].fillna(data["merge_play
 non_pff = data.merge(cap, left_on=["Team", "Year", "final_player_name"], 
                               right_on=["Team", "year", "merge_player"], how="left")
 print('Non-PFF:', len(non_pff))
+non_pff.drop(columns=['merge_player_x','fuzzy_matched_player','final_player_name','Unnamed: 0','Player','position',
+'year','merge_player_y'], inplace=True)
 non_pff.to_csv('non_pff.csv')
 
 

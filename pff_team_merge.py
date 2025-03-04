@@ -78,26 +78,18 @@ for pos in positions:
     if pos == 'CB':
         pos_data = data[data['position'] == 'CB']
     if pos == 'S':
-        pos_data = data[data['position'] == 'S']
+        pos_data = data[data['position'] == 'CB']
+    print(pos_data.columns)
+    print(pff.columns)
 
     # Merge using fuzzy-matched names
-    position_df = pos_data.merge(pff, left_on=['final_player_name', 'Team', 'season'], 
-                                right_on=['merge_player', 'Team', 'Year'], how='right')
+    position_df = pos_data.merge(pff, left_on=['final_player_name', 'Team', 'Year'], 
+                                right_on=['merge_player', 'Team', 'Year'], how='left')
     print(f"{pos} Merged:", len(position_df))
+        # Merge using fuzzy-matched names
+    position_df.drop(columns=['Unnamed: 0_x', 'position_x', 'player_name', 'merge_player_x','fuzzy_matched_player','final_player_name','Unnamed: 0_y', 'player_id_y','team_name', 'merge_player_y'], inplace=True)
+    position_df.rename(columns={'player_id_x': 'player_id', 'position_y': 'position'}, inplace=True)
 
-    # Save NaN rows after each position merge
-    pos_nan_rows = position_df[position_df.isna().any(axis=1)]
-    pos_nan_rows.to_csv(f'{pos}_rows_with_nans.csv', index=False)
-    print(f"Rows with NaN values in {pos} Merged: {len(pos_nan_rows)}")
-    players_with_multiple_nans = pos_nan_rows['merge_player_x'].value_counts()
-
-    # Filter players who have more than one missing data row
-    players_with_multiple_nans = players_with_multiple_nans[players_with_multiple_nans > 1]
-
-    # Print the players who have multiple rows with missing data (excluding those with 'MISSING' in any row)
-    print("Players with multiple rows containing NaNs (excluding those with 'MISSING' in any row):", players_with_multiple_nans)
-
-    print(len(players_with_multiple_nans))
 
     sum += len(position_df)
     position_df.to_csv(f'{pos}_no_cap.csv', index=False)
