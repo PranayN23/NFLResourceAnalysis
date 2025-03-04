@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 r_square_val_dict = {
-    "QB": 0.6389,
+    "QB": 0.6755,
 
     "RB": 0.724,
 
@@ -9,7 +9,7 @@ r_square_val_dict = {
 
     "TE": 0.83,
 
-    "OL": 0.87,
+    "OL": 0.64,
 
     "Defense": 0.82
 }
