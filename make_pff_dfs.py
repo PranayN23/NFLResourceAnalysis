@@ -7,7 +7,7 @@ def get_pff():
               'DI' : 'snap_counts_defense', 'ED' : 'snap_counts_defense', 'LB' : 'snap_counts_defense',
               'CB' : 'snap_counts_defense', 'S' : 'snap_counts_defense'}
     positions = {'QB' : [
-                'player', 'team_name', 'position', 'accuracy_percent', 'aimed_passes', 'attempts', 'avg_depth_of_target',
+                'player', 'player_id', 'team_name', 'position', 'accuracy_percent', 'aimed_passes', 'attempts', 'avg_depth_of_target',
                 'avg_time_to_throw', 'bats', 'big_time_throws', 'btt_rate', 
                 'completion_percent', 'completions', 'declined_penalties', 
                 'def_gen_pressures', 'drop_rate', 'dropbacks', 'drops', 
@@ -19,7 +19,7 @@ def get_pff():
                 'touchdowns', 'turnover_worthy_plays', 'twp_rate', 
                 'yards', 'ypa'
             ], 'HB' : [
-            'player', 'team_name', 'position', 'attempts', 'avoided_tackles', 'breakaway_attempts', 'breakaway_percent',
+            'player', 'player_id', 'team_name', 'position', 'attempts', 'avoided_tackles', 'breakaway_attempts', 'breakaway_percent',
             'breakaway_yards', 'declined_penalties', 'designed_yards', 'drops',
             'elu_recv_mtf', 'elu_rush_mtf', 'elu_yco', 'elusive_rating', 'explosive',
             'first_downs', 'franchise_id', 'fumbles', 'gap_attempts', 'grades_hands_fumble',
@@ -29,7 +29,7 @@ def get_pff():
             'targets', 'total_touches', 'touchdowns', 'yards', 'yards_after_contact',
             'yco_attempt', 'ypa', 'yprr', 'zone_attempts'
         ], 'WR' : [
-            'player', 'team_name', 'position', 'avg_depth_of_target', 'avoided_tackles', 'caught_percent', 'contested_catch_rate',
+            'player', 'player_id', 'team_name', 'position', 'avg_depth_of_target', 'avoided_tackles', 'caught_percent', 'contested_catch_rate',
             'contested_receptions', 'contested_targets', 'declined_penalties', 'drop_rate', 'drops',
             'first_downs', 'franchise_id', 'fumbles', 'grades_hands_drop', 'grades_hands_fumble',
             'grades_offense', 'grades_pass_block', 'grades_pass_route', 'inline_rate',
@@ -39,7 +39,7 @@ def get_pff():
             'yards_after_catch_per_reception', 'yards_per_reception', 'yprr', 'inline_snaps',
             'slot_snaps', 'wide_snaps'
         ], 'TE': [
-        'player', 'team_name', 'position', "avg_depth_of_target", "avoided_tackles", "caught_percent",
+        'player', 'player_id', 'team_name', 'position', "avg_depth_of_target", "avoided_tackles", "caught_percent",
         "contested_catch_rate", "contested_receptions", "contested_targets",
         "declined_penalties", "drop_rate", "drops", "first_downs",
         "franchise_id", "fumbles", "grades_hands_drop", "grades_hands_fumble",
@@ -51,7 +51,7 @@ def get_pff():
         "wide_snaps", "yards", "yards_after_catch", "yards_after_catch_per_reception",
         "yards_per_reception", "yprr", "snap_counts_pass_block", "snap_counts_run_block"
         ], 'T' : [
-            'player', 'team_name', 'position', "block_percent", "declined_penalties", "franchise_id", "grades_offense",
+            'player', 'player_id', 'team_name', 'position', "block_percent", "declined_penalties", "franchise_id", "grades_offense",
             "grades_pass_block", "grades_run_block", "hits_allowed", "hurries_allowed",
             "non_spike_pass_block", "non_spike_pass_block_percentage", "pass_block_percent",
             "pbe", "penalties", "pressures_allowed", "sacks_allowed", "snap_counts_block",
@@ -59,7 +59,7 @@ def get_pff():
             "snap_counts_pass_block", "snap_counts_pass_play", "snap_counts_rg",
             "snap_counts_rt", "snap_counts_run_block", "snap_counts_te"
         ], 'G' : [
-            'player', 'team_name', 'position', "block_percent", "declined_penalties", "franchise_id", "grades_offense",
+            'player', 'player_id', 'team_name', 'position', "block_percent", "declined_penalties", "franchise_id", "grades_offense",
             "grades_pass_block", "grades_run_block", "hits_allowed", "hurries_allowed",
             "non_spike_pass_block", "non_spike_pass_block_percentage", "pass_block_percent",
             "pbe", "penalties", "pressures_allowed", "sacks_allowed", "snap_counts_block",
@@ -67,7 +67,7 @@ def get_pff():
             "snap_counts_pass_block", "snap_counts_pass_play", "snap_counts_rg",
             "snap_counts_rt", "snap_counts_run_block", "snap_counts_te"
         ], 'C' : [
-            'player', 'team_name', 'position', "block_percent", "declined_penalties", "franchise_id", "grades_offense",
+            'player', 'player_id', 'team_name', 'position', "block_percent", "declined_penalties", "franchise_id", "grades_offense",
             "grades_pass_block", "grades_run_block", "hits_allowed", "hurries_allowed",
             "non_spike_pass_block", "non_spike_pass_block_percentage", "pass_block_percent",
             "pbe", "penalties", "pressures_allowed", "sacks_allowed", "snap_counts_block",
@@ -173,8 +173,6 @@ def get_pff():
                 'SL' : 'Rams', 'SD' : 'Chargers'
             }
             df = df[output_columns]
-            print(year)
-            print(pos)
             if pos == 'WR':
                 df['total_snaps'] = df['inline_snaps'] + df['slot_snaps'] + df['wide_snaps']
             if pos == 'TE':
@@ -190,10 +188,6 @@ def get_pff():
             df.columns = df.columns.str.strip()
 
             # Print columns to check if 'passing_snaps' exists
-            print(df.columns)
-
-            # Print counts[pos] to ensure it's a valid column
-            print(f"Accessing column: {counts[pos]}")
 
             # Perform the groupby and transformation
             df['weighted_average_grade'] = df.groupby(['Team', 'position', 'Year']).apply(
