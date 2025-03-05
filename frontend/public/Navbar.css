@@ -1,0 +1,69 @@
+/* 
+  Navbar.css 
+  A dark-themed, pinned navbar with a logo on the left 
+  and links on the right.
+*/
+
+/* The main navbar container (pinned at the top) */
+.navbar-container {
+    position: fixed;    /* stays at the top even when you scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;    
+  
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2c2352; /* Purple/dark color for the navbar */
+    color: #ffffff;
+    box-sizing: border-box; /* ensures padding is part of total width */
+  }
+  
+  /* LOGO SECTION */
+  .navbar-logo {
+    /* You can add custom styling or positioning for your logo here */
+  }
+  
+  .logo-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+    /* Adjust any spacing around the logo text or image if needed */
+  }
+  
+  /* If you are using an <img> for the logo, you could style it like so:
+  .logo-img {
+    height: 40px;
+    object-fit: contain;
+  }
+  */
+  /* Navbar.css */
+  .navbar-logo img {
+    height: 40px;         /* adjust as desired */
+    width: 40px;          /* same value as height to form a circle */
+    object-fit: cover;    /* ensures the image fills the circle without distortion */
+    border-radius: 50%;   /* makes the image circular */
+  }
+  
+  
+  /* NAV LINKS SECTION */
+  .navbar-links {
+    display: flex;
+    gap: 2.5rem; /* Space between links */
+  }
+  
+  /* Navbar link styles */
+  .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 500;
+  }
+  
+  .nav-link:hover {
+    color: #b8a3ff; /* Subtle purple hover color */
+  }
+  
