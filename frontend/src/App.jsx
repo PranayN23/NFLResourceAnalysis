@@ -1,19 +1,32 @@
 import { useState } from 'react'
 import axios from 'axios'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [position, setPosition] = useState('QB')
+  const [team, setTeam] = useState('Seahawks')
+  const [player, setPlayer] = useState('Player 1')
 
-  // Function to call the API when the button is clicked
-  const handleUpload = async () => {
+  const positions = ['QB', 'RB', 'WR', 'TE', 'T', 'G', 'C', 'ED', 'DI', 'LB', 'CB', 'S']
+  const teams = [
+    'Seahawks', 'Cardinals', '49ers', 'Rams', 'Cowboys', 'Giants', 'Eagles', 'Commanders',
+    'Bears', 'Lions', 'Packers', 'Vikings', 'Falcons', 'Panthers', 'Saints', 'Buccaneers',
+    'Bills', 'Dolphins', 'Patriots', 'Jets', 'Ravens', 'Bengals', 'Browns', 'Steelers',
+    'Texans', 'Colts', 'Jaguars', 'Titans', 'Broncos', 'Chiefs', 'Raiders', 'Chargers'
+  ]
+  const players = teams.reduce((acc, team) => {
+    acc[team] = ['Player 1', 'Player 2', 'Player 3']
+    return acc
+  }, {})
+
+  // Function to call the API with selected values
+  const handleSubmit = async () => {
     try {
-      // Call the backend API to trigger the upload action
-      const response = await axios.post('http://127.0.0.1:5000/upload_data')
-      
-      // Log the response from the server
+      const response = await axios.post('http://127.0.0.1:5000/get_player_data', {
+        position,
+        team,
+        player
+      })
       console.log('Response from server:', response.data)
       alert('API called successfully!')
     } catch (error) {
@@ -23,28 +36,40 @@ function App() {
   }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="container">
+      <nav className="navbar">
+        <h1 className="title">ML@Purdue: NFL Player Analysis</h1>
+        <a href="/results" className="nav-link">Results</a>
+      </nav>
+      <header>
+        <h2>Player Selection</h2>
+      </header>
+
+      <div className="form-container">
+        <div className="form-group">
+          <label>Position:</label>
+          <select value={position} onChange={(e) => setPosition(e.target.value)}>
+            {positions.map(pos => <option key={pos} value={pos}>{pos}</option>)}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Team:</label>
+          <select value={team} onChange={(e) => setTeam(e.target.value)}>
+            {teams.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Player:</label>
+          <select value={player} onChange={(e) => setPlayer(e.target.value)}>
+            {players[team].map(p => <option key={p} value={p}>{p}</option>)}
+          </select>
+        </div>
+
+        <button className="submit-button" onClick={handleSubmit}>Submit</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => { setCount(count + 1); handleUpload() }}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
