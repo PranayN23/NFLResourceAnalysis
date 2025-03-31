@@ -23,6 +23,58 @@ client = MongoClient(mongo_uri)
 # ✅ Define position names
 positions = ['qb', 'hb', 'wr', 'te', 't', 'g', 'c', 'di', 'ed', 'lb', 'cb', 's']
 
+position_fields = {
+    "S": ["age", "snap_counts", "assists", "grades_defense", "grades_tackles", "forced_fumbles",
+          "fumble_recoveries", "interceptions", "interception_touchdown", "missed_tackle_rate",
+          "pass_break_ups", "tackles", "receptions", "touchdowns", "yards", "stops"],
+
+    "CB": ["age", "snap_counts", "grades_tackles", "grades_coverage_defense", "grades_defense",
+           "interceptions", "pass_break_ups", "qb_rating_against", "receptions", "stops",
+           "targets", "touchdowns", "yards"],
+
+    "DI": ["age", "snap_counts_defense", "assists", "batted_passes", "forced_fumbles",
+           "grades_defense", "grades_coverage_defense", "grades_pass_rush_defense",
+           "grades_run_defense", "hits", "hurries", "missed_tackle_rate", "sacks",
+           "stops", "tackles", "tackles_for_loss", "total_pressures"],
+
+    "ED": ["age", "snap_counts_defense", "assists", "batted_passes", "forced_fumbles",
+           "grades_defense", "grades_pass_rush_defense", "grades_run_defense",
+           "hits", "hurries", "missed_tackle_rate", "sacks", "stops", "tackles",
+           "tackles_for_loss", "total_pressures"],
+
+    "LB": ["age", "snap_counts_defense", "assists", "batted_passes", "forced_fumbles",
+           "grades_defense", "grades_coverage_defense", "grades_pass_rush_defense",
+           "grades_run_defense", "grades_tackle", "hits", "interception",
+           "missed_tackle_rate", "passed_break_ups", "penalties", "sacks", "stops",
+           "tackles", "tackles_for_loss", "total_pressures"],
+
+    "QB": ["age", "completion_percent", "avg_time_to_throw", "qb_rating", "interceptions",
+           "sack_percent", "passing_snaps", "touchdowns", "yards", "ypa"],
+
+    "T": ["age", "hits_allowed", "hurries_allowed", "penalties", "grades_pass_block",
+          "grades_run_block", "pressures_allowed", "sacks_allowed", "snap_counts_offense"],
+
+    "G": ["age", "hits_allowed", "hurries_allowed", "penalties", "grades_pass_block",
+          "grades_run_block", "pressures_allowed", "sacks_allowed", "snap_counts_offense"],
+
+    "C": ["age", "hits_allowed", "hurries_allowed", "penalties", "grades_pass_block",
+          "grades_run_block", "pressures_allowed", "sacks_allowed", "snap_counts_offense"],
+
+    "TE": ["age", "caught_percent", "contested_catch_rate", "fumbles", "grades_pass_block",
+           "penalties", "receptions", "targets", "touchdowns", "yards_after_catch",
+           "yards_per_reception", "total_snaps"],
+
+    "WR": ["age", "caught_percent", "contested_catch_rate", "drop_rate", "receptions",
+           "targeted_qb_rating", "targets", "touchdowns", "yards",
+           "yards_after_catch_per_reception", "yprr", "total_snaps"],
+
+    "HB": ["age", "attempts", "avoided_tackles", "breakaway_percent", "breakaway_yards",
+           "elusive_rating", "explosive", "first_down", "fumbles", "grades_offense",
+           "grades_run", "grades_pass", "grades_pass_block", "longest", "rec_yards",
+           "receptions", "total_touches", "touchdowns", "yards", "yards_after_contact",
+           "yco_attempt", "ypa", "yprr"]
+}
+
 @app.route("/health", methods=["GET"])
 def health_check():
     return jsonify({"message": "Server is running!", "status": "healthy"}), 200
