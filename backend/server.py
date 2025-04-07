@@ -75,6 +75,109 @@ position_fields = {
            "yco_attempt", "ypa", "yprr"]
 }
 
+# Mapping each position to the corresponding weight field(s) and grade field.
+# For each position, the first element represents the weight factor (what to average by)
+# and the second element represents the grade to average.
+position_fields = {
+    "C":   ("snap_counts_offense",  "grades_offense"),
+    "CB":  ("snap_counts_corner",     "grades_defense"),
+    "DI":  ("snap_counts_dl",         "grades_defense"),
+    "ED":  ("snap_counts_dl",         "grades_defense"),
+    "G":   ("snap_counts_offense",    "grades_offense"),
+    "HB":  ("total_touches",          "grades_offense"),
+    "LB":  ("snap_counts_offball",    "grades_defense"),
+    "QB":  ("passing_snaps",          "grades_offense"),
+    "S":   (["snap_counts_box", "snap_counts_fs", "snap_counts_coverage", "snap_counts_slot"], "grades_defense"),
+    "T":   ("snap_counts_offense",    "grades_offense"),
+    "TE":  ("total_snaps",            "grades_offense"),
+    "WR":  ("total_snaps",            "grades_offense")
+}
+
+@app.route('/weighted-average-grade', methods=['GET'])
+def weighted_average_grade():
+    """
+    Expects a JSON payload with:
+      - team: e.g., "49ers"
+      - position: e.g., "QB"
+      - year: e.g., 2021
+      
+    The endpoint will query the MongoDB collection for the provided position (e.g., "QB")
+    and compute the weighted average grade based on the provided mapping:
+      - The weight field(s) is used to compute the total weight.
+      - The grade field is multiplied by the respective weight for each player.
+    """
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No JSON payload provided"}), 400
+
+    team = data.get("team")
+    position = data.get("position")
+    year = data.get("year")
+
+    if not team or not position or not year:
+        return jsonify({"error": "Missing required parameters: team, position, and year"}), 400
+
+    try:
+        year = int(year)
+    except ValueError:
+        return jsonify({"error": "Year must be an integer"}), 400
+
+    # Ensure the position is standardized to uppercase to match the keys in our mapping.
+    pos = position.upper()
+    if pos not in position_fields:
+        return jsonify({"error": f"Unknown position: {position}"}), 400
+
+    # Unpack the mapping for the position.
+    weight_field, grade_field = position_fields[pos]
+
+    # Access the relevant MongoDB collection based on the position.
+    collection = db[pos]
+
+    # Query documents for the given team and year.
+    # Adjust field names ("Team" and "Year") if needed based on your MongoDB documents.
+    query = {"Team": team, "Year": year}
+    cursor = collection.find(query)
+
+    total_weighted_grade = 0.0
+    total_weight = 0.0
+
+    # Iterate through the documents.
+    for doc in cursor:
+        # Retrieve and convert the grade value.
+        try:
+            grade = float(doc.get(grade_field, 0))
+        except (ValueError, TypeError):
+            grade = 0.0
+
+        # Retrieve the weighting value(s).
+        weight_value = 0.0
+        if isinstance(weight_field, list):
+            # For a list of fields (example: for "S" position), sum their values.
+            for wf in weight_field:
+                try:
+                    weight_value += float(doc.get(wf, 0))
+                except (ValueError, TypeError):
+                    weight_value += 0.0
+        else:
+            try:
+                weight_value = float(doc.get(weight_field, 0))
+            except (ValueError, TypeError):
+                weight_value = 0.0
+
+        # Only use documents with a positive weight.
+        if weight_value > 0:
+            total_weighted_grade += grade * weight_value
+            total_weight += weight_value
+
+    # Calculate the weighted average grade.
+    weighted_average = total_weighted_grade / total_weight if total_weight > 0 else 0.0
+
+    return jsonify({
+        "team": team,
+        "position": position,
+        "year": year,
+        "weighted_average_grade": weighted_average
+    }), 200
 
 @app.route("/health", methods=["GET"])
 def health_check():
