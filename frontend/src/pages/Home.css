@@ -1,0 +1,73 @@
+/* Container that covers the entire viewport */
+.container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #0d0d2b; /* Dark navy background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff; /* White text on dark background */
+  font-family: Arial, sans-serif;
+}
+
+/* Page title */
+header h2 {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: normal;
+  text-align: center;
+}
+
+/* Form container */
+.form-container {
+  background-color: #2c2352; /* Dark purple for the form background */
+  border-radius: 0.5rem;
+  padding: 2rem;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Labels for the inputs */
+.form-group label {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #dddddd; /* Light text for labels */
+}
+
+/* Select dropdown styling */
+select {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  background-color: #1f1b3d; /* Dark background for dropdown */
+  color: #ffffff; /* White text in the dropdown */
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for select dropdown */
+select:hover {
+  background-color: #3a2e67;
+}
+
+/* Submit button */
+.submit-button {
+  background-color: #0f3d2e; /* Dark green button */
+  color: #ffffff;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 0.7rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for submit button */
+.submit-button:hover {
+  background-color: #145943; /* Lighter green on hover */
+}
