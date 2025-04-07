@@ -57,4 +57,19 @@ header h2 {
   text-align: left;
 }
 
+.player-button {
+  background: none;
+  border: none;
+  color: #0077cc;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.player-button:hover {
+  color: #005fa3;
+}
+
+
 /* Optionally add a button or additional content styles as needed */
