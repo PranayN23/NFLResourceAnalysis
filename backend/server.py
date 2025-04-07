@@ -166,6 +166,7 @@ def signup_handler():
         if existing_user:
             return jsonify({"message": "User already exists."}), 409
 
+
         new_user = {
             "email": email,
             "password": password,
