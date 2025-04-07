@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 import './Navbar.css';
+import mlLogo from './assets/mlpurdue-logo.png';
+import pffLogo from './assets/pff-logo.jpeg';
 
 const Navbar = () => {
     return (
         <div id="navbar-container">
-            <div id="navbar-title">
-                ML @Purdue: NFL Resource Allocation
+            <div id="navbar-left">
+                <img src={mlLogo} alt="ML Purdue Logo" className="navbar-logo" />
+                <img src={pffLogo} alt="PFF Logo" className="navbar-logo" />
+                <div id="navbar-title">ML @Purdue: NFL Resource Allocation</div>
             </div>
 
             <div id="navbar-links">
@@ -15,7 +19,7 @@ const Navbar = () => {
                 <Link to="/results">Results</Link>
             </div>
         </div>
-    )
+    );
 };
 
 export default Navbar;

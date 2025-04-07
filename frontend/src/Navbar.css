@@ -1,11 +1,45 @@
 #navbar-container {
+  width: 100vw;  /* Make the navbar span the full width of the viewport */
   display: flex;
   justify-content: space-between;
-  padding: 16px;
-  box-sizing: border-box;
+  align-items: center;
+  background-color: #0f0f0f;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #333;
+  box-sizing: border-box; /* Keeps padding inside the width */
+}
+
+
+
+#navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-logo {
+  height: 50px;
+  object-fit: contain;
+}
+
+#navbar-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 #navbar-links {
   display: flex;
-  gap: 8px;
+  gap: 1.5rem;
+}
+
+#navbar-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+#navbar-links a:hover {
+  color: #ffcc00;
 }

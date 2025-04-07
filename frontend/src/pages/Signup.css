@@ -1,66 +1,87 @@
-/* 
-  Signup.css
-  Styles for the signup page to match your dark Figma theme
-*/
+/* Signup.css */
+/* Adjusting the theme to match Home.css */
 
 /* Container that covers the entire viewport */
 .signup-container {
-    width: 100vw;
-    height: 100vh;
-    background-color: #0d0d2b; /* Same dark navy as the Login */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff; /* White text on dark background */
-  }
-  
-  /* Page title */
-  .signup-title {
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
-    font-weight: normal;
-  }
-  
-  /* The form container (similar style to Login form) */
-  .signup-form {
-    background-color: #2c2352; /* Purple/dark color for the form box */
-    border-radius: 0.5rem;
-    padding: 2rem;
-    width: 300px; /* Adjust to match your design */
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Labels for the inputs */
-  .signup-label {
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  /* Inputs for username, password, confirm password */
-  .signup-input {
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: none;
-    border-radius: 0.3rem;
-    font-size: 0.9rem;
-    outline: none;
-  }
-  
-  /* The Sign Up button */
-  .signup-button {
-    background-color: #0f3d2e; /* Same dark green as the login button */
-    color: #ffffff;
-    border: none;
-    border-radius: 0.3rem;
-    padding: 0.7rem;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  
-  /* Hover effect for button */
-  .signup-button:hover {
-    background-color: #145943;
-  }
-  
+  width: 100vw;
+  height: 100vh;
+  background-color: #0f0f0f; /* Dark background to match Home.css */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff; /* White text */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistent font */
+}
+
+/* Page title */
+.signup-title {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #ffffff; /* White text */
+}
+
+/* The form container */
+.signup-form {
+  background-color: #1a1a1a; /* Dark grey to match Home.css */
+  border-radius: 1rem; /* Rounded corners */
+  padding: 2rem;
+  width: 300px; /* Adjust width */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Reduced gap between form elements */
+  border: 1px solid #333; /* Subtle border for better contrast */
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05); /* Soft shadow */
+}
+
+/* Labels for the inputs */
+.signup-label {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #cccccc; /* Light grey color for labels */
+  font-weight: 500;
+}
+
+/* Inputs for username, password, confirm password */
+.signup-input {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #444; /* Dark border */
+  border-radius: 0.5rem;
+  background-color: #222; /* Dark background for inputs */
+  color: #ffffff; /* White text in inputs */
+  font-size: 1rem;
+  outline: none;
+}
+
+.signup-input:focus {
+  border-color: #888; /* Highlight border color on focus */
+}
+
+/* The Sign Up button */
+.signup-button {
+  background-color: #ffffff; /* White button to contrast dark theme */
+  color: #0f0f0f; /* Dark text for button */
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.7rem;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hover effect for button */
+.signup-button:hover {
+  background-color: #e0e0e0;
+  color: #0f0f0f; /* Dark color on hover */
+}
+
+/* Footer logo or branding */
+.footer-logo {
+  margin-top: 2rem;
+  height: 40px;
+  object-fit: contain;
+  opacity: 0.8; /* Slightly transparent logo */
+}
