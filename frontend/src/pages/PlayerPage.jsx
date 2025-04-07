@@ -15,9 +15,9 @@ const PlayerPage = () => {
         team: 'Seahawks',
         position: 'QB',
         advancedStats: {
-          EPA: '+0.25',
-          SuccessRate: '52%',
-          AirYardsPerAttempt: '8.1',
+          PFF: '70',
+          Touchdowns: '40',
+          BTT: '15',
         },
       };
       setPlayerData(dummyData);
@@ -38,9 +38,9 @@ const PlayerPage = () => {
       <div className="advanced-stats">
         <h4>Advanced Stats:</h4>
         <ul>
-          <li><strong>EPA:</strong> {playerData.advancedStats.EPA}</li>
-          <li><strong>Success Rate:</strong> {playerData.advancedStats.SuccessRate}</li>
-          <li><strong>Air Yards/Attempt:</strong> {playerData.advancedStats.AirYardsPerAttempt}</li>
+          <li><strong>PFF Grade:</strong> {playerData.advancedStats.PFF}</li>
+          <li><strong>Touchdowns:</strong> {playerData.advancedStats.Touchdowns}</li>
+          <li><strong>Big Time Throws:</strong> {playerData.advancedStats.BTT}</li>
         </ul>
       </div>
     </div>
