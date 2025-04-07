@@ -65,6 +65,75 @@ def upload_data():
     return jsonify({"message": "Data uploaded for all available positions!"}), 200
 
 
+@app.route("/login", methods=["POST"])
+def login_handler():
+    try:
+        data = request.get_json()
+        email = data.get("username")
+        password = data.get("password")
+
+        print("\n🔹 LOGIN REQUEST RECEIVED")
+        print(f"🔸 Email: {email}, Password: {'*' * len(password) if password else ''}")
+
+        if not email or not password:
+            return jsonify({"message": "Email and password are required."}), 400
+        db = client["users"]
+        collection = db["users"]
+
+        user = collection.find_one({"email": email})
+        if not user:
+            return jsonify({"message": "Incorrect username. User does not exist"}), 401
+
+        if user["password"] != password:
+            return jsonify({"message": "Incorrect password."}), 401
+
+        user["_id"] = str(user["_id"])
+        return jsonify(user), 200
+
+    except Exception as e:
+        print(f"❌ LOGIN ERROR: {e}")
+        return jsonify({"message": "Internal server error."}), 500
+
+
+# ✅ Signup Route (Requires Resume Upload)
+@app.route("/signup", methods=["POST"])
+def signup_handler():
+    try:
+        email = request.form.get("username")
+        password = request.form.get("password")
+
+        print("\n🔹 SIGNUP REQUEST RECEIVED")
+
+        if not email or not password:
+            return jsonify({"message": "Username and password are required."}), 400
+        db = client["users"]
+        collection = db["users"]
+
+        existing_user = collection.find_one({"email": email})
+        if existing_user:
+            return jsonify({"message": "User already exists."}), 409
+
+
+        new_user = {
+            "email": email,
+            "password": password,
+        }
+        insert_result = collection.insert_one(new_user)
+        if not insert_result.acknowledged:
+            return jsonify({"message": "User creation failed."}), 500
+
+        return jsonify(
+            {
+                "id": str(insert_result.inserted_id),
+                "email": email,
+            }
+        ), 201
+
+    except Exception as e:
+        print(f"❌ SIGNUP ERROR: {e}")
+        return jsonify({"message": f"Internal Server Error: {e}"}), 500
+
+
 if __name__ == "__main__":
     try:
         client.admin.command("ping")
