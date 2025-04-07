@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Results from './pages/Results';
+import PlayerPage from './pages/PlayerPage'
 
 import './App.css';
 
@@ -23,6 +24,8 @@ function App() {
           <Route path="/login" element={<Login/>}/>
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/results" element={<Results/>}/>
+          <Route path="/player/:playerName" element={<PlayerPage />} />
+
         </Routes>
 
       </BrowserRouter>
