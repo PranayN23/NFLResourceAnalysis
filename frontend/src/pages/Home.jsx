@@ -3,10 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './Home.css';
 
-function App() {
-  const [position, setPosition] = useState('QB');
-  const [team, setTeam] = useState('Seahawks');
-  const [player, setPlayer] = useState('Player 1');
+function Home() {
+  const [position, setPosition] = useState('All');  // Default to 'All' for position
+  const [team, setTeam] = useState('All');          // Default to 'All' for team
+  const [player, setPlayer] = useState('All');      // Default to 'All' for player
 
   const positions = ['QB', 'RB', 'WR', 'TE', 'T', 'G', 'C', 'ED', 'DI', 'LB', 'CB', 'S'];
   const teams = [
@@ -15,6 +15,7 @@ function App() {
     'Bills', 'Dolphins', 'Patriots', 'Jets', 'Ravens', 'Bengals', 'Browns', 'Steelers',
     'Texans', 'Colts', 'Jaguars', 'Titans', 'Broncos', 'Chiefs', 'Raiders', 'Chargers'
   ];
+  
   const players = teams.reduce((acc, team) => {
     acc[team] = ['Player 1', 'Player 2', 'Player 3'];
     return acc;
@@ -26,9 +27,9 @@ function App() {
   const handleSubmit = async () => {
     try {
       const response = await axios.post('http://127.0.0.1:5000/get_player_data', {
-        position,
-        team,
-        player
+        position: position === 'All' ? null : position, // Send null if 'All' is selected
+        team: team === 'All' ? null : team,             // Send null if 'All' is selected
+        player: player === 'All' ? null : player        // Send null if 'All' is selected
       });
       console.log('Response from server:', response.data);
       alert('API called successfully!');
@@ -39,7 +40,6 @@ function App() {
       console.error('Error calling the API:', error);
       alert('Error calling the API.');
       navigate('/results'); // Adjust the path as necessary
-
     }
   };
 
@@ -53,6 +53,7 @@ function App() {
         <div className="form-group">
           <label>Position:</label>
           <select value={position} onChange={(e) => setPosition(e.target.value)}>
+            <option value="All">All</option>
             {positions.map(pos => <option key={pos} value={pos}>{pos}</option>)}
           </select>
         </div>
@@ -60,6 +61,7 @@ function App() {
         <div className="form-group">
           <label>Team:</label>
           <select value={team} onChange={(e) => setTeam(e.target.value)}>
+            <option value="All">All</option>
             {teams.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         </div>
@@ -67,7 +69,8 @@ function App() {
         <div className="form-group">
           <label>Player:</label>
           <select value={player} onChange={(e) => setPlayer(e.target.value)}>
-            {players[team].map(p => <option key={p} value={p}>{p}</option>)}
+            <option value="All">All</option>
+            {players[team]?.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
 
@@ -77,4 +80,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;

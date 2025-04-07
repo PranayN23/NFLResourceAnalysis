@@ -31,14 +31,18 @@ const PlayerPage = () => {
   return (
     <div className="player-page">
       <h2>{playerData.name} - Advanced Stats</h2>
-      <p>Team: {playerData.team}</p>
-      <p>Position: {playerData.position}</p>
-      <h4>Advanced Stats:</h4>
-      <ul>
-        <li>EPA: {playerData.advancedStats.EPA}</li>
-        <li>Success Rate: {playerData.advancedStats.SuccessRate}</li>
-        <li>Air Yards/Attempt: {playerData.advancedStats.AirYardsPerAttempt}</li>
-      </ul>
+      <div className="player-info">
+        <p><strong>Team:</strong> {playerData.team}</p>
+        <p><strong>Position:</strong> {playerData.position}</p>
+      </div>
+      <div className="advanced-stats">
+        <h4>Advanced Stats:</h4>
+        <ul>
+          <li><strong>EPA:</strong> {playerData.advancedStats.EPA}</li>
+          <li><strong>Success Rate:</strong> {playerData.advancedStats.SuccessRate}</li>
+          <li><strong>Air Yards/Attempt:</strong> {playerData.advancedStats.AirYardsPerAttempt}</li>
+        </ul>
+      </div>
     </div>
   );
 };
