@@ -1,0 +1,72 @@
+/* ====================== */
+/* 1) GLOBAL RESET        */
+/* ====================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* ====================== */
+  /* 2) BODY STYLING        */
+  /* ====================== */
+  html, body {
+    width: 100%;
+    height: 100%;
+    background-color: #1b1b1b; /* Dark page background (adjust as needed) */
+    font-family: 'Jersey 25', sans-serif; /* Fallback to sans-serif */
+    /* No margin or padding here, so no extra spacing at top */
+  }
+  
+  /* If you have a custom navbar/header, ensure it's not adding top margin/padding */
+  header, nav, .navbar, .header {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* ====================== */
+  /* 3) FREE AGENCY STYLES  */
+  /* ====================== */
+  .free-agency-container {
+    /* Minimal margin to let it breathe just a little from the top */
+    margin: 20px auto;
+    max-width: 400px;
+    padding: 30px;
+    background-color: #2e2e2e;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .free-agency-title {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 24px;
+  }
+  
+  .free-agency-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-label {
+    color: #ffffff;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  
+  .input-field {
+    background-color: #3c3c3c;
+    color: #ffffff;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    outline: none;
+    font-size: 14px;
+  }
+  
+  .input-field::placeholder {
+    color: #cccccc;
+  }
+  
