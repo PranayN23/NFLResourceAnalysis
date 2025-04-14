@@ -6,6 +6,7 @@ import re
 import pandas as pd
 from bson import ObjectId
 
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,9 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 # ✅ Connect to MongoDB
-mongo_uri = (
-    "mongodb+srv://pranaynandkeolyar:nfl@cluster0.4nbxj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-)
+mongo_uri = (    "mongodb+srv://pranaynandkeolyar:nfl@cluster0.4nbxj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 client = MongoClient(mongo_uri)
 
@@ -189,7 +188,6 @@ def upload_data():
     # Load data for each position CSV
     for position in positions:
         file_path = f"{position.upper()}.csv"  # File name convention: QB.csv, RB.csv, etc.
-
         # Check if the file exists
         if os.path.exists(file_path):
             try:
@@ -198,6 +196,7 @@ def upload_data():
 
                 # Convert the DataFrame to a list of dictionaries
                 data = df.to_dict(orient="records")
+                
 
                 # Connect to the database specific to the position
                 position_db = client[position.upper()]  # e.g., 'qb', 'rb', etc.
@@ -211,7 +210,6 @@ def upload_data():
 
                     # Insert the record into the team collection
                     team_collection.insert_one(record)
-
                 print(f"✅ Data uploaded successfully for {position.upper()} position!")
             except Exception as e:
                 print(f"❌ Error while uploading data for {position.upper()}: {str(e)}")
