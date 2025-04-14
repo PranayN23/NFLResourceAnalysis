@@ -6,8 +6,8 @@ import re
 import pandas as pd
 from bson import ObjectId
 
-
 from dotenv import load_dotenv
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -15,13 +15,66 @@ CORS(app)
 
 # ✅ Connect to MongoDB
 mongo_uri = (
-   "mongodb+srv://pranaynandkeolyar:nfl@cluster0.4nbxj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://pranaynandkeolyar:nfl@cluster0.4nbxj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 )
 
 client = MongoClient(mongo_uri)
 
 # ✅ Define position names
 positions = ['qb', 'hb', 'wr', 'te', 't', 'g', 'c', 'di', 'ed', 'lb', 'cb', 's']
+
+position_fields = {
+    "S": ["age", "snap_counts", "assists", "grades_defense", "grades_tackles", "forced_fumbles",
+          "fumble_recoveries", "interceptions", "interception_touchdown", "missed_tackle_rate",
+          "pass_break_ups", "tackles", "receptions", "touchdowns", "yards", "stops"],
+
+    "CB": ["age", "snap_counts", "grades_tackles", "grades_coverage_defense", "grades_defense",
+           "interceptions", "pass_break_ups", "qb_rating_against", "receptions", "stops",
+           "targets", "touchdowns", "yards"],
+
+    "DI": ["age", "snap_counts_defense", "assists", "batted_passes", "forced_fumbles",
+           "grades_defense", "grades_coverage_defense", "grades_pass_rush_defense",
+           "grades_run_defense", "hits", "hurries", "missed_tackle_rate", "sacks",
+           "stops", "tackles", "tackles_for_loss", "total_pressures"],
+
+    "ED": ["age", "snap_counts_defense", "assists", "batted_passes", "forced_fumbles",
+           "grades_defense", "grades_pass_rush_defense", "grades_run_defense",
+           "hits", "hurries", "missed_tackle_rate", "sacks", "stops", "tackles",
+           "tackles_for_loss", "total_pressures"],
+
+    "LB": ["age", "snap_counts_defense", "assists", "batted_passes", "forced_fumbles",
+           "grades_defense", "grades_coverage_defense", "grades_pass_rush_defense",
+           "grades_run_defense", "grades_tackle", "hits", "interception",
+           "missed_tackle_rate", "passed_break_ups", "penalties", "sacks", "stops",
+           "tackles", "tackles_for_loss", "total_pressures"],
+
+    "QB": ["age", "completion_percent", "avg_time_to_throw", "qb_rating", "interceptions",
+           "sack_percent", "passing_snaps", "touchdowns", "yards", "ypa"],
+
+    "T": ["age", "hits_allowed", "hurries_allowed", "penalties", "grades_pass_block",
+          "grades_run_block", "pressures_allowed", "sacks_allowed", "snap_counts_offense"],
+
+    "G": ["age", "hits_allowed", "hurries_allowed", "penalties", "grades_pass_block",
+          "grades_run_block", "pressures_allowed", "sacks_allowed", "snap_counts_offense"],
+
+    "C": ["age", "hits_allowed", "hurries_allowed", "penalties", "grades_pass_block",
+          "grades_run_block", "pressures_allowed", "sacks_allowed", "snap_counts_offense"],
+
+    "TE": ["age", "caught_percent", "contested_catch_rate", "fumbles", "grades_pass_block",
+           "penalties", "receptions", "targets", "touchdowns", "yards_after_catch",
+           "yards_per_reception", "total_snaps"],
+
+    "WR": ["age", "caught_percent", "contested_catch_rate", "drop_rate", "receptions",
+           "targeted_qb_rating", "targets", "touchdowns", "yards",
+           "yards_after_catch_per_reception", "yprr", "total_snaps"],
+
+    "HB": ["age", "attempts", "avoided_tackles", "breakaway_percent", "breakaway_yards",
+           "elusive_rating", "explosive", "first_down", "fumbles", "grades_offense",
+           "grades_run", "grades_pass", "grades_pass_block", "longest", "rec_yards",
+           "receptions", "total_touches", "touchdowns", "yards", "yards_after_contact",
+           "yco_attempt", "ypa", "yprr"]
+}
+
 
 @app.route("/health", methods=["GET"])
 def health_check():
@@ -33,7 +86,7 @@ def upload_data():
     # Load data for each position CSV
     for position in positions:
         file_path = f"{position.upper()}.csv"  # File name convention: QB.csv, RB.csv, etc.
-        
+
         # Check if the file exists
         if os.path.exists(file_path):
             try:
@@ -42,7 +95,7 @@ def upload_data():
 
                 # Convert the DataFrame to a list of dictionaries
                 data = df.to_dict(orient="records")
-                
+
                 # Connect to the database specific to the position
                 position_db = client[position.upper()]  # e.g., 'qb', 'rb', etc.
 
@@ -55,7 +108,7 @@ def upload_data():
 
                     # Insert the record into the team collection
                     team_collection.insert_one(record)
-                
+
                 print(f"✅ Data uploaded successfully for {position.upper()} position!")
             except Exception as e:
                 print(f"❌ Error while uploading data for {position.upper()}: {str(e)}")
@@ -63,6 +116,75 @@ def upload_data():
             print(f"❌ File for {position.upper()} does not exist at {file_path}")
 
     return jsonify({"message": "Data uploaded for all available positions!"}), 200
+
+
+@app.route("/login", methods=["POST"])
+def login_handler():
+    try:
+        data = request.get_json()
+        email = data.get("username")
+        password = data.get("password")
+
+        print("\n🔹 LOGIN REQUEST RECEIVED")
+        print(f"🔸 Email: {email}, Password: {'*' * len(password) if password else ''}")
+
+        if not email or not password:
+            return jsonify({"message": "Email and password are required."}), 400
+        db = client["users"]
+        collection = db["users"]
+
+        user = collection.find_one({"email": email})
+        if not user:
+            return jsonify({"message": "Incorrect username. User does not exist"}), 401
+
+        if user["password"] != password:
+            return jsonify({"message": "Incorrect password."}), 401
+
+        user["_id"] = str(user["_id"])
+        return jsonify(user), 200
+
+    except Exception as e:
+        print(f"❌ LOGIN ERROR: {e}")
+        return jsonify({"message": "Internal server error."}), 500
+
+
+# ✅ Signup Route (Requires Resume Upload)
+@app.route("/signup", methods=["POST"])
+def signup_handler():
+    try:
+        email = request.form.get("username")
+        password = request.form.get("password")
+
+        print("\n🔹 SIGNUP REQUEST RECEIVED")
+
+        if not email or not password:
+            return jsonify({"message": "Username and password are required."}), 400
+        db = client["users"]
+        collection = db["users"]
+
+        existing_user = collection.find_one({"email": email})
+        if existing_user:
+            return jsonify({"message": "User already exists."}), 409
+
+
+        new_user = {
+            "email": email,
+            "password": password,
+        }
+        insert_result = collection.insert_one(new_user)
+        if not insert_result.acknowledged:
+            return jsonify({"message": "User creation failed."}), 500
+
+        return jsonify(
+            {
+                "id": str(insert_result.inserted_id),
+                "email": email,
+            }
+        ), 201
+
+    except Exception as e:
+        print(f"❌ SIGNUP ERROR: {e}")
+        return jsonify({"message": f"Internal Server Error: {e}"}), 500
 
 
 if __name__ == "__main__":
