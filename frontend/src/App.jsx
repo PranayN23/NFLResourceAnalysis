@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Results from './pages/Results';
 import PlayerPage from './pages/PlayerPage'
+import PlayerRanking from './pages/PlayerRanking';
 
 import './App.css';
 
@@ -25,7 +26,7 @@ function App() {
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/results" element={<Results/>}/>
           <Route path="/player/:playerName" element={<PlayerPage />} />
-
+          <Route path="/player-rankings" element={<PlayerRanking />} />
         </Routes>
 
       </BrowserRouter>
