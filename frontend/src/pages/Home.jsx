@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
-  const [position, setPosition] = useState('All');  // Default to 'All' for position
-  const [team, setTeam] = useState('All');          // Default to 'All' for team
-  const [player, setPlayer] = useState('All');      // Default to 'All' for player
+  const [position, setPosition] = useState('All');
+  const [team, setTeam] = useState('All');
+  const [player, setPlayer] = useState('All');
+  const [playerOptions, setPlayerOptions] = useState([]); // New state for players
 
   const positions = ['QB', 'RB', 'WR', 'TE', 'T', 'G', 'C', 'ED', 'DI', 'LB', 'CB', 'S'];
   const teams = [
@@ -15,31 +16,49 @@ function Home() {
     'Bills', 'Dolphins', 'Patriots', 'Jets', 'Ravens', 'Bengals', 'Browns', 'Steelers',
     'Texans', 'Colts', 'Jaguars', 'Titans', 'Broncos', 'Chiefs', 'Raiders', 'Chargers'
   ];
-  
-  const players = teams.reduce((acc, team) => {
-    acc[team] = ['Player 1', 'Player 2', 'Player 3'];
-    return acc;
-  }, {});
 
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
 
-  // Function to call the API with selected values
+  // 🆕 Fetch player names when team or position changes
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      if (position === 'All' || team === 'All') {
+        setPlayerOptions([]);
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/get_pos_team_name', {
+          params: {
+            pos: position,
+            team: team
+          }
+        });
+        setPlayerOptions(response.data);  // Array of names
+        setPlayer('All'); // Reset player selection
+      } catch (error) {
+        console.error('Failed to fetch players:', error);
+        setPlayerOptions([]);
+      }
+    };
+
+    fetchPlayers();
+  }, [position, team]);
+
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:5000/get_player_data', {
-        position: position === 'All' ? null : position, // Send null if 'All' is selected
-        team: team === 'All' ? null : team,             // Send null if 'All' is selected
-        player: player === 'All' ? null : player        // Send null if 'All' is selected
+      const response = await axios.post('http://127.0.0.1:5000/get_pos_team', {
+        position: position === 'All' ? null : position,
+        team: team === 'All' ? null : team,
+        player: player === 'All' ? null : player
       });
       console.log('Response from server:', response.data);
       alert('API called successfully!');
-
-      // Navigate to the results page after successful submission
-      navigate('/results'); // Adjust the path as necessary
+      navigate('/results');
     } catch (error) {
       console.error('Error calling the API:', error);
       alert('Error calling the API.');
-      navigate('/results'); // Adjust the path as necessary
+      navigate('/results');
     }
   };
 
@@ -70,7 +89,7 @@ function Home() {
           <label>Player:</label>
           <select value={player} onChange={(e) => setPlayer(e.target.value)}>
             <option value="All">All</option>
-            {players[team]?.map(p => <option key={p} value={p}>{p}</option>)}
+            {playerOptions.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
 

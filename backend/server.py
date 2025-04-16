@@ -130,7 +130,7 @@ def weighted_average_grade():
     weight_field, grade_field = position_fields[pos]
 
     # Access the relevant MongoDB collection based on the position.
-    collection = db[pos]
+    collection = client[pos]
 
     # Query documents for the given team and year.
     # Adjust field names ("Team" and "Year") if needed based on your MongoDB documents.
@@ -177,6 +177,26 @@ def weighted_average_grade():
         "year": year,
         "weighted_average_grade": weighted_average
     }), 200
+
+@app.route("/get_pos_team_name", methods=["GET"])
+def get_latest_player_history():
+    pos = request.args.get("pos")
+    team = request.args.get("team")
+    print(pos)
+    print(team)
+    if not pos or not team:
+        return jsonify({"error": "Missing 'pos' or 'team' parameter"}), 400
+
+    pos_db = client[pos]
+    print(pos_db)
+    team_collection = pos_db[team]
+    print(team_collection)
+    cursor = team_collection.find({"Year": 2024}, {"player": 1, "_id": 0})
+    players = [doc["player"] for doc in cursor]
+    print(players)
+    return jsonify(players), 200
+
+
 
 @app.route("/health", methods=["GET"])
 def health_check():
