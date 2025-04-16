@@ -3,25 +3,43 @@ import { useParams } from 'react-router-dom';
 import './PlayerPages.css';
 
 const PlayerPage = () => {
-  const { playerName } = useParams();
+  //const { playerName } = useParams();
+  const playerName = 'Joe Flacco'
   const [playerData, setPlayerData] = useState(null);
+  const [team, setTeam] = useState('');
+  const [position, setPosition] = useState('');
 
   useEffect(() => {
     // Simulate an API request based on playerName
     const fetchPlayerData = async () => {
-      // Replace this with actual API call
-      const dummyData = {
-        name: decodeURIComponent(playerName),
-        team: 'Seahawks',
-        position: 'QB',
-        advancedStats: {
-          PFF: '70',
-          Touchdowns: '40',
-          BTT: '15',
-        },
+      const res1 = await fetch(`http://127.0.0.1:5000/get_player_year_pos_team?player_name=${playerName}`); //playerName
+      const yearData = await res1.json();
+
+      const years = Object.keys(yearData.years).sort((a, b) => b - a); // descending order
+        for (let year of years) {
+          const entry = yearData.years[year];
+          const team = entry.teams?.[0];
+          const position = entry.positions?.[0];
+
+          setTeam(team);
+          setPosition(position);
+          console.log(team);
+
+          const params = new URLSearchParams({
+            player_name: playerName,
+            team,
+            position,
+            year
+          });
+
+        fetch(`http://127.0.0.1:5000/get_player_data?${params.toString()}`)
+          .then((res) => res.json())
+          .then((data) => setPlayerData(data[0]))
+          .catch((err) => console.error('Fetch error:', err));
+
+        break;
       };
-      setPlayerData(dummyData);
-    };
+  }
 
     fetchPlayerData();
   }, [playerName]);
@@ -30,17 +48,25 @@ const PlayerPage = () => {
 
   return (
     <div className="player-page">
-      <h2>{playerData.name} - Advanced Stats</h2>
+      <h2>{playerName}</h2>
       <div className="player-info">
-        <p><strong>Team:</strong> {playerData.team}</p>
-        <p><strong>Position:</strong> {playerData.position}</p>
+        <p><strong>Team:</strong> {team}</p>
+        <p><strong>Position:</strong> {position}</p>
       </div>
-      <div className="advanced-stats">
-        <h4>Advanced Stats:</h4>
+      <div className="general-stats">
+        <h4>General Stats</h4>
         <ul>
-          <li><strong>PFF Grade:</strong> {playerData.advancedStats.PFF}</li>
-          <li><strong>Touchdowns:</strong> {playerData.advancedStats.Touchdowns}</li>
-          <li><strong>Big Time Throws:</strong> {playerData.advancedStats.BTT}</li>
+          <li><strong>PFF:</strong> 0</li>
+          <li><strong>Cap Space:</strong> 0</li>
+          <li><strong>Draft Capital:</strong> 0</li>
+        </ul>
+      </div>
+      <div className="position-stats">
+        <h4>Position Specific Stats</h4>
+        <ul>
+          <li><strong>Touchdowns:</strong> {playerData.touchdowns}</li>
+          <li><strong>Completion Percent:</strong> {playerData.completion_percent}</li>
+          <li><strong>QB Rating:</strong> {playerData.qb_rating}</li>
         </ul>
       </div>
     </div>
