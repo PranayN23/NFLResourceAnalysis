@@ -1,7 +1,7 @@
 /* Container for the entire player page */
 .player-page {
   width: 100vw;
-  height: 100vh;
+  height: 120vh;
   background-color: #0f0f0f; /* Dark background to match results */
   display: flex;
   flex-direction: column;
