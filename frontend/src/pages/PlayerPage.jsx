@@ -2,6 +2,45 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './PlayerPages.css';
 
+const positionFields = {
+  "S": [
+    "grades_defense", "grades_coverage_defense", "tackles"
+  ],
+  "CB": [
+    "grades_defense", "interceptions", "pass_break_ups"
+  ],
+  "DI": [
+    "grades_defense", "sacks", "total_pressures"
+  ],
+  "ED": [
+    "grades_defense", "sacks", "total_pressures"
+  ],
+  "LB": [
+    "grades_defense", "interceptions", "sacks"
+  ],
+  "QB": [
+    "qb_rating", "touchdowns", "yards"
+  ],
+  "T": [
+    "grades_pass_block", "pressures_allowed", "sacks_allowed"
+  ],
+  "G": [
+    "grades_pass_block", "pressures_allowed", "sacks_allowed"
+  ],
+  "C": [
+    "grades_pass_block", "pressures_allowed", "sacks_allowed"
+  ],
+  "TE": [
+    "receptions", "touchdowns", "yards_after_catch"
+  ],
+  "WR": [
+    "receptions", "touchdowns", "yards"
+  ],
+  "HB": [
+    "attempts", "touchdowns", "yards"
+  ]
+};
+
 const PlayerPage = () => {
   const location = useLocation();
   const { player } = location.state || {}; // Get player object passed from Results page
@@ -40,6 +79,9 @@ const PlayerPage = () => {
 
   if (!playerData) return <p>Loading...</p>;
 
+  // Get position specific fields (3 stats per position)
+  const positionStats = positionFields[player.position] || [];
+
   return (
     <div className="player-page">
       <h2>{player.player}</h2>
@@ -47,18 +89,25 @@ const PlayerPage = () => {
         <p><strong>Team:</strong> {player.Team}</p>
         <p><strong>Position:</strong> {player.position}</p>
       </div>
+      
       <div className="general-stats">
         <h4>General Stats</h4>
         <ul>
-          <li><strong>PFF:</strong> {playerData.grades_offense || 0}</li>
-        </ul>
-      </div>
-      <div className="position-stats">
-        <h4>Position Specific Stats</h4>
-        <ul>
-          <li><strong>Touchdowns:</strong> {playerData.touchdowns}</li>
-          <li><strong>Completion Percent:</strong> {playerData.completion_percent}</li>
-          <li><strong>QB Rating:</strong> {playerData.qb_rating}</li>
+          {positionStats.map(field => (
+            <li key={field}>
+              <strong>
+                {field
+                  .replace(/_/g, ' ') // Replace underscores with spaces
+                  .split(' ') // Split the string into words
+                  .map((word) =>
+                    ['QB', 'HB', 'WR', 'TE', 'S', 'CB', 'DI', 'ED', 'LB', 'T', 'G', 'C'].includes(word.toUpperCase()) // Check if it's a position abbreviation
+                      ? word.toUpperCase() // Keep it uppercase
+                      : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() // Capitalize other words
+                  )
+                  .join(' ')}:
+              </strong> {playerData[field] || 0}            
+            </li>
+          ))}
         </ul>
       </div>
     </div>

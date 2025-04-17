@@ -23,28 +23,37 @@ const Results = () => {
 
       <div className="results-content">
         {players && players.length > 0 ? (
-          players.map((player, index) => (
-            <div key={index} className="player-card">
-              <p>
-                Player:{' '}
-                <button
-                  className="player-button"
-                  onClick={() => handlePlayerClick(player)}
-                >
-                  {player.player}
-                </button>
-              </p>
-              <p>Team: {player.Team}</p>
-              <p>Position: {player.position}</p>
-              <p>
-                Grade: {
-                  offensivePositions.includes(player.position)
-                    ? player.grades_offense
-                    : player.grades_defense
-                }
-              </p>
-            </div>
-          ))
+          <table border="1" cellPadding="8" cellSpacing="0">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Team</th>
+                <th>Position</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {players.map((player, index) => (
+                <tr key={index}>
+                  <td>
+                    <button
+                      className="player-button"
+                      onClick={() => handlePlayerClick(player)}
+                    >
+                      {player.player}
+                    </button>
+                  </td>
+                  <td>{player.Team}</td>
+                  <td>{player.position}</td>
+                  <td>
+                    {offensivePositions.includes(player.position)
+                      ? player.grades_offense
+                      : player.grades_defense}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         ) : (
           <p>No player data available. Please go back and try again.</p>
         )}
