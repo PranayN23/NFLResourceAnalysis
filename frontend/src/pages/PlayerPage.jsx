@@ -1,64 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import './PlayerPages.css';
 
 const PlayerPage = () => {
-  //const { playerName } = useParams();
-  const playerName = 'Joe Flacco'
+  const location = useLocation();
+  const { player } = location.state || {}; // Get player object passed from Results page
+
   const [playerData, setPlayerData] = useState(null);
-  const [team, setTeam] = useState('');
-  const [position, setPosition] = useState('');
 
   useEffect(() => {
-    // Simulate an API request based on playerName
+    if (!player) return;
+
+    // Simulate an API request based on player data
     const fetchPlayerData = async () => {
-      const res1 = await fetch(`http://127.0.0.1:5000/get_player_year_pos_team?player_name=${playerName}`); //playerName
-      const yearData = await res1.json();
+      const params = new URLSearchParams({
+        player_name: player.player,
+        team: player.Team,
+        position: player.position,
+        year: "2024", // Default year, can be dynamic as needed
+      });
 
-      const years = Object.keys(yearData.years).sort((a, b) => b - a); // descending order
-        for (let year of years) {
-          const entry = yearData.years[year];
-          const team = entry.teams?.[0];
-          const position = entry.positions?.[0];
+      try {
+        const res = await fetch(`http://127.0.0.1:5000/get_player_data?${params.toString()}`);
+        const data = await res.json();
 
-          setTeam(team);
-          setPosition(position);
-          console.log(team);
+        if (data.error) {
+          console.error(data.error);
+          return;
+        }
 
-          const params = new URLSearchParams({
-            player_name: playerName,
-            team,
-            position,
-            year
-          });
-
-        fetch(`http://127.0.0.1:5000/get_player_data?${params.toString()}`)
-          .then((res) => res.json())
-          .then((data) => setPlayerData(data[0]))
-          .catch((err) => console.error('Fetch error:', err));
-
-        break;
-      };
-  }
+        setPlayerData(data[0] || null);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    };
 
     fetchPlayerData();
-  }, [playerName]);
+  }, [player]); // Re-fetch if the player changes
 
   if (!playerData) return <p>Loading...</p>;
 
   return (
     <div className="player-page">
-      <h2>{playerName}</h2>
+      <h2>{player.player}</h2>
       <div className="player-info">
-        <p><strong>Team:</strong> {team}</p>
-        <p><strong>Position:</strong> {position}</p>
+        <p><strong>Team:</strong> {player.Team}</p>
+        <p><strong>Position:</strong> {player.position}</p>
       </div>
       <div className="general-stats">
         <h4>General Stats</h4>
         <ul>
-          <li><strong>PFF:</strong> 0</li>
-          <li><strong>Cap Space:</strong> 0</li>
-          <li><strong>Draft Capital:</strong> 0</li>
+          <li><strong>PFF:</strong> {playerData.grades_offense || 0}</li>
         </ul>
       </div>
       <div className="position-stats">
