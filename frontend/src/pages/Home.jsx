@@ -9,7 +9,7 @@ function Home() {
   const [player, setPlayer] = useState('All');
   const [playerOptions, setPlayerOptions] = useState([]); // New state for players
 
-  const positions = ['QB', 'RB', 'WR', 'TE', 'T', 'G', 'C', 'ED', 'DI', 'LB', 'CB', 'S'];
+  const positions = ['QB', 'HB', 'WR', 'TE', 'T', 'G', 'C', 'ED', 'DI', 'LB', 'CB', 'S'];
   const teams = [
     'Seahawks', 'Cardinals', '49ers', 'Rams', 'Cowboys', 'Giants', 'Eagles', 'Commanders',
     'Bears', 'Lions', 'Packers', 'Vikings', 'Falcons', 'Panthers', 'Saints', 'Buccaneers',
@@ -47,20 +47,51 @@ function Home() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:5000/get_pos_team', {
-        position: position === 'All' ? null : position,
-        team: team === 'All' ? null : team,
-        player: player === 'All' ? null : player
-      });
-      console.log('Response from server:', response.data);
-      alert('API called successfully!');
-      navigate('/results');
+      let response;
+      let val = false
+      if (player !== 'All') {
+        // Fetch specific player with name, pos, team, and year
+        response = await axios.get('http://127.0.0.1:5000/get_player_data', {
+          params: {
+            player_name: player,
+            position: position,
+            team: team,
+            year: 2024
+          }
+        });
+      } else if (position !== 'All' && team !== 'All') {
+        response = await axios.post('http://127.0.0.1:5000/get_pos_team', {
+          pos,
+          team
+        });
+      } else if (position !== 'All') {
+        response = await axios.get('http://127.0.0.1:5000/get_pos', {
+          params: { pos: position }
+        });
+      } else if (team !== 'All') {
+        response = await axios.get('http://127.0.0.1:5000/get_team', {
+          params: { team }
+        });
+      } else {
+        alert("Select one fielld")
+        val = true
+      }
+      if (!val) {
+        console.log('Response from server:', response.data);
+        navigate('/results', {
+          state: {
+            players: response.data,
+          }
+        });
+      }
+  
     } catch (error) {
       console.error('Error calling the API:', error);
       alert('Error calling the API.');
-      navigate('/results');
     }
   };
+  
+  
 
   return (
     <div className="container">
