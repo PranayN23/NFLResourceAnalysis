@@ -23,26 +23,33 @@ client = MongoClient(mongo_uri)
 # ✅ Define position names
 positions = ['qb', 'hb', 'wr', 'te', 't', 'g', 'c', 'di', 'ed', 'lb', 'cb', 's']
 position_fields = {
-  "S": ["grades_defense", "position", "Team", "player", "age", "snap_counts", "assists", 
-        "forced_fumbles", "fumble_recoveries", "interceptions", "interception_touchdown", "missed_tackle_rate", 
-        "pass_break_ups", "tackles", "receptions", "touchdowns", "yards", "stops"],
+  "S": [
+    "grades_defense", "grades_coverage_defense", "position", "grades_tackle", "Team", "player", "age", "snap_counts_defense", "assists", 
+    "forced_fumbles", "fumble_recoveries", "interceptions", "interception_touchdowns", "missed_tackle_rate", 
+    "pass_break_ups", "tackles", "receptions", "touchdowns", "yards", "stops", "targets", "tackles_for_loss"
+],
 
-  "CB": ["grades_defense", "position", "Team", "player", "age", "snap_counts", "grades_tackles", 
-         "grades_coverage_defense", "interceptions", "pass_break_ups", "qb_rating_against", "receptions", "stops", 
-         "targets", "touchdowns", "yards"],
 
-  "DI": ["grades_defense", "position", "Team", "player", "age", "snap_counts_defense", "assists", 
-         "batted_passes", "forced_fumbles", "grades_coverage_defense", "grades_pass_rush_defense", "grades_run_defense", 
+  "CB": [
+    "grades_defense", "position", "Team", "player", "age", "snap_counts_corner", "grades_coverage_defense", 
+    "interceptions", "pass_break_ups", "qb_rating_against", "receptions", "stops", "targets", "touchdowns", "yards"
+],
+
+  "DI": ["grades_defense", "position", "Team", "player", "age", "snap_counts_dl", "assists", 
+         "batted_passes", "forced_fumbles", "grades_pass_rush_defense", "grades_run_defense", 
          "hits", "hurries", "missed_tackle_rate", "sacks", "stops", "tackles", "tackles_for_loss", "total_pressures"],
 
   "ED": ["grades_defense", "position", "Team", "player", "age", "snap_counts_defense", "assists", 
          "batted_passes", "forced_fumbles", "grades_pass_rush_defense", "grades_run_defense", "hits", "hurries", 
          "missed_tackle_rate", "sacks", "stops", "tackles", "tackles_for_loss", "total_pressures"],
 
-  "LB": ["grades_defense", "position", "Team", "player", "age", "snap_counts_defense", "assists", 
-         "batted_passes", "forced_fumbles", "grades_coverage_defense", "grades_pass_rush_defense", "grades_run_defense", 
-         "grades_tackle", "hits", "interception", "missed_tackle_rate", "passed_break_ups", "penalties", "sacks", "stops", 
-         "tackles", "tackles_for_loss", "total_pressures"],
+  "LB": [
+    "grades_defense", "position", "Team", "player", "age", "snap_counts_defense", "assists", 
+    "forced_fumbles", "grades_coverage_defense", "grades_pass_rush_defense", "grades_run_defense", 
+    "hits", "hurries", "missed_tackle_rate", "sacks", "stops", "tackles", "tackles_for_loss", "total_pressures",
+    "grades_defense_penalty", "grades_tackle", "interceptions", "pass_break_ups", "penalties", "snap_counts_box", 
+    "snap_counts_offball", "snap_counts_pass_rush", "snap_counts_run_defense", "targets"
+],
 
   "QB": ["grades_offense", "position", "Team", "player", "age", "completion_percent", "avg_time_to_throw", 
          "qb_rating", "interceptions", "sack_percent", "passing_snaps", "touchdowns", "yards", "ypa"],
@@ -64,9 +71,13 @@ position_fields = {
          "drop_rate", "receptions", "targeted_qb_rating", "targets", "touchdowns", "yards", "yards_after_catch_per_reception", 
          "yprr", "total_snaps"],
 
-  "HB": ["grades_offense", "position", "Team", "player", "age", "attempts", "avoided_tackles", "breakaway_percent", 
-         "breakaway_yards", "elusive_rating", "explosive", "first_down", "fumbles", "grades_run", "grades_pass", "grades_pass_block", 
-         "longest", "rec_yards", "receptions", "total_touches", "touchdowns", "yards", "yards_after_contact", "yco_attempt", "ypa", "yprr"]
+  "HB": [
+    "grades_offense", "position", "Team", "player", "age", "attempts", "avoided_tackles", 
+    "breakaway_percent", "breakaway_yards", "elusive_rating", "explosive", "first_downs", 
+    "fumbles", "grades_run", "longest", "rec_yards", "receptions", "total_touches", 
+    "touchdowns", "yards", "yards_after_contact", "yco_attempt", "ypa", "yprr"
+]
+
 }
 
 
@@ -433,15 +444,31 @@ def get_players_for_pos_team():
     print(pos_db)
     team_collection = pos_db[team]
     print(team_collection)
-    cursor = team_collection.find({"Year": 2024}, {"player": 1, "_id": 0})
+    cursor = team_collection.find({"Year": 2024})
     # Build a list of filtered documents
     filtered_players = []
     fields_to_return = position_fields.get(pos, [])
 
     for player_doc in cursor:
-        filtered = {field: player_doc.get(field) for field in fields_to_return}
+        filtered = {}
+        contains_nan = False
+
+        for field in fields_to_return:
+            value = player_doc.get(field)
+            if isinstance(value, float) and math.isnan(value):
+                contains_nan = True
+                break
+            elif value is None:
+                contains_nan = True
+                break
+            filtered[field] = value
+
+        if contains_nan:
+            continue
+
         if player_doc.get("_id"):
             filtered["_id"] = str(player_doc.get("_id"))
+
         filtered_players.append(filtered)
     return jsonify(filtered_players), 200
 
@@ -460,15 +487,27 @@ def get_pos_data():
 
     for team in team_collections:
         collection = pos_db[team]
-
-        cursor = collection.find({"Year": 2024}, {"player": 1, "_id": 0})
-        # Build a list of filtered documents
+        cursor = collection.find({"Year": 2024})
 
         for player_doc in cursor:
-            filtered = {field: player_doc.get(field) for field in fields_to_return}
+            filtered = {}
+            contains_nan = False
+
+            for field in fields_to_return:
+                value = player_doc.get(field)
+                if value is None or (isinstance(value, float) and math.isnan(value)):
+                    contains_nan = True
+                    break
+                filtered[field] = value
+
+            if contains_nan:
+                continue
+
             if player_doc.get("_id"):
                 filtered["_id"] = str(player_doc.get("_id"))
+
             filtered_players.append(filtered)
+
     return jsonify(filtered_players), 200
 
 
@@ -478,23 +517,43 @@ def get_team_data():
     team = request.args.get("team")
     print(team)
     if not team:
-        return jsonify({"error": "Missing 'pos' parameter"}), 400
+        return jsonify({"error": "Missing 'team' parameter"}), 400
+
     filtered_players = []
+
     for pos in positions:
-        # Access the database for this position
-        pos_db = client[pos]
-        # List all team collections within the position database
-        collection = pos_db[team]
-        fields_to_return = position_fields.get(pos, [])
+        pos = pos.upper()
+        try:
+            pos_db = client[pos]              # Database = position
+            collection = pos_db[team]         # Collection = team
+            fields_to_return = position_fields.get(pos, [])  # Use UPPER key for field access
+            
+            cursor = collection.find({"Year": 2024})  # ← no need to filter by "position"
+            print(collection)
+            for player_doc in cursor:
+                print(player_doc.get("player"))
+                filtered = {}
+                contains_nan = False
 
-        cursor = collection.find({"Year": 2024}, {"player": 1, "_id": 0})
-        # Build a list of filtered documents
+                for field in fields_to_return:
+                    value = player_doc.get(field)
+                    if value is None or (isinstance(value, float) and math.isnan(value)):
+                        contains_nan = True
+                        break
+                    filtered[field] = value
 
-        for player_doc in cursor:
-            filtered = {field: player_doc.get(field) for field in fields_to_return}
-            if player_doc.get("_id"):
-                filtered["_id"] = str(player_doc.get("_id"))
-            filtered_players.append(filtered)
+                if contains_nan:
+                    continue
+
+                if player_doc.get("_id"):
+                    filtered["_id"] = str(player_doc.get("_id"))
+
+                filtered_players.append(filtered)
+
+        except Exception as e:
+            print(f"Error accessing {pos} for team {team}: {e}")
+            continue  # Skip if team collection doesn't exist for a position
+
     return jsonify(filtered_players), 200
 
 

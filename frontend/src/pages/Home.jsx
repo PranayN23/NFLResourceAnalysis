@@ -60,9 +60,11 @@ function Home() {
           }
         });
       } else if (position !== 'All' && team !== 'All') {
-        response = await axios.post('http://127.0.0.1:5000/get_pos_team', {
-          pos,
-          team
+        response = await axios.get('http://127.0.0.1:5000/get_pos_team', {
+          params: {
+            pos: position,
+            team: team,
+          }
         });
       } else if (position !== 'All') {
         response = await axios.get('http://127.0.0.1:5000/get_pos', {
@@ -77,7 +79,7 @@ function Home() {
         val = true
       }
       if (!val) {
-        console.log('Response from server:', response.data);
+        console.log("Players:", response.data.map(player => player.player));
         navigate('/results', {
           state: {
             players: response.data,
