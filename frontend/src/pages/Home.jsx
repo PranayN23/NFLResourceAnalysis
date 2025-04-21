@@ -1,47 +1,99 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
-  const [position, setPosition] = useState('All');  // Default to 'All' for position
-  const [team, setTeam] = useState('All');          // Default to 'All' for team
-  const [player, setPlayer] = useState('All');      // Default to 'All' for player
+  const [position, setPosition] = useState('All');
+  const [team, setTeam] = useState('All');
+  const [player, setPlayer] = useState('All');
+  const [playerOptions, setPlayerOptions] = useState([]); // New state for players
 
-  const positions = ['QB', 'RB', 'WR', 'TE', 'T', 'G', 'C', 'ED', 'DI', 'LB', 'CB', 'S'];
+  const positions = ['QB', 'HB', 'WR', 'TE', 'T', 'G', 'C', 'ED', 'DI', 'LB', 'CB', 'S'];
   const teams = [
     'Seahawks', 'Cardinals', '49ers', 'Rams', 'Cowboys', 'Giants', 'Eagles', 'Commanders',
     'Bears', 'Lions', 'Packers', 'Vikings', 'Falcons', 'Panthers', 'Saints', 'Buccaneers',
     'Bills', 'Dolphins', 'Patriots', 'Jets', 'Ravens', 'Bengals', 'Browns', 'Steelers',
     'Texans', 'Colts', 'Jaguars', 'Titans', 'Broncos', 'Chiefs', 'Raiders', 'Chargers'
   ];
-  
-  const players = teams.reduce((acc, team) => {
-    acc[team] = ['Player 1', 'Player 2', 'Player 3'];
-    return acc;
-  }, {});
 
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
 
-  // Function to call the API with selected values
+  // 🆕 Fetch player names when team or position changes
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      if (position === 'All' || team === 'All') {
+        setPlayerOptions([]);
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/get_pos_team_name', {
+          params: {
+            pos: position,
+            team: team
+          }
+        });
+        setPlayerOptions(response.data);  // Array of names
+        setPlayer('All'); // Reset player selection
+      } catch (error) {
+        console.error('Failed to fetch players:', error);
+        setPlayerOptions([]);
+      }
+    };
+
+    fetchPlayers();
+  }, [position, team]);
+
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:5000/get_player_data', {
-        position: position === 'All' ? null : position, // Send null if 'All' is selected
-        team: team === 'All' ? null : team,             // Send null if 'All' is selected
-        player: player === 'All' ? null : player        // Send null if 'All' is selected
-      });
-      console.log('Response from server:', response.data);
-      alert('API called successfully!');
-
-      // Navigate to the results page after successful submission
-      navigate('/results'); // Adjust the path as necessary
+      let response;
+      let val = false
+      if (player !== 'All') {
+        // Fetch specific player with name, pos, team, and year
+        response = await axios.get('http://127.0.0.1:5000/get_player_data', {
+          params: {
+            player_name: player,
+            position: position,
+            team: team,
+            year: 2024
+          }
+        });
+      } else if (position !== 'All' && team !== 'All') {
+        response = await axios.get('http://127.0.0.1:5000/get_pos_team', {
+          params: {
+            pos: position,
+            team: team,
+          }
+        });
+      } else if (position !== 'All') {
+        response = await axios.get('http://127.0.0.1:5000/get_pos', {
+          params: { pos: position }
+        });
+      } else if (team !== 'All') {
+        response = await axios.get('http://127.0.0.1:5000/get_team', {
+          params: { team }
+        });
+      } else {
+        alert("Select one fielld")
+        val = true
+      }
+      if (!val) {
+        console.log("Players:", response.data.map(player => player.player));
+        navigate('/results', {
+          state: {
+            players: response.data,
+          }
+        });
+      }
+  
     } catch (error) {
       console.error('Error calling the API:', error);
       alert('Error calling the API.');
-      navigate('/results'); // Adjust the path as necessary
     }
   };
+  
+  
 
   return (
     <div className="container">
@@ -70,7 +122,7 @@ function Home() {
           <label>Player:</label>
           <select value={player} onChange={(e) => setPlayer(e.target.value)}>
             <option value="All">All</option>
-            {players[team]?.map(p => <option key={p} value={p}>{p}</option>)}
+            {playerOptions.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
 

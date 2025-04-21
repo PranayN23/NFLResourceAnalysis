@@ -18,7 +18,11 @@ const Navbar = () => {
                 <Link to="/signup">Signup</Link>
                 <Link to="/results">Results</Link>
                 <Link to="/player-rankings">Player Rankings</Link>
+<<<<<<< HEAD
                 <Link to="/draft">Draft/Rookies</Link>
+=======
+                <Link to="/free-agency">Free Agency</Link>
+>>>>>>> 9453fd46515d09d91ef3f4c0445758af9dc3b37d
             </div>
         </div>
     );
