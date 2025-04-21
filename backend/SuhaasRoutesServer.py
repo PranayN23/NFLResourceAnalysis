@@ -141,7 +141,8 @@ def get_player_cap_space():
         result_list.append({
             "player": doc.get("player"),
             "year": doc.get("Year"),
-            "position": doc.get("Position"),
+            'team': doc.get("Team"),
+            "position": doc.get("position"),
             "Cap_Space": doc.get("Cap_Space")
         })
 
