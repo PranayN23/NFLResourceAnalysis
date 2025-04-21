@@ -1,12 +1,18 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Results.css';
 
 const Results = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { players } = location.state || {}; // Added selected filters
+  console.log(players);
 
-  const handlePlayerClick = (playerName) => {
-    navigate(`/player/${encodeURIComponent(playerName)}`);
+  // List of offensive positions
+  const offensivePositions = ['QB', 'HB', 'WR', 'TE', 'T', 'G', 'C'];
+
+  const handlePlayerClick = (player) => {
+    navigate(`/player/${encodeURIComponent(player.player)}`, { state: { player } });
   };
 
   return (
@@ -16,26 +22,41 @@ const Results = () => {
       </header>
 
       <div className="results-content">
-        <p>This is the results page. Display relevant player data here after fetching it from the API.</p>
-        <p>Data will appear here once the form is submitted successfully!</p>
-      </div>
-
-      <div className="dummy-results">
-        <h3>Dummy Player Data</h3>
-        <ul>
-          <li>
-            Player:{' '}
-            <button
-              className="player-button"
-              onClick={() => handlePlayerClick('Player 1')}
-            >
-              Player 1
-            </button>
-          </li>
-          <li>Team: Seahawks</li>
-          <li>Position: QB</li>
-          <li>Statistics: Placeholder data for now.</li>
-        </ul>
+        {players && players.length > 0 ? (
+          <table border="1" cellPadding="8" cellSpacing="0">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Team</th>
+                <th>Position</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {players.map((player, index) => (
+                <tr key={index}>
+                  <td>
+                    <button
+                      className="player-button"
+                      onClick={() => handlePlayerClick(player)}
+                    >
+                      {player.player}
+                    </button>
+                  </td>
+                  <td>{player.Team}</td>
+                  <td>{player.position}</td>
+                  <td>
+                    {offensivePositions.includes(player.position)
+                      ? player.grades_offense
+                      : player.grades_defense}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No player data available. Please go back and try again.</p>
+        )}
       </div>
     </div>
   );
