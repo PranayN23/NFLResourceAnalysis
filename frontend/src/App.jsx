@@ -5,7 +5,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Results from './pages/Results';
-import PlayerPage from './pages/PlayerPage'
+import PlayerPage from './pages/PlayerPage';
+import DraftPage from './pages/DraftPage'; // ✅ Import the new page
 
 import './App.css';
 
@@ -25,7 +26,7 @@ function App() {
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/results" element={<Results/>}/>
           <Route path="/player/:playerName" element={<PlayerPage />} />
-
+          <Route path="/draft" element={<DraftPage />} /> {/* ✅ Add DraftPage route */}
         </Routes>
 
       </BrowserRouter>
