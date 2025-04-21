@@ -142,7 +142,7 @@ def get_player_cap_space():
             "player": doc.get("player"),
             "year": doc.get("Year"),
             'team': doc.get("Team"),
-            "position": doc.get("Position"),
+            "position": doc.get("position"),
             "Cap_Space": doc.get("Cap_Space")
         })
 
