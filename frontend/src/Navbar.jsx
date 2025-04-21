@@ -18,6 +18,7 @@ const Navbar = () => {
                 <Link to="/signup">Signup</Link>
                 <Link to="/results">Results</Link>
                 <Link to="/player-rankings">Player Rankings</Link>
+                <Link to="/free-agency">Free Agency</Link>
             </div>
         </div>
     );

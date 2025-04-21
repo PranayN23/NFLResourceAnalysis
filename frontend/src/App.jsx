@@ -7,6 +7,7 @@ import Signup from './pages/Signup';
 import Results from './pages/Results';
 import PlayerPage from './pages/PlayerPage'
 import PlayerRanking from './pages/PlayerRanking';
+import FreeAgency from './pages/FreeAgency'
 
 import './App.css';
 
@@ -27,8 +28,8 @@ function App() {
           <Route path="/results" element={<Results/>}/>
           <Route path="/player/:playerName" element={<PlayerPage />} />
           <Route path="/player-rankings" element={<PlayerRanking />} />
+          <Route path="/free-agency" element={<FreeAgency />} />
         </Routes>
-
       </BrowserRouter>
 
     </GlobalProvider>
