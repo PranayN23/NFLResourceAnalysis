@@ -1,10 +1,7 @@
 import React from 'react';
 import './FreeAgency.css'; // Make sure the path is correct relative to this file
-import { useNavigate } from 'react-router-dom';
-
 
 function FreeAgency() {
-  console.log("in free agency")
   return (
     <div className="free-agency-container">
       <h1 className="free-agency-title">Free Agency</h1>

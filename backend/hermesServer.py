@@ -72,19 +72,134 @@ position_fields = {
            "yco_attempt", "ypa", "yprr"]
 }
 
+positions = ['QB', 'HB', 'WR', 'TE', 'TE', 'G', 'C', 'DL', 'ED', 'LB', 'CB', 'S']
+
 
 @app.route("/health", methods=["GET"])
 def health_check():
     return jsonify({"message": "Server is running!", "status": "healthy"}), 200
+@app.route("/get_player_year_team", methods=["GET"])
+def get_player_teams_by_year():
+    # Extract the player's name from the query parameters
+    player_name = request.args.get("player_name")
+    if not player_name:
+        return jsonify({"error": "player_name is required"}), 400
 
+    # Initialize a dictionary to store the player's team history by year.
+    # For each year, we'll use a set to avoid duplicates.
+    history = {}
+
+    # Iterate over every position in the global list 'positions'
+    for pos in positions:
+        # Access the database for the current position
+        pos_db = client[pos]
+        # Get all team collection names within that database
+        team_names = pos_db.list_collection_names()
+        for team in team_names:
+            # Access the team collection
+            team_players = pos_db[team]
+            # Find all documents for the given player in this team/position
+            cursor = team_players.find({"player": player_name})
+            for doc in cursor:
+                year = doc.get("Year")
+                if year is None:
+                    continue  # Skip if there's no year
+                year_key = str(year)  # Use the year as a string key
+                if year_key not in history:
+                    history[year_key] = set()
+                history[year_key].add(team)
+
+    # Convert the sets to lists for JSON serialization
+    for year_key in history:
+        history[year_key] = list(history[year_key])
+
+    result = {
+        "name": player_name,
+        "years": history
+    }
+    return jsonify(result), 200
+
+
+@app.route("/get_player_year_pos_team", methods=["GET"])
+def get_player_history():
+    # Get the player name from the query string
+    player_name = request.args.get("player_name")
+    if not player_name:
+        return jsonify({"error": "player_name is required"}), 400
+
+    # Initialize a dictionary to aggregate history by year.
+    # For each year, we'll use sets to avoid duplicates.
+    history = {}
+
+    # Iterate over every position in the global list "positions"
+    for pos in positions:
+        # Access the database for this position
+        pos_db = client[pos]
+        # List all team collections within the position database
+        team_names = pos_db.list_collection_names()
+        for team in team_names:
+            # Access the team collection
+            team_players = pos_db[team]
+            # Find all documents for this player
+            cursor = team_players.find({"player": player_name})
+            for doc in cursor:
+                # Get the Year from the document; skip if missing
+                year = doc.get("Year")
+                if year is None:
+                    continue
+                # Use the year (as a string) as the key
+                year_key = str(year)
+                # Initialize the entry for this year if needed
+                if year_key not in history:
+                    history[year_key] = {"teams": set(), "positions": set()}
+                # Add the team and position to the corresponding sets
+                history[year_key]["teams"].add(team)
+                history[year_key]["positions"].add(pos)
+
+    # Convert the sets to lists for JSON serialization
+    for year_key in history:
+        history[year_key]["teams"] = list(history[year_key]["teams"])
+        history[year_key]["positions"] = list(history[year_key]["positions"])
+
+    result = {
+        "name": player_name,
+        "years": history
+    }
+    return jsonify(result), 200
 
 @app.route("/get_player_data", methods=["GET"])
 def get_player_data():
+    # player_name = request.args.get("player_name")
+    # position = request.args.get("position")
+    # team = request.args.get("team")
+    # year = request.args.get("year")
+    #
+    # if not player_name or not position or not year:
+    #     return jsonify({"error": "player_name, position, and year are required"}), 400
+    #
+    # position = position.upper()
+    # fields_to_return = position_fields.get(position, [])
+    #
+    #
+    # position = client[position]
+    # team_players = position[team]
+    # filtered_player = ""
+    # for player in team_players.find({"player": player_name}):
+    #     filtered_player = {field: player.get(field) for field in fields_to_return}
+    #     print(filtered_player)
+    #
+    # if not filtered_player:
+    #     return jsonify({"error": "Player not found"}), 404
+    #
+    # return jsonify(filtered_player), 200
+
+    # Extract query parameters
     player_name = request.args.get("player_name")
     position = request.args.get("position")
     team = request.args.get("team")
     year = request.args.get("year")
 
+    # Validate required parameters
     if not player_name or not position or not team or not year:
         return jsonify({"error": "player_name, team, position, and year are required"}), 400
 
@@ -96,62 +211,26 @@ def get_player_data():
     position = position.upper()
     fields_to_return = position_fields.get(position, [])
 
+    # Access the database corresponding to the position and the team collection
     pos_db = client[position]
     team_players = pos_db[team]
 
+    # Query documents matching both the player name and the year
     query = {"player": player_name, "Year": year}
     cursor = team_players.find(query)
 
+    # Build a list of filtered documents
     filtered_players = []
     for player_doc in cursor:
         filtered = {field: player_doc.get(field) for field in fields_to_return}
-        # 🧹 Don't include _id
+        if player_doc.get("_id"):
+            filtered["_id"] = str(player_doc.get("_id"))
         filtered_players.append(filtered)
 
     if not filtered_players:
         return jsonify({"error": "Player not found"}), 404
 
     return jsonify(filtered_players), 200
-
-
-@app.route("/get_player_cap_space", methods=["GET"])
-def get_player_cap_space():
-    player_name = request.args.get("player_name")
-    position = request.args.get("position")
-    team = request.args.get("team")
-    year = request.args.get("year")
-
-    if not player_name or not position or not team or not year:
-        return jsonify({"error": "player_name, team, position, and year are required"}), 400
-
-    try:
-        year = int(year)
-    except ValueError:
-        return jsonify({"error": "year must be an integer"}), 400
-
-    position = position.upper()
-    pos_db = client[position]
-    team_players = pos_db[team]
-
-    query = {"player": player_name, "Year": year}
-    cursor = team_players.find(query)
-
-    result_list = []
-    for doc in cursor:
-        result_list.append({
-            "player": doc.get("player"),
-            "year": doc.get("Year"),
-            'team': doc.get("Team"),
-            "position": doc.get("position"),
-            "Cap_Space": doc.get("Cap_Space")
-        })
-
-    if not result_list:
-        return jsonify({"error": "Player not found or Cap_Space unavailable"}), 404
-
-    return jsonify(result_list), 200
-
-
 
 
 
