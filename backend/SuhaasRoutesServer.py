@@ -80,37 +80,11 @@ def health_check():
 
 @app.route("/get_player_data", methods=["GET"])
 def get_player_data():
-    # player_name = request.args.get("player_name")
-    # position = request.args.get("position")
-    # team = request.args.get("team")
-    # year = request.args.get("year")
-    #
-    # if not player_name or not position or not year:
-    #     return jsonify({"error": "player_name, position, and year are required"}), 400
-    #
-    # position = position.upper()
-    # fields_to_return = position_fields.get(position, [])
-    #
-    #
-    # position = client[position]
-    # team_players = position[team]
-    # filtered_player = ""
-    # for player in team_players.find({"player": player_name}):
-    #     filtered_player = {field: player.get(field) for field in fields_to_return}
-    #     print(filtered_player)
-    #
-    # if not filtered_player:
-    #     return jsonify({"error": "Player not found"}), 404
-    #
-    # return jsonify(filtered_player), 200
-
-    # Extract query parameters
     player_name = request.args.get("player_name")
     position = request.args.get("position")
     team = request.args.get("team")
     year = request.args.get("year")
 
-    # Validate required parameters
     if not player_name or not position or not team or not year:
         return jsonify({"error": "player_name, team, position, and year are required"}), 400
 
@@ -122,20 +96,16 @@ def get_player_data():
     position = position.upper()
     fields_to_return = position_fields.get(position, [])
 
-    # Access the database corresponding to the position and the team collection
     pos_db = client[position]
     team_players = pos_db[team]
 
-    # Query documents matching both the player name and the year
     query = {"player": player_name, "Year": year}
     cursor = team_players.find(query)
 
-    # Build a list of filtered documents
     filtered_players = []
     for player_doc in cursor:
         filtered = {field: player_doc.get(field) for field in fields_to_return}
-        if player_doc.get("_id"):
-            filtered["_id"] = str(player_doc.get("_id"))
+        # 🧹 Don't include _id
         filtered_players.append(filtered)
 
     if not filtered_players:
@@ -144,6 +114,42 @@ def get_player_data():
     return jsonify(filtered_players), 200
 
 
+@app.route("/get_player_cap_space", methods=["GET"])
+def get_player_cap_space():
+    player_name = request.args.get("player_name")
+    position = request.args.get("position")
+    team = request.args.get("team")
+    year = request.args.get("year")
+
+    if not player_name or not position or not team or not year:
+        return jsonify({"error": "player_name, team, position, and year are required"}), 400
+
+    try:
+        year = int(year)
+    except ValueError:
+        return jsonify({"error": "year must be an integer"}), 400
+
+    position = position.upper()
+    pos_db = client[position]
+    team_players = pos_db[team]
+
+    query = {"player": player_name, "Year": year}
+    cursor = team_players.find(query)
+
+    result_list = []
+    for doc in cursor:
+        result_list.append({
+            "player": doc.get("player"),
+            "year": doc.get("Year"),
+            'team': doc.get("Team"),
+            "position": doc.get("position"),
+            "Cap_Space": doc.get("Cap_Space")
+        })
+
+    if not result_list:
+        return jsonify({"error": "Player not found or Cap_Space unavailable"}), 404
+
+    return jsonify(result_list), 200
 
 
 
