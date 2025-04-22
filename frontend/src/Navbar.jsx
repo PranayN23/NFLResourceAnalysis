@@ -18,9 +18,12 @@ const Navbar = () => {
                 <Link to="/signup">Signup</Link>
                 <Link to="/results">Results</Link>
                 <Link to="/player-rankings">Player Rankings</Link>
+                <Link to="/team-pff">Team Rosters</Link>
+                <Link to="/draft">Draft/Rookies</Link>
+                <Link to="/free-agency">Free Agency</Link>
             </div>
         </div>
     );
-};
+}; 
 
 export default Navbar;

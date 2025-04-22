@@ -78,6 +78,8 @@ positions = ['QB', 'HB', 'WR', 'TE', 'TE', 'G', 'C', 'DL', 'ED', 'LB', 'CB', 'S'
 @app.route("/health", methods=["GET"])
 def health_check():
     return jsonify({"message": "Server is running!", "status": "healthy"}), 200
+
+
 @app.route("/get_player_year_team", methods=["GET"])
 def get_player_teams_by_year():
     # Extract the player's name from the query parameters
@@ -118,6 +120,46 @@ def get_player_teams_by_year():
         "years": history
     }
     return jsonify(result), 200
+
+
+
+@app.route("/get_draft_capital", methods=["GET"])
+def get_draft_capital():
+    player_name = request.args.get("player_name")
+    position = request.args.get("position")
+    team = request.args.get("team")
+    year = request.args.get("year")
+
+    if not player_name or not position or not team or not year:
+        return jsonify({"error": "player_name, team, position, and year are required"}), 400
+
+    try:
+        year = int(year)
+    except ValueError:
+        return jsonify({"error": "year must be an integer"}), 400
+
+    position = position.upper()
+    pos_db = client[position]
+    team_players = pos_db[team]
+
+
+    query = {"player": player_name, "Year": year}
+    cursor = team_players.find(query)
+
+    result_list = []
+    for doc in cursor:
+        result_list.append({
+            "player": doc.get("player"),
+            "year": doc.get("Year"),
+            "position": doc.get("position"),
+            "team": doc.get("Team"),
+            "draft_rating": doc.get("adjusted_value"),
+        })
+
+    if not result_list:
+        return jsonify({"error": "Player not found or Draft Capital unavailable"}), 404
+
+    return jsonify(result_list), 200
 
 
 @app.route("/get_player_year_pos_team", methods=["GET"])

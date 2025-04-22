@@ -2,6 +2,55 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './PlayerPages.css';
 
+//install recharts
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+
+//dummy data rn
+const data = [
+    { yearIndex: 1, playerPFF: 68, avgPFF: 72 },
+    { yearIndex: 2, playerPFF: 70, avgPFF: 74 },
+    { yearIndex: 3, playerPFF: 73, avgPFF: 75 },
+    { yearIndex: 4, playerPFF: 76, avgPFF: 76 },
+    { yearIndex: 5, playerPFF: 79, avgPFF: 77 },
+  ];
+
+const YearLineChart = () => (
+  <ResponsiveContainer width="50%" height={300}>
+    <LineChart data={data}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis 
+        label={{ value: "Year of Experience",  position: "insideBottom", dy: 6.8 }}
+      />
+      <YAxis
+        label={{ value: "PFF Score", angle: -90, position: "insideLeft" }}
+      />
+      <Tooltip />
+      <Legend verticalAlign="bottom" />
+      <Line
+        type="monotone"
+        dataKey="playerPFF"
+        stroke="#8884d8"
+        name="Player PFF"
+      />
+      <Line
+        type="monotone"
+        dataKey="avgPFF"
+        stroke="#82ca9d"
+        name="Average PFF"
+      />
+    </LineChart>
+  </ResponsiveContainer>
+);
+
 const positionFields = {
   "S": [
     "grades_defense", "grades_coverage_defense", "tackles"
@@ -89,6 +138,8 @@ const PlayerPage = () => {
         <p><strong>Team:</strong> {player.Team}</p>
         <p><strong>Position:</strong> {player.position}</p>
       </div>
+
+      <YearLineChart />
       
       <div className="general-stats">
         <h4>General Stats</h4>
