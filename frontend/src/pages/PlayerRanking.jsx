@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './PlayerRanking.css';
 
-
 const PlayerRanking = () => {
   const [position, setPosition] = useState("QB");
   const [year, setYear] = useState("2021");
@@ -24,7 +23,6 @@ const PlayerRanking = () => {
         const data = await response.json();
         setPlayers(data);
       }
-    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setError("An error occurred while fetching data.");
       setPlayers([]);
@@ -38,48 +36,45 @@ const PlayerRanking = () => {
   }, []);
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div className="player-ranking">
       <h2>Player Rankings</h2>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label style={{ marginRight: '1rem' }}>
+      <div className="filters">
+        <label>
           Position:
           <input
             type="text"
             value={position}
             onChange={(e) => setPosition(e.target.value)}
-            style={{ marginLeft: '0.5rem' }}
           />
         </label>
 
-        <label style={{ marginRight: '1rem' }}>
+        <label>
           Year:
           <input
             type="number"
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            style={{ marginLeft: '0.5rem', width: '80px' }}
           />
         </label>
 
-        <label style={{ marginRight: '1rem' }}>
+        <label>
           Minimum Snap Counts:
           <input
             type="number"
             value={snapCounts}
             onChange={(e) => setSnapCounts(e.target.value)}
-            style={{ marginLeft: '0.5rem', width: '80px' }}
           />
         </label>
 
         <button onClick={fetchPlayers}>Fetch Rankings</button>
       </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {loading && <p className="loading-message">Loading...</p>}
+      {error && <p className="error-message">Error: {error}</p>}
 
       {!loading && !error && players.length > 0 && (
-        <table border="1" cellPadding="8" cellSpacing="0">
+        <table className="ranking-table">
           <thead>
             <tr>
               <th>Player</th>
@@ -91,7 +86,6 @@ const PlayerRanking = () => {
           </thead>
           <tbody>
             {players.map((player) => {
-              // Determine which ranking grade field is available.
               const rankingGrade =
                 player.grades_offense !== undefined
                   ? player.grades_offense
