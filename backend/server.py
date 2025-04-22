@@ -301,6 +301,45 @@ def get_player_history():
     return jsonify(result), 200
 
 
+
+@app.route("/get_draft_capital", methods=["GET"])
+def get_draft_capital():
+    player_name = request.args.get("player_name")
+    position = request.args.get("position")
+    team = request.args.get("team")
+    year = request.args.get("year")
+
+    if not player_name or not position or not team or not year:
+        return jsonify({"error": "player_name, team, position, and year are required"}), 400
+
+    try:
+        year = int(year)
+    except ValueError:
+        return jsonify({"error": "year must be an integer"}), 400
+
+    position = position.upper()
+    pos_db = client[position]
+    team_players = pos_db[team]
+
+
+    query = {"player": player_name, "Year": year}
+    cursor = team_players.find(query)
+
+    result_list = []
+    for doc in cursor:
+        result_list.append({
+            "player": doc.get("player"),
+            "year": doc.get("Year"),
+            "position": doc.get("position"),
+            "team": doc.get("Team"),
+            "draft_rating": doc.get("adjusted_value"),
+        })
+
+    if not result_list:
+        return jsonify({"error": "Player not found or Draft Capital unavailable"}), 404
+
+    return jsonify(result_list), 200
+
 @app.route("/get_player_data", methods=["GET"])
 def get_player_grades():
     # Get the parameters from the request
@@ -326,7 +365,80 @@ def get_player_grades():
     return jsonify(filtered_players), 200
     
 
+@app.route("/team_pff", methods=["GET"])
+def team_pff():
+    """
+    Return every player on <team> for <year> that meets <snap_counts>,
+    sorted by his PFF grade (offense or defense).
 
+    Query parameters
+      • team  (required) – 3‑letter team code used for your collections
+      • year  (required) – season (int)
+      • snap_counts (optional, default 0) – minimum snaps/touches
+    """
+    team = request.args.get("team")
+    year = request.args.get("year")
+    snap_counts_threshold = request.args.get("snap_counts", "0")
+    print(team)
+    # -------- basic validation ----------
+    if not team or not year:
+        return jsonify({"error": "Parameters 'team' and 'year' are required"}), 400
+    try:
+        year = int(year)
+    except ValueError:
+        return jsonify({"error": "Parameter 'year' must be an integer"}), 400
+    try:
+        snap_counts_threshold = float(snap_counts_threshold)
+    except ValueError:
+        snap_counts_threshold = 0.0
+
+    players = []
+    all_positions = ["QB", "HB", "WR", "TE", "T", "G", "C", "ED", "DI", "LB", "CB", "S"]
+    # -------- iterate over every POSITION DB -------------
+    for pos in all_positions:
+        print(pos)
+        snap_field, grade_field = position_fields_summary[pos]
+
+        pos_db = client[pos]
+        print(pos_db.list_collection_names())
+        if team not in pos_db.list_collection_names():
+            continue                                     # team didn’t use this position that year
+        col = pos_db[team]
+        print(col)
+        # ---- build year + snap filter --------------
+        query = {"Year": year}
+        if isinstance(snap_field, str):
+            query[snap_field] = {"$gte": snap_counts_threshold}
+        else:  # list of snap fields (e.g., Safety)
+            add_expr = {"$add": [f"${f}" for f in snap_field]}
+            query["$expr"] = {"$gte": [add_expr, snap_counts_threshold]}
+
+        for doc in col.find(query):
+            print(doc)
+            grade = doc.get(grade_field)
+            if grade is None or (isinstance(grade, float) and math.isnan(grade)):
+                continue
+
+            # -------- build uniform record ------------
+            record = {
+                "player":  doc.get("player"),
+                "position": pos,
+                "pff_score": grade,                     # <- renamed
+                "snap_counts": (
+                    doc.get(snap_field) if isinstance(snap_field, str)
+                    else sum(float(doc.get(f, 0) or 0) for f in snap_field)
+                ),
+                "Year": year,
+                "_id": str(doc.get("_id"))
+            }
+            players.append(record)
+    print(players)
+    if not players:
+        return jsonify({"error": "No players found for that query."}), 404
+
+    # sort highest grade first
+    players.sort(key=lambda x: float(x["pff_score"]), reverse=True)
+    return jsonify(players), 200
 
 @app.route('/weighted-average-grade', methods=['GET'])
 def weighted_average_grade():
@@ -665,6 +777,44 @@ def signup_handler():
     except Exception as e:
         print(f"❌ SIGNUP ERROR: {e}")
         return jsonify({"message": f"Internal Server Error: {e}"}), 500
+    
+
+@app.route("/get_player_cap_space", methods=["GET"])
+def get_player_cap_space():
+    player_name = request.args.get("player_name")
+    position = request.args.get("position")
+    team = request.args.get("team")
+    year = request.args.get("year")
+
+    if not player_name or not position or not team or not year:
+        return jsonify({"error": "player_name, team, position, and year are required"}), 400
+
+    try:
+        year = int(year)
+    except ValueError:
+        return jsonify({"error": "year must be an integer"}), 400
+
+    position = position.upper()
+    pos_db = client[position]
+    team_players = pos_db[team]
+
+    query = {"player": player_name, "Year": year}
+    cursor = team_players.find(query)
+
+    result_list = []
+    for doc in cursor:
+        result_list.append({
+            "player": doc.get("player"),
+            "year": doc.get("Year"),
+            'team': doc.get("Team"),
+            "position": doc.get("position"),
+            "Cap_Space": doc.get("Cap_Space")
+        })
+
+    if not result_list:
+        return jsonify({"error": "Player not found or Cap_Space unavailable"}), 404
+
+    return jsonify(result_list), 200
 
 
 if __name__ == "__main__":

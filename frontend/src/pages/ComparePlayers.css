@@ -1,0 +1,114 @@
+ComparePlayers.css
+.compare-container {
+    padding: 2rem;
+    background-color: #0f0f0f;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .compare-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .player-form {
+    background-color: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 300px;
+    align-items: stretch;
+  }
+  
+  .player-form h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  
+  .player-form select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    background-color: #222;
+    border: 1px solid #444;
+    color: #ffffff;
+    outline: none;
+    text-align: left;
+  }
+  
+  .player-form select:focus {
+    border-color: #888;
+  }
+  
+  .compare-button {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .compare-button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .error {
+    color: #ff5c5c;
+    margin-top: 1rem;
+  }
+  
+  .comparison-result {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .player-box {
+    background-color: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+    max-width: 350px;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .player-box h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+  }
+  
+  .player-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .player-box li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: #dddddd;
+  }
+ 
