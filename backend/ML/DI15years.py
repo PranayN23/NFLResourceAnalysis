@@ -3,11 +3,19 @@ import pandas as pd
 from pymongo import MongoClient
 import tensorflow as tf
 from tensorflow.keras import layers, models
+from urllib.parse import quote_plus
+from pymongo import MongoClient
+import ssl
+import os
+username = quote_plus(os.getenv("MONGO_USER"))
+password = quote_plus(os.getenv("MONGO_PASS"))
 
-# need to connect to mongo  
 
-client = MongoClient("mongodb+srv://<db_username>:<db_password>@cluster0.4nbxj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-db = client["football_stats"]  # DB name for football stats
+
+client = MongoClient(
+    f"mongodb+srv://{username}:{password}@cluster0.4nbxj.mongodb.net/football_stats?retryWrites=true&w=majority"
+)
+db = client["football_stats"]
 
 # --- Load all collections (teams) ---
 all_data = []
@@ -20,7 +28,7 @@ for team in db.list_collection_names():
 df = pd.DataFrame(all_data)
 
 year_col = "year" if "year" in df.columns else "season"
-target = "sacks"  # example IDL-relevant stat; could also be tackles or pressures
+target = "sacks"  # example IDL-relevant stat; maybe change 
 
 
 ignore_cols = ["_id", "team", year_col, target]
