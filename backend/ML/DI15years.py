@@ -4,7 +4,8 @@ from pymongo import MongoClient
 import tensorflow as tf
 from tensorflow.keras import layers, models
 
-# --- Connect to MongoDB ---
+# need to connect to mongo  
+
 client = MongoClient("mongodb+srv://<db_username>:<db_password>@cluster0.4nbxj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["football_stats"]  # DB name for football stats
 
