@@ -15,6 +15,8 @@ numeric_cols = [
     'twp_rate','yards','ypa'
 ]
 
+
+
 # Force them to be numeric; convert errors to NaN
 df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors='coerce')
 
@@ -25,9 +27,12 @@ def weighted_avg(series, weights):
         return series.mean()
     return (series * weights).sum() / weights.sum()
 
+pd.set_option('display.max_columns', None)
+print(df[(df['Team'] == "Ravens") & (df['Year'] == 2022)][["touchdowns", "player", "passing_snaps"]])
+
 # Group by position, player, and year
 grouped = (
-    df.groupby(['position', 'Team', 'Year'])
+    df.groupby(['Team', 'Year'])
     .apply(lambda g: pd.Series({
         'Cap_Space': g['Cap_Space'].sum(),
         'adjusted_value': g['adjusted_value'].sum(),
@@ -74,6 +79,7 @@ grouped = (
     }))
     .reset_index()
 )
+print(grouped[(grouped['Team'] == "Ravens") & (grouped['Year'] == 2022)]["touchdowns"])
 
-print(grouped.head())
+#print(grouped.head())
 grouped.to_csv('backend/Grouped_Data/Grouped_QB.csv')
