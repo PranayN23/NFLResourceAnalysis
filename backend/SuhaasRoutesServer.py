@@ -73,6 +73,7 @@ position_fields = {
 }
 
 
+
 @app.route("/health", methods=["GET"])
 def health_check():
     return jsonify({"message": "Server is running!", "status": "healthy"}), 200
@@ -151,6 +152,81 @@ def get_player_cap_space():
 
     return jsonify(result_list), 200
 
+
+@app.route("/get_player_progression_data", methods=["GET"])
+def get_player_progression_data():
+    player_name = request.args.get("player_name")
+    position = request.args.get("position")
+
+    if not player_name or not position:
+        return jsonify({"error": "player_name and position are required"}), 400
+
+    position = position.upper()
+    pos_db = client[position]
+    all_teams = pos_db.list_collection_names()
+
+    # Get all seasons for this player
+    player_seasons = []
+    for team in all_teams:
+        for doc in pos_db[team].find({"player": player_name}):
+            player_seasons.append(doc)
+
+    if not player_seasons:
+        return jsonify({"error": "Player not found"}), 404
+
+    # Detect which grade type is available for this player
+    example_doc = next((doc for doc in player_seasons if "grades_offense" in doc or "grades_defense" in doc), None)
+    if not example_doc:
+        return jsonify({"error": "No grade field found for player"}), 400
+
+    grade_field = "grades_offense" if "grades_offense" in example_doc else "grades_defense"
+
+    player_seasons.sort(key=lambda x: x["Year"])
+    rookie_year = player_seasons[0]["Year"]
+
+    result = []
+
+    for doc in player_seasons:
+        year = doc["Year"]
+        experience_year = year - rookie_year
+        player_grade = doc.get(grade_field)
+
+        if player_grade is None:
+            continue
+
+        # Gather position average for players with same experience
+        grades = []
+        for team in all_teams:
+            for other_doc in pos_db[team].find({"Year": year}):
+                other_name = other_doc.get("player")
+                if not other_name:
+                    continue
+
+                other_docs = list(pos_db[team].find({"player": other_name}))
+                if not other_docs:
+                    continue
+
+                other_rookie = min(d["Year"] for d in other_docs)
+                other_exp = year - other_rookie
+
+                if other_exp != experience_year:
+                    continue
+
+                grade = other_doc.get(grade_field)
+                if grade is not None:
+                    grades.append(grade)
+
+        avg_grade = sum(grades) / len(grades) if grades else None
+
+        result.append({
+            "year": year,
+            "experience_year": experience_year,
+            "team": doc.get("Team"),
+            "player_grade": player_grade,
+            "position_avg": avg_grade
+        })
+
+    return jsonify(result), 200
 
 
 
