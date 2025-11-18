@@ -1,0 +1,14 @@
+beautifulsoup4
+flask
+flask-cors
+matplotlib
+numpy
+pandas
+python-dotenv
+pymongo
+rapidfuzz
+requests
+scikit-learn
+scipy
+seaborn
+tensorflow
