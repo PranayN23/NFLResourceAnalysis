@@ -15,11 +15,8 @@ numeric_cols = [
     'twp_rate','yards','ypa'
 ]
 
-
-
-# Force them to be numeric; convert errors to NaN
-df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors='coerce')
-
+# Force them to be numeric; convert errors to NaN, then fill NaN with 0 for aggregation
+df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors='coerce').fillna(0)
 
 # Helper for weighted average
 def weighted_avg(series, weights):
@@ -40,46 +37,50 @@ grouped = (
         'Win %': g['Win %'].iloc[0],
         'franchise_id': g['franchise_id'].iloc[0],
         
-        # Weighted averages
+        # Counting statistics - SUM
+        'aimed_passes': g['aimed_passes'].sum(),
+        'attempts': g['attempts'].sum(),
+        'completions': g['completions'].sum(),
+        'touchdowns': g['touchdowns'].sum(),
+        'interceptions': g['interceptions'].sum(),
+        'sacks': g['sacks'].sum(),
+        'scrambles': g['scrambles'].sum(),
+        'first_downs': g['first_downs'].sum(),
+        'yards': g['yards'].sum(),
+        'dropbacks': g['dropbacks'].sum(),
+        'drops': g['drops'].sum(),
+        'big_time_throws': g['big_time_throws'].sum(),
+        'turnover_worthy_plays': g['turnover_worthy_plays'].sum(),
+        'bats': g['bats'].sum(),
+        'declined_penalties': g['declined_penalties'].sum(),
+        'penalties': g['penalties'].sum(),
+        'hit_as_threw': g['hit_as_threw'].sum(),
+        'thrown_aways': g['thrown_aways'].sum(),
+        'spikes': g['spikes'].sum(),
+        
+        # Rate/percentage statistics - WEIGHTED AVERAGE
         'accuracy_percent': weighted_avg(g['accuracy_percent'], g['passing_snaps']),
-        'aimed_passes': weighted_avg(g['aimed_passes'], g['passing_snaps']),
-        'attempts': weighted_avg(g['attempts'], g['passing_snaps']),
+        'completion_percent': weighted_avg(g['completion_percent'], g['passing_snaps']),
+        'btt_rate': weighted_avg(g['btt_rate'], g['passing_snaps']),
+        'twp_rate': weighted_avg(g['twp_rate'], g['passing_snaps']),
+        'drop_rate': weighted_avg(g['drop_rate'], g['passing_snaps']),
+        'qb_rating': weighted_avg(g['qb_rating'], g['passing_snaps']),
+        'sack_percent': weighted_avg(g['sack_percent'], g['passing_snaps']),
+        'pressure_to_sack_rate': weighted_avg(g['pressure_to_sack_rate'], g['passing_snaps']),
         'avg_depth_of_target': weighted_avg(g['avg_depth_of_target'], g['passing_snaps']),
         'avg_time_to_throw': weighted_avg(g['avg_time_to_throw'], g['passing_snaps']),
-        'bats': weighted_avg(g['bats'], g['passing_snaps']),
-        'big_time_throws': weighted_avg(g['big_time_throws'], g['passing_snaps']),
-        'btt_rate': weighted_avg(g['btt_rate'], g['passing_snaps']),
-        'completion_percent': weighted_avg(g['completion_percent'], g['passing_snaps']),
-        'completions': weighted_avg(g['completions'], g['passing_snaps']),
-        'declined_penalties': weighted_avg(g['declined_penalties'], g['passing_snaps']),
+        'ypa': weighted_avg(g['ypa'], g['passing_snaps']),
         'def_gen_pressures': weighted_avg(g['def_gen_pressures'], g['passing_snaps']),
-        'drop_rate': weighted_avg(g['drop_rate'], g['passing_snaps']),
-        'dropbacks': weighted_avg(g['dropbacks'], g['passing_snaps']),
-        'drops': weighted_avg(g['drops'], g['passing_snaps']),
-        'first_downs': weighted_avg(g['first_downs'], g['passing_snaps']),
+        
+        # Grades - WEIGHTED AVERAGE
         'grades_hands_fumble': weighted_avg(g['grades_hands_fumble'], g['passing_snaps']),
         'grades_offense': weighted_avg(g['grades_offense'], g['passing_snaps']),
         'grades_pass': weighted_avg(g['grades_pass'], g['passing_snaps']),
         'grades_run': weighted_avg(g['grades_run'], g['passing_snaps']),
-        'hit_as_threw': weighted_avg(g['hit_as_threw'], g['passing_snaps']),
-        'interceptions': weighted_avg(g['interceptions'], g['passing_snaps']),
-        'penalties': weighted_avg(g['penalties'], g['passing_snaps']),
-        'pressure_to_sack_rate': weighted_avg(g['pressure_to_sack_rate'], g['passing_snaps']),
-        'qb_rating': weighted_avg(g['qb_rating'], g['passing_snaps']),
-        'sack_percent': weighted_avg(g['sack_percent'], g['passing_snaps']),
-        'sacks': weighted_avg(g['sacks'], g['passing_snaps']),
-        'scrambles': weighted_avg(g['scrambles'], g['passing_snaps']),
-        'spikes': weighted_avg(g['spikes'], g['passing_snaps']),
-        'thrown_aways': weighted_avg(g['thrown_aways'], g['passing_snaps']),
-        'touchdowns': weighted_avg(g['touchdowns'], g['passing_snaps']),
-        'turnover_worthy_plays': weighted_avg(g['turnover_worthy_plays'], g['passing_snaps']),
-        'twp_rate': weighted_avg(g['twp_rate'], g['passing_snaps']),
-        'yards': weighted_avg(g['yards'], g['passing_snaps']),
-        'ypa': weighted_avg(g['ypa'], g['passing_snaps']),
-    }))
+    }), include_groups=False)
     .reset_index()
 )
+print("\n")
 print(grouped[(grouped['Team'] == "Ravens") & (grouped['Year'] == 2022)]["touchdowns"])
 
-#print(grouped.head())
 grouped.to_csv('backend/Grouped_Data/Grouped_QB.csv')
