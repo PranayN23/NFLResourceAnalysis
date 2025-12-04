@@ -6,6 +6,25 @@ import os
 import re
 import pandas as pd
 from bson import ObjectId
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+import tensorflow as tf
+
+model = tf.keras.models.load_model("backend/ML/combined_notebook/best_model.h5")
+
+# Load your template data for scaling / feature order
+df_template = pd.read_csv("backend/ML/data/Combined_QB.csv")  # adjust path if needed
+
+# Define feature columns your model expects
+feature_cols = [
+    'Value_cap_space', 'Previous_twp_rate', 'Previous_AV', 'Previous_PFF',
+    'Previous_ypa', 'Previous_qb_rating', 'Previous_grades_pass', 
+    'Previous_accuracy_percent', 'Previous_btt_rate'
+]
+
+# Fit scaler on existing data
+scaler = StandardScaler()
+scaler.fit(df_template[feature_cols])
 
 
 from dotenv import load_dotenv
@@ -99,6 +118,92 @@ position_fields_summary = {
     "TE":  ("total_snaps",            "grades_offense"),
     "WR":  ("total_snaps",            "grades_offense")
 }
+
+def get_last_3_years_input(player_name, position="QB", feature_cols=None):
+    """
+    Fetches the last 3 years of player data from MongoDB and returns a scaled 3-step input
+    suitable for the model (shape: [1, 3, num_features]).
+    """
+    pos = position.upper()
+    pos_db = client[pos]
+
+    # Collect all player docs across all teams
+    years_data = []
+    for team in pos_db.list_collection_names():
+        collection = pos_db[team]
+        cursor = collection.find({"player": player_name}).sort("Year", -1)
+        for doc in cursor:
+            print(doc)
+            # Build a dict with feature names as keys
+            year_dict = {}
+            for col in feature_cols:
+                try:
+                    year_dict[col] = float(doc.get(col, 0.0))
+                except:
+                    year_dict[col] = 0.0
+            years_data.append(year_dict)
+
+    # Take last 3 years
+    last_3 = years_data[:3]
+
+    # Pad with zeros if less than 3
+    while len(last_3) < 3:
+        last_3.append({col: 0.0 for col in feature_cols})
+
+    # Reverse to chronological order (oldest -> newest)
+    last_3 = last_3[::-1]
+
+    # Convert to DataFrame (with column names!) before scaling
+    df_input = pd.DataFrame(last_3, columns=feature_cols)
+    print(df_input.head())
+    X_scaled = scaler.transform(df_input)  # ✅ now matches the fitted scaler
+    X_scaled = X_scaled[np.newaxis, :, :]  # add batch dimension for model
+    return X_scaled
+
+
+@app.route("/predict_player_group", methods=["POST"])
+def predict_player_group():
+    data = request.get_json()
+    print(data)
+    if not data:
+        return jsonify({"error": "JSON payload required"}), 400
+
+    player_name = data.get("player_name")
+    projected_cap = data.get("projected_cap")
+
+    if player_name is None or projected_cap is None:
+        return jsonify({"error": "player_name and projected_cap are required"}), 400
+
+    try:
+        projected_cap = float(projected_cap)
+    except ValueError:
+        return jsonify({"error": "projected_cap must be a number"}), 400
+
+    X_input = get_last_3_years_input(player_name, position="QB", feature_cols=feature_cols)
+    # Latest year is the last row
+    X_input[0, -1, feature_cols.index("Value_cap_space")] = projected_cap
+
+    # Make prediction
+    y_pred = model.predict(X_input)
+    predicted_pff = float(y_pred[0][0])
+
+    # Map predicted PFF to a group tier
+    if predicted_pff >= 80:
+        group = "Elite"
+    elif predicted_pff >= 65:
+        group = "High"
+    elif predicted_pff >= 50:
+        group = "Medium"
+    else:
+        group = "Low"
+
+    return jsonify({
+        "player_name": player_name,
+        "projected_cap": projected_cap,
+        "predicted_pff": predicted_pff,
+        "group": group
+    }), 200
+
 
 @app.route("/player_ranking", methods=["GET"])
 def player_ranking():
