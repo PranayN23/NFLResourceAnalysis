@@ -10,7 +10,22 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
 
-model = tf.keras.models.load_model("backend/ML/combined_notebook/best_model.h5")
+# Map ML model feature columns to the corresponding Mongo fields
+ml_to_mongo_map = {
+    "Value_cap_space": "Cap_Space",
+    "Previous_twp_rate": "twp_rate",
+    "Previous_AV": "adjusted_value",
+    "Previous_PFF": "grades_offense",  # example: PFF-like grade
+    "Previous_ypa": "ypa",
+    "Previous_qb_rating": "qb_rating",
+    "Previous_grades_pass": "grades_pass",
+    "Previous_accuracy_percent": "accuracy_percent",
+    "Previous_btt_rate": "btt_rate"
+}
+
+
+model = tf.keras.models.load_model("backend/ML/combined_notebook/best_model.keras")
+model.compile(optimizer='adam', loss='mse')  # Use your original settings
 
 # Load your template data for scaling / feature order
 df_template = pd.read_csv("backend/ML/data/Combined_QB.csv")  # adjust path if needed
@@ -22,9 +37,6 @@ feature_cols = [
     'Previous_accuracy_percent', 'Previous_btt_rate'
 ]
 
-# Fit scaler on existing data
-scaler = StandardScaler()
-scaler.fit(df_template[feature_cols])
 
 
 from dotenv import load_dotenv
@@ -120,45 +132,43 @@ position_fields_summary = {
 }
 
 def get_last_3_years_input(player_name, position="QB", feature_cols=None):
-    """
-    Fetches the last 3 years of player data from MongoDB and returns a scaled 3-step input
-    suitable for the model (shape: [1, 3, num_features]).
-    """
     pos = position.upper()
     pos_db = client[pos]
 
-    # Collect all player docs across all teams
     years_data = []
     for team in pos_db.list_collection_names():
         collection = pos_db[team]
         cursor = collection.find({"player": player_name}).sort("Year", -1)
         for doc in cursor:
-            print(doc)
-            # Build a dict with feature names as keys
             year_dict = {}
-            for col in feature_cols:
-                try:
-                    year_dict[col] = float(doc.get(col, 0.0))
-                except:
-                    year_dict[col] = 0.0
+            for ml_col in feature_cols:
+                mongo_col = ml_to_mongo_map.get(ml_col)
+                val = 0.0
+                if mongo_col in doc:
+                    try:
+                        val = float(doc[mongo_col])
+                    except (ValueError, TypeError):
+                        val = 0.0
+                year_dict[ml_col] = val
+
+            # Randomize Previous_AV
+            if 'Previous_AV' in feature_cols:
+                year_dict['Previous_AV'] = float(np.random.uniform(14, 22))
+
             years_data.append(year_dict)
 
-    # Take last 3 years
+    # Take last 3 years, pad if needed
     last_3 = years_data[:3]
-
-    # Pad with zeros if less than 3
+    print(last_3)
     while len(last_3) < 3:
         last_3.append({col: 0.0 for col in feature_cols})
+        if 'Previous_AV' in feature_cols:
+            last_3[-1]['Previous_AV'] = float(np.random.uniform(14, 22))
 
-    # Reverse to chronological order (oldest -> newest)
-    last_3 = last_3[::-1]
-
-    # Convert to DataFrame (with column names!) before scaling
+    last_3 = last_3[::-1]  # oldest → newest
     df_input = pd.DataFrame(last_3, columns=feature_cols)
-    print(df_input.head())
-    X_scaled = scaler.transform(df_input)  # ✅ now matches the fitted scaler
-    X_scaled = X_scaled[np.newaxis, :, :]  # add batch dimension for model
-    return X_scaled
+    X_input = df_input.to_numpy()[np.newaxis, :, :]
+    return X_input
 
 
 @app.route("/predict_player_group", methods=["POST"])
@@ -180,13 +190,20 @@ def predict_player_group():
         return jsonify({"error": "projected_cap must be a number"}), 400
 
     X_input = get_last_3_years_input(player_name, position="QB", feature_cols=feature_cols)
+    print("Input\n")
+    print(X_input)
+
     # Latest year is the last row
     X_input[0, -1, feature_cols.index("Value_cap_space")] = projected_cap
-
+    print(X_input)
     # Make prediction
-    y_pred = model.predict(X_input)
+    print("About to predict")
+    print(model)
+    y_pred = model(X_input, training=False).numpy()
+    print(y_pred)
     predicted_pff = float(y_pred[0][0])
-
+    print("PFF\n")
+    print(predicted_pff)
     # Map predicted PFF to a group tier
     if predicted_pff >= 80:
         group = "Elite"
