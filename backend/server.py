@@ -174,7 +174,6 @@ def get_last_3_years_input(player_name, position="QB", feature_cols=None):
 @app.route("/predict_player_group", methods=["POST"])
 def predict_player_group():
     data = request.get_json()
-    print(data)
     if not data:
         return jsonify({"error": "JSON payload required"}), 400
 
@@ -190,20 +189,12 @@ def predict_player_group():
         return jsonify({"error": "projected_cap must be a number"}), 400
 
     X_input = get_last_3_years_input(player_name, position="QB", feature_cols=feature_cols)
-    print("Input\n")
-    print(X_input)
 
     # Latest year is the last row
     X_input[0, -1, feature_cols.index("Value_cap_space")] = projected_cap
-    print(X_input)
     # Make prediction
-    print("About to predict")
-    print(model)
     y_pred = model(X_input, training=False).numpy()
-    print(y_pred)
     predicted_pff = float(y_pred[0][0])
-    print("PFF\n")
-    print(predicted_pff)
     # Map predicted PFF to a group tier
     if predicted_pff >= 80:
         group = "Elite"
@@ -473,16 +464,13 @@ def get_player_grades():
     player_name = request.args.get('player_name').strip()
     year = request.args.get('year')
     pos_db = client[position]
-    print(pos_db)
     team_players = pos_db[team]
-    print(team_players)
     query = {"Year": year}
     
     cursor = team_players.find({"Year": 2024, "player": player_name})
     fields_to_return = position_fields.get(position, [])
     filtered_players = []
     for player_doc in cursor:
-        print(player_doc)
         filtered = {field: player_doc.get(field) for field in fields_to_return}
         if player_doc.get("_id"):
             filtered["_id"] = str(player_doc.get("_id"))
