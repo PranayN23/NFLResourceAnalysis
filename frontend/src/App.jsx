@@ -10,6 +10,7 @@ import PlayerRanking from './pages/PlayerRanking';
 import TeamPffRanking from './pages/TeamPffRanking';
 import DraftPage from './pages/DraftPage'; // ✅ Import the new page
 import FreeAgency from './pages/FreeAgency'
+import ComparePlayers from './pages/ComparePlayers';
 
 import './App.css';
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/player-rankings" element={<PlayerRanking />} />
           <Route path="/team-pff" element={<TeamPffRanking />} />
           <Route path="/free-agency" element={<FreeAgency />} />
+          <Route path="/compare-players" element={<ComparePlayers />} />
         </Routes>
       </BrowserRouter>
     </GlobalProvider>

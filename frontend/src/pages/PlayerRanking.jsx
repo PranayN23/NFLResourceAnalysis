@@ -6,6 +6,7 @@ const PlayerRanking = () => {
   const [position, setPosition] = useState("QB");
   const [year, setYear] = useState("2021");
   const [snapCounts, setSnapCounts] = useState("0");
+    const [minGrade, setMinGrade] = useState("0");      // ⬅️ new state
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -14,7 +15,7 @@ const PlayerRanking = () => {
     setLoading(true);
     setError("");
     try {
-      const url = `http://127.0.0.1:5000/player_ranking?position=${position}&year=${year}&snap_counts=${snapCounts}`;
+      const url = `http://127.0.0.1:5000/player_ranking?position=${position}&year=${year}&snap_counts=${snapCounts}&min_grade=${minGrade}`
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
@@ -68,6 +69,16 @@ const PlayerRanking = () => {
             type="number"
             value={snapCounts}
             onChange={(e) => setSnapCounts(e.target.value)}
+            style={{ marginLeft: '0.5rem', width: '80px' }}
+          />
+        </label>
+
+        <label style={{ marginRight: '1rem' }}>
+          Minimum PFF Grade:
+          <input
+            type="number"
+            value={minGrade}
+            onChange={(e) => setMinGrade(e.target.value)}   // ⬅️ update state
             style={{ marginLeft: '0.5rem', width: '80px' }}
           />
         </label>

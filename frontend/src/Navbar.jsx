@@ -21,6 +21,7 @@ const Navbar = () => {
                 <Link to="/team-pff">Team Rosters</Link>
                 <Link to="/draft">Draft/Rookies</Link>
                 <Link to="/free-agency">Free Agency</Link>
+                <Link to="/compare-players">Compare Players</Link>
             </div>
         </div>
     );
