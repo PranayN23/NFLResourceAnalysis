@@ -6,6 +6,37 @@ import os
 import re
 import pandas as pd
 from bson import ObjectId
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+import tensorflow as tf
+
+# Map ML model feature columns to the corresponding Mongo fields
+ml_to_mongo_map = {
+    "Value_cap_space": "Cap_Space",
+    "Previous_twp_rate": "twp_rate",
+    "Previous_AV": "adjusted_value",
+    "Previous_PFF": "grades_offense",  # example: PFF-like grade
+    "Previous_ypa": "ypa",
+    "Previous_qb_rating": "qb_rating",
+    "Previous_grades_pass": "grades_pass",
+    "Previous_accuracy_percent": "accuracy_percent",
+    "Previous_btt_rate": "btt_rate"
+}
+
+
+model = tf.keras.models.load_model("backend/ML/combined_notebook/best_model.keras")
+model.compile(optimizer='adam', loss='mse')  # Use your original settings
+
+# Load your template data for scaling / feature order
+df_template = pd.read_csv("backend/ML/data/Combined_QB.csv")  # adjust path if needed
+
+# Define feature columns your model expects
+feature_cols = [
+    'Value_cap_space', 'Previous_twp_rate', 'Previous_AV', 'Previous_PFF',
+    'Previous_ypa', 'Previous_qb_rating', 'Previous_grades_pass', 
+    'Previous_accuracy_percent', 'Previous_btt_rate'
+]
+
 
 
 from dotenv import load_dotenv
@@ -99,6 +130,98 @@ position_fields_summary = {
     "TE":  ("total_snaps",            "grades_offense"),
     "WR":  ("total_snaps",            "grades_offense")
 }
+
+def get_last_3_years_input(player_name, position="QB", feature_cols=None):
+    pos = position.upper()
+    pos_db = client[pos]
+
+    years_data = []
+    for team in pos_db.list_collection_names():
+        collection = pos_db[team]
+        cursor = collection.find({"player": player_name}).sort("Year", -1)
+        for doc in cursor:
+            year_dict = {}
+            for ml_col in feature_cols:
+                mongo_col = ml_to_mongo_map.get(ml_col)
+                val = 0.0
+                if mongo_col in doc:
+                    try:
+                        val = float(doc[mongo_col])
+                    except (ValueError, TypeError):
+                        val = 0.0
+                year_dict[ml_col] = val
+
+            # Randomize Previous_AV
+            if 'Previous_AV' in feature_cols:
+                year_dict['Previous_AV'] = float(np.random.uniform(14, 22))
+
+            years_data.append(year_dict)
+
+    # Take last 3 years, pad if needed
+    last_3 = years_data[:3]
+    print(last_3)
+    while len(last_3) < 3:
+        last_3.append({col: 0.0 for col in feature_cols})
+        if 'Previous_AV' in feature_cols:
+            last_3[-1]['Previous_AV'] = float(np.random.uniform(14, 22))
+
+    last_3 = last_3[::-1]  # oldest → newest
+    df_input = pd.DataFrame(last_3, columns=feature_cols)
+    X_input = df_input.to_numpy()[np.newaxis, :, :]
+    return X_input
+
+
+@app.route("/predict_player_group", methods=["POST"])
+def predict_player_group():
+    data = request.get_json()
+    print(data)
+    if not data:
+        return jsonify({"error": "JSON payload required"}), 400
+
+    player_name = data.get("player_name")
+    projected_cap = data.get("projected_cap")
+
+    if player_name is None or projected_cap is None:
+        return jsonify({"error": "player_name and projected_cap are required"}), 400
+
+    try:
+        projected_cap = float(projected_cap)
+    except ValueError:
+        return jsonify({"error": "projected_cap must be a number"}), 400
+
+    X_input = get_last_3_years_input(player_name, position="QB", feature_cols=feature_cols)
+    print("Input\n")
+    print(X_input)
+
+    # Latest year is the last row
+    X_input[0, -1, feature_cols.index("Value_cap_space")] = projected_cap
+    print(X_input)
+    # Make prediction
+    print("About to predict")
+    print(model)
+    y_pred = model(X_input, training=False).numpy()
+    print(y_pred)
+    predicted_pff = float(y_pred[0][0])
+    print("PFF\n")
+    print(predicted_pff)
+    # Map predicted PFF to a group tier
+    if predicted_pff >= 80:
+        group = "Elite"
+    elif predicted_pff >= 65:
+        group = "High"
+    elif predicted_pff >= 50:
+        group = "Medium"
+    else:
+        group = "Low"
+
+    return jsonify({
+        "player_name": player_name,
+        "projected_cap": projected_cap,
+        "predicted_pff": predicted_pff,
+        "group": group
+    }), 200
+
+
 @app.route("/player_ranking", methods=["GET"])
 def player_ranking():
     """
