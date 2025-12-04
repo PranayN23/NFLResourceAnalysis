@@ -46,6 +46,10 @@ const PlayerPage = () => {
   const { player } = location.state || {}; // Get player object passed from Results page
 
   const [playerData, setPlayerData] = useState(null);
+  const [capSpace, setCapSpace] = useState('');
+  const [prediction, setPrediction] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!player) return;
@@ -76,6 +80,44 @@ const PlayerPage = () => {
 
     fetchPlayerData();
   }, [player]); // Re-fetch if the player changes
+
+  const handlePredict = async () => {
+    if (!capSpace || isNaN(capSpace)) {
+      setError('Please enter a valid cap space percentage');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setPrediction(null);
+
+    try {
+      const res = await fetch('http://127.0.0.1:5000/predict_player_group', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          player_name: player.player,
+          projected_cap: parseFloat(capSpace),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        setError(data.error);
+        return;
+      }
+
+      setPrediction(data);
+    } catch (err) {
+      console.error('Prediction error:', err);
+      setError('Failed to fetch prediction');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!playerData) return <p>Loading...</p>;
 
@@ -110,6 +152,37 @@ const PlayerPage = () => {
           ))}
         </ul>
       </div>
+
+      {player.position === 'QB' && (
+        <div className="prediction-section">
+          <h4>Performance Prediction</h4>
+          <div className="cap-space-input">
+            <label htmlFor="capSpace">Cap Space %: </label>
+            <input
+              id="capSpace"
+              type="number"
+              step="0.01"
+              value={capSpace}
+              onChange={(e) => setCapSpace(e.target.value)}
+              placeholder="e.g., 15.5"
+            />
+            <button onClick={handlePredict} disabled={loading}>
+              {loading ? 'Predicting...' : 'Predict'}
+            </button>
+          </div>
+
+          {error && <p className="error-message">{error}</p>}
+
+          {prediction && (
+            <div className="prediction-results">
+              <h5>Prediction Results:</h5>
+              <p><strong>Predicted PFF Grade:</strong> {prediction.predicted_pff.toFixed(2)}</p>
+              <p><strong>Performance Tier:</strong> {prediction.group}</p>
+              <p><strong>Projected Cap Space:</strong> {prediction.projected_cap}%</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
