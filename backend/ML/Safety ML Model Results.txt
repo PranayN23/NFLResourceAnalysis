@@ -1,0 +1,29 @@
+Results from Safety ML Models:
+
+Predicting Net EPA:
+
+Training R²: 0.1026
+Validation R²: 0.0597
+Test R²: 0.0594
+
+Predicting Win %:
+
+Training R²: 0.1927
+Validation R²: 0.0901
+Test R²: 0.0973
+
+Reasons for low R^2 values:
+
+1. When checking each individual feature, I observe that the strongest correlations between the feature to another feature is relatively low. Other positions that have more values such as the QB are expected to have R^2 values of about 0.60-0.80. 
+
+Previous_Net_EPA → Net EPA: 0.3951
+Previous_Win_Pct → Win %: 0.3808
+Safety-specific features (interceptions, grades, etc.): 0.20–0.30
+
+2. Safety is a supporting position on one side of the pitch and doesn't have significant impact on team success.
+
+Defense is generally dominated by defensive lineman, and safeties have one of the lowest impacts on the football field, so their low impact in terms of winning could indicate a low R^2 value.
+
+3. Our data is really noisy, even after doing regularization and using XGBoost for predictions. The model seems to explain about only 10% of variance in the data, which indicates that fluctuations in team-level outcomes are seldomly understood by the model.
+
+In the end, after testing various models and experimentation, we can see that safety performance fluctuates vastly from team to team and from year to year, and allocating vast resources to safeties isn't effective, as they aren't largely conducive to team success.
