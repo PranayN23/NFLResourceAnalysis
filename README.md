@@ -1,40 +1,13 @@
-# NFL Team Success Predictor & Offseason Simulator
+"NFL Success Metrics: Unveiling the Winning Formula"
 
-![NFL Analytics](https://img.shields.io/badge/Sports-Analytics-blue)
-![Machine Learning](https://img.shields.io/badge/Machine-Learning-orange)
-![Web App](https://img.shields.io/badge/Web-App-green)
+Our GitHub project delves into the intricate dynamics of NFL success, employing a comprehensive analysis of salary cap, draft value, player statistics, and team performance data. Through meticulous examination, we aim to unravel the pivotal positions that dictate triumph in the NFL and identify the strategic allocations of resources such as salary cap space and draft picks.
 
-A comprehensive system for predicting NFL team success and simulating offseason roster management through machine learning and web technologies.
+Our objectives:
 
-## Features
+Position Importance Assessment: By scrutinizing historical data, we seek to determine which positions wield the greatest influence on team success in the NFL landscape.
+Return on Investment Analysis: We delve into the correlation between salary cap expenditure, draft value, and team performance to discern the positions and strategies that offer the most significant returns.
+Resource Allocation Guidance: Armed with insights gleaned from our analysis, we endeavor to provide actionable recommendations for general managers and coaches on resource allocation strategies, including cap space utilization and draft pick investments.
+Predictive Modeling for Team Success: Leveraging our findings, we aim to develop predictive models to forecast team success in upcoming NFL seasons, offering valuable foresight to stakeholders.
+Throughout the spring semester, we will meticulously analyze data sets, employ advanced statistical methodologies, and leverage machine learning techniques to extract meaningful patterns and insights. Our ultimate aim is to empower decision-makers in the NFL fraternity with actionable intelligence to enhance team performance and drive success in the forthcoming seasons.
 
-### Predictive Modeling
-- Developed TensorFlow models including RNNs to forecast team success
-- Analyzed position investment and player performance data
-- Achieved **84% R² accuracy** for both team and player success predictions
-
-### Offseason Simulator Web App
-- **Frontend**: Interactive React interface
-- **Backend**: Flask API service
-- **Database**: MongoDB for flexible data storage
-- Features:
-  - Player signing simulations
-  - Rookie draft scenarios
-  - Trade management tools
-
-### Data Pipeline
-- Scraped 15 years of NFL historical data using Beautiful Soup
-- Cleaned and processed data with Pandas
-- Stored in MongoDB with integrity checks
-- Dataset includes:
-  - Team investment patterns
-  - Player performance metrics
-  - Salary cap information
-
-## Technology Stack
-- **Machine Learning**: TensorFlow, Keras, Scikit-learn
-- **Web Framework**: Flask (Python backend)
-- **Frontend**: React.js
-- **Database**: MongoDB
-- **Data Processing**: Pandas, NumPy
-- **Web Scraping**: Beautiful Soup, Requests
+Join us on this journey as we unravel the secrets behind NFL triumph and chart the course for strategic excellence in professional football.
