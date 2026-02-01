@@ -34,14 +34,14 @@ bars = plt.bar(positions, r_square_values, color=bar_colors, edgecolor='black')
 # Add labels and title
 plt.xlabel('Position Groups', fontsize=12)
 plt.ylabel('R² Value', fontsize=12)
-plt.title('Player Performance R² Model Values by Position Group for Recurrent Neural Network (2022)', fontsize=14)
+plt.title('Player Performance R² Model Values by Position Group for LSTM (2024)', fontsize=14)
 plt.ylim(0, 1.1)  # Set y-axis limit to show the full range of R² values
 
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 for bar, pos in zip(bars, positions):
     bar.set_label(f"{pos}")
 plt.legend(title="Position Colors", fontsize=10)
-plt.savefig("player_performance_r_square_model_by_position_RNN.png")
+plt.savefig("player_performance_r_square_model_by_position_LSTM.png")
 # Display the plot
 plt.show()
 
