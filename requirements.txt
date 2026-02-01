@@ -8,3 +8,10 @@ seaborn==0.12.2
 scipy==1.11.3
 webdriver-manager==4.0.1
 selenium==4.13.0
+tensorflow
+scikit-learn
+jupyter
+flask
+pymongo
+flask-cors
+python-dotenv
