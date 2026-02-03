@@ -1,0 +1,66 @@
+Top 20 Positive Correlations with TE_Value_Score_next:
+TE_Value_Score_next    1.000000
+TE_Value               0.663110
+TE_Value_Score         0.663110
+yards                  0.646912
+Production_Score       0.646116
+first_downs            0.641660
+receptions             0.614048
+weighted_grade         0.612864
+targets                0.612213
+yards_after_catch      0.607213
+routes                 0.546909
+total_snaps            0.538128
+pass_plays             0.535319
+touchdowns             0.522375
+avoided_tackles        0.516825
+grades_offense         0.510891
+grades_pass_route      0.490476
+slot_snaps             0.482850
+wide_snaps             0.433632
+drops                  0.427830
+Name: TE_Value_Score_next, dtype: float64
+
+Top 20 Negative Correlations with TE_Value_Score_next:
+pass_blocks                        0.189893
+yards_per_reception                0.178002
+grades_hands_drop                  0.144382
+targeted_qb_rating                 0.143459
+declined_penalties                 0.139724
+Net EPA                            0.129361
+wide_rate                          0.120253
+age                                0.104299
+contested_catch_rate               0.100890
+grades_pass_block                  0.058777
+franchise_id                       0.014696
+caught_percent                     0.009572
+yards_after_catch_per_reception    0.006690
+grades_hands_fumble               -0.038431
+drop_rate                         -0.074723
+Year                              -0.171225
+weighted_average_grade            -0.208408
+inline_rate                       -0.208838
+pass_block_rate                   -0.247451
+position_x                              NaN
+Name: TE_Value_Score_next, dtype: float64
+
+Generating Correlation Matrix for top features...
+Top Features: ['TE_Value', 'TE_Value_Score', 'yards', 'Production_Score', 'first_downs', 'receptions', 'weighted_grade', 'targets', 'yards_after_catch', 'routes', 'total_snaps', 'pass_plays', 'touchdowns', 'avoided_tackles', 'grades_offense']
+
+Correlation between top predictors:
+                   TE_Value  TE_Value_Score     yards  Production_Score  first_downs  receptions  weighted_grade   targets  yards_after_catch    routes  total_snaps  pass_plays  touchdowns  avoided_tackles  grades_offense
+TE_Value           1.000000        1.000000  0.926417          0.933445     0.931182    0.889945        0.921059  0.880026           0.863227  0.802890     0.806714    0.805784    0.787799         0.695905        0.739647
+TE_Value_Score     1.000000        1.000000  0.926417          0.933445     0.931182    0.889945        0.921059  0.880026           0.863227  0.802890     0.806714    0.805784    0.787799         0.695905        0.739647
+yards              0.926417        0.926417  1.000000          0.995073     0.984250    0.972808        0.952489  0.972090           0.942765  0.915494     0.897895    0.893790    0.795461         0.737923        0.590195
+Production_Score   0.933445        0.933445  0.995073          1.000000     0.993043    0.971124        0.953482  0.970049           0.930427  0.912738     0.895248    0.891227    0.842636         0.726716        0.601713
+first_downs        0.931182        0.931182  0.984250          0.993043     1.000000    0.969957        0.947845  0.967240           0.913216  0.906827     0.888030    0.884054    0.818447         0.707973        0.602999
+receptions         0.889945        0.889945  0.972808          0.971124     0.969957    1.000000        0.954869  0.989854           0.922510  0.940848     0.923061    0.920119    0.766558         0.731661        0.535793
+weighted_grade     0.921059        0.921059  0.952489          0.953482     0.947845    0.954869        1.000000  0.957524           0.894098  0.964136     0.973158    0.970890    0.780140         0.699150        0.550721
+targets            0.880026        0.880026  0.972090          0.970049     0.967240    0.989854        0.957524  1.000000           0.910228  0.951916     0.932951    0.930130    0.768458         0.716930        0.514556
+yards_after_catch  0.863227        0.863227  0.942765          0.930427     0.913216    0.922510        0.894098  0.910228           1.000000  0.856595     0.846631    0.845837    0.721516         0.814622        0.552090
+routes             0.802890        0.802890  0.915494          0.912738     0.906827    0.940848        0.964136  0.951916           0.856595  1.000000     0.988569    0.987439    0.727838         0.660377        0.396981
+total_snaps        0.806714        0.806714  0.897895          0.895248     0.888030    0.923061        0.973158  0.932951           0.846631  0.988569     1.000000    0.997108    0.718278         0.649684        0.398596
+pass_plays         0.805784        0.805784  0.893790          0.891227     0.884054    0.920119        0.970890  0.930130           0.845837  0.987439     0.997108    1.000000    0.715415         0.648586        0.401775
+touchdowns         0.787799        0.787799  0.795461          0.842636     0.818447    0.766558        0.780140  0.768458           0.721516  0.727838     0.718278    0.715415    1.000000         0.570114        0.538481
+avoided_tackles    0.695905        0.695905  0.737923          0.726716     0.707973    0.731661        0.699150  0.716930           0.814622  0.660377     0.649684    0.648586    0.570114         1.000000        0.454150
+grades_offense     0.739647        0.739647  0.590195          0.601713     0.602999    0.535793        0.550721  0.514556           0.552090  0.396981     0.398596    0.401775    0.538481         0.454150        1.000000
