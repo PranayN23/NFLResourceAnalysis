@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 import joblib
 import os
 
-# --- MODEL ARCHITECTURE (Must match training script) ---
+# --- MODEL ARCHITECTURE (Hybrid Regressor) ---
 class Time2Vec(nn.Module):
     def __init__(self, input_dim, kernel_size=1):
         super(Time2Vec, self).__init__()
@@ -25,10 +25,9 @@ class Time2Vec(nn.Module):
         out = out.reshape(x.size(0), x.size(1), -1)
         return out
 
-class PlayerTransformerClassifier(nn.Module):
-    def __init__(self, input_dim, seq_len, num_classes=3, kernel_size=1, num_heads=4, ff_dim=64, num_layers=2, dropout=0.1):
-        super(PlayerTransformerClassifier, self).__init__()
-        
+class PlayerTransformerRegressor(nn.Module):
+    def __init__(self, input_dim, seq_len, kernel_size=1, num_heads=4, ff_dim=64, num_layers=2, dropout=0.1):
+        super(PlayerTransformerRegressor, self).__init__()
         self.time2vec = Time2Vec(input_dim, kernel_size)
         self.embed_dim = input_dim * (kernel_size + 1)
         
@@ -46,45 +45,34 @@ class PlayerTransformerClassifier(nn.Module):
             dropout=dropout,
             batch_first=True
         )
-        # --- ARCHITECTURE UPGRADES (Match Training) ---
         self.pos_embedding = nn.Parameter(torch.randn(1, seq_len + 1, self.embed_dim))
         self.cls_token = nn.Parameter(torch.randn(1, 1, self.embed_dim))
-
         self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
         
-        self.classifier = nn.Sequential(
+        self.regressor = nn.Sequential(
             nn.Linear(self.embed_dim, 64),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(64, num_classes)
+            nn.Linear(64, 1)
         )
         
     def forward(self, x, mask=None):
         x = self.time2vec(x)
         x = self.pad_proj(x)
-        
-        # Add CLS Token
         batch_size = x.size(0)
         cls_tokens = self.cls_token.expand(batch_size, -1, -1)
         x = torch.cat((cls_tokens, x), dim=1)
-
-        # Update Mask for CLS Token
+        
         if mask is not None:
             cls_mask = torch.zeros((batch_size, 1), dtype=torch.bool, device=x.device)
             full_mask = torch.cat([cls_mask, mask], dim=1)
         else:
             full_mask = None
-
-        # Add Positional Encoding
+            
         x = x + self.pos_embedding
-        
-        # Transformer with Masking
         x = self.transformer_encoder(x, src_key_padding_mask=full_mask)
-        
-        # Extract CLS token output
         x = x[:, 0, :]
-        
-        x = self.classifier(x)
+        x = self.regressor(x)
         return x
 
 # --- INFERENCE WRAPPER ---
@@ -98,120 +86,65 @@ class PlayerModelInference:
             'team_performance_proxy'
         ]
         self.max_seq_len = 5
-        self.num_classes = 3
-        self.tier_names = ["Reserve/Poor", "Starter/Average", "Elite/High Quality"]
-
-        # Load Model (Input dim = 14)
-        self.model = PlayerTransformerClassifier(input_dim=14, seq_len=5, num_classes=3).to(self.device)
+        self.model = PlayerTransformerRegressor(input_dim=len(self.features), seq_len=5).to(self.device)
         
         if os.path.exists(model_path):
             state_dict = torch.load(model_path, map_location=self.device)
             self.model.load_state_dict(state_dict)
             self.model.eval()
             print(f"Model loaded from {model_path}")
-        else:
-            print(f"WARNING: Model path {model_path} not found.")
-
-        # ATOMIC SCALER LOADING
+        
         self.scaler = None
         self.is_fitted = False
         if scaler_path and os.path.exists(scaler_path):
             self.scaler = joblib.load(scaler_path)
             self.is_fitted = True
             print(f"Scaler loaded from {scaler_path}")
-        else:
-             print("WARNING: No scaler found. Falling back to internal StandardScaler (needs fitting).")
-             self.scaler = StandardScaler()
-
-    def fit_scaler(self, csv_path):
-        """Only used if atomic loader fails."""
-        if self.is_fitted and not isinstance(self.scaler, StandardScaler):
-            return
-            
-        if os.path.exists(csv_path):
-            df = pd.read_csv(csv_path)
-            # Ensure adjusted_value is numeric
-            df['adjusted_value'] = pd.to_numeric(df['adjusted_value'], errors='coerce')
-            
-            df.sort_values(by=['player', 'Year'], inplace=True)
-            
-            # Filter backups BEFORE feature engineering
-            if 'dropbacks' in df.columns:
-                df = df[df['dropbacks'] >= 100].copy()
-            
-            df["years_in_league"] = df.groupby("player").cumcount()
-            df["delta_grade"] = df.groupby("player")["grades_offense"].diff().fillna(0)
-            df["delta_epa"]   = df.groupby("player")["Net EPA"].diff().fillna(0)
-            df["delta_btt"]   = df.groupby("player")["btt_rate"].diff().fillna(0)
-            df['team_performance_proxy'] = df.groupby(['Team', 'Year'])['Net EPA'].transform('mean')
-            
-            self.scaler.fit(df[self.features])
-            self.is_fitted = True
-            print("Scaler fitted on historical data manually.")
 
     def predict(self, player_history_df):
-        """
-        Supports variable history length (1-5 years) via padding/masking.
-        """
         if not self.is_fitted:
-            print("Warning: Scaler not loaded/fitted.")
+            print("Warning: Scaler not loaded.")
         
-        # 1. Cleaning & Pre-filtering
         player_history_df = player_history_df.copy()
         player_history_df['adjusted_value'] = pd.to_numeric(player_history_df['adjusted_value'], errors='coerce')
-        
-        # Filter for starter seasons only to match training logic
-        if 'dropbacks' in player_history_df.columns:
-            player_history_df = player_history_df[player_history_df['dropbacks'] >= 100].copy()
-
-        if len(player_history_df) == 0:
-            return "No Data", {}
-
         player_history_df = player_history_df.sort_values('Year')
         
-        # 2. Feature Engineering
+        # Engineering
         player_history_df["years_in_league"] = player_history_df.groupby("player").cumcount()
         player_history_df["delta_grade"] = player_history_df["grades_offense"].diff().fillna(0)
         player_history_df["delta_epa"]   = player_history_df["Net EPA"].diff().fillna(0)
         player_history_df["delta_btt"]   = player_history_df["btt_rate"].diff().fillna(0)
         
-        # Note: team_performance_proxy should already be present if passed from test_model.py
+        # Team Proxy handling
         if 'team_performance_proxy' not in player_history_df.columns:
-             player_history_df['team_performance_proxy'] = player_history_df['Net EPA']
+            player_history_df['team_performance_proxy'] = player_history_df['Net EPA'].fillna(0)
+        
+        # Final NaN clean
+        player_history_df = player_history_df.fillna(0)
 
-        # 3. Extract History (up to 5 years)
         history = player_history_df.iloc[-self.max_seq_len:][self.features].copy()
         actual_len = len(history)
         
-        # 4. Normalize
         if self.is_fitted:
             history[self.features] = self.scaler.transform(history[self.features])
             
-        # 5. Padding & Masking
         vals = history.values
         padding_len = self.max_seq_len - actual_len
         if padding_len > 0:
-            pad = np.zeros((padding_len, len(self.features)))
-            padded_x = np.vstack([pad, vals])
+            padded_x = np.vstack([np.zeros((padding_len, len(self.features))), vals])
             mask = [True] * padding_len + [False] * actual_len
         else:
             padded_x = vals
             mask = [False] * actual_len
 
-        # 6. Inference
-        x = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0).to(self.device)
-        m = torch.tensor(mask, dtype=torch.bool).unsqueeze(0).to(self.device)
+        x = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
+        m = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
         
         with torch.no_grad():
-            outputs = self.model(x, mask=m) 
-            probs = torch.softmax(outputs, dim=1).squeeze().numpy()
-            pred_idx = np.argmax(probs)
+            output = self.model(x, mask=m).squeeze().item()
             
-        prediction = self.tier_names[pred_idx]
-        confidence = {
-            self.tier_names[0]: float(probs[0]),
-            self.tier_names[1]: float(probs[1]),
-            self.tier_names[2]: float(probs[2])
-        }
+        if output >= 80.0: tier = "Elite"
+        elif output >= 60.0: tier = "Starter"
+        else: tier = "Reserve/Poor"
         
-        return prediction, confidence
+        return tier, {"predicted_grade": output}
