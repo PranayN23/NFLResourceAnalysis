@@ -1,40 +1,65 @@
 
-from typing import TypedDict, Literal, Dict
-from langgraph.graph import StateGraph, END
-from backend.agent.model_wrapper import PlayerModelInference
+from typing import Dict, Literal, TypedDict
+
 import pandas as pd
-import os
+from langgraph.graph import END, StateGraph
 
-# Initialize Model Wrapper
+from backend.agent.model_wrapper import (
+    EdgePlayerModelInference,
+    PlayerModelInference,
+)
+
+# Initialize Model Wrappers
 # Using absolute paths to avoid CWD issues
-MODEL_PATH = "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/transformers/best_classifier.pth"
-CSV_PATH = "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/QB.csv"
+QB_MODEL_PATH = (
+    "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/transformers/"
+    "best_classifier.pth"
+)
+EDGE_MODEL_PATH = (
+    "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/transformers/"
+    "best_classifier_edge.pth"
+)
 
-# Global inference instance (loaded once)
-inference_engine = PlayerModelInference(MODEL_PATH)
-inference_engine.fit_scaler(CSV_PATH) # Fit scaler on startup
+QB_CSV_PATH = "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/QB.csv"
+EDGE_CSV_PATH = "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/ED.csv"
+
+# Global inference instances (loaded once)
+qb_inference_engine = PlayerModelInference(QB_MODEL_PATH)
+qb_inference_engine.fit_scaler(QB_CSV_PATH)
+
+edge_inference_engine = EdgePlayerModelInference(EDGE_MODEL_PATH)
+edge_inference_engine.fit_scaler(EDGE_CSV_PATH)
+
 
 class AgentState(TypedDict):
     player_name: str
-    salary_ask: float # in Millions
-    player_history: pd.DataFrame # Raw data for the player
-    
+    salary_ask: float  # in Millions
+    position: Literal["QB", "EDGE"]
+    player_history: pd.DataFrame  # Raw data for the player
+
     # Outputs
     predicted_tier: str
     confidence: Dict[str, float]
-    valuation: float # Estimated fair value
-    decision: str # "SIGN" or "PASS"
+    valuation: float  # Estimated fair value
+    decision: str  # "SIGN" or "PASS"
     reasoning: str
 
+
 def predict_performance(state: AgentState):
-    """Run the PyTorch Model to get the Tier"""
-    print(f"Agent: Predicting performance for {state['player_name']}...")
-    
-    tier, conf = inference_engine.predict(state['player_history'])
-    
+    """Run the PyTorch Model to get the Tier for the requested position."""
+    print(
+        f"Agent: Predicting performance for {state['player_name']} "
+        f"at position {state['position']}..."
+    )
+
+    if state["position"] == "EDGE":
+        tier, conf = edge_inference_engine.predict(state["player_history"])
+    else:
+        tier, conf = qb_inference_engine.predict(state["player_history"])
+
     return {
         "predicted_tier": tier,
-        "confidence": conf
+        "confidence": conf,
     }
 
 def evaluate_value(state: AgentState):

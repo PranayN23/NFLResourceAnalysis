@@ -1,24 +1,26 @@
 
-import torch
-import torch.nn as nn
+import os
+from typing import List
+
 import numpy as np
 import pandas as pd
+import torch
+import torch.nn as nn
 from sklearn.preprocessing import StandardScaler
-import joblib
-import os
 
-# --- MODEL ARCHITECTURE (Must match training script) ---
+
+# --- SHARED MODEL ARCHITECTURE (matches training scripts) ---
 class Time2Vec(nn.Module):
-    def __init__(self, input_dim, kernel_size=1):
-        super(Time2Vec, self).__init__()
+    def __init__(self, input_dim: int, kernel_size: int = 1):
+        super().__init__()
         self.k = kernel_size
         self.input_dim = input_dim
-        self.w0 = nn.Parameter(torch.randn(input_dim, 1)) 
+        self.w0 = nn.Parameter(torch.randn(input_dim, 1))
         self.b0 = nn.Parameter(torch.randn(input_dim, 1))
         self.wk = nn.Parameter(torch.randn(input_dim, kernel_size))
         self.bk = nn.Parameter(torch.randn(input_dim, kernel_size))
-        
-    def forward(self, x):
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x_uns = x.unsqueeze(-1)
         linear = x_uns * self.w0 + self.b0
         periodic = torch.sin(x_uns * self.wk + self.bk)
@@ -26,13 +28,24 @@ class Time2Vec(nn.Module):
         out = out.reshape(x.size(0), x.size(1), -1)
         return out
 
+
 class PlayerTransformerClassifier(nn.Module):
-    def __init__(self, input_dim, seq_len, num_classes=3, kernel_size=1, num_heads=4, ff_dim=64, num_layers=2, dropout=0.1):
-        super(PlayerTransformerClassifier, self).__init__()
-        
+    def __init__(
+        self,
+        input_dim: int,
+        seq_len: int,
+        num_classes: int = 3,
+        kernel_size: int = 1,
+        num_heads: int = 4,
+        ff_dim: int = 64,
+        num_layers: int = 2,
+        dropout: float = 0.1,
+    ):
+        super().__init__()
+
         self.time2vec = Time2Vec(input_dim, kernel_size)
         self.embed_dim = input_dim * (kernel_size + 1)
-        
+
         if self.embed_dim % num_heads != 0:
             new_dim = (self.embed_dim // num_heads + 1) * num_heads
             self.pad_proj = nn.Linear(self.embed_dim, new_dim)
@@ -41,48 +54,53 @@ class PlayerTransformerClassifier(nn.Module):
             self.pad_proj = nn.Identity()
 
         encoder_layer = nn.TransformerEncoderLayer(
-            d_model=self.embed_dim, 
-            nhead=num_heads, 
-            dim_feedforward=ff_dim, 
+            d_model=self.embed_dim,
+            nhead=num_heads,
+            dim_feedforward=ff_dim,
             dropout=dropout,
-            batch_first=True
+            batch_first=True,
         )
-        self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+        self.transformer_encoder = nn.TransformerEncoder(
+            encoder_layer, num_layers=num_layers
+        )
         self.global_avg_pool = nn.AdaptiveAvgPool1d(1)
-        
+
         self.classifier = nn.Sequential(
             nn.Linear(self.embed_dim, 64),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(64, num_classes)
+            nn.Linear(64, num_classes),
         )
-        
-    def forward(self, x):
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.time2vec(x)
         x = self.pad_proj(x)
         x = self.transformer_encoder(x)
-        x = x.permute(0, 2, 1) 
+        x = x.permute(0, 2, 1)
         x = self.global_avg_pool(x).squeeze(-1)
         x = self.classifier(x)
         return x
 
-# --- INFERENCE WRAPPER ---
-class PlayerModelInference:
-    def __init__(self, model_path, scaler=None):
-        self.device = torch.device('cpu')
-        self.features = [
-            'grades_pass', 'grades_offense', 'qb_rating', 'adjusted_value',
-            'Cap_Space', 'ypa', 'twp_rate', 'btt_rate', 'completion_percent'
-        ]
-        self.seq_len = 3
+
+class BasePlayerModelInference:
+    """
+    Shared inference utilities for sequence-based Time2Vec+Transformer models.
+    Specialized subclasses set features and tier naming.
+    """
+
+    def __init__(self, model_path: str, features: List[str], seq_len: int = 3):
+        self.device = torch.device("cpu")
+        self.features = features
+        self.seq_len = seq_len
         self.num_classes = 3
         self.tier_names = ["Reserve/Poor", "Starter/Average", "Elite/High Quality"]
 
-        # Load Model
-        # We need to instantiate the model structure first with the same params as training
-        # Features length = 9
-        self.model = PlayerTransformerClassifier(input_dim=9, seq_len=3, num_classes=3).to(self.device)
-        
+        self.model = PlayerTransformerClassifier(
+            input_dim=len(self.features),
+            seq_len=self.seq_len,
+            num_classes=self.num_classes,
+        ).to(self.device)
+
         if os.path.exists(model_path):
             state_dict = torch.load(model_path, map_location=self.device)
             self.model.load_state_dict(state_dict)
@@ -91,66 +109,116 @@ class PlayerModelInference:
         else:
             print(f"WARNING: Model path {model_path} not found.")
 
-        # TEAM REVIEW NOTE (STAGE 3 - INFERENCE):
-        # Currently, we re-fit the Standard Scaler on the CSV every time the Agent starts.
-        # PRODUCTION FIX: We must save `scaler.save` during training and load it here.
-        # Otherwise, if the CSV changes, the model input distribution shifts.
+        # REVIEW NOTE:
+        # We still re-fit the StandardScaler from CSV on startup (same behavior as QB).
+        # For production, persist the scaler during training and load it here.
         self.scaler = StandardScaler()
         self.is_fitted = False
 
-    def fit_scaler(self, csv_path):
-        """Fit scaler on the training data to ensure inference input standardization matches training."""
-        if os.path.exists(csv_path):
-            df = pd.read_csv(csv_path)
-            # Filter backups just like training
-            if 'dropbacks' in df.columns:
-                df = df[df['dropbacks'] >= 100]
-            
-            # Ensure columns exist
-            available_feat = [f for f in self.features if f in df.columns]
-            if len(available_feat) == len(self.features):
-                self.scaler.fit(df[self.features])
-                self.is_fitted = True
-                print("Scaler fitted on historical data.")
-            else:
-                print("Missing features in CSV, cannot fit scaler.")
+    def _fit_scaler_from_df(self, df: pd.DataFrame):
+        available_feat = [f for f in self.features if f in df.columns]
+        if len(available_feat) == len(self.features):
+            self.scaler.fit(df[self.features])
+            self.is_fitted = True
+            print("Scaler fitted on historical data.")
         else:
-            print(f"CSV path {csv_path} not found. Scaler not fitted.")
+            print(
+                f"Missing features in CSV, cannot fit scaler. "
+                f"Expected: {self.features}, got: {available_feat}"
+            )
 
-    def predict(self, player_history_df):
+    def predict(self, player_history_df: pd.DataFrame):
         """
-        Expects a DataFrame with at least 3 rows (years) for the player.
-        Columns must include: grades_pass, grades_offense, qb_rating... etc.
+        Expects a DataFrame with at least `seq_len` rows for the player.
         """
         if not self.is_fitted:
             print("Warning: Scaler not fitted. Predictions may be inaccurate.")
-        
-        # Ensure latest years are used
-        player_history_df = player_history_df.sort_values('Year')
-        
+
+        player_history_df = player_history_df.sort_values("Year")
+
         if len(player_history_df) < self.seq_len:
             return "Insufficient Data", {}
 
-        # Get last 3 years
-        history = player_history_df.iloc[-self.seq_len:][self.features].copy()
-        
-        # Normalize
+        history = player_history_df.iloc[-self.seq_len :][self.features].copy()
+
         if self.is_fitted:
             history[self.features] = self.scaler.transform(history[self.features])
-            
-        # Create tensor [1, seq_len, features]
-        x = torch.tensor(history.values, dtype=torch.float32).unsqueeze(0).to(self.device)
-        
+
+        x = torch.tensor(history.values, dtype=torch.float32).unsqueeze(0).to(
+            self.device
+        )
+
         with torch.no_grad():
-            outputs = self.model(x) # [1, 3] -> logits
+            outputs = self.model(x)
             probs = torch.softmax(outputs, dim=1).squeeze().numpy()
-            pred_idx = np.argmax(probs)
-            
+            pred_idx = int(np.argmax(probs))
+
         prediction = self.tier_names[pred_idx]
         confidence = {
             self.tier_names[0]: float(probs[0]),
             self.tier_names[1]: float(probs[1]),
-            self.tier_names[2]: float(probs[2])
+            self.tier_names[2]: float(probs[2]),
         }
-        
+
         return prediction, confidence
+
+
+class PlayerModelInference(BasePlayerModelInference):
+    """
+    QB-specific inference (matches Player_Model_QB.py).
+    """
+
+    def __init__(self, model_path: str):
+        features = [
+            "grades_pass",
+            "grades_offense",
+            "qb_rating",
+            "adjusted_value",
+            "Cap_Space",
+            "ypa",
+            "twp_rate",
+            "btt_rate",
+            "completion_percent",
+        ]
+        super().__init__(model_path=model_path, features=features, seq_len=3)
+
+    def fit_scaler(self, csv_path: str):
+        if os.path.exists(csv_path):
+            df = pd.read_csv(csv_path)
+            if "dropbacks" in df.columns:
+                df = df[df["dropbacks"] >= 100]
+            self._fit_scaler_from_df(df)
+        else:
+            print(f"CSV path {csv_path} not found. Scaler not fitted.")
+
+
+class EdgePlayerModelInference(BasePlayerModelInference):
+    """
+    EDGE-specific inference (matches Player_Model_EDGE.py).
+    """
+
+    def __init__(self, model_path: str):
+        features = [
+            "grades_defense",
+            "grades_pass_rush_defense",
+            "grades_run_defense",
+            "grades_tackle",
+            "Cap_Space",
+            "Net EPA",
+            "snap_counts_pass_rush",
+            "snap_counts_run_defense",
+            "total_pressures",
+        ]
+        super().__init__(model_path=model_path, features=features, seq_len=3)
+
+    def fit_scaler(self, csv_path: str):
+        if os.path.exists(csv_path):
+            df = pd.read_csv(csv_path)
+            if "position" in df.columns:
+                df = df[df["position"] == "ED"]
+            if "snap_counts_defense" in df.columns:
+                df = df[df["snap_counts_defense"] >= 300]
+            self._fit_scaler_from_df(df)
+        else:
+            print(f"CSV path {csv_path} not found. Scaler not fitted.")
+
