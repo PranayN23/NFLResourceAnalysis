@@ -20,10 +20,10 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 # Ensure root is in path
 sys.path.append(os.getcwd())
 
-from backend.ML.TightEnds.TETime2Vec import load_and_engineer_features as load_xgb_data
-from backend.ML.TightEnds.TETransformer import TETransformer, load_sequences as load_transformer_data
+from backend.ML.WideReceivers.WRTime2Vec import load_and_engineer_features as load_xgb_data
+from backend.ML.WideReceivers.WRTransformer import WRTransformer, load_sequences as load_transformer_data
 
-DATA_FILE = "backend/ML/TightEnds/TE.csv"
+DATA_FILE = "backend/ML/WR.csv"
 TARGET = "weighted_grade"
 
 def validate_year(validation_year, verbose=False):
@@ -32,7 +32,7 @@ def validate_year(validation_year, verbose=False):
     Models are trained ONLY on data from years PRIOR to validation_year.
     """
     if verbose:
-        print(f"==== STARTING ENSEMBLE VALIDATION (Predicting {validation_year}) ====")
+        print(f"==== STARTING WR ENSEMBLE VALIDATION (Predicting {validation_year}) ====")
 
     # ==========================================
     # 1. XGBOOST VALIDATION (75%)
@@ -49,8 +49,8 @@ def validate_year(validation_year, verbose=False):
         "time_linear", "time_sin_1", "time_cos_1", 
         "time_sin_2", "time_cos_2", "time_sin_3", "time_cos_3",
         "career_year", "career_year_sq",
-        "is_prime", "is_decline",
-        "Growth_Potential", "Team_TE_EPA_History"
+        "is_prime", "is_decline", "efficiency_spike", "efficiency_per_snap",
+        "Growth_Potential", "Team_WR_EPA_History", "career_peak_grade"
     ]
     predictors = [c for c in predictors if c in data.columns]
     
@@ -118,7 +118,7 @@ def validate_year(validation_year, verbose=False):
     torch.manual_seed(12)
     np.random.seed(12)
     
-    transformer = TETransformer(num_features=F).to(device)
+    transformer = WRTransformer(num_features=F).to(device)
     optimizer = torch.optim.Adam(transformer.parameters(), lr=0.001)
     criterion = nn.MSELoss()
     
@@ -153,11 +153,12 @@ def validate_year(validation_year, verbose=False):
     # Use 'inner' to ensure we only evaluate players present in both models
     final_df = pd.merge(df_xgb, df_trans[["player", "Team", "Pred_Transformer"]], on=["player", "Team"], how="inner")
     
-    # Weights (Optimized: 0.75 / 0.25)
+    # Weights (Optimized from TE: 0.75 / 0.25)
     W_XGB = 0.75
     W_TRANS = 0.25
     
     final_df["Ensemble_Pred"] = (final_df["Pred_XGB"] * W_XGB) + (final_df["Pred_Transformer"] * W_TRANS)
+    final_df["Error"] = final_df[TARGET] - final_df["Ensemble_Pred"]
     
     # Metrics
     r2 = r2_score(final_df[TARGET], final_df["Ensemble_Pred"])
@@ -171,7 +172,7 @@ def validate_year(validation_year, verbose=False):
         "R2": r2,
         "MAE": mae,
         "RMSE": rmse,
-        "Samples": len(final_df)
+        "Samples": len(final_df) 
     }
 
 def analyze_specific_year(target_year):
@@ -179,9 +180,8 @@ def analyze_specific_year(target_year):
     Generates a detailed prediction report for a specific year.
     Prints Top 20 predictions and saves the full list to CSV.
     """
-    print(f"\n==== GENERATING DETAILED REPORT FOR {target_year} ====")
+    print(f"\n==== GENERATING WR DETAILED REPORT FOR {target_year} ====")
     
-    # Re-use the validation logic but keep the dataframe
     # 1. XGBOOST
     data, _ = load_xgb_data(DATA_FILE)
     
@@ -191,8 +191,8 @@ def analyze_specific_year(target_year):
         "time_linear", "time_sin_1", "time_cos_1", 
         "time_sin_2", "time_cos_2", "time_sin_3", "time_cos_3",
         "career_year", "career_year_sq",
-        "is_prime", "is_decline",
-        "Growth_Potential", "Team_TE_EPA_History"
+        "is_prime", "is_decline", "efficiency_spike", "efficiency_per_snap",
+        "Growth_Potential", "Team_WR_EPA_History"
     ]
     predictors = [c for c in predictors if c in data.columns]
     
@@ -210,7 +210,6 @@ def analyze_specific_year(target_year):
     )
     xgb_model.fit(train_data[predictors], train_data[TARGET])
     
-    # Predict XGB
     preds_xgb = xgb_model.predict(test_data[predictors])
     df_xgb = test_data[["player", "Team", "player_id", TARGET, "weighted_grade_prev"]].copy()
     df_xgb["Pred_XGB"] = preds_xgb
@@ -240,7 +239,7 @@ def analyze_specific_year(target_year):
     np.random.seed(12)
     
     print("Training Transformer...")
-    transformer = TETransformer(num_features=F).to(device)
+    transformer = WRTransformer(num_features=F).to(device)
     optimizer = torch.optim.Adam(transformer.parameters(), lr=0.001)
     criterion = nn.MSELoss()
     
@@ -268,48 +267,52 @@ def analyze_specific_year(target_year):
     # 3. ENSEMBLE
     final_df = pd.merge(df_xgb, df_trans[["player", "Team", "Pred_Transformer"]], on=["player", "Team"], how="inner")
     
+    # Weights (Optimized from TE: 0.75 / 0.25)
     W_XGB = 0.75
     W_TRANS = 0.25
+    
     final_df["Ensemble_Pred"] = (final_df["Pred_XGB"] * W_XGB) + (final_df["Pred_Transformer"] * W_TRANS)
     final_df["Error"] = final_df[TARGET] - final_df["Ensemble_Pred"]
 
     # Metrics
     r2 = r2_score(final_df[TARGET], final_df["Ensemble_Pred"])
     print(f"\nR-Squared for {target_year}: {r2:.4f}")
-    
-    # Output to Console
+
     cols = ["player", "Team", "weighted_grade_prev", TARGET, "Pred_XGB", "Pred_Transformer", "Ensemble_Pred", "Error"]
     final_df = final_df.sort_values("Ensemble_Pred", ascending=False)
     
-    print(f"\n==== TOP 25 PREDICTIONS FOR {target_year} ====")
+    print(f"\n==== TOP 25 WR PREDICTIONS FOR {target_year} ====")
     print(final_df[cols].head(25).to_string(index=False))
     
-    filename = f"backend/ML/TightEnds/TE_{target_year}_Detailed_Report.csv"
+    filename = f"backend/ML/WideReceivers/WR_{target_year}_Detailed_Report.csv"
     final_df.to_csv(filename, index=False)
     print(f"\nSaved detailed report to {filename}")
 
 if __name__ == "__main__":
-    # print("\n==========================================================================")
-    # print("   HISTORICAL BACKTEST (Strict Walk-Forward: Training on Past Data Only)")
-    # print("==========================================================================")
-    # print(f"{'Year':<6} | {'Trained On':<12} | {'Train N':<8} | {'Test N':<8} | {'R2':<8} | {'MAE':<8} | {'RMSE':<8}")
-    # print("-" * 88)
+    print("\n==========================================================================")
+    print("   WR HISTORICAL BACKTEST (Strict Walk-Forward: Training on Past Data Only)")
+    print("==========================================================================")
+    print(f"{'Year':<6} | {'Training Range':<12} | {'Trained On':<8} | {'Test Samples':<8} | {'R2':<8} | {'MAE':<8} | {'RMSE':<8}")
+    print("-" * 88)
     
-    # # Test from 2018 to 2024
-    # years_to_test = range(2008, 2025)
+    # Test from 2012 to 2024 (Data starts 2010, need some history)
+    years_to_test = range(2023, 2025)
     
-    # results = []
+    results = []
     
-    # for year in years_to_test:
-    #     # Suppress stdout/stderr inside the function only if needed, 
-    #     # but verbose=False usually handles it.
-    #     metrics = validate_year(year, verbose=False)
-    #     if metrics:
-    #         print(f"{year:<6} | {metrics['Train_Range']:<12} | {metrics['Train_N']:<8} | {metrics['Samples']:<8} | {metrics['R2']:.4f}   | {metrics['MAE']:.4f}   | {metrics['RMSE']:.4f}")
-    #         results.append(metrics)
-    #     else:
-    #         print(f"{year:<6} | INSUFFICIENT DATA")
+    for year in years_to_test:
+        metrics = validate_year(year, verbose=False)
+        if metrics:
+            print(f"{year:<6} | {metrics['Train_Range']:<12} | {metrics['Train_N']:<8} | {metrics['Samples']:<8} | {metrics['R2']:.4f}   | {metrics['MAE']:.4f}   | {metrics['RMSE']:.4f}")
+            results.append(metrics)
+        else:
+            print(f"{year:<6} | INSUFFICIENT DATA")
             
-    # print("-" * 88)
+    print("-" * 88)
+    
+    # Save validation results
+    if results:
+        res_df = pd.DataFrame(results)
+        res_df.to_csv("backend/ML/WideReceivers/WR_Validation_History.csv", index=False)
 
-    analyze_specific_year(2024)
+    # analyze_specific_year(2024)

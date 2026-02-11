@@ -12,24 +12,24 @@ from sklearn.preprocessing import StandardScaler
 import sys
 sys.path.append(os.getcwd()) # Ensure root is in path
 
-from backend.ML.TightEnds.TETime2Vec import load_and_engineer_features as load_xgb_data
-from backend.ML.TightEnds.TETransformer import TETransformer, load_sequences as load_transformer_data
+from backend.ML.WideReceivers.WRTime2Vec import load_and_engineer_features as load_xgb_data
+from backend.ML.WideReceivers.WRTransformer import WRTransformer, load_sequences as load_transformer_data
 
 # ==========================================
 # 1. SETUP & CONFIG
 # ==========================================
-DATA_FILE = "backend/ML/TightEnds/TE.csv"
+DATA_FILE = "backend/ML/WR.csv"
 
 # ==========================================
 # 0. MODE SELECTION
 # ==========================================
-# MODE = "VALIDATION"  # Predict 2024 (Train < 2024) and compare with Actuals
+# MODE = "DREAM" # "VALIDATION" or "DREAM"edict 2024 (Train < 2024) and compare with Actuals
 MODE = "DREAM"       # Predict 2025 (Train <= 2024)
 
-print(f"==== STARTING ENSEMBLE MODELING (Mode: {MODE}) ====")
+print(f"==== STARTING WR ENSEMBLE MODELING (Mode: {MODE}) ====")
 
 # ==========================================
-# 2. RUN XGBOOST MODEL (Weight: 60%)
+# 2. RUN XGBOOST MODEL (Weight: 75%)
 # ==========================================
 print("\n[1/3] Training XGBoost (Hybrid Time2Vec)...")
 
@@ -44,12 +44,11 @@ predictors += [
     "time_sin_2","time_cos_2",
     "time_sin_3","time_cos_3",
     "career_year","career_year_sq",
-    "is_prime", "is_decline",
-    "Growth_Potential", "Team_TE_EPA_History"
+    "is_prime", "is_decline", "efficiency_spike", "efficiency_per_snap",
+    "Growth_Potential", "Team_WR_EPA_History"
 ]
 predictors = [c for c in predictors if c in data.columns]
 target = "weighted_grade"
-target_col = target
 
 # TRAIN/TEST SPLIT BASED ON MODE
 if MODE == "VALIDATION":
@@ -58,7 +57,7 @@ if MODE == "VALIDATION":
     print(f"Validation Mode: Training on {len(train_data)} samples (<2024), Validating on {len(test_data)} samples (2024)")
 else:
     train_data = data[data["Year"] <= 2024]
-    test_data = None # No test set for Dream mode
+    test_data = None 
     print(f"Dream Mode: Training on {len(train_data)} samples (All Data)")
 
 X_train = train_data[predictors]
@@ -79,7 +78,6 @@ xgb_model.fit(X_train, y_train)
 if MODE == "VALIDATION":
     print("Generating XGBoost 2024 Validation Predictions...")
     X_val = test_data[predictors]
-    # Prediction DataFrame
     pred_df_xgb = test_data[["player_id", "player", "Team", "Year", target]].copy()
     pred_df_xgb["Pred_XGB"] = xgb_model.predict(X_val)
     
@@ -113,32 +111,30 @@ else:
         
         # Age Features
         age_next = feat_dict["age"]
-        feat_dict["is_prime"] = 1.0 if 23 <= age_next <= 26 else 0.0
+        feat_dict["is_prime"] = 1.0 if 23 <= age_next <= 27 else 0.0
         feat_dict["is_decline"] = 1.0 if age_next >= 30 else 0.0
         
-        # Growth Potential (Rookie Scaling)
-        cy = feat_dict["career_year"]
-        if cy == 1: feat_dict["Growth_Potential"] = 1.3726
-        elif cy == 2: feat_dict["Growth_Potential"] = 1.1393
-        elif cy == 3: feat_dict["Growth_Potential"] = 0.9838
-        else: feat_dict["Growth_Potential"] = 1.0
+        # Derived Features
+        grade_curr = row_2024["grades_offense"] if "grades_offense" in row_2024 else 0
+        yprr_curr = row_2024["yprr"] if "yprr" in row_2024 else 0
         
-        # Team TE EPA History (2022-2024 Average for 2025 Prediction)
+        feat_dict["efficiency_spike"] = 1.0 if (grade_curr > 75 and yprr_curr > 1.8) else 0.0
+        
+        snaps = row_2024["total_snaps"] if "total_snaps" in row_2024 else 0
+        wg = row_2024["weighted_grade"] if "weighted_grade" in row_2024 else 0
+        feat_dict["efficiency_per_snap"] = wg / snaps if snaps > 0 else 0.0
+        
+        # Growth Potential (Placeholder: 1.0 until optimized)
+        feat_dict["Growth_Potential"] = 1.0 # Standard for WRs for now
+        
+        # Team EPA History
         team_history_df = full_df[full_df["Team"] == feat_dict["Team"]]
         epa_history = team_history_df[team_history_df["Year"].isin([2022, 2023, 2024])]["Net EPA"].mean()
-        feat_dict["Team_TE_EPA_History"] = epa_history if not pd.isna(epa_history) else 0.0
+        feat_dict["Team_WR_EPA_History"] = epa_history if not pd.isna(epa_history) else 0.0
 
         # Lags
         lag_cols_base = [
-            "weighted_grade", "Net EPA", "grades_offense", "yards", "touchdowns", 
-            "first_downs", "yprr", "receptions", "targets",
-            "grades_pass_route", "wide_snaps", "slot_snaps",
-            "epa_per_target", "targets_per_snap"
-        ]
-
-        # Lags
-        lag_cols_base = [
-            "weighted_grade", "Net EPA", "grades_offense", "yards", "touchdowns", 
+            "weighted_grade", "grades_offense", "yards", "touchdowns", 
             "first_downs", "yprr", "receptions", "targets",
             "grades_pass_route", "wide_snaps", "slot_snaps",
             "epa_per_target", "targets_per_snap"
@@ -148,13 +144,13 @@ else:
             v1 = row_2024[col] if col in row_2024 else np.nan
             v2 = row_2023[col] if row_2023 is not None and col in row_2023 else np.nan
             
-            # ROOKIE/MISSING YEAR FIX: Treat missing prior year as 0 for Trend, but don't average it for Rolling
+            # ROOKIE/MISSING YEAR FIX
             if pd.notnull(v1) and pd.isna(v2):
-                v2_val = 0.0
+                v2_val = v1 # Impute prev2 with prev1 (Trend=0) instead of 0 (Trend=Huge)
                 feat_dict[f"{col}_prev"] = v1
-                feat_dict[f"{col}_prev2"] = 0.0 # Impute 0
-                feat_dict[f"{col}_trend"] = v1 - v2_val # Trend is the full value (0 -> v1)
-                feat_dict[f"{col}_rolling2"] = v1 # Keep rolling as just the current year (don't average with 0)
+                feat_dict[f"{col}_prev2"] = v2_val
+                feat_dict[f"{col}_trend"] = v1 - v2_val 
+                feat_dict[f"{col}_rolling2"] = v1 
             else:
                 feat_dict[f"{col}_prev"] = v1
                 feat_dict[f"{col}_prev2"] = v2
@@ -168,7 +164,7 @@ else:
     pred_df_xgb["Pred_XGB"] = xgb_model.predict(X_pred_2025)
 
 # ==========================================
-# 3. RUN TRANSFORMER MODEL (Weight: 40%)
+# 3. RUN TRANSFORMER MODEL (Weight: 25%)
 # ==========================================
 print("\n[2/3] Training Transformer...")
 
@@ -181,14 +177,13 @@ scaler = StandardScaler()
 X_flat = X.reshape(-1, F)
 X_scaled = scaler.fit_transform(X_flat).reshape(N, S, F)
 
-# Train split logic
 meta_year = meta_df["Year"].values
 
 if MODE == "VALIDATION":
     train_mask = meta_year < 2024
     test_mask = meta_year == 2024
 else:
-    train_mask = meta_year <= 2024 # All available labels
+    train_mask = meta_year <= 2024
     test_mask = None
 
 X_train_t = torch.FloatTensor(X_scaled[train_mask])
@@ -198,13 +193,13 @@ y_train_t = torch.FloatTensor(y[train_mask]).unsqueeze(1)
 device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
 print(f"Using device: {device}")
 
-# SET FIXED SEED FOR AGGRESSIVE BEHAVIOR (Seed 12 found via TE_Search_Seed.py)
+# SEED (Start with 12 like TE, can optimize later)
 torch.manual_seed(12)
 np.random.seed(12)
 if torch.cuda.is_available():
     torch.cuda.manual_seed_all(12)
 
-transformer = TETransformer(num_features=F).to(device)
+transformer = WRTransformer(num_features=F).to(device)
 optimizer = torch.optim.Adam(transformer.parameters(), lr=0.001)
 criterion = nn.MSELoss()
 
@@ -235,53 +230,61 @@ transformer.eval()
 transformer_rows = []
 
 if MODE == "VALIDATION":
-    # Just run on the held-out test set
     X_val_t = torch.FloatTensor(X_scaled[test_mask]).to(device)
     T_val_t = torch.FloatTensor(T[test_mask]).to(device)
     
     with torch.no_grad():
         val_preds = transformer(X_val_t, T_val_t).cpu().flatten().numpy()
         
-    # Get player IDs for merge. meta_df has "player" and "Team" but not ID?
-    # load_sequences in TETransformer needs to return player_id if we want proper merge.
-    # Hack: We will assume order is preserved (it is) and meta_df corresponds to X/y rows.
-    
-    # Actually, meta_df stores player/Team. Let's rely on that for merge keys?
-    # Or better, add player_id to meta_df in TETransformer.py.
-    # For now, let's look at what we have.
     val_meta = meta_df[test_mask].reset_index(drop=True)
     val_meta["Pred_Transformer"] = val_preds
-    pred_df_trans = val_meta # Has player, Team, Pred_Transformer
+    pred_df_trans = val_meta 
 
 else:
-    # 2025 Prediction Construction (Same as before)
     player_groups = full_df.groupby("player_id")
-    # ... (Logic to construct 2025 input sequence)
-    # Re-using previous logic block for 2025
+    # Manual Feats list from    # Input Features
+    features = [
+        "weighted_grade", "grades_offense", "yards", "touchdowns", 
+        "first_downs", "receptions", "targets", "age",
+        "efficiency", "volume", "yprr", "yprr_trend", "efficiency_per_snap",
+        "is_prime", "is_decline"
+    ]
     
-    for pid in players_2024: # We calculate for all active 
-        # ... (Same logic as previous step)
+    for pid in players_2024: 
         if pid not in player_groups.groups: continue
         group = player_groups.get_group(pid).sort_values("Year")
         last_years = group[group["Year"] <= 2024].tail(SEQ_LEN)
         
         if 2024 not in last_years["Year"].values: continue
 
-        # Manual Feature Engineering (Must match TETransformer exactly)
+        # Manual Feature Engineering (Must match WRTransformer exactly)
         local_df = last_years.copy()
-        local_df["weighted_grade"] = local_df["grades_offense"].fillna(0) * local_df["total_snaps"].fillna(0) / 1000.0
-        local_df["efficiency"] = local_df["grades_offense"] / 100.0
-        local_df["volume"] = local_df["total_snaps"] / 1000.0
-        local_df["yprr_trend"] = local_df["yprr"].diff().fillna(0)
-        local_df["efficiency_per_snap"] = local_df["weighted_grade"] / local_df["total_snaps"].replace(0, np.nan)
-        local_df["efficiency_per_snap"] = local_df["efficiency_per_snap"].fillna(0)
-        local_df["is_prime"] = ((local_df["age"] >= 23) & (local_df["age"] <= 26)).astype(float)
+        
+        if "grades_offense" in local_df.columns and "total_snaps" in local_df.columns:
+            local_df["weighted_grade"] = local_df["grades_offense"].fillna(0) * local_df["total_snaps"].fillna(0) / 1000.0
+        
+        local_df["efficiency"] = local_df["grades_offense"] / 100.0 if "grades_offense" in local_df.columns else 0
+        local_df["volume"] = local_df["total_snaps"] / 1000.0 if "total_snaps" in local_df.columns else 0
+        local_df["yprr_trend"] = local_df["yprr"].diff().fillna(0) if "yprr" in local_df.columns else 0
+        
+        wg = local_df["weighted_grade"]
+        sn = local_df["total_snaps"].replace(0, np.nan)
+        local_df["efficiency_per_snap"] = (wg / sn).fillna(0)
+        
+        local_df["is_prime"] = ((local_df["age"] >= 23) & (local_df["age"] <= 27)).astype(float)
         local_df["is_decline"] = (local_df["age"] >= 30).astype(float)
+        
         local_df = local_df.fillna(0)
         
-        raw_seq = local_df[feats].values
+        # Ensure only needed columns and correct order
+        # Add missing columns with 0 if necessary
+        for c in features:
+            if c not in local_df.columns: local_df[c] = 0
+            
+        raw_seq = local_df[features].values
+        
         if len(raw_seq) < SEQ_LEN:
-            pad = np.zeros((SEQ_LEN - len(raw_seq), len(feats)))
+            pad = np.zeros((SEQ_LEN - len(raw_seq), len(features)))
             raw_seq = np.vstack([pad, raw_seq])
             
         scaled_seq = scaler.transform(raw_seq) 
@@ -307,27 +310,22 @@ else:
 # ==========================================
 print("\n[3/3] Ensembling...")
 
-# Merge logic depends on cols available
 if MODE == "VALIDATION":
-    # Merge on Player + Team since we might lack ID in meta_df
     final_df = pd.merge(pred_df_xgb, pred_df_trans[["player", "Team", "Pred_Transformer"]], on=["player", "Team"], how="left")
 else:
     final_df = pd.merge(pred_df_xgb, pred_df_trans[["player_id", "Pred_Transformer"]], on="player_id", how="left")
 
-# Fill NaNs
 final_df["Pred_Transformer"] = final_df["Pred_Transformer"].fillna(final_df["Pred_XGB"])
 
-# WEIGHTS (Optimized: 0.75 XGB / 0.25 Transformer)
+# WEIGHTS (50/50 split to capture talent upside correctly)
 W_XGB = 0.75
 W_TRANS = 0.25
 
-# Calculate Ensemble
 if MODE == "VALIDATION":
     final_df["Ensemble_Pred"] = (final_df["Pred_XGB"] * W_XGB) + (final_df["Pred_Transformer"] * W_TRANS)
     final_df["Error"] = final_df[target] - final_df["Ensemble_Pred"]
     final_df["Abs_Error"] = final_df["Error"].abs()
     
-    # Calculate Metrics
     from sklearn.metrics import mean_absolute_error, r2_score
     mae = mean_absolute_error(final_df[target], final_df["Ensemble_Pred"])
     r2 = r2_score(final_df[target], final_df["Ensemble_Pred"])
@@ -344,12 +342,12 @@ if MODE == "VALIDATION":
     print(final_df.sort_values("Abs_Error", ascending=False)[cols].head(10).to_string(index=False))
 
 else:
-    final_df["TE_Value_Score_2025"] = (final_df["Pred_XGB"] * W_XGB) + (final_df["Pred_Transformer"] * W_TRANS)
-    final_df = final_df.sort_values("TE_Value_Score_2025", ascending=False)
+    final_df["WR_Value_Score_2025"] = (final_df["Pred_XGB"] * W_XGB) + (final_df["Pred_Transformer"] * W_TRANS)
+    final_df = final_df.sort_values("WR_Value_Score_2025", ascending=False)
     
-    cols = ["player", "Team", "weighted_grade_prev", "Pred_XGB", "Pred_Transformer", "TE_Value_Score_2025"]
+    cols = ["player", "Team", "weighted_grade_prev", "Pred_XGB", "Pred_Transformer", "WR_Value_Score_2025"]
     print("\n==== FINAL 2025 CONSENSUS RANKINGS ====")
     print(final_df[cols].head(25).to_string(index=False))
     
-    final_df[cols].to_csv("backend/ML/TightEnds/TE_2025_Final_Rankings.csv", index=False)
-    print("\nSaved Final Rankings to backend/ML/TightEnds/TE_2025_Final_Rankings.csv")
+    final_df[cols].to_csv("backend/ML/WideReceivers/WR_2025_Final_Rankings.csv", index=False)
+    print("\nSaved Final Rankings to backend/ML/WideReceivers/WR_2025_Final_Rankings.csv")
