@@ -67,10 +67,18 @@ def load_and_engineer_features(filepath):
     
     for col in lag_features:
         if col in df.columns:
+            # Shift
             df[f"{col}_prev"] = df.groupby("player_id")[col].shift(1)
             df[f"{col}_prev2"] = df.groupby("player_id")[col].shift(2)
-            df[f"{col}_trend"] = df[f"{col}_prev"] - df[f"{col}_prev2"]
-            df[f"{col}_rolling2"] = (df[f"{col}_prev"] + df[f"{col}_prev2"]) / 2
+            
+            # Trend: Impute 0 for prev2 if it is missing (e.g. Sophomores), so Trend = prev - 0
+            p1 = df[f"{col}_prev"]
+            p2_imputed = df[f"{col}_prev2"].fillna(0)
+            df[f"{col}_trend"] = p1 - p2_imputed
+            
+            # Rolling: If prev2 is missing, use prev1. Else average.
+            # Note: np.where allows us to handle the condition element-wise
+            df[f"{col}_rolling2"] = np.where(df[f"{col}_prev2"].isna(), p1, (p1 + df[f"{col}_prev2"]) / 2)
 
     # Fix Fragmentation Warning
     df = df.copy()
@@ -89,6 +97,33 @@ def load_and_engineer_features(filepath):
     
     # Catching the "Jonnu Smith" effect: High efficiency on low volume
     df["efficiency_per_snap"] = df["weighted_grade"] / df["total_snaps"].replace(0, np.nan)
+    
+    # ==========================================
+    # 2.6 GROWTH CONSTANTS & TEAM HISTORY (User Request)
+    # ==========================================
+    # Constants derived from TE_Analyze_Rookie_Progression.py
+    # Y1->Y2: 1.3726, Y2->Y3: 1.1393, Y3->Y4: 0.9838
+    conditions = [
+        df["career_year"] == 1,
+        df["career_year"] == 2,
+        df["career_year"] == 3
+    ]
+    choices = [1.3726, 1.1393, 0.9838]
+    df["Growth_Potential"] = np.select(conditions, choices, default=1.0)
+    
+    # Team TE EPA History (3-Year Rolling Avg)
+    # 1. Get Avg Net EPA per Team-Year (ignoring NaNs)
+    team_epa = df.groupby(["Team", "Year"])["Net EPA"].mean().reset_index()
+    team_epa = team_epa.sort_values(["Team", "Year"])
+    
+    # 2. Calc Rolling Mean (Closed='left' to use only PAST years)
+    # shifting by 1 to ensure we don't include current year
+    team_epa["Team_TE_EPA_History"] = team_epa.groupby("Team")["Net EPA"].transform(
+        lambda x: x.shift(1).rolling(window=3, min_periods=1).mean()
+    )
+    
+    # 3. Merge back
+    df = pd.merge(df, team_epa[["Team", "Year", "Team_TE_EPA_History"]], on=["Team", "Year"], how="left")
     
     # Defragment again after new cols
     df = df.copy()
