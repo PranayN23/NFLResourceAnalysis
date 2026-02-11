@@ -80,7 +80,7 @@ if MODE == "VALIDATION":
     print("Generating XGBoost 2024 Validation Predictions...")
     X_val = test_data[predictors]
     # Prediction DataFrame
-    pred_df_xgb = test_data[["player_id", "player", "Team", "Year", target]].copy()
+    pred_df_xgb = test_data[["player_id", "player", "Team", "Year", target, "weighted_grade_prev"]].copy()
     pred_df_xgb["Pred_XGB"] = xgb_model.predict(X_val)
     
 else:
@@ -324,6 +324,7 @@ W_TRANS = 0.25
 # Calculate Ensemble
 if MODE == "VALIDATION":
     final_df["Ensemble_Pred"] = (final_df["Pred_XGB"] * W_XGB) + (final_df["Pred_Transformer"] * W_TRANS)
+    final_df["Predicted_Jump"] = final_df["Ensemble_Pred"] - final_df["weighted_grade_prev"]
     final_df["Error"] = final_df[target] - final_df["Ensemble_Pred"]
     final_df["Abs_Error"] = final_df["Error"].abs()
     
@@ -336,7 +337,7 @@ if MODE == "VALIDATION":
     print(f"R-Squared: {r2:.4f}")
     print(f"MAE:       {mae:.4f}")
     
-    cols = ["player", "Team", target, "Pred_XGB", "Pred_Transformer", "Ensemble_Pred", "Error"]
+    cols = ["player", "Team", "weighted_grade_prev", target, "Pred_XGB", "Pred_Transformer", "Ensemble_Pred", "Predicted_Jump", "Error"]
     print("\n==== TOP PREDICTIONS (Ensemble) ====")
     print(final_df.sort_values("Ensemble_Pred", ascending=False)[cols].head(15).to_string(index=False))
     
@@ -345,9 +346,10 @@ if MODE == "VALIDATION":
 
 else:
     final_df["TE_Value_Score_2025"] = (final_df["Pred_XGB"] * W_XGB) + (final_df["Pred_Transformer"] * W_TRANS)
+    final_df["Predicted_Jump"] = final_df["TE_Value_Score_2025"] - final_df["weighted_grade_prev"]
     final_df = final_df.sort_values("TE_Value_Score_2025", ascending=False)
     
-    cols = ["player", "Team", "weighted_grade_prev", "Pred_XGB", "Pred_Transformer", "TE_Value_Score_2025"]
+    cols = ["player", "Team", "weighted_grade_prev", "Pred_XGB", "Pred_Transformer", "TE_Value_Score_2025", "Predicted_Jump"]
     print("\n==== FINAL 2025 CONSENSUS RANKINGS ====")
     print(final_df[cols].head(25).to_string(index=False))
     

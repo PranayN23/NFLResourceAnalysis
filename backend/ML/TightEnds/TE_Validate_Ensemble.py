@@ -70,11 +70,12 @@ def validate_year(validation_year, verbose=False):
     if verbose: print(f"XGB Train Samples: {len(train_data)} ({train_start}-{train_end}) | Test Samples: {len(test_data)}")
     
     xgb_model = xgb.XGBRegressor(
-        n_estimators=1000,
-        learning_rate=0.01,
-        max_depth=4,
-        subsample=0.7,
-        colsample_bytree=0.7,
+        n_estimators=500,
+        learning_rate=0.05,
+        max_depth=6,
+        subsample=0.6,
+        colsample_bytree=0.8,
+        min_child_weight=1,
         n_jobs=1, # Fix for deadlock
         random_state=42,
         verbosity=0 # Silent
@@ -205,8 +206,9 @@ def analyze_specific_year(target_year):
 
     print(f"Training XGBoost on {len(train_data)} samples (<{target_year})...")
     xgb_model = xgb.XGBRegressor(
-        n_estimators=1000, learning_rate=0.01, max_depth=4,
-        subsample=0.7, colsample_bytree=0.7, n_jobs=1, random_state=42, verbosity=0
+        n_estimators=500, learning_rate=0.05, max_depth=6,
+        subsample=0.6, colsample_bytree=0.8, min_child_weight=1,
+        n_jobs=1, random_state=42, verbosity=0
     )
     xgb_model.fit(train_data[predictors], train_data[TARGET])
     
