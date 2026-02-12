@@ -26,3 +26,12 @@ To get absolute values, add the mean for each feature:
   down_3_pass_rate: mean = 74.39
   down_3_run_rate: mean = 25.61
   read_option_rate: mean = 0.00
+  personnel_01_rate: mean = 0.37
+  personnel_10_rate: mean = 0.36
+  personnel_11_rate: mean = 61.07
+  personnel_12_rate: mean = 21.73
+  personnel_13_rate: mean = 3.57
+  personnel_20_rate: mean = 0.43
+  personnel_21_rate: mean = 6.58
+  personnel_22_rate: mean = 2.30
+  personnel_31_rate: mean = 0.03

@@ -221,7 +221,12 @@ def fix_and_cluster_year(year: int, n_clusters: int = 4) -> Path:
     
     df["scheme_cluster"] = labels
     
-    # 6) Save updated CSV
+    # 6) Put scheme_cluster last and save
+    personnel_cols = [c for c in df.columns if c.startswith("personnel_")]
+    core_cols = [c for c in df.columns if c not in personnel_cols and c != "scheme_cluster"]
+    col_order = core_cols + personnel_cols + ["scheme_cluster"]
+    col_order = [c for c in col_order if c in df.columns]
+    df = df[col_order]
     df.to_csv(csv_path, index=False)
     
     # 7) Save cluster centers RELATIVE TO MEAN (centered)

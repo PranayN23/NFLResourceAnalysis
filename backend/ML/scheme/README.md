@@ -92,6 +92,20 @@ python -m scheme.scheme_clustering scheme/data/scheme_from_pbp.csv -k 6 -o schem
 
 You can add PROE, personnel rates, or target hotspots later by extending `config.SCHEME_FEATURE_COLUMNS_EXTENDED` and ensuring your CSV has those columns.
 
+## Clustering: per-year (not combined)
+
+Clustering is **per year**: K-means is fit on that year's data only. Cluster centers are relative to that year's league average. Cluster 0 in 2019 is not comparable to cluster 0 in 2020—labels are only meaningful within the same season.
+
+## Net EPA by cluster (plots)
+
+Plot **Net EPA vs scheme cluster** using `backend/ML/nfl_epa.csv`:
+
+```bash
+python -m backend.ML.scheme.plot_epa_by_cluster
+```
+
+Outputs in `scheme/data/figs/`: `{year}_net_epa_by_cluster.png` (one per year, x=cluster, y=Net EPA, teams labeled) and `all_years_net_epa_by_cluster.png` (boxplot across all years).
+
 ## Using clusters downstream
 
 - **Coach ↔ scheme:** Join `scheme_cluster` to a coaching DB (team + season) to label each coach with a cluster (e.g. “Cluster 3: High motion / high PROE”).
