@@ -5,7 +5,14 @@ This module scrapes **offensive scheme/tendency** data (motion rate, play action
 ## Data sources
 
 1. **Sharp Football Analysis** – Current-season tendencies (Motion Rate, Play Action Rate, AirYards/Att, Shotgun Rate, No Huddle Rate). One URL; typically current year only.
-2. **Play-by-play (nfl_data_py)** – Multi-year scheme metrics derived from nflfastR-style PBP (shotgun, no_huddle, play_action, air_yards). Use this for 10-year deep dives.
+2. **Play-by-play (nflfastR / nfl_data_py / nflreadpy)** – Multi-year scheme metrics derived from nflfastR-style PBP. Includes:
+   - **Basic rates**: motion, play action, shotgun, under center, no huddle, air yards
+   - **Formation-specific rates**: Under center play action/dropback/run, Shotgun play action/dropback/run
+   - **Down-specific rates**: 1st/2nd/3rd down pass and run rates
+   - **Personnel rates** (coming): 11/12/21 personnel groupings
+   - **Target hotspots** (coming): Short/medium/deep × left/middle/right target rates
+
+   Use this for 10-year deep dives. For **true play-action rates**, download nflfastR PBP CSVs with a `play_action` column and place them in `backend/ML/scheme/raw_pbp/` as `pbp_2015.csv`, `pbp_2016.csv`, ..., `pbp_2025.csv`. The `scheme_from_pbp` script will automatically prefer these local files.
 
 ## Quick start
 
@@ -27,7 +34,7 @@ Outputs:
 
 ## Multi-year data (PBP)
 
-For 10-year scheme analysis, build metrics from play-by-play:
+For 10-year scheme analysis, build metrics from play-by-play. This includes all formation-specific and down-specific rates:
 
 ```bash
 # Default: 2015 through current year
@@ -37,7 +44,20 @@ python -m scheme.scheme_from_pbp
 python -m scheme.scheme_from_pbp 2018 2019 2020 2021 2022 2023 2024
 ```
 
-Requires: `nfl_data_py` (or `nflreadpy`). Writes `scheme/data/scheme_from_pbp.csv`. Then:
+**Data source**:
+- Preferred: **nflfastR PBP CSVs** with a `play_action` column, saved as `scheme/raw_pbp/pbp_<year>.csv`.
+- Fallback: `nfl_data_py` or `nflreadpy` if local CSVs are missing (these lack reliable `play_action`/motion).
+
+The PBP data includes:
+- `shotgun` (0/1) – formation indicator
+- `play_action` (0/1) – play action flag
+- `pass_attempt` (0/1) – pass indicator
+- `rush_attempt` (0/1) – run indicator
+- `down` (1/2/3/4) – down number
+- `air_yards` – air yards for passes
+- `pre_snap_motion` or `motion` – motion indicator (if available)
+
+Writes `scheme/data/scheme_from_pbp.csv` with all formation and down-specific rates. Then:
 
 ```bash
 python -m scheme.scheme_clustering scheme/data/scheme_from_pbp.csv -k 6 -o scheme/data/scheme_from_pbp_clustered.csv
@@ -45,6 +65,7 @@ python -m scheme.scheme_clustering scheme/data/scheme_from_pbp.csv -k 6 -o schem
 
 ## Features used for clustering
 
+**Basic features** (from Sharp Football or PBP):
 - `motion_rate` – % of plays with pre-snap motion  
 - `play_action_rate` – % of pass attempts that are play action  
 - `shotgun_rate` – % of plays from shotgun  
@@ -52,7 +73,24 @@ python -m scheme.scheme_clustering scheme/data/scheme_from_pbp.csv -k 6 -o schem
 - `no_huddle_rate` – % of plays in no-huddle  
 - `air_yards_per_att` – average air yards per pass attempt  
 
-You can add PROE or personnel rates later by extending `config.SCHEME_FEATURE_COLUMNS` and ensuring your CSV has those columns.
+**Formation-specific features** (from PBP only):
+- `under_center_play_action_rate` – % of under-center plays that are play action passes
+- `under_center_pass_rate` – % of under-center plays that are passes (all passes: dropback + play action)
+- `under_center_run_rate` – % of under-center plays that are runs
+- `shotgun_play_action_rate` – % of shotgun plays that are play action passes
+- `shotgun_pass_rate` – % of shotgun plays that are passes (all passes: dropback + play action)
+- `shotgun_run_rate` – % of shotgun plays that are runs
+
+**QB rushing features** (from PBP only):
+- `qb_rush_rate` – % of all plays that are designed QB runs (excluding scrambles)
+- `read_option_rate` – % of all plays that are read option (subset of QB rushing)
+
+**Down-specific features** (from PBP only):
+- `down_1_pass_rate`, `down_1_run_rate` – Pass/run rates on 1st down
+- `down_2_pass_rate`, `down_2_run_rate` – Pass/run rates on 2nd down
+- `down_3_pass_rate`, `down_3_run_rate` – Pass/run rates on 3rd down
+
+You can add PROE, personnel rates, or target hotspots later by extending `config.SCHEME_FEATURE_COLUMNS_EXTENDED` and ensuring your CSV has those columns.
 
 ## Using clusters downstream
 

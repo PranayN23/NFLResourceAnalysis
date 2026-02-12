@@ -48,7 +48,9 @@ def prepare_scheme_matrix(
         )
     X = df[feature_columns].astype(float)
     if fill_missing:
-        X = X.fillna(X.median())
+        # Fill NaN with median, but if median is NaN (all values missing), fill with 0
+        medians = X.median()
+        X = X.fillna(medians.fillna(0))
     return df, X.values, feature_columns
 
 

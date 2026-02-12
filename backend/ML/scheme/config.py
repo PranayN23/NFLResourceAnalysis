@@ -51,10 +51,35 @@ SCHEME_FEATURE_COLUMNS = [
     "air_yards_per_att",
 ]
 
-# Optional: PROE and personnel if we add nfelo or PBP-derived metrics
-SCHEME_FEATURE_COLUMNS_EXTENDED = SCHEME_FEATURE_COLUMNS + [
-    "proe",
-    "personnel_11_rate",
-    "personnel_12_rate",
-    "personnel_21_rate",
+# Formation-specific rates (from PBP)
+FORMATION_FEATURE_COLUMNS = [
+    "under_center_play_action_rate",
+    "under_center_pass_rate",
+    "under_center_run_rate",
+    "shotgun_play_action_rate",
+    "shotgun_pass_rate",
+    "shotgun_run_rate",
 ]
+
+# Down-specific rates (from PBP)
+DOWN_FEATURE_COLUMNS = [
+    "down_1_pass_rate",
+    "down_1_run_rate",
+    "down_2_pass_rate",
+    "down_2_run_rate",
+    "down_3_pass_rate",
+    "down_3_run_rate",
+]
+
+# Optional: PROE and personnel if we add nfelo or PBP-derived metrics
+SCHEME_FEATURE_COLUMNS_EXTENDED = (
+    SCHEME_FEATURE_COLUMNS
+    + FORMATION_FEATURE_COLUMNS
+    + DOWN_FEATURE_COLUMNS
+    + [
+        "proe",
+        "personnel_11_rate",
+        "personnel_12_rate",
+        "personnel_21_rate",
+    ]
+)
