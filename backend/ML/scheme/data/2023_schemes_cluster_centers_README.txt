@@ -1,7 +1,9 @@
 Cluster Centers for 2023 - RELATIVE TO MEAN
 ==============================================
 
-Values show how each cluster differs from the league average.
+The first column 'cluster' is the cluster ID (0, 1, 2, 3). Each row is that cluster's center.
+
+Feature values show how each cluster differs from the league average for that year.
 - Positive values = above average
 - Negative values = below average
 - Zero = exactly at league average
@@ -26,3 +28,12 @@ To get absolute values, add the mean for each feature:
   down_3_pass_rate: mean = 75.74
   down_3_run_rate: mean = 24.26
   read_option_rate: mean = 0.00
+  personnel_01_rate: mean = 0.52
+  personnel_10_rate: mean = 0.55
+  personnel_11_rate: mean = 62.18
+  personnel_12_rate: mean = 19.23
+  personnel_13_rate: mean = 3.61
+  personnel_20_rate: mean = 0.59
+  personnel_21_rate: mean = 7.95
+  personnel_22_rate: mean = 1.96
+  personnel_31_rate: mean = 0.06

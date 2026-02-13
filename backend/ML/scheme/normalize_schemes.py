@@ -71,22 +71,21 @@ def normalize_schemes() -> None:
     year_files = _list_year_scheme_files()
 
     for year, schemes_path in sorted(year_files.items()):
-        with_personnel_path = base / f"{year}_schemes_with_personnel.csv"
+        # Always read from the main scheme file (has scheme_cluster from fix_and_cluster)
+        df = pd.read_csv(schemes_path)
 
-        # Decide which source to load:
-        # - 2022–2024: prefer the *_schemes_with_personnel.csv version
-        # - 2025: keep the already-enriched 2025_schemes.csv (has Sharp + personnel)
-        # - other years: just use the base {year}_schemes.csv
-        if year in (2022, 2023, 2024) and with_personnel_path.exists():
-            df = pd.read_csv(with_personnel_path)
-            source = with_personnel_path
-        else:
-            df = pd.read_csv(schemes_path)
-            source = schemes_path
-
+        # Normalize team abbreviations: LA -> LAR (Rams)
+        if "team_abbr" in df.columns:
+            df["team_abbr"] = df["team_abbr"].replace({"LA": "LAR"})
+            # If normalization created duplicates (e.g., both "LA" and "LAR" became "LAR"),
+            # keep only the last entry per team_abbr (should have most complete data)
+            if df["team_abbr"].duplicated().any():
+                print(f"[normalize_schemes] Warning: Found duplicate team_abbr after normalization for {year}. Keeping last entry per team.")
+                df = df.drop_duplicates(subset=["team_abbr"], keep="last").reset_index(drop=True)
+        
         df_norm = _reorder_columns(df)
         df_norm.to_csv(schemes_path, index=False)
-        print(f"[normalize_schemes] Year {year}: wrote normalized {schemes_path} (source={source.name})")
+        print(f"[normalize_schemes] Year {year}: wrote normalized {schemes_path.name} (scheme_cluster last)")
 
 
 if __name__ == "__main__":

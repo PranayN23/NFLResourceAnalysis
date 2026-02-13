@@ -221,7 +221,12 @@ def fix_and_cluster_year(year: int, n_clusters: int = 4) -> Path:
     
     df["scheme_cluster"] = labels
     
-    # 6) Save updated CSV
+    # 6) Put scheme_cluster last and save
+    personnel_cols = [c for c in df.columns if c.startswith("personnel_")]
+    core_cols = [c for c in df.columns if c not in personnel_cols and c != "scheme_cluster"]
+    col_order = core_cols + personnel_cols + ["scheme_cluster"]
+    col_order = [c for c in col_order if c in df.columns]
+    df = df[col_order]
     df.to_csv(csv_path, index=False)
     
     # 7) Save cluster centers RELATIVE TO MEAN (centered)
@@ -236,7 +241,8 @@ def fix_and_cluster_year(year: int, n_clusters: int = 4) -> Path:
         columns=feature_cols,
         index=range(n_clusters)
     )
-    # Add a note in the first row explaining these are relative to mean
+    # Label which row is which cluster (first column)
+    centers_df.insert(0, "cluster", range(n_clusters))
     centers_df.to_csv(centers_path, index=False)
     
     # Also save a note file explaining the format
@@ -245,7 +251,8 @@ def fix_and_cluster_year(year: int, n_clusters: int = 4) -> Path:
         f.write(
             f"Cluster Centers for {year} - RELATIVE TO MEAN\n"
             f"==============================================\n\n"
-            f"Values show how each cluster differs from the league average.\n"
+            f"The first column 'cluster' is the cluster ID (0, 1, 2, 3). Each row is that cluster's center.\n\n"
+            f"Feature values show how each cluster differs from the league average for that year.\n"
             f"- Positive values = above average\n"
             f"- Negative values = below average\n"
             f"- Zero = exactly at league average\n\n"

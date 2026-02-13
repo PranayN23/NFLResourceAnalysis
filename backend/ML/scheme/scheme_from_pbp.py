@@ -340,6 +340,11 @@ def build_scheme_metrics_from_pbp(pbp: pd.DataFrame) -> pd.DataFrame:
             out[col] = out[col].fillna(0)
     
     out = out.rename(columns={"posteam": "team_abbr"})
+    
+    # Normalize team abbreviations: LA -> LAR (Rams)
+    # PBP data sometimes uses "LA" but we standardize to "LAR"
+    out["team_abbr"] = out["team_abbr"].replace({"LA": "LAR"})
+    
     return out
 
 

@@ -86,6 +86,16 @@ def merge_sumer_personnel_for_year(year: int) -> Path:
     schemes = pd.read_csv(schemes_path)
     sumer = pd.read_csv(sumer_path)
 
+    # Normalize team abbreviations: LA -> LAR (Rams)
+    # This ensures PBP data using "LA" matches Sumer data using "LAR"
+    schemes["team_abbr"] = schemes["team_abbr"].replace({"LA": "LAR"})
+    
+    # If normalization created duplicates (e.g., both "LA" and "LAR" became "LAR"),
+    # keep only the last entry per team_abbr (should have most complete data)
+    if schemes["team_abbr"].duplicated().any():
+        print(f"[merge_sumer_personnel] Warning: Found duplicate team_abbr after normalization. Keeping last entry per team.")
+        schemes = schemes.drop_duplicates(subset=["team_abbr"], keep="last").reset_index(drop=True)
+
     # Basic sanity checks
     if "Team" not in sumer.columns or "Personnel" not in sumer.columns or "Rate" not in sumer.columns:
         raise ValueError(
@@ -191,9 +201,9 @@ def merge_sumer_personnel_for_year(year: int) -> Path:
         if col in merged.columns:
             merged[col] = merged[col].fillna(0.0)
 
-    out_path = base_dir / f"{year}_schemes_with_personnel.csv"
-    merged.to_csv(out_path, index=False)
-    return out_path
+    # Write to main scheme file so clustering and normalization see personnel + cluster
+    merged.to_csv(schemes_path, index=False)
+    return schemes_path
 
 
 def merge_sumer_personnel(years: Iterable[int]) -> list[Path]:

@@ -86,6 +86,11 @@ def merge_sharp_into_2025() -> Path:
             "LA": "LAR",  # Make sure Rams join correctly
         }
     )
+    
+    # If normalization created duplicates, keep only the last entry per team_abbr
+    if schemes_normalized["team_abbr"].duplicated().any():
+        print(f"[enrich_2025] Warning: Found duplicate team_abbr after normalization. Keeping last entry per team.")
+        schemes_normalized = schemes_normalized.drop_duplicates(subset=["team_abbr"], keep="last").reset_index(drop=True)
 
     # Drop any existing versions of these columns from schemes so Sharp values win
     schemes_wo_sharp = schemes_normalized.drop(columns=sharp_cols, errors="ignore")
@@ -111,12 +116,8 @@ def enrich_2025_with_sharp_and_personnel() -> Path:
     # 1) Sharp -> 2025_schemes.csv
     schemes_path = merge_sharp_into_2025()
 
-    # 2) Sumer personnel merge writes 2025_schemes_with_personnel.csv
-    with_personnel_path = merge_sumer_personnel_for_year(2025)
-
-    # 3) Overwrite 2025_schemes.csv with the with-personnel version
-    enriched = pd.read_csv(with_personnel_path)
-    enriched.to_csv(schemes_path, index=False)
+    # 2) Sumer personnel merge writes into 2025_schemes.csv
+    merge_sumer_personnel_for_year(2025)
 
     return schemes_path
 
