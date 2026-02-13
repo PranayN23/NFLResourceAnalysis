@@ -1,7 +1,9 @@
 Cluster Centers for 2023 - RELATIVE TO MEAN
 ==============================================
 
-Values show how each cluster differs from the league average.
+The first column 'cluster' is the cluster ID (0, 1, 2, 3). Each row is that cluster's center.
+
+Feature values show how each cluster differs from the league average for that year.
 - Positive values = above average
 - Negative values = below average
 - Zero = exactly at league average
