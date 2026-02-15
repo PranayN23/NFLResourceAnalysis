@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 import torch
@@ -6,91 +5,41 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import mean_absolute_error
 import os
-import matplotlib.pyplot as plt
-import seaborn as sns
+import joblib
 
 # Check device stability
-# For Mac M1/M2, 'mps' is available but sometimes float64 isn't supported. 
-# We'll stick to CPU for maximum stability given the previous crashes, 
-# unless we explicitly want to try 'mps'. Let's stay safe with CPU for now.
 DEVICE = torch.device('cpu')
 print(f"Using device: {DEVICE}")
 
-# --- PFF CLASS DEFINITIONS (3 TIERS) ---
-# TEAM REVIEW NOTE:
-# We consolidated 6 PFF tiers into 3 for better model stability.
-# Tier 2 (Elite/High Quality): 80.0+ (Includes both Elite & High Quality)
-# Tier 1 (Starter/Average): 60.0 - 79.9 (Includes Above Avg, Avg, Below Avg)
-# Tier 0 (Reserve/Poor): < 60.0 (Includes Poor)
-
-def get_tier(grade):
-    if grade >= 80.0: return 2
-    elif grade >= 60.0: return 1
-    else: return 0
-
-TIER_NAMES = ["Reserve/Poor", "Starter/Average", "Elite/High Quality"]
-
-# 1. Time2Vec Layer (PyTorch Implementation)
+# 1. Time2Vec Layer
 class Time2Vec(nn.Module):
     def __init__(self, input_dim, kernel_size=1):
         super(Time2Vec, self).__init__()
         self.k = kernel_size
         self.input_dim = input_dim
-        
-        # Initializing weights (matches the logic of Time2Vec paper/implementations)
-        # Linear term weights: w0, b0
         self.w0 = nn.Parameter(torch.randn(input_dim, 1)) 
         self.b0 = nn.Parameter(torch.randn(input_dim, 1))
-        
-        # Periodic term weights: w1..k, b1..k (captured in one tensor)
         self.wk = nn.Parameter(torch.randn(input_dim, kernel_size))
         self.bk = nn.Parameter(torch.randn(input_dim, kernel_size))
         
     def forward(self, x):
-        # x shape: [batch, seq_len, features]
-        
-        # We process each feature independently for time2vec embeddings
-        # Simplest approach: Apply Time2Vec to each element
-        # But usually Time2Vec is for the *Time* feature. 
-        # Here we are applying it as a feature embedding layer for ALL features as per the previous keras code.
-        
-        # Linear term: x * w0 + b0 (elementwise scaling and shift)
-        # We need to broadcast properly. 
-        # w0 shape: [features, 1] - we want to multiply each feature channel
-        
-        # Reshape x for easy multiplication: [batch, seq_len, features, 1]
         x_uns = x.unsqueeze(-1)
-        
-        # Linear: [batch, seq_len, features, 1]
         linear = x_uns * self.w0 + self.b0
-        
-        # Periodic: [batch, seq_len, features, k]
-        # x_uns * wk + bk
         periodic = torch.sin(x_uns * self.wk + self.bk)
-        
-        # Concatenate: [batch, seq_len, features, k+1]
         out = torch.cat([linear, periodic], dim=-1)
-        
-        # Flatten the last two dims: [batch, seq_len, features * (k+1)]
         out = out.reshape(x.size(0), x.size(1), -1)
         return out
 
-# 2. Transformer Classification Model
-class PlayerTransformerClassifier(nn.Module):
-    def __init__(self, input_dim, seq_len, num_classes=3, kernel_size=1, num_heads=4, ff_dim=64, num_layers=2, dropout=0.1):
-        super(PlayerTransformerClassifier, self).__init__()
-        
-        # Time2Vec Embedding
+# 2. Transformer Regressor
+class PlayerTransformerRegressor(nn.Module):
+    def __init__(self, input_dim, seq_len, kernel_size=1, num_heads=4, ff_dim=64, num_layers=2, dropout=0.1):
+        super(PlayerTransformerRegressor, self).__init__()
         self.time2vec = Time2Vec(input_dim, kernel_size)
-        
-        # Helper to compute expanded dimension
         self.embed_dim = input_dim * (kernel_size + 1)
         
-        # Ensure embed_dim is divisible by num_heads for PyTorch Transformer
         if self.embed_dim % num_heads != 0:
-            # Simple padding layer to make it compatible
             new_dim = (self.embed_dim // num_heads + 1) * num_heads
             self.pad_proj = nn.Linear(self.embed_dim, new_dim)
             self.embed_dim = new_dim
@@ -104,232 +53,163 @@ class PlayerTransformerClassifier(nn.Module):
             dropout=dropout,
             batch_first=True
         )
+        self.pos_embedding = nn.Parameter(torch.randn(1, seq_len + 1, self.embed_dim))
+        self.cls_token = nn.Parameter(torch.randn(1, 1, self.embed_dim))
         self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
         
-        self.global_avg_pool = nn.AdaptiveAvgPool1d(1)
-        
-        # Classification Head
-        self.classifier = nn.Sequential(
+        self.regressor = nn.Sequential(
             nn.Linear(self.embed_dim, 64),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(64, num_classes) # Logic Output (logits)
+            nn.Linear(64, 1)
         )
         
-    def forward(self, x):
-        # x: [batch, seq_len, input_dim]
-        
-        # Embedding
-        x = self.time2vec(x) # [batch, seq_len, input_dim * (k+1)]
+    def forward(self, x, mask=None):
+        x = self.time2vec(x)
         x = self.pad_proj(x)
+        batch_size = x.size(0)
+        cls_tokens = self.cls_token.expand(batch_size, -1, -1)
+        x = torch.cat((cls_tokens, x), dim=1)
         
-        # Transformer
-        x = self.transformer_encoder(x) # [batch, seq_len, embed_dim]
-        
-        # Global Average Pooling
-        # PyTorch pooling expects [batch, channels, length]
-        x = x.permute(0, 2, 1) # [batch, embed_dim, seq_len]
-        x = self.global_avg_pool(x).squeeze(-1) # [batch, embed_dim]
-        
-        # Classifier
-        x = self.classifier(x)
+        if mask is not None:
+            cls_mask = torch.zeros((batch_size, 1), dtype=torch.bool, device=x.device)
+            full_mask = torch.cat([cls_mask, mask], dim=1)
+        else:
+            full_mask = None
+            
+        x = x + self.pos_embedding
+        x = self.transformer_encoder(x, src_key_padding_mask=full_mask)
+        x = x[:, 0, :]
+        x = self.regressor(x)
         return x
 
 # 3. Data Processing
-data_path = '../../ML/QB.csv' 
-if not os.path.exists(data_path):
-    data_path = '/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/QB.csv'
-
-print(f"Reading data from: {data_path}")
+data_path = '/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/QB.csv'
 df = pd.read_csv(data_path)
-
-# TEAM REVIEW NOTE (STAGE 1 - DATA):
-# We filter out players with < 100 dropbacks to avoid noise from backups.
-# REVIEW: Is 100 the right cutoff? Should it be higher (e.g., 200) for "Starter" analysis?
-MIN_DROPBACKS = 100
-print(f"Filtering for Minimum Dropbacks: {MIN_DROPBACKS}")
-if 'dropbacks' in df.columns:
-    df = df[df['dropbacks'] >= MIN_DROPBACKS].copy()
-
-if 'Year' not in df.columns and 'year' in df.columns: 
-    df.rename(columns={'year': 'Year'}, inplace=True)
-
-if 'player' not in df.columns:
-     raise KeyError(f"Could not find 'player' column.")
-
-print(f"Unique Players: {df['player'].nunique()}")
+df['adjusted_value'] = pd.to_numeric(df['adjusted_value'], errors='coerce')
+df = df[df['dropbacks'] >= 100].copy()
 df.sort_values(by=['player', 'Year'], inplace=True)
 
-SEQUENCE_LENGTH = 3 
+# Engineering
+df["years_in_league"] = df.groupby("player").cumcount()
+df["delta_grade"] = df.groupby("player")["grades_offense"].diff().fillna(0)
+df["delta_epa"]   = df.groupby("player")["Net EPA"].diff().fillna(0)
+df["delta_btt"]   = df.groupby("player")["btt_rate"].diff().fillna(0)
+df['team_performance_proxy'] = df.groupby(['Team', 'Year'])['Net EPA'].transform('mean')
 
 features = [
-    'grades_pass', 
-    'grades_offense',
-    'qb_rating',
-    'adjusted_value',
-    'Cap_Space',
-    'ypa',
-    'twp_rate',
-    'btt_rate',
-    'completion_percent'
+    'grades_pass', 'grades_offense', 'qb_rating', 'adjusted_value',
+    'Cap_Space', 'ypa', 'twp_rate', 'btt_rate', 'completion_percent',
+    'years_in_league', 'delta_grade', 'delta_epa', 'delta_btt',
+    'team_performance_proxy'
 ]
 target_col = 'grades_offense' 
 
-available_features = [f for f in features if f in df.columns]
-if len(available_features) < len(features):
-    features = available_features
+df_clean = df.dropna(subset=features + [target_col]).copy()
 
-df_clean = df.dropna(subset=features + [target_col])
-
-# Create Classes BEFORE normalization
-print("Raw Grades Distribution:")
-print(df_clean[target_col].describe())
-df_clean['tier'] = df_clean[target_col].apply(get_tier)
-print("Target Class Distribution:")
-print(df_clean['tier'].value_counts().sort_index())
-
-# Normalize Features
+# Normalize Features (Strict Separation)
 scaler = StandardScaler()
-df_clean[features] = scaler.fit_transform(df_clean[features])
+X_features = df_clean[features].copy()
+scaler.fit(X_features)
+df_clean_scaled = df_clean.copy()
+df_clean_scaled[features] = scaler.transform(X_features)
 
-def create_sequences(dataset, seq_len, features, target_class_col):
-    X = []
-    y = []
-    for player, group in dataset.groupby('player'):
-        group = group.sort_values('Year')
-        if len(group) <= seq_len:
-            continue
-        vals = group[features].values
-        targs = group[target_class_col].values
-        for i in range(len(group) - seq_len):
-            X.append(vals[i:i+seq_len])
-            y.append(targs[i+seq_len])
-    return np.array(X, dtype=np.float32), np.array(y, dtype=np.int64)
+SCALER_OUT = os.path.join(os.path.dirname(__file__), 'player_scaler.joblib')
+MODEL_OUT  = os.path.join(os.path.dirname(__file__), 'best_classifier.pth')
+joblib.dump(scaler, SCALER_OUT)
 
-X, y = create_sequences(df_clean, SEQUENCE_LENGTH, features, 'tier')
-print(f"Generated Sequences Shape: X={X.shape}, y={y.shape}")
+def create_sequences_hybrid(scaled_df, original_df, max_seq_len, features, target_col):
+    X, y, masks = [], [], []
+    for player, group_scaled in scaled_df.groupby('player'):
+        group_orig = original_df.loc[group_scaled.index]
+        vals = group_scaled[features].values
+        targs = group_orig[target_col].values
+        for i in range(1, len(group_scaled)):
+            start_idx = max(0, i - max_seq_len)
+            history_vals = vals[start_idx:i]
+            actual_len = len(history_vals)
+            padding_len = max_seq_len - actual_len
+            
+            if padding_len > 0:
+                pad = np.zeros((padding_len, len(features)))
+                padded_x = np.vstack([pad, history_vals])
+                mask = [True] * padding_len + [False] * actual_len
+            else:
+                padded_x = history_vals
+                mask = [False] * actual_len
+                
+            X.append(padded_x)
+            y.append(targs[i])
+            masks.append(mask)
+    return np.array(X, dtype=np.float32), np.array(y, dtype=np.float32), np.array(masks, dtype=bool)
 
-if len(X) == 0:
-    print("Error: Not enough history.")
-    exit()
+MAX_SEQUENCE_LENGTH = 5
+X_all, y_all, masks_all = create_sequences_hybrid(df_clean_scaled, df_clean, MAX_SEQUENCE_LENGTH, features, target_col)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Calibrated Oversampling
+X_boosted, y_boosted, masks_boosted = [], [], []
+for xi, yi, mi in zip(X_all, y_all, masks_all):
+    X_boosted.append(xi)
+    y_boosted.append(yi)
+    masks_boosted.append(mi)
+    if yi >= 80.0 or yi < 50.0:
+        X_boosted.append(xi)
+        y_boosted.append(yi)
+        masks_boosted.append(mi)
 
-# Verify Class Balance in Split
-unique, counts = np.unique(y_train, return_counts=True)
-class_counts = dict(zip(unique, counts))
-print(f"Train Class Dist: {class_counts}")
+X_train, X_test, y_train, y_test, masks_train, masks_test = train_test_split(
+    np.array(X_boosted), np.array(y_boosted), np.array(masks_boosted), test_size=0.1, random_state=42
+)
 
-# TEAM REVIEW NOTE (STAGE 2 - MODEL OPTIMIZATION):
-# We use "Inverse Frequency" weighting to force the model to care about rare "Elite" seasons.
-# This increases Recall (finding elites) but decreases Precision (more false positives).
-# REVIEW: Adjust this strategy if the GM Agent makes too many "High Risk" signings.
-total_samples = len(y_train)
-class_weights = []
-for i in range(3):
-    count = class_counts.get(i, 0)
-    if count > 0:
-        weight = total_samples / (3 * count) # Sklearn style: n_samples / (n_classes * n_samples_j)
-    else:
-        weight = 1.0
-    class_weights.append(weight)
+class PlayerDataset(Dataset):
+    def __init__(self, X, y, masks):
+        self.X = torch.tensor(X, dtype=torch.float32)
+        self.y = torch.tensor(y, dtype=torch.float32)
+        self.masks = torch.tensor(masks, dtype=torch.bool)
+    def __len__(self): return len(self.X)
+    def __getitem__(self, idx): return self.X[idx], self.y[idx], self.masks[idx]
 
-class_weights_tensor = torch.tensor(class_weights, dtype=torch.float32).to(DEVICE)
-print(f"Computed Class Weights: {class_weights}")
+train_loader = DataLoader(PlayerDataset(X_train, y_train, masks_train), batch_size=32, shuffle=True)
+test_loader = DataLoader(PlayerDataset(X_test, y_test, masks_test), batch_size=32, shuffle=False)
 
-# Convert to PyTorch tensors
-train_dataset = torch.utils.data.TensorDataset(torch.from_numpy(X_train), torch.from_numpy(y_train))
-test_dataset = torch.utils.data.TensorDataset(torch.from_numpy(X_test), torch.from_numpy(y_test))
+model = PlayerTransformerRegressor(input_dim=len(features), seq_len=MAX_SEQUENCE_LENGTH).to(DEVICE)
+criterion = nn.L1Loss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10)
 
-train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
-
-# 4. Train
-num_classes = 3
-model = PlayerTransformerClassifier(input_dim=len(features), seq_len=SEQUENCE_LENGTH, num_classes=num_classes).to(DEVICE)
-print(model)
-
-# Weighted Loss to handle imbalance
-criterion = nn.CrossEntropyLoss(weight=class_weights_tensor)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=10)
-
+best_loss = float('inf')
 EPOCHS = 150
-best_acc = 0.0
-
-print("Starting training...")
+print("Starting calibrated hybrid training...")
 
 for epoch in range(EPOCHS):
     model.train()
-    running_loss = 0.0
-    correct = 0
-    total = 0
-    
-    for inputs, targets in train_loader:
-        inputs, targets = inputs.to(DEVICE), targets.to(DEVICE)
-        
+    for inputs, targets, masks in train_loader:
         optimizer.zero_grad()
-        outputs = model(inputs)
+        outputs = model(inputs, mask=masks).squeeze()
         loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
-        
-        running_loss += loss.item() * inputs.size(0)
-        _, predicted = torch.max(outputs.data, 1)
-        total += targets.size(0)
-        correct += (predicted == targets).sum().item()
     
-    epoch_loss = running_loss / len(train_dataset)
-    epoch_acc = correct / total
-    
-    # Validation
     model.eval()
-    val_correct = 0
-    val_total = 0
+    val_loss = 0
     with torch.no_grad():
-        for inputs, targets in test_loader:
-            inputs, targets = inputs.to(DEVICE), targets.to(DEVICE)
-            outputs = model(inputs)
-            _, predicted = torch.max(outputs.data, 1)
-            val_total += targets.size(0)
-            val_correct += (predicted == targets).sum().item()
+        for inputs, targets, masks in test_loader:
+            outputs = model(inputs, mask=masks).squeeze()
+            val_loss += criterion(outputs, targets).item()
     
-    val_acc = val_correct / val_total
+    avg_val_loss = val_loss / len(test_loader)
+    scheduler.step(avg_val_loss)
     
-    # Step Scheduler based on Val Accuracy
-    scheduler.step(val_acc)
-    
-    if (epoch+1) % 10 == 0:
-        print(f"Epoch {epoch+1}/{EPOCHS}, Loss: {epoch_loss:.4f}, Train Acc: {epoch_acc:.4f}, Val Acc: {val_acc:.4f}")
+    if avg_val_loss < best_loss:
+        best_loss = avg_val_loss
+        torch.save(model.state_dict(), MODEL_OUT)
         
-    if val_acc > best_acc:
-        best_acc = val_acc
-        torch.save(model.state_dict(), 'best_classifier.pth')
+    if (epoch+1) % 50 == 0:
+        print(f"Epoch {epoch+1}, Val MAE: {avg_val_loss:.4f}")
 
-# 5. Eval
-model.load_state_dict(torch.load('best_classifier.pth'))
+# Final Test
+model.load_state_dict(torch.load(MODEL_OUT))
 model.eval()
-all_preds = []
-all_targets = []
-
 with torch.no_grad():
-    for inputs, targets in test_loader:
-        inputs = inputs.to(DEVICE)
-        outputs = model(inputs)
-        _, predicted = torch.max(outputs.data, 1)
-        all_preds.extend(predicted.cpu().numpy())
-        all_targets.extend(targets.numpy())
-
-print(f"\nFinal Test Accuracy: {accuracy_score(all_targets, all_preds):.4f}")
-print("\nClassification Report (Weighted):")
-print(classification_report(all_targets, all_preds, target_names=[TIER_NAMES[i] for i in sorted(list(set(all_targets)))]))
-
-# Confusion Matrix
-cm = confusion_matrix(all_targets, all_preds)
-plt.figure(figsize=(10, 8))
-sns.heatmap(cm, annot=True, fmt='d', xticklabels=TIER_NAMES, yticklabels=TIER_NAMES)
-plt.xlabel('Predicted')
-plt.ylabel('Actual')
-plt.title('Confusion Matrix - PFF Tier Prediction (Optimized)')
-plt.savefig('player_prediction_classifier_cm_optimized.png')
-print("Confusion Matrix saved to player_prediction_classifier_cm_optimized.png")
+    y_pred = model(torch.tensor(X_test), mask=torch.tensor(masks_test)).squeeze().numpy()
+print(f"\nFinal Calibrated MAE: {mean_absolute_error(y_test, y_pred):.4f}")

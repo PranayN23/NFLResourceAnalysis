@@ -9,10 +9,11 @@ import os
 # Using absolute paths to avoid CWD issues
 MODEL_PATH = "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/transformers/best_classifier.pth"
 CSV_PATH = "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/QB.csv"
+SCALER_PATH = "/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/transformers/player_scaler.joblib"
 
 # Global inference instance (loaded once)
-inference_engine = PlayerModelInference(MODEL_PATH)
-inference_engine.fit_scaler(CSV_PATH) # Fit scaler on startup
+# Now uses atomic scaler load instead of refitting on startup
+inference_engine = PlayerModelInference(MODEL_PATH, scaler_path=SCALER_PATH)
 
 class AgentState(TypedDict):
     player_name: str
