@@ -1,96 +1,114 @@
-#%%
 import pandas as pd
 import numpy as np
-import tensorflow as tf
-from sklearn.datasets import fetch_openml
-from sklearn.model_selection import train_test_split
-from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import r2_score
-from sklearn.preprocessing import StandardScaler
-#%%
-te_df = pd.read_csv('Combined_TE.csv')
-#%%
-print(te_df.head())
-#%%
-def check_correlation(df, metric):
-    pd.set_option('display.max_rows', None)
+from xgboost import XGBRegressor
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 
-    features = [col for col in df.columns if
-                col != metric and col != 'weighted_avg_franchise_id' and col != 'weighted_avg_spikes' and col != 'Team' and col != 'Year' and col != 'Position']
-    prev = [x for x in features if 'Previous' in x]
-    prev.append('Current_' + metric)
-    curr = [x for x in features if 'Previous' not in x]
-    df['Total DVOA'] = df['Total DVOA'].astype(str).str.rstrip('%').astype(float) / 100.0
-    l = [curr, prev]
-    for item in l:
-        # Filter only the relevant columns
-        corr_df = df[item]
+# ====================================================
+# 1. LOAD & CLEAN DATA
+# ====================================================
+df = pd.read_csv("backend/ML/TE.csv")
+df = df.replace("MISSING", np.nan)
 
-        # Compute the correlation matrix
-        corr_matrix = corr_df.corr()
-        target_corr = corr_matrix[['Current_' + metric]].drop('Current_' + metric).sort_values(by='Current_' + metric,
-                                                                                               ascending=False)  # Select correlation with 'metric' and exclude itself
+# Convert numeric columns
+for col in df.columns:
+    df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # Print the correlation matrix
-        print(f'Correlation Matrix for {metric}:\n', target_corr, '\n')
-        pd.reset_option('display.max_rows')
+# Remove rows with no base-grade
+df = df.dropna(subset=["weighted_grade"])   # <-- IMPORTANT
+df = df.sort_values(["player_id", "Year"]).reset_index(drop=True)
 
-#%%
-te_df = te_df.drop(columns=['Unnamed: 0', 'Team', 'Year', 'Position', 'position'])
-#%%
-check_correlation(te_df, 'PFF')
-#%%
-te_df = pd.read_csv('Combined_TE.csv')
-#%%
-te_df = te_df.sort_values(by=['Team', 'Year'])
-te_df = te_df.drop(columns=['Unnamed: 0'])
+# ====================================================
+# 2. CREATE NEXT-YEAR LABEL
+# ====================================================
+df["weighted_grade_next"] = df.groupby("player_id")["weighted_grade"].shift(-1)
 
-# Display the sorted data
-print(te_df.head())
+# Only keep rows that have next-year grade
+df_trainable = df.dropna(subset=["weighted_grade_next"]).reset_index(drop=True)
 
-#%%
-team_data = te_df.groupby('Team')
-print(team_data.head)
-#%%
-import numpy as np
+# ====================================================
+# 3. FEATURES
+# ====================================================
+base_features = [
+    "age","Cap_Space","adjusted_value","Net EPA","Win %",
+    "avg_depth_of_target","avoided_tackles","caught_percent",
+    "contested_catch_rate","drop_rate","grades_offense",
+    "grades_pass_block","grades_pass_route","inline_rate",
+    "pass_block_rate","route_rate","slot_rate","wide_rate",
+    "yards_after_catch_per_reception","yards_per_reception","yprr",
+    "touchdowns","receptions","first_downs","targets",
+    "snap_counts_pass_block","snap_counts_run_block","total_snaps"
+]
 
-sequences = []
-targets = []
+# Lag features
+lag_cols = [
+    "weighted_grade","grades_offense","grades_pass_block",
+    "grades_pass_route","yards","receptions","touchdowns","yprr"
+]
 
-# Iterate over each team and its respective data
-for team, group in team_data:
-    # Ensure the team has at least 4 years of data
-    if len(group) >= 4:
-        print(f"Processing team: {team}, data length: {len(group)}")  # Debugging: check length of data for each team
-        
-        # Iterate through the data to create sequences for 3 years
-        for i in range(len(group) - 3):
-            # Select the relevant columns for the sequence
-            sequence = group.iloc[i:i+3][['Previous_yprr', 'Previous_grades_pass_route', 'Previous_PFF', 
-            'Previous_grades_offense', 'Previous_yards', 'Previous_first_downs']]  # Add more columns if needed
-            
-            # The target is the next year's Current_PFF
-            target = group.iloc[i+3]['Current_PFF']  
-            
-            sequences.append(sequence.values)  # Add the sequence to the list
-            targets.append(target)  # Add the target to the list
+for col in lag_cols:
+    df_trainable[col + "_lag1"] = df_trainable.groupby("player_id")[col].shift(1)
 
-# Convert lists to numpy arrays
-X = np.array(sequences)
-y = np.array(targets)
+df_trainable = df_trainable.dropna(subset=[c+"_lag1" for c in lag_cols])
 
+features = base_features + [c+"_lag1" for c in lag_cols]
 
+# ====================================================
+# 4. AUTO-DETECT LAST YEAR WITH COMPLETE LABELS
+# ====================================================
+last_trainable_year = df_trainable["Year"].max()
+validation_year = last_trainable_year  # validate on last fully-labeled year
 
-print(f"Total sequences generated: {len(sequences)}")
-print(f"X shape: {X.shape}, y shape: {y.shape}")
-#%%
-# Check shape before reshaping
-print(X)
-print(X.shape)
+print("Last year with complete labels:", validation_year)
 
-# Reshape X to (samples, timesteps, features)
-X = X.reshape(X.shape[0], 3, -1)  # 3 years per sequence, features will be inferred
+train = df_trainable[df_trainable["Year"] < validation_year]
+valid = df_trainable[df_trainable["Year"] == validation_year]
 
+X_train = train[features]
+y_train = train["weighted_grade_next"]
 
-print('hi')  # Should now be (samples, 3, features)
-print(X)
+X_valid = valid[features]
+y_valid = valid["weighted_grade_next"]
+
+# ====================================================
+# 5. TRAIN MODEL
+# ====================================================
+model = XGBRegressor(
+    n_estimators=600,
+    learning_rate=0.04,
+    max_depth=6,
+    subsample=0.9,
+    colsample_bytree=0.9,
+    objective="reg:squarederror",
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+# ====================================================
+# 6. VALIDATION
+# ====================================================
+pred_valid = model.predict(X_valid)
+
+print("\n==== VALIDATION RESULTS ====")
+print("Validating on year:", validation_year)
+print("R²:", r2_score(y_valid, pred_valid))
+print("RMSE:", mean_squared_error(y_valid, pred_valid, squared=False))
+print("MAE:", mean_absolute_error(y_valid, pred_valid))
+
+results = valid[["player_id","player","Team","Year","weighted_grade_next"]].copy()
+results["predicted"] = pred_valid
+
+print("\n==== SAMPLE OUTPUT ====")
+print(results.head())
+
+# ====================================================
+# 7. OPTIONAL: Predict 2025 next
+# ====================================================
+df_2024 = df[df["Year"] == validation_year][features]
+pred_2025 = model.predict(df_2024)
+
+df_predict_2025 = df[df["Year"] == validation_year][["player_id","player","Team","Year"]].copy()
+df_predict_2025["predicted_2025_grade"] = pred_2025
+
+print("\n==== PREDICT 2025 ====")
+print(df_predict_2025.head())
