@@ -1,150 +1,174 @@
-import torch
-import torch.nn as nn
-import numpy as np
-import pandas as pd
-from sklearn.preprocessing import StandardScaler
-import joblib
 import os
+import torch
+import pandas as pd
+import numpy as np
+import joblib
+import sys
 
-# --- MODEL ARCHITECTURE (Hybrid Regressor) ---
-class Time2Vec(nn.Module):
-    def __init__(self, input_dim, kernel_size=1):
-        super(Time2Vec, self).__init__()
-        self.k = kernel_size
-        self.input_dim = input_dim
-        self.w0 = nn.Parameter(torch.randn(input_dim, 1)) 
-        self.b0 = nn.Parameter(torch.randn(input_dim, 1))
-        self.wk = nn.Parameter(torch.randn(input_dim, kernel_size))
-        self.bk = nn.Parameter(torch.randn(input_dim, kernel_size))
-        
-    def forward(self, x):
-        x_uns = x.unsqueeze(-1)
-        linear = x_uns * self.w0 + self.b0
-        periodic = torch.sin(x_uns * self.wk + self.bk)
-        out = torch.cat([linear, periodic], dim=-1)
-        out = out.reshape(x.size(0), x.size(1), -1)
-        return out
+# Add project root to path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-class PlayerTransformerRegressor(nn.Module):
-    def __init__(self, input_dim, seq_len, kernel_size=1, num_heads=4, ff_dim=64, num_layers=2, dropout=0.1):
-        super(PlayerTransformerRegressor, self).__init__()
-        self.time2vec = Time2Vec(input_dim, kernel_size)
-        self.embed_dim = input_dim * (kernel_size + 1)
-        
-        if self.embed_dim % num_heads != 0:
-            new_dim = (self.embed_dim // num_heads + 1) * num_heads
-            self.pad_proj = nn.Linear(self.embed_dim, new_dim)
-            self.embed_dim = new_dim
-        else:
-            self.pad_proj = nn.Identity()
+from backend.ML.QBtransformers.Player_Model_QB import PlayerTransformerRegressor
 
-        encoder_layer = nn.TransformerEncoderLayer(
-            d_model=self.embed_dim, 
-            nhead=num_heads, 
-            dim_feedforward=ff_dim, 
-            dropout=dropout,
-            batch_first=True
-        )
-        self.pos_embedding = nn.Parameter(torch.randn(1, seq_len + 1, self.embed_dim))
-        self.cls_token = nn.Parameter(torch.randn(1, 1, self.embed_dim))
-        self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
-        
-        self.regressor = nn.Sequential(
-            nn.Linear(self.embed_dim, 64),
-            nn.ReLU(),
-            nn.Dropout(0.2),
-            nn.Linear(64, 1)
-        )
-        
-    def forward(self, x, mask=None):
-        x = self.time2vec(x)
-        x = self.pad_proj(x)
-        batch_size = x.size(0)
-        cls_tokens = self.cls_token.expand(batch_size, -1, -1)
-        x = torch.cat((cls_tokens, x), dim=1)
-        
-        if mask is not None:
-            cls_mask = torch.zeros((batch_size, 1), dtype=torch.bool, device=x.device)
-            full_mask = torch.cat([cls_mask, mask], dim=1)
-        else:
-            full_mask = None
-            
-        x = x + self.pos_embedding
-        x = self.transformer_encoder(x, src_key_padding_mask=full_mask)
-        x = x[:, 0, :]
-        x = self.regressor(x)
-        return x
-
-# --- INFERENCE WRAPPER ---
 class PlayerModelInference:
-    def __init__(self, model_path, scaler_path=None):
+    def __init__(self, transformer_path, scaler_path=None, xgb_path=None):
         self.device = torch.device('cpu')
-        self.features = [
+        
+        # Original features used in Player_Model_QB.py
+        self.transformer_features = [
             'grades_pass', 'grades_offense', 'qb_rating', 'adjusted_value',
             'Cap_Space', 'ypa', 'twp_rate', 'btt_rate', 'completion_percent',
             'years_in_league', 'delta_grade', 'delta_epa', 'delta_btt',
             'team_performance_proxy'
         ]
+        
+        # XGBoost features (Strictly Lagged)
+        self.xgb_features = [
+            'lag_grades_offense', 'lag_Net_EPA', 'lag_btt_rate', 'lag_twp_rate',
+            'lag_qb_rating', 'lag_ypa', 'adjusted_value', 'years_in_league',
+            'delta_grade_lag', 'team_performance_proxy_lag'
+        ]
+        
         self.max_seq_len = 5
-        self.model = PlayerTransformerRegressor(input_dim=len(self.features), seq_len=5).to(self.device)
-        
-        if os.path.exists(model_path):
-            state_dict = torch.load(model_path, map_location=self.device)
-            self.model.load_state_dict(state_dict)
-            self.model.eval()
-            print(f"Model loaded from {model_path}")
-        
+        self.model = PlayerTransformerRegressor(input_dim=len(self.transformer_features), seq_len=self.max_seq_len).to(self.device)
+        self.model.load_state_dict(torch.load(transformer_path, map_location=self.device))
+        self.model.eval()
+
         self.scaler = None
-        self.is_fitted = False
         if scaler_path and os.path.exists(scaler_path):
             self.scaler = joblib.load(scaler_path)
-            self.is_fitted = True
-            print(f"Scaler loaded from {scaler_path}")
-
-    def predict(self, player_history_df):
-        if not self.is_fitted:
-            print("Warning: Scaler not loaded.")
-        
-        player_history_df = player_history_df.copy()
-        player_history_df['adjusted_value'] = pd.to_numeric(player_history_df['adjusted_value'], errors='coerce')
-        player_history_df = player_history_df.sort_values('Year')
-        
-        # Engineering
-        player_history_df["years_in_league"] = player_history_df.groupby("player").cumcount()
-        player_history_df["delta_grade"] = player_history_df["grades_offense"].diff().fillna(0)
-        player_history_df["delta_epa"]   = player_history_df["Net EPA"].diff().fillna(0)
-        player_history_df["delta_btt"]   = player_history_df["btt_rate"].diff().fillna(0)
-        
-        # Team Proxy handling
-        if 'team_performance_proxy' not in player_history_df.columns:
-            player_history_df['team_performance_proxy'] = player_history_df['Net EPA'].fillna(0)
-        
-        # Final NaN clean
-        player_history_df = player_history_df.fillna(0)
-
-        history = player_history_df.iloc[-self.max_seq_len:][self.features].copy()
-        actual_len = len(history)
-        
-        if self.is_fitted:
-            history[self.features] = self.scaler.transform(history[self.features])
             
-        vals = history.values
-        padding_len = self.max_seq_len - actual_len
-        if padding_len > 0:
-            padded_x = np.vstack([np.zeros((padding_len, len(self.features))), vals])
-            mask = [True] * padding_len + [False] * actual_len
-        else:
-            padded_x = vals
-            mask = [False] * actual_len
+        self.xgb_model = None
+        if xgb_path and os.path.exists(xgb_path):
+            self.xgb_model = joblib.load(xgb_path)
 
-        x = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
-        m = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
+    def _prepare_features(self, player_history):
+        """Prepare both original and lagged features for a player's history."""
+        df = player_history.copy()
+        df['adjusted_value'] = pd.to_numeric(df['adjusted_value'], errors='coerce').fillna(0)
+        df = df.sort_values('Year')
+        
+        # Engineering (Original Logic)
+        df["years_in_league"] = range(len(df))
+        df["delta_grade"] = df["grades_offense"].diff().fillna(0)
+        df["delta_epa"]   = df["Net EPA"].diff().fillna(0)
+        df["delta_btt"]   = df["btt_rate"].diff().fillna(0)
+        df['team_performance_proxy'] = df.groupby(['Team', 'Year'])['Net EPA'].transform('mean')
+        
+        # Lagged Engineering for XGBoost (Predicting T using T-1)
+        # Assuming the LAST row in player_history is Year T-1
+        row_last = df.iloc[-1]
+        row_prev = df.iloc[-2] if len(df) > 1 else row_last
+        
+        xgb_input = {
+            'lag_grades_offense': row_last['grades_offense'],
+            'lag_Net_EPA': row_last['Net EPA'],
+            'lag_btt_rate': row_last['btt_rate'],
+            'lag_twp_rate': row_last['twp_rate'],
+            'lag_qb_rating': row_last['qb_rating'],
+            'lag_ypa': row_last['ypa'],
+            'adjusted_value': row_last['adjusted_value'],
+            'years_in_league': row_last['years_in_league'] + 1,
+            'delta_grade_lag': row_last['grades_offense'] - row_prev['grades_offense'],
+            'team_performance_proxy_lag': row_last['team_performance_proxy']
+        }
+        
+        return df, pd.DataFrame([xgb_input])
+
+    def predict(self, player_history, mode="ensemble", apply_calibration=True):
+        """
+        Predict performance for the NEXT year based on player_history.
+        - mode: 'transformer', 'xgb', or 'ensemble'
+        - apply_calibration: Whether to apply the volatility-aware bias reduction
+        """
+        if player_history.empty:
+            return "No Data", {"error": "History is empty"}
+
+        df_history, df_xgb = self._prepare_features(player_history)
+        
+        # 1. Transformer Prediction (Uses Sequence)
+        p_history_tail = df_history.tail(self.max_seq_len)
+        history_vals = self.scaler.transform(p_history_tail[self.transformer_features])
+        
+        actual_len = len(history_vals)
+        pad = np.zeros((self.max_seq_len - actual_len, len(self.transformer_features)))
+        padded_x = np.vstack([pad, history_vals])
+        mask = [True] * (self.max_seq_len - actual_len) + [False] * actual_len
         
         with torch.no_grad():
-            output = self.model(x, mask=m).squeeze().item()
-            
-        if output >= 80.0: tier = "Elite"
-        elif output >= 60.0: tier = "Starter"
-        else: tier = "Reserve/Poor"
+            x_tensor = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
+            m_tensor = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
+            transformer_grade = self.model(x_tensor, mask=m_tensor).item()
+
+        # 2. XGBoost Prediction
+        xgb_grade = 0.0
+        if self.xgb_model:
+            xgb_grade = self.xgb_model.predict(df_xgb[self.xgb_features])[0]
+
+        # 3. BASE ENSEMBLE CALCULATION
+        career_std = df_history['grades_offense'].std() if len(df_history) > 1 else 5.0
         
-        return tier, {"predicted_grade": output}
+        if apply_calibration:
+            # Dispersion Factor: If career is high-variance, lean more on XGBoost
+            high_volatility = career_std > 8.0
+            xgb_weight = 0.7 if high_volatility else 0.5
+            trans_weight = 1.0 - xgb_weight
+        else:
+            xgb_weight = 0.5
+            trans_weight = 0.5
+        
+        if mode == "transformer":
+            final_grade = transformer_grade
+        elif mode == "xgb":
+            final_grade = xgb_grade
+        else:
+            final_grade = (transformer_grade * trans_weight) + (xgb_grade * xgb_weight)
+
+        # 4. VOLATILITY-AWARE CALIBRATION (CLIFF PENALTY)
+        calibration_penalty = 0.0
+        if apply_calibration and final_grade >= 80.0:
+            last_grade = df_history.iloc[-1]['grades_offense']
+            career_avg = df_history['grades_offense'].mean()
+            drop_from_avg = career_avg - last_grade
+            if drop_from_avg > 5.0:
+                calibration_penalty = min(5.0, drop_from_avg * 0.5)
+                final_grade -= calibration_penalty
+
+        tier = self.get_tier(final_grade)
+        
+        # 5. RISK METADATA
+        vol_score = self.get_volatility_score(df_history)
+        conf_interval = self.get_confidence_interval(final_grade, vol_score)
+
+        return tier, {
+            "predicted_grade": round(final_grade, 2),
+            "transformer_grade": round(transformer_grade, 2),
+            "xgb_grade": round(xgb_grade, 2) if self.xgb_model else None,
+            "calibration_applied": apply_calibration,
+            "calibration_penalty": round(calibration_penalty, 2),
+            "volatility_index": round(vol_score, 3),
+            "confidence_interval": conf_interval
+        }
+
+    def get_prediction(self, player_history, mode="ensemble", apply_calibration=True):
+        """Alias for predict() to maintain backward compatibility."""
+        return self.predict(player_history, mode=mode, apply_calibration=apply_calibration)
+
+    def get_volatility_score(self, df_history):
+        """Formal 0-1 scale of player performance unpredictability."""
+        if len(df_history) < 2: return 0.5
+        std = df_history['grades_offense'].std()
+        # Scale 0-15 std range to 0-1 index
+        return min(1.0, std / 15.0)
+
+    def get_confidence_interval(self, grade, vol_score):
+        """Calculate +/- bounds based on historical cohort MAE and player volatility."""
+        base_mae = 6.6 # From 2024 validation
+        # Inflate interval for volatile players
+        bound = base_mae * (1.0 + vol_score)
+        return (round(grade - bound, 2), round(grade + bound, 2))
+
+    def get_tier(self, grade):
+        if grade >= 80.0: return "Elite"
+        elif grade >= 60.0: return "Starter"
+        else: return "Reserve/Poor"
