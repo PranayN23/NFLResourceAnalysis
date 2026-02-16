@@ -13,7 +13,7 @@ import joblib
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
 # Import classes and wrapper
-from backend.ML.QBtransformers.Player_Model_QB import PlayerTransformerRegressor, Time2Vec
+from backend.ML.QB_Pranay_Transformers.Player_Model_QB import PlayerTransformerRegressor, Time2Vec
 from backend.agent.model_wrapper import PlayerModelInference
 
 # ==========================================

@@ -8,7 +8,7 @@ import sys
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from backend.ML.QBtransformers.Player_Model_QB import PlayerTransformerRegressor
+from backend.ML.QB_Pranay_Transformers.Player_Model_QB import PlayerTransformerRegressor
 
 class PlayerModelInference:
     def __init__(self, transformer_path, scaler_path=None, xgb_path=None):
