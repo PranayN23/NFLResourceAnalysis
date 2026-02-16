@@ -33,13 +33,13 @@ TRANSFORMER_FEATURES = [
     'grades_pass', 'grades_offense', 'qb_rating', 'adjusted_value',
     'Cap_Space', 'ypa', 'twp_rate', 'btt_rate', 'completion_percent',
     'years_in_league', 'delta_grade', 'delta_epa', 'delta_btt',
-    'team_performance_proxy'
+    'team_performance_proxy', 'dropbacks'
 ]
 
 XGB_FEATURES = [
     'lag_grades_offense', 'lag_Net_EPA', 'lag_btt_rate', 'lag_twp_rate',
     'lag_qb_rating', 'lag_ypa', 'adjusted_value', 'years_in_league',
-    'delta_grade_lag', 'team_performance_proxy_lag'
+    'delta_grade_lag', 'team_performance_proxy_lag', 'lag_dropbacks'
 ]
 
 # ==========================================
@@ -64,6 +64,7 @@ def prepare_data():
     df['lag_twp_rate'] = groups['twp_rate'].shift(1)
     df['lag_qb_rating'] = groups['qb_rating'].shift(1)
     df['lag_ypa'] = groups['ypa'].shift(1)
+    df['lag_dropbacks'] = groups['dropbacks'].shift(1).fillna(100) # Baseline workload
     df['delta_grade_lag'] = groups['lag_grades_offense'].diff().fillna(0)
     df['team_performance_proxy_lag'] = groups['team_performance_proxy'].shift(1)
     
@@ -138,7 +139,8 @@ elif MODE == "DREAM":
             "Conf_Lower": details["confidence_interval"][0],
             "Conf_Upper": details["confidence_interval"][1],
             "Vol_Index": details["volatility_index"],
-            "Calibration_Penalty": details["calibration_penalty"]
+            "Age_Adjustment": details["age_adjustment"],
+            "Dropbacks": row["dropbacks"]
         })
         
     final_2025 = pd.DataFrame(rows_2025).sort_values("Ensemble_Pred", ascending=False)

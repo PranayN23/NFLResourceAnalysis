@@ -19,14 +19,14 @@ class PlayerModelInference:
             'grades_pass', 'grades_offense', 'qb_rating', 'adjusted_value',
             'Cap_Space', 'ypa', 'twp_rate', 'btt_rate', 'completion_percent',
             'years_in_league', 'delta_grade', 'delta_epa', 'delta_btt',
-            'team_performance_proxy'
+            'team_performance_proxy', 'dropbacks'
         ]
         
         # XGBoost features (Strictly Lagged)
         self.xgb_features = [
             'lag_grades_offense', 'lag_Net_EPA', 'lag_btt_rate', 'lag_twp_rate',
             'lag_qb_rating', 'lag_ypa', 'adjusted_value', 'years_in_league',
-            'delta_grade_lag', 'team_performance_proxy_lag'
+            'delta_grade_lag', 'team_performance_proxy_lag', 'lag_dropbacks'
         ]
         
         self.max_seq_len = 5
@@ -70,7 +70,8 @@ class PlayerModelInference:
             'adjusted_value': row_last['adjusted_value'],
             'years_in_league': row_last['years_in_league'] + 1,
             'delta_grade_lag': row_last['grades_offense'] - row_prev['grades_offense'],
-            'team_performance_proxy_lag': row_last['team_performance_proxy']
+            'team_performance_proxy_lag': row_last['team_performance_proxy'],
+            'lag_dropbacks': row_last['dropbacks']
         }
         
         return df, pd.DataFrame([xgb_input])
@@ -105,17 +106,10 @@ class PlayerModelInference:
         if self.xgb_model:
             xgb_grade = self.xgb_model.predict(df_xgb[self.xgb_features])[0]
 
-        # 3. BASE ENSEMBLE CALCULATION
-        career_std = df_history['grades_offense'].std() if len(df_history) > 1 else 5.0
-        
-        if apply_calibration:
-            # Dispersion Factor: If career is high-variance, lean more on XGBoost
-            high_volatility = career_std > 8.0
-            xgb_weight = 0.7 if high_volatility else 0.5
-            trans_weight = 1.0 - xgb_weight
-        else:
-            xgb_weight = 0.5
-            trans_weight = 0.5
+        # 3. BASE ENSEMBLE CALCULATION (Stability-Balanced)
+        # Use equal weighting as volume is now internally handled by features
+        xgb_weight = 0.5
+        trans_weight = 0.5
         
         if mode == "transformer":
             final_grade = transformer_grade
@@ -124,15 +118,12 @@ class PlayerModelInference:
         else:
             final_grade = (transformer_grade * trans_weight) + (xgb_grade * xgb_weight)
 
-        # 4. VOLATILITY-AWARE CALIBRATION (CLIFF PENALTY)
-        calibration_penalty = 0.0
-        if apply_calibration and final_grade >= 80.0:
-            last_grade = df_history.iloc[-1]['grades_offense']
-            career_avg = df_history['grades_offense'].mean()
-            drop_from_avg = career_avg - last_grade
-            if drop_from_avg > 5.0:
-                calibration_penalty = min(5.0, drop_from_avg * 0.5)
-                final_grade -= calibration_penalty
+        # 4. AGE-AWARE DECAY (Post-Processing)
+        age_adjustment = 0.0
+        if 'age' in df_history.columns:
+            current_age = df_history.iloc[-1]['age']
+            age_adjustment = self.get_age_decay_factor(current_age)
+            final_grade -= age_adjustment
 
         tier = self.get_tier(final_grade)
         
@@ -144,8 +135,7 @@ class PlayerModelInference:
             "predicted_grade": round(final_grade, 2),
             "transformer_grade": round(transformer_grade, 2),
             "xgb_grade": round(xgb_grade, 2) if self.xgb_model else None,
-            "calibration_applied": apply_calibration,
-            "calibration_penalty": round(calibration_penalty, 2),
+            "age_adjustment": round(age_adjustment, 2),
             "volatility_index": round(vol_score, 3),
             "confidence_interval": conf_interval
         }
@@ -167,6 +157,23 @@ class PlayerModelInference:
         # Inflate interval for volatile players
         bound = base_mae * (1.0 + vol_score)
         return (round(grade - bound, 2), round(grade + bound, 2))
+
+    def get_age_decay_factor(self, age):
+        """
+        Empirical age-based performance adjustment to address survivorship bias.
+        - Peak years (25-32): No adjustment
+        - Decline years (33-40): Gradual decay (~0.8 pts/year)
+        - Veteran years (41+): Gentle additional decay (capped at 10 pts total)
+        """
+        if age <= 32:
+            return 0.0  # Prime years
+        elif age <= 40:
+            return (age - 32) * 0.8  # Gradual decline
+        else:
+            # Age 41+: slower decay with cap
+            base_penalty = (40 - 32) * 0.8  # 6.4 pts at age 40
+            additional = (age - 40) * 0.5   # +0.5 pts per year after 40
+            return min(base_penalty + additional, 10.0)  # Cap at 10 pts max
 
     def get_tier(self, grade):
         if grade >= 80.0: return "Elite"

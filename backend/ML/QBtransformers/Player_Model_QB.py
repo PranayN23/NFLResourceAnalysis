@@ -13,7 +13,56 @@ import joblib
 DEVICE = torch.device('cpu')
 print(f"Using device: {DEVICE}")
 
-# 1. Time2Vec Layer
+# 1. Dataset Class
+class PlayerDataset(Dataset):
+    def __init__(self, sequences, targets, masks):
+        self.sequences = torch.tensor(sequences, dtype=torch.float32)
+        self.targets = torch.tensor(targets, dtype=torch.float32)
+        self.masks = torch.tensor(masks, dtype=torch.bool)
+        
+    def __len__(self):
+        return len(self.targets)
+        
+    def __getitem__(self, idx):
+        return self.sequences[idx], self.targets[idx], self.masks[idx]
+
+# 2. Sequence Utility
+def create_sequences_hybrid(df_scaled, df_raw, seq_len, features, target_col):
+    sequences, targets, masks = [], [], []
+    players = df_raw['player'].unique()
+    
+    for p in players:
+        p_data_scaled = df_scaled[df_raw['player'] == p]
+        p_data_raw = df_raw[df_raw['player'] == p]
+        
+        for i in range(len(p_data_raw)):
+            # Target is current year (i)
+            # Sequence is up to previous years (before i)
+            target = p_data_raw.iloc[i][target_col]
+            
+            # Historical sequence up to i (not including i for target consistency)
+            # Actually, standard transformer training uses [t-seq_len, ..., t-1] to predict t
+            history_scaled = p_data_scaled.iloc[:i]
+            
+            if len(history_scaled) == 0:
+                continue # No history to predict from
+
+            # Take last seq_len years
+            history_scaled = history_scaled.tail(seq_len)
+            actual_len = len(history_scaled)
+            
+            # Padding
+            pad_len = seq_len - actual_len
+            seq = np.vstack([np.zeros((pad_len, len(features))), history_scaled[features].values])
+            mask = [True] * pad_len + [False] * actual_len
+            
+            sequences.append(seq)
+            targets.append(target)
+            masks.append(mask)
+            
+    return np.array(sequences), np.array(targets), np.array(masks)
+
+# 3. Time2Vec Layer (Structural)
 class Time2Vec(nn.Module):
     def __init__(self, input_dim, kernel_size=1):
         super(Time2Vec, self).__init__()
@@ -32,7 +81,7 @@ class Time2Vec(nn.Module):
         out = out.reshape(x.size(0), x.size(1), -1)
         return out
 
-# 2. Transformer Regressor
+# 4. Transformer Regressor
 class PlayerTransformerRegressor(nn.Module):
     def __init__(self, input_dim, seq_len, kernel_size=1, num_heads=4, ff_dim=64, num_layers=2, dropout=0.1):
         super(PlayerTransformerRegressor, self).__init__()
@@ -84,7 +133,7 @@ class PlayerTransformerRegressor(nn.Module):
         return x
 
 if __name__ == "__main__":
-    # 3. Data Processing
+    # 5. Data Processing
     data_path = '/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/QB.csv'
     df = pd.read_csv(data_path)
     df['adjusted_value'] = pd.to_numeric(df['adjusted_value'], errors='coerce')
@@ -102,7 +151,7 @@ if __name__ == "__main__":
         'grades_pass', 'grades_offense', 'qb_rating', 'adjusted_value',
         'Cap_Space', 'ypa', 'twp_rate', 'btt_rate', 'completion_percent',
         'years_in_league', 'delta_grade', 'delta_epa', 'delta_btt',
-        'team_performance_proxy'
+        'team_performance_proxy', 'dropbacks'
     ]
     target_col = 'grades_offense' 
 
@@ -139,18 +188,19 @@ if __name__ == "__main__":
     train_loader = DataLoader(PlayerDataset(X_train, y_train, masks_train), batch_size=32, shuffle=True)
     test_loader = DataLoader(PlayerDataset(X_test, y_test, masks_test), batch_size=32, shuffle=False)
 
-    model = PlayerTransformerRegressor(input_dim=len(features), seq_len=5).to(DEVICE)
+    model = PlayerTransformerRegressor(input_dim=len(features), seq_len=5).to(DEVICE).float()
     criterion = nn.L1Loss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10)
 
     best_loss = float('inf')
     EPOCHS = 150
-    print("Starting calibrated hybrid training...")
+    print("Starting calibrated hybrid training with Learned Durability...")
 
     for epoch in range(EPOCHS):
         model.train()
         for i, t, m in train_loader:
+            i, t = i.to(DEVICE), t.to(DEVICE)
             optimizer.zero_grad()
             outputs = model(i, mask=m).squeeze()
             loss = criterion(outputs, t)
@@ -176,5 +226,7 @@ if __name__ == "__main__":
     model.load_state_dict(torch.load(MODEL_OUT))
     model.eval()
     with torch.no_grad():
-        y_pred = model(torch.tensor(X_test), mask=torch.tensor(masks_test)).squeeze().numpy()
+        test_x = torch.tensor(X_test, dtype=torch.float32)
+        test_m = torch.tensor(masks_test, dtype=torch.bool)
+        y_pred = model(test_x, mask=test_m).squeeze().numpy()
     print(f"\nFinal Calibrated MAE: {mean_absolute_error(y_test, y_pred):.4f}")
