@@ -34,19 +34,158 @@ TRANSFORMER_FEATURES = [
     'yards', 'yards_after_contact', 'yco_attempt', 'breakaway_percent',
     'explosive', 'first_downs', 'receptions', 'targets', 'total_touches',
     'touchdowns', 'adjusted_value', 'Cap_Space', 'age', 'years_in_league',
-    'delta_grade', 'delta_yards', 'delta_touches', 'team_performance_proxy'
+    'delta_grade', 'delta_yards', 'delta_touches', 'team_performance_proxy',
+    # OL features (previous year)
+    'grades_run_block_ol_prev', 'grades_pass_block_ol_prev', 
+    'penalties_ol_prev', 'pressures_allowed_ol_prev',
+    # Rolling stats
+    'rb_yards_rolling_std', 'rb_touches_rolling_std', 'rb_grades_rolling_std',
+    'rb_yards_rolling_mean', 'rb_grades_rolling_mean'
 ]
 
 XGB_FEATURES = [
     'lag_grades_offense', 'lag_yards', 'lag_yco_attempt', 'lag_elusive_rating',
     'lag_breakaway_percent', 'lag_explosive', 'lag_total_touches', 'lag_touchdowns',
     'adjusted_value', 'age', 'years_in_league', 'delta_grade_lag',
-    'team_performance_proxy_lag', 'lag_receptions'
+    'team_performance_proxy_lag', 'lag_receptions',
+    # OL features (previous year - already lagged)
+    'lag_grades_run_block_ol', 'lag_grades_pass_block_ol',
+    'lag_penalties_ol', 'lag_pressures_allowed_ol',
+    # Rolling stats (from last year)
+    'lag_rb_yards_rolling_std', 'lag_rb_touches_rolling_std', 'lag_rb_grades_rolling_std'
 ]
 
 # ==========================================
 # 2. DATA PREPARATION (WITH TEMPORAL AWARENESS)
 # ==========================================
+def add_ol_features(rb_df, ol_df_paths=None):
+    """
+    Add previous-year OL features to RB dataframe using snap-weighted averages.
+    Combines G (Guard), T (Tackle), and C (Center) data.
+    Uses snap_counts_offense for weighted averaging.
+    """
+    try:
+        # Default paths for G, T, C files
+        if ol_df_paths is None:
+            base_paths = [
+                ('backend/ML/G.csv', 'backend/ML/T.csv', 'backend/ML/C.csv'),
+                (os.path.join(os.path.dirname(__file__), '../../ML/G.csv'),
+                 os.path.join(os.path.dirname(__file__), '../../ML/T.csv'),
+                 os.path.join(os.path.dirname(__file__), '../../ML/C.csv')),
+                (os.path.abspath(os.path.join(os.path.dirname(__file__), '../../ML/G.csv')),
+                 os.path.abspath(os.path.join(os.path.dirname(__file__), '../../ML/T.csv')),
+                 os.path.abspath(os.path.join(os.path.dirname(__file__), '../../ML/C.csv')))
+            ]
+            
+            ol_g_path = None
+            ol_t_path = None
+            ol_c_path = None
+            
+            for g_path, t_path, c_path in base_paths:
+                if os.path.exists(g_path) and os.path.exists(t_path) and os.path.exists(c_path):
+                    ol_g_path = g_path
+                    ol_t_path = t_path
+                    ol_c_path = c_path
+                    break
+            
+            if ol_g_path is None:
+                raise FileNotFoundError("Could not find G.csv, T.csv, or C.csv in any expected location")
+        else:
+            ol_g_path, ol_t_path, ol_c_path = ol_df_paths
+        
+        # Load all three OL position files
+        ol_g = pd.read_csv(ol_g_path)
+        ol_t = pd.read_csv(ol_t_path)
+        ol_c = pd.read_csv(ol_c_path)
+        
+        # Combine all OL positions
+        ol_df = pd.concat([ol_g, ol_t, ol_c], ignore_index=True)
+        
+        ol_features = ['grades_run_block', 'grades_pass_block', 'penalties', 'pressures_allowed']
+        weight_col = 'snap_counts_offense'
+        
+        for feat in ol_features:
+            if feat in ol_df.columns:
+                ol_df[feat] = pd.to_numeric(ol_df[feat], errors='coerce')
+        
+        if weight_col in ol_df.columns:
+            ol_df[weight_col] = pd.to_numeric(ol_df[weight_col], errors='coerce')
+            ol_df[weight_col] = ol_df[weight_col].fillna(0)
+        else:
+            weight_col = None
+        
+        # Shift OL year forward by 1
+        ol_df_shifted = ol_df.copy()
+        ol_df_shifted['Year'] = ol_df_shifted['Year'] + 1
+        
+        # Calculate snap-weighted averages by Team and Year
+        ol_agg_list = []
+        
+        for team_year, group in ol_df_shifted.groupby(['Team', 'Year']):
+            team, year = team_year
+            agg_dict = {'Team': team, 'Year': year}
+            
+            if weight_col and (group[weight_col] > 0).any():
+                # Snap-weighted average
+                total_snaps = group[weight_col].sum()
+                if total_snaps > 0:
+                    for feat in ol_features:
+                        if feat in group.columns:
+                            weighted_sum = (group[feat] * group[weight_col]).sum()
+                            agg_dict[f'{feat}_ol_prev'] = weighted_sum / total_snaps
+                        else:
+                            agg_dict[f'{feat}_ol_prev'] = 0.0
+                else:
+                    # Fallback to simple mean if no snaps
+                    for feat in ol_features:
+                        if feat in group.columns:
+                            agg_dict[f'{feat}_ol_prev'] = group[feat].mean()
+                        else:
+                            agg_dict[f'{feat}_ol_prev'] = 0.0
+            else:
+                # Simple mean if no snap data
+                for feat in ol_features:
+                    if feat in group.columns:
+                        agg_dict[f'{feat}_ol_prev'] = group[feat].mean()
+                    else:
+                        agg_dict[f'{feat}_ol_prev'] = 0.0
+            
+            ol_agg_list.append(agg_dict)
+        
+        ol_agg = pd.DataFrame(ol_agg_list)
+        
+        rb_df = rb_df.merge(ol_agg, on=['Team', 'Year'], how='left')
+        
+        # Fill missing with league average
+        for feat in ol_features:
+            col_name = f'{feat}_ol_prev'
+            if col_name in rb_df.columns:
+                league_avg = rb_df[col_name].mean()
+                rb_df[col_name] = rb_df[col_name].fillna(league_avg)
+        
+        return rb_df
+    except Exception as e:
+        print(f"Warning: Could not load OL features: {e}")
+        return rb_df
+
+def add_rolling_stats(df):
+    """Add rolling statistics features."""
+    groups = df.groupby('player')
+    
+    # These columns should exist, so groups is fine here
+    df['rb_yards_rolling_std'] = groups['yards'].rolling(window=3, min_periods=1).std().reset_index(0, drop=True)
+    df['rb_touches_rolling_std'] = groups['total_touches'].rolling(window=3, min_periods=1).std().reset_index(0, drop=True)
+    df['rb_grades_rolling_std'] = groups['grades_offense'].rolling(window=3, min_periods=1).std().reset_index(0, drop=True)
+    df['rb_yards_rolling_mean'] = groups['yards'].rolling(window=3, min_periods=1).mean().reset_index(0, drop=True)
+    df['rb_grades_rolling_mean'] = groups['grades_offense'].rolling(window=3, min_periods=1).mean().reset_index(0, drop=True)
+    
+    rolling_cols = ['rb_yards_rolling_std', 'rb_touches_rolling_std', 'rb_grades_rolling_std',
+                    'rb_yards_rolling_mean', 'rb_grades_rolling_mean']
+    for col in rolling_cols:
+        df[col] = df[col].fillna(0)
+    
+    return df
+
 def prepare_data():
     df = pd.read_csv(DATA_FILE)
     df['adjusted_value'] = pd.to_numeric(df['adjusted_value'], errors='coerce').fillna(0)
@@ -61,6 +200,12 @@ def prepare_data():
     df["delta_touches"] = groups["total_touches"].diff().fillna(0)
     df['team_performance_proxy'] = df.groupby(['Team', 'Year'])['Net EPA'].transform('mean')
     
+    # Add OL features (previous year)
+    df = add_ol_features(df)
+    
+    # Add rolling statistics
+    df = add_rolling_stats(df)
+    
     # Lagged features for XGBoost (using previous year to predict current)
     df['lag_grades_offense'] = groups['grades_offense'].shift(1)
     df['lag_yards'] = groups['yards'].shift(1)
@@ -71,15 +216,43 @@ def prepare_data():
     df['lag_total_touches'] = groups['total_touches'].shift(1).fillna(50)  # Baseline workload
     df['lag_touchdowns'] = groups['touchdowns'].shift(1)
     df['lag_receptions'] = groups['receptions'].shift(1)
-    df['delta_grade_lag'] = groups['lag_grades_offense'].diff().fillna(0)
+    # Recreate groups to include newly created lag columns, or use df.groupby directly
+    df['delta_grade_lag'] = df.groupby('player')['lag_grades_offense'].diff().fillna(0)
     df['team_performance_proxy_lag'] = groups['team_performance_proxy'].shift(1)
+    
+    # Lag OL features (already previous year, but need to shift for XGB)
+    # Use df.groupby directly since groups was created before OL features existed
+    if 'grades_run_block_ol_prev' in df.columns:
+        df['lag_grades_run_block_ol'] = df.groupby('player')['grades_run_block_ol_prev'].shift(1)
+        df['lag_grades_pass_block_ol'] = df.groupby('player')['grades_pass_block_ol_prev'].shift(1)
+        df['lag_penalties_ol'] = df.groupby('player')['penalties_ol_prev'].shift(1)
+        df['lag_pressures_allowed_ol'] = df.groupby('player')['pressures_allowed_ol_prev'].shift(1)
+    
+    # Lag rolling stats
+    if 'rb_yards_rolling_std' in df.columns:
+        df['lag_rb_yards_rolling_std'] = df.groupby('player')['rb_yards_rolling_std'].shift(1)
+        df['lag_rb_touches_rolling_std'] = df.groupby('player')['rb_touches_rolling_std'].shift(1)
+        df['lag_rb_grades_rolling_std'] = df.groupby('player')['rb_grades_rolling_std'].shift(1)
+    
+    # Fill NaN for lagged features
+    if 'lag_grades_run_block_ol' in df.columns:
+        df['lag_grades_run_block_ol'] = df['lag_grades_run_block_ol'].fillna(df['grades_run_block_ol_prev'].mean() if 'grades_run_block_ol_prev' in df.columns else 0)
+        df['lag_grades_pass_block_ol'] = df['lag_grades_pass_block_ol'].fillna(df['grades_pass_block_ol_prev'].mean() if 'grades_pass_block_ol_prev' in df.columns else 0)
+        df['lag_penalties_ol'] = df['lag_penalties_ol'].fillna(df['penalties_ol_prev'].mean() if 'penalties_ol_prev' in df.columns else 0)
+        df['lag_pressures_allowed_ol'] = df['lag_pressures_allowed_ol'].fillna(df['pressures_allowed_ol_prev'].mean() if 'pressures_allowed_ol_prev' in df.columns else 0)
+    
+    if 'lag_rb_yards_rolling_std' in df.columns:
+        df['lag_rb_yards_rolling_std'] = df['lag_rb_yards_rolling_std'].fillna(0)
+        df['lag_rb_touches_rolling_std'] = df['lag_rb_touches_rolling_std'].fillna(0)
+        df['lag_rb_grades_rolling_std'] = df['lag_rb_grades_rolling_std'].fillna(0)
     
     target_col = 'grades_offense'
     df_clean = df.dropna(subset=XGB_FEATURES + [target_col]).copy()
     
     # CRITICAL: Convert all XGB features to numeric (fix object dtype error)
     for col in XGB_FEATURES:
-        df_clean[col] = pd.to_numeric(df_clean[col], errors='coerce')
+        if col in df_clean.columns:
+            df_clean[col] = pd.to_numeric(df_clean[col], errors='coerce')
     
     # Drop any rows with NaN after conversion
     df_clean = df_clean.dropna(subset=XGB_FEATURES + [target_col]).copy()
@@ -196,7 +369,7 @@ elif MODE == "DREAM":
     print("\n[2/3] Generating 2025 'Dream' Projections with Calibration...")
     rows_2025 = []
     
-    retired_players = ["Derrick Henry"]  # Example - update as needed
+    retired_players = []  # Example - update as needed
     
     for _, row in active_2024.iterrows():
         player = row['player']
