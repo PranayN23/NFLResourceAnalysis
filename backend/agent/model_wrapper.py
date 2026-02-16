@@ -106,10 +106,11 @@ class PlayerModelInference:
         if self.xgb_model:
             xgb_grade = self.xgb_model.predict(df_xgb[self.xgb_features])[0]
 
-        # 3. BASE ENSEMBLE CALCULATION (Stability-Balanced)
-        # Use equal weighting as volume is now internally handled by features
-        xgb_weight = 0.5
-        trans_weight = 0.5
+        # 3. BASE ENSEMBLE CALCULATION (Optimized Weights via Grid Search)
+        # Grid search on 2014-2024 data found optimal: 87% XGB, 13% Transformer
+        # Using 65/35 for balanced approach
+        xgb_weight = 0.65
+        trans_weight = 0.35
         
         if mode == "transformer":
             final_grade = transformer_grade
