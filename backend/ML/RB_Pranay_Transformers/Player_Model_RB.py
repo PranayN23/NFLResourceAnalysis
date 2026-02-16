@@ -4,14 +4,20 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 import os
 import joblib
 
 # Check device stability
-DEVICE = torch.device('cpu')
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Using device: {DEVICE}")
+
+# ==========================
+# TEMPORAL SPLIT CONFIG
+# ==========================
+TRAIN_END_YEAR = 2022  # Train on 2010-2022
+VAL_YEAR = 2023        # Validate on 2023
+TEST_YEAR = 2024       # Test on 2024
 
 # 1. Dataset Class
 class PlayerDataset(Dataset):
@@ -26,9 +32,10 @@ class PlayerDataset(Dataset):
     def __getitem__(self, idx):
         return self.sequences[idx], self.targets[idx], self.masks[idx]
 
-# 2. Sequence Utility
-def create_sequences_hybrid(df_scaled, df_raw, seq_len, features, target_col):
-    sequences, targets, masks = [], [], []
+# 2. Sequence Utility with Year Tracking
+def create_sequences_temporal(df_scaled, df_raw, seq_len, features, target_col):
+    """Create sequences with year labels for temporal splitting"""
+    sequences, targets, masks, years = [], [], [], []
     players = df_raw['player'].unique()
     
     for p in players:
@@ -37,11 +44,10 @@ def create_sequences_hybrid(df_scaled, df_raw, seq_len, features, target_col):
         
         for i in range(len(p_data_raw)):
             # Target is current year (i)
-            # Sequence is up to previous years (before i)
+            target_year = p_data_raw.iloc[i]['Year']
             target = p_data_raw.iloc[i][target_col]
             
-            # Historical sequence up to i (not including i for target consistency)
-            # Actually, standard transformer training uses [t-seq_len, ..., t-1] to predict t
+            # Historical sequence up to previous years (before i)
             history_scaled = p_data_scaled.iloc[:i]
             
             if len(history_scaled) == 0:
@@ -59,8 +65,9 @@ def create_sequences_hybrid(df_scaled, df_raw, seq_len, features, target_col):
             sequences.append(seq)
             targets.append(target)
             masks.append(mask)
+            years.append(target_year)
             
-    return np.array(sequences), np.array(targets), np.array(masks)
+    return np.array(sequences), np.array(targets), np.array(masks), np.array(years)
 
 # 3. Time2Vec Layer (Structural)
 class Time2Vec(nn.Module):
@@ -134,7 +141,7 @@ class PlayerTransformerRegressor(nn.Module):
 
 if __name__ == "__main__":
     # 5. Data Processing
-    data_path = '/Users/pranaynandkeolyar/Documents/NFLSalaryCap/backend/ML/HB.csv'
+    data_path = 'backend/ML/HB.csv'  # Update path as needed
     df = pd.read_csv(data_path)
     df['adjusted_value'] = pd.to_numeric(df['adjusted_value'], errors='coerce')
     df = df[df['total_touches'] >= 50].copy()
@@ -145,109 +152,203 @@ if __name__ == "__main__":
     df["delta_grade"] = df.groupby("player")["grades_offense"].diff().fillna(0)
     df["delta_yards"] = df.groupby("player")["yards"].diff().fillna(0)
     df["delta_touches"] = df.groupby("player")["total_touches"].diff().fillna(0)
+    df['team_performance_proxy'] = df.groupby(['Team', 'Year'])['Net EPA'].transform('mean')
 
-    df["team_performance_proxy"] = df.groupby(['Team', 'Year'])['Net EPA'].transform('mean')
-
-
+    # NOTE: Including grades_offense is VALID because sequences use iloc[:i]
+    # This means we use PAST years' grades to predict CURRENT year's grade
     features = [
-    'grades_offense',
-    'grades_run',
-    'grades_pass_route',
-    'elusive_rating',
-    'yards',
-    'yards_after_contact',
-    'yco_attempt',
-    'breakaway_percent',
-    'explosive',
-    'first_downs',
-    'receptions',
-    'targets',
-    'total_touches',
-    'touchdowns',
-    'adjusted_value',
-    'Cap_Space',
-    'age',
-    'years_in_league',
-    'delta_grade',
-    'delta_yards',
-    'delta_touches',
-    'team_performance_proxy'
-]
-
+        'grades_offense',      # Past grades to predict future grades
+        'grades_run',
+        'grades_pass_route',
+        'elusive_rating',
+        'yards',
+        'yards_after_contact',
+        'yco_attempt',
+        'breakaway_percent',
+        'explosive',
+        'first_downs',
+        'receptions',
+        'targets',
+        'total_touches',
+        'touchdowns',
+        'adjusted_value',
+        'Cap_Space',
+        'age',
+        'years_in_league',
+        'delta_grade',
+        'delta_yards',
+        'delta_touches',
+        'team_performance_proxy'
+    ]
     target_col = 'grades_offense' 
 
     df_clean = df.dropna(subset=features + [target_col]).copy()
 
-    # Normalize Features (Strict Separation)
+    # Normalize Features (Fit ONLY on training data)
+    print("Fitting scaler on training data only (no leakage)...")
+    train_data = df_clean[df_clean['Year'] <= TRAIN_END_YEAR]
+    
     scaler = StandardScaler()
-    X_features = df_clean[features].copy()
-    scaler.fit(X_features)
+    scaler.fit(train_data[features])
+    
+    # Transform all data using training scaler
     df_clean_scaled = df_clean.copy()
-    df_clean_scaled[features] = scaler.transform(X_features)
+    df_clean_scaled[features] = scaler.transform(df_clean[features])
 
-    SCALER_OUT = os.path.join(os.path.dirname(__file__), 'rb_player_scaler.joblib')
-    MODEL_OUT  = os.path.join(os.path.dirname(__file__), 'rb_best_classifier.pth')
+    SCALER_OUT = 'backend/ML/RB_Pranay_Transformers/rb_player_scaler.joblib'
+    MODEL_OUT  = 'backend/ML/RB_Pranay_Transformers/rb_best_classifier.pth'
     joblib.dump(scaler, SCALER_OUT)
+    print(f"Scaler saved to {SCALER_OUT}")
 
-    X_all, y_all, masks_all = create_sequences_hybrid(df_clean_scaled, df_clean, 5, features, target_col)
+    # Create sequences with year tracking
+    X_all, y_all, masks_all, years_all = create_sequences_temporal(
+        df_clean_scaled, df_clean, 5, features, target_col
+    )
 
-    # Calibrated Oversampling
+    print(f"\nTotal sequences created: {len(X_all)}")
+    print(f"Year range: {years_all.min()} - {years_all.max()}")
+
+    # ==========================
+    # TEMPORAL SPLIT (NO LEAKAGE)
+    # ==========================
+    train_idx = years_all <= TRAIN_END_YEAR
+    val_idx = years_all == VAL_YEAR
+    test_idx = years_all == TEST_YEAR
+
+    print(f"\nTemporal Split:")
+    print(f"  Train (≤{TRAIN_END_YEAR}): {train_idx.sum()} samples")
+    print(f"  Val ({VAL_YEAR}): {val_idx.sum()} samples")
+    print(f"  Test ({TEST_YEAR}): {test_idx.sum()} samples")
+
+    X_train, y_train, masks_train = X_all[train_idx], y_all[train_idx], masks_all[train_idx]
+    X_val, y_val, masks_val = X_all[val_idx], y_all[val_idx], masks_all[val_idx]
+    X_test, y_test, masks_test = X_all[test_idx], y_all[test_idx], masks_all[test_idx]
+
+    # Calibrated Oversampling (ONLY on training data)
+    print("\nApplying oversampling to training data...")
     X_boosted, y_boosted, masks_boosted = [], [], []
-    for xi, yi, mi in zip(X_all, y_all, masks_all):
+    for xi, yi, mi in zip(X_train, y_train, masks_train):
         X_boosted.append(xi)
         y_boosted.append(yi)
         masks_boosted.append(mi)
+        # Duplicate extreme performers (adjusted for RB grading scale)
         if yi >= 75.0 or yi < 55.0:
             X_boosted.append(xi)
             y_boosted.append(yi)
             masks_boosted.append(mi)
 
-    X_train, X_test, y_train, y_test, masks_train, masks_test = train_test_split(
-        np.array(X_boosted), np.array(y_boosted), np.array(masks_boosted), test_size=0.1, random_state=42
+    X_train = np.array(X_boosted)
+    y_train = np.array(y_boosted)
+    masks_train = np.array(masks_boosted)
+    
+    print(f"  Training samples after oversampling: {len(X_train)}")
+
+    # Create DataLoaders
+    train_loader = DataLoader(
+        PlayerDataset(X_train, y_train, masks_train), 
+        batch_size=32, 
+        shuffle=True
+    )
+    val_loader = DataLoader(
+        PlayerDataset(X_val, y_val, masks_val), 
+        batch_size=32, 
+        shuffle=False
+    )
+    test_loader = DataLoader(
+        PlayerDataset(X_test, y_test, masks_test), 
+        batch_size=32, 
+        shuffle=False
     )
 
-    train_loader = DataLoader(PlayerDataset(X_train, y_train, masks_train), batch_size=32, shuffle=True)
-    test_loader = DataLoader(PlayerDataset(X_test, y_test, masks_test), batch_size=32, shuffle=False)
-
-    model = PlayerTransformerRegressor(input_dim=len(features), seq_len=3).to(DEVICE).float()
+    # Model initialization
+    model = PlayerTransformerRegressor(
+        input_dim=len(features), 
+        seq_len=5
+    ).to(DEVICE).float()
+    
     criterion = nn.L1Loss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode='min', factor=0.5, patience=10
+    )
 
-    best_loss = float('inf')
+    best_val_loss = float('inf')
     EPOCHS = 150
-    print("Starting calibrated hybrid training with Learned Durability...")
+    
+    print("\n" + "="*60)
+    print("Starting temporal training (no leakage)...")
+    print("="*60)
 
     for epoch in range(EPOCHS):
+        # Training
         model.train()
+        train_loss = 0
         for i, t, m in train_loader:
             i, t = i.to(DEVICE), t.to(DEVICE)
+            m = m.to(DEVICE)
             optimizer.zero_grad()
             outputs = model(i, mask=m).squeeze()
             loss = criterion(outputs, t)
             loss.backward()
             optimizer.step()
+            train_loss += loss.item()
         
+        # Validation
         model.eval()
         val_loss = 0
         with torch.no_grad():
-            for iv, tv, mv in test_loader:
+            for iv, tv, mv in val_loader:
+                iv, tv, mv = iv.to(DEVICE), tv.to(DEVICE), mv.to(DEVICE)
                 ov = model(iv, mask=mv).squeeze()
                 val_loss += criterion(ov, tv).item()
         
-        avg_v_loss = val_loss / len(test_loader)
-        if avg_v_loss < best_loss:
-            best_loss = avg_v_loss
-            torch.save(model.state_dict(), MODEL_OUT)
+        avg_train_loss = train_loss / len(train_loader)
+        avg_val_loss = val_loss / len(val_loader)
         
-        if (epoch+1) % 50 == 0:
-            print(f"Epoch {epoch+1}, Val MAE: {avg_v_loss:.4f}")
+        # Save best model based on validation loss
+        if avg_val_loss < best_val_loss:
+            best_val_loss = avg_val_loss
+            torch.save(model.state_dict(), MODEL_OUT)
+            best_epoch = epoch + 1
+        
+        scheduler.step(avg_val_loss)
+        
+        if (epoch + 1) % 10 == 0:
+            print(f"Epoch {epoch+1}/{EPOCHS} | Train MAE: {avg_train_loss:.4f} | Val MAE: {avg_val_loss:.4f}")
 
-    # Final Test
+    print(f"\nBest model saved from epoch {best_epoch} with Val MAE: {best_val_loss:.4f}")
+
+    # ==========================
+    # FINAL EVALUATION ON TEST SET
+    # ==========================
+    print("\n" + "="*60)
+    print("Final Evaluation on Test Set (2024)")
+    print("="*60)
+    
     model.load_state_dict(torch.load(MODEL_OUT))
     model.eval()
+    
     with torch.no_grad():
-        test_x = torch.tensor(X_test, dtype=torch.float32)
-        test_m = torch.tensor(masks_test, dtype=torch.bool)
-        y_pred = model(test_x, mask=test_m).squeeze().numpy()
-    print(f"\nFinal Calibrated MAE: {mean_absolute_error(y_test, y_pred):.4f}")
+        test_x = torch.tensor(X_test, dtype=torch.float32).to(DEVICE)
+        test_m = torch.tensor(masks_test, dtype=torch.bool).to(DEVICE)
+        y_pred = model(test_x, mask=test_m).squeeze().cpu().numpy()
+    
+    test_mae = mean_absolute_error(y_test, y_pred)
+    print(f"\nTest Set MAE (2024): {test_mae:.4f}")
+    
+    # Additional metrics
+    residuals = y_test - y_pred
+    print(f"Mean Residual: {residuals.mean():.4f}")
+    print(f"Std Residual: {residuals.std():.4f}")
+    print(f"Max Overestimate: {residuals.min():.4f}")
+    print(f"Max Underestimate: {residuals.max():.4f}")
+    
+    # Performance by grade range (adjusted for RB grading)
+    print("\nPerformance by Grade Range:")
+    for threshold in [55, 65, 75]:
+        mask = y_test >= threshold
+        if mask.sum() > 0:
+            mae_subset = mean_absolute_error(y_test[mask], y_pred[mask])
+            print(f"  Grade ≥{threshold}: MAE = {mae_subset:.4f} (n={mask.sum()})")
+    
+    print(f"\nModel training complete. Best model saved to {MODEL_OUT}")
