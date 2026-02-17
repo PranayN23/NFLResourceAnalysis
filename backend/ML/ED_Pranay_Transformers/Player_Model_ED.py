@@ -25,7 +25,7 @@ TEST_YEAR      = 2024   # Hold-out test on 2024
 # ==========================
 # TRAINING HYPERPARAMETERS
 # ==========================
-SEQ_LEN       = 3       # Look-back window — must match wrapper + ensemble
+SEQ_LEN       = 6       # Look-back window
 EPOCHS        = 150
 LR            = 0.0001
 BATCH_SIZE    = 32
@@ -35,9 +35,9 @@ GRAD_CLIP     = 1.0
 # ==========================
 # I/O PATHS
 # ==========================
-DATA_PATH  = "backend/ML/DI.csv"
-SCALER_OUT = "backend/ML/DI_Pranay_Transformers/di_player_scaler.joblib"
-MODEL_OUT  = "backend/ML/DI_Pranay_Transformers/di_best_classifier.pth"
+DATA_PATH  = "backend/ML/ED.csv"
+SCALER_OUT = "backend/ML/ED_Transformers/ed_player_scaler.joblib"
+MODEL_OUT  = "backend/ML/ED_Transformers/ed_best_classifier.pth"
 
 
 # ==========================
@@ -234,13 +234,15 @@ if __name__ == "__main__":
     # 5. Data Loading & Filtering
     # --------------------------------------------------
     df = pd.read_csv(DATA_PATH)
-    df = df[df["position"] == "DI"].copy()
+    df = df[df["position"] == "ED"].copy()
     df.sort_values(by=["player", "Year"], inplace=True)
 
     numeric_cols = [
         "grades_pass_rush_defense", "grades_run_defense", "grades_defense",
         "pressures", "sacks", "tackles", "assists", "missed_tackles",
-        "age", "snap_counts_defense",
+        "age", "snap_counts_defense", "hits", "hurries", "stops",
+        "tackles_for_loss", "total_pressures", "penalties",
+        "snap_counts_pass_rush", "snap_counts_run_defense",
     ]
     for col in numeric_cols:
         if col in df.columns:
@@ -263,17 +265,18 @@ if __name__ == "__main__":
     snap    = df["snap_counts_defense"]
     snap_dl = df["snap_counts_dl"]
 
-    df["pressure_rate"]   = safe_div(df["total_pressures"],          snap)
-    df["sack_rate"]       = safe_div(df["sacks"],                    snap)
-    df["hit_rate"]        = safe_div(df["hits"],                     snap)
-    df["hurry_rate"]      = safe_div(df["hurries"],                  snap)
-    df["stop_rate"]       = safe_div(df["stops"],                    snap)
-    df["tfl_rate"]        = safe_div(df["tackles_for_loss"],         snap)
-    df["penalty_rate"]    = safe_div(df["penalties"],                snap)
-    df["a_gap_share"]     = safe_div(df["snap_counts_dl_a_gap"],     snap_dl)
-    df["b_gap_share"]     = safe_div(df["snap_counts_dl_b_gap"],     snap_dl)
-    df["over_t_share"]    = safe_div(df["snap_counts_dl_over_t"],    snap_dl)
+    # Edge rushers: pressure-focused rates (same columns as DI but ED-specific context)
+    df["pressure_rate"]   = safe_div(df["total_pressures"],    snap)
+    df["sack_rate"]       = safe_div(df["sacks"],              snap)
+    df["hit_rate"]        = safe_div(df["hits"],               snap)
+    df["hurry_rate"]      = safe_div(df["hurries"],            snap)
+    df["stop_rate"]       = safe_div(df["stops"],              snap)
+    df["tfl_rate"]        = safe_div(df["tackles_for_loss"],   snap)
+    df["penalty_rate"]    = safe_div(df["penalties"],          snap)
+
+    # ED alignment shares — outside-T and over-T are most relevant for edge
     df["outside_t_share"] = safe_div(df["snap_counts_dl_outside_t"], snap_dl)
+    df["over_t_share"]    = safe_div(df["snap_counts_dl_over_t"],    snap_dl)
 
     # NOTE: grades_defense as a feature is VALID — create_sequences_temporal
     # uses iloc[:i], so only PAST seasons' grades predict the CURRENT season.
@@ -288,10 +291,8 @@ if __name__ == "__main__":
         "stop_rate",
         "tfl_rate",
         "penalty_rate",
-        "a_gap_share",
-        "b_gap_share",
-        "over_t_share",
         "outside_t_share",
+        "over_t_share",
         "age",
         "years_in_league",
         "adjusted_value",
