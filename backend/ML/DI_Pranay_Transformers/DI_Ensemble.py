@@ -24,7 +24,7 @@ MODEL_OUT     = os.path.join(os.path.dirname(__file__), "di_best_classifier.pth"
 SCALER_OUT    = os.path.join(os.path.dirname(__file__), "di_player_scaler.joblib")
 XGB_MODEL_OUT = os.path.join(os.path.dirname(__file__), "di_best_xgb.joblib")
 
-MODE = "DREAM"   # "VALIDATION" | "DREAM"
+MODE = "VALIDATION"   # "VALIDATION" | "DREAM"
 
 print(f"==== STARTING DI ENSEMBLE MODELING (Mode: {MODE}) ====")
 

@@ -70,6 +70,24 @@ class DIModelInference:
         "team_performance_proxy_lag",
     ]
 
+    # ============================================================
+    # POST-HOC VARIANCE CALIBRATION
+    #
+    # The transformer regresses toward the mean, compressing its output
+    # to roughly 50–74 while actual PFF grades span 30–90. This stretch
+    # calibration maps the raw output back to the true grade scale so
+    # tier thresholds (80/70/60) remain semantically correct.
+    #
+    # Derived from 2024 validation set (n=170):
+    #   pred  mean=58.4, std=6.1
+    #   actual mean=57.1, std=13.0  →  ratio = 13.0/6.1 = 2.131
+    #
+    # Formula: calibrated = (raw - CALIB_PRED_MEAN) * CALIB_STD_RATIO + CALIB_ACTUAL_MEAN
+    # ============================================================
+    CALIB_PRED_MEAN   = 58.4
+    CALIB_ACTUAL_MEAN = 57.1
+    CALIB_STD_RATIO   = 2.131
+
     def __init__(self, transformer_path, scaler_path=None, xgb_path=None):
         self.device = torch.device("cpu")
 
@@ -234,8 +252,16 @@ class DIModelInference:
 
         df_eng, df_xgb = self._prepare_features(player_history)
 
-        # Transformer grade
+        # Transformer grade (raw, compressed to ~50-74)
         transformer_grade = self._transformer_predict(df_eng)
+
+        # Stretch-calibrate back to PFF grade scale (30-90)
+        # Raw output regresses to mean — this restores the variance
+        transformer_grade = (
+            (transformer_grade - self.CALIB_PRED_MEAN)
+            * self.CALIB_STD_RATIO
+            + self.CALIB_ACTUAL_MEAN
+        )
 
         # XGB grade
         xgb_grade = None
@@ -248,7 +274,7 @@ class DIModelInference:
         elif mode == "xgb":
             final_grade = xgb_grade
         else:
-            final_grade = 0.8 * transformer_grade + 0.2 * xgb_grade
+            final_grade = 0.5 * transformer_grade + 0.5 * xgb_grade
 
         # Age adjustment (DI ages slower than skill positions)
         current_age    = float(df_eng.iloc[-1]["age"])
