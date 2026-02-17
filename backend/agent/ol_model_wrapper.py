@@ -179,7 +179,7 @@ class OLModelInference:
 
 
     def get_tier(self, grade):
-        if grade >= 75.0:
+        if grade >= 80.0:
             return "Elite"
         elif grade >= 65.0:
             return "Starter"
