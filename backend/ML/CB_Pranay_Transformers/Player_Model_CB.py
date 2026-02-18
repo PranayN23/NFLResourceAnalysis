@@ -236,8 +236,9 @@ if __name__ == "__main__":
     # -------------------------
     # Career mean as feature
     # -------------------------
-    career_mean = df.groupby("player")["grades_defense"].transform("mean")
-    df["career_mean_grade"] = career_mean
+    df["career_mean_grade"] = df.groupby("player")["grades_defense"] \
+                            .transform(lambda x: x.shift(1).expanding().mean())
+
 
     features = [
         "grades_defense","grades_coverage_defense","grades_tackle","grades_defense_penalty",
