@@ -147,7 +147,7 @@ def plot_single_year(merged: pd.DataFrame, year: int, epa_col: str, label: str, 
     ax.set_xticks(clusters)
     if show_zero_line:
         ax.axhline(y=0, color="gray", linestyle="--", alpha=0.5)
-    ax.legend(loc="upper right")
+    ax.legend(loc="lower right", fontsize=8, framealpha=0.9)
     plt.tight_layout()
     out = FIG_DIR / f"{year}_{filename_suffix}.png"
     plt.savefig(out, dpi=150)
