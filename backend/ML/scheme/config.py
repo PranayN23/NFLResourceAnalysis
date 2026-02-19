@@ -83,3 +83,52 @@ SCHEME_FEATURE_COLUMNS_EXTENDED = (
         "personnel_21_rate",
     ]
 )
+
+# Optional: Feature weights for K-means clustering
+# Features with higher weights have more influence in cluster assignments
+# Default: all features weighted equally (weight = 1.0)
+# Example: Give motion_rate and play_action_rate 2x weight, others 1x
+FEATURE_WEIGHTS = {
+    # Core scheme features (higher weight = more important for clustering)
+    "motion_rate": 1.0,
+    "play_action_rate": 1.0,
+    "shotgun_rate": 1.0,
+    "under_center_rate": 1.0,
+    "no_huddle_rate": 1.0,
+    "air_yards_per_att": 1.0,
+    
+    # Formation-specific rates
+    "under_center_play_action_rate": 1.0,
+    "under_center_pass_rate": 1.0,
+    "under_center_run_rate": 1.0,
+    "shotgun_play_action_rate": 1.0,
+    "shotgun_pass_rate": 1.0,
+    "shotgun_run_rate": 1.0,
+    
+    # Down-specific rates
+    "down_1_pass_rate": 1.0,
+    "down_1_run_rate": 1.0,
+    "down_2_pass_rate": 1.0,
+    "down_2_run_rate": 1.0,
+    "down_3_pass_rate": 1.0,
+    "down_3_run_rate": 1.0,
+    
+    # Personnel rates
+    "personnel_01_rate": 1.0,
+    "personnel_10_rate": 1.0,
+    "personnel_11_rate": 1.0,
+    "personnel_12_rate": 1.0,
+    "personnel_13_rate": 1.0,
+    "personnel_20_rate": 1.0,
+    "personnel_21_rate": 1.0,
+    "personnel_22_rate": 1.0,
+    "personnel_31_rate": 1.0,
+    
+    # Other
+    "read_option_rate": 1.0,
+}
+
+# To use custom weights, modify FEATURE_WEIGHTS above, then pass it to fix_and_cluster_all_years:
+# from backend.ML.scheme.fix_and_validate_schemes import fix_and_cluster_all_years
+# from backend.ML.scheme.config import FEATURE_WEIGHTS
+# fix_and_cluster_all_years(feature_weights=FEATURE_WEIGHTS)
