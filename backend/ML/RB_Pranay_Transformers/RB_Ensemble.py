@@ -44,6 +44,8 @@ XGB_FEATURES = [
     'team_performance_proxy_lag', 'lag_receptions'
 ]
 
+T2V_SIGNAL_FEATURE = 't2v_transformer_signal'
+
 # ==========================================
 # 2. DATA PREPARATION (WITH TEMPORAL AWARENESS)
 # ==========================================
@@ -86,7 +88,34 @@ def prepare_data():
     
     return df_clean, df, target_col
 
+
+def add_transformer_signal_feature(df_features, df_all):
+    """Add transformer(Time2Vec)-derived signal as an XGB stacking feature."""
+    print("\nComputing transformer(Time2Vec) signal for XGBoost stacking feature...")
+    signal_engine = RBModelInference(MODEL_OUT, scaler_path=SCALER_OUT, xgb_path=None)
+
+    signals = []
+    total_rows = len(df_features)
+    for idx, (_, row) in enumerate(df_features.iterrows(), start=1):
+        history = df_all[(df_all['player'] == row['player']) & (df_all['Year'] < row['Year'])].copy()
+
+        if len(history) == 0:
+            signals.append(np.nan)
+        else:
+            _, details = signal_engine.get_prediction(history, mode="transformer", apply_calibration=False)
+            signals.append(details.get("transformer_grade", np.nan))
+
+        if idx % 200 == 0 or idx == total_rows:
+            print(f"  Processed {idx}/{total_rows} rows")
+
+    out_df = df_features.copy()
+    out_df[T2V_SIGNAL_FEATURE] = pd.to_numeric(signals, errors='coerce')
+    out_df[T2V_SIGNAL_FEATURE] = out_df[T2V_SIGNAL_FEATURE].fillna(out_df[T2V_SIGNAL_FEATURE].median())
+    return out_df
+
 df_clean, df_all, target_col = prepare_data()
+df_clean = add_transformer_signal_feature(df_clean, df_all)
+XGB_FEATURES = XGB_FEATURES + [T2V_SIGNAL_FEATURE]
 
 # ==========================================
 # 3. TEMPORAL SPLIT & MODEL TRAINING

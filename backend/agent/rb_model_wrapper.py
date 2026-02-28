@@ -24,12 +24,14 @@ class RBModelInference:
         ]
         
         # XGBoost features
-        self.xgb_features = [
+        self.xgb_base_features = [
             'lag_grades_offense', 'lag_yards', 'lag_yco_attempt', 'lag_elusive_rating',
             'lag_breakaway_percent', 'lag_explosive', 'lag_total_touches', 'lag_touchdowns',
             'adjusted_value', 'age', 'years_in_league', 'delta_grade_lag',
             'team_performance_proxy_lag', 'lag_receptions'
         ]
+        self.t2v_signal_feature = 't2v_transformer_signal'
+        self.xgb_features = self.xgb_base_features + [self.t2v_signal_feature]
         
         self.max_seq_len = 5
         self.model = PlayerTransformerRegressor(input_dim=len(self.transformer_features), seq_len=self.max_seq_len).to(self.device)
@@ -43,6 +45,38 @@ class RBModelInference:
         self.xgb_model = None
         if xgb_path and os.path.exists(xgb_path):
             self.xgb_model = joblib.load(xgb_path)
+
+    def _build_transformer_tensors(self, df_history):
+        p_history_tail = df_history.tail(self.max_seq_len).copy()
+
+        for col in self.transformer_features:
+            if col not in p_history_tail.columns:
+                p_history_tail[col] = 0.0
+
+        p_history_tail[self.transformer_features] = (
+            p_history_tail[self.transformer_features]
+            .apply(pd.to_numeric, errors='coerce')
+            .fillna(0.0)
+        )
+
+        feature_frame = p_history_tail[self.transformer_features]
+        feature_vals = feature_frame.values
+        if self.scaler is not None:
+            feature_vals = self.scaler.transform(feature_frame)
+
+        actual_len = len(feature_vals)
+        pad = np.zeros((self.max_seq_len - actual_len, len(self.transformer_features)))
+        padded_x = np.vstack([pad, feature_vals])
+        mask = [True] * (self.max_seq_len - actual_len) + [False] * actual_len
+
+        x_tensor = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
+        m_tensor = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
+        return x_tensor, m_tensor
+
+    def _compute_transformer_signal(self, df_history):
+        with torch.no_grad():
+            x_tensor, m_tensor = self._build_transformer_tensors(df_history)
+            return self.model(x_tensor, mask=m_tensor).item()
 
     def _prepare_features(self, player_history):
         """Prepare both original and lagged features for a player's history."""
@@ -70,6 +104,7 @@ class RBModelInference:
         # Lagged Engineering for XGBoost
         row_last = df.iloc[-1]
         row_prev = df.iloc[-2] if len(df) > 1 else row_last
+        transformer_signal = self._compute_transformer_signal(df)
         
         xgb_input = {
             'lag_grades_offense': float(row_last['grades_offense']),
@@ -85,7 +120,8 @@ class RBModelInference:
             'years_in_league': int(row_last['years_in_league']) + 1,
             'delta_grade_lag': float(row_last['grades_offense']) - float(row_prev['grades_offense']),
             'team_performance_proxy_lag': float(row_last['team_performance_proxy']),
-            'lag_receptions': float(row_last['receptions'])
+            'lag_receptions': float(row_last['receptions']),
+            self.t2v_signal_feature: float(transformer_signal)
         }
         
         return df, pd.DataFrame([xgb_input])
@@ -96,24 +132,21 @@ class RBModelInference:
 
         df_history, df_xgb = self._prepare_features(player_history)
         
-        # Transformer
-        p_history_tail = df_history.tail(self.max_seq_len)
-        history_vals = self.scaler.transform(p_history_tail[self.transformer_features])
-        
-        actual_len = len(history_vals)
-        pad = np.zeros((self.max_seq_len - actual_len, len(self.transformer_features)))
-        padded_x = np.vstack([pad, history_vals])
-        mask = [True] * (self.max_seq_len - actual_len) + [False] * actual_len
-        
-        with torch.no_grad():
-            x_tensor = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
-            m_tensor = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
-            transformer_grade = self.model(x_tensor, mask=m_tensor).item()
+        # Transformer (includes Time2Vec representation internally)
+        transformer_grade = self._compute_transformer_signal(df_history)
 
         # XGBoost
         xgb_grade = 0.0
         if self.xgb_model:
-            xgb_grade = self.xgb_model.predict(df_xgb[self.xgb_features])[0]
+            xgb_columns = self.xgb_features
+            if hasattr(self.xgb_model, "feature_names_in_"):
+                xgb_columns = list(self.xgb_model.feature_names_in_)
+
+            for col in xgb_columns:
+                if col not in df_xgb.columns:
+                    df_xgb[col] = 0.0
+
+            xgb_grade = self.xgb_model.predict(df_xgb[xgb_columns])[0]
 
         # Ensemble (50/50)
         xgb_weight = 0.50
