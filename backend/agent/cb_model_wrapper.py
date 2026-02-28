@@ -75,7 +75,7 @@ class CBModelInference:
 
         # Age-aware decay — CBs peak early (mid-20s) and decline by ~30
         age_adjustment = 0.0
-        if 'age' in df_history.columns:
+        if apply_calibration and 'age' in df_history.columns:
             current_age = df_history.iloc[-1]['age']
             if pd.notna(current_age):
                 age_adjustment = self.get_age_decay_factor(current_age)
