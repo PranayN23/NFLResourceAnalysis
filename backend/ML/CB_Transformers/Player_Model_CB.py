@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, f1_score
 import os
 import joblib
 
@@ -16,16 +16,17 @@ VAL_YEAR = 2023
 TEST_YEAR = 2024
 
 class PlayerDataset(Dataset):
-    def __init__(self, sequences, targets, masks):
+    def __init__(self, sequences, targets, masks, weights):
         self.sequences = torch.tensor(sequences, dtype=torch.float32)
-        self.targets = torch.tensor(targets, dtype=torch.float32)
-        self.masks = torch.tensor(masks, dtype=torch.bool)
+        self.targets   = torch.tensor(targets,   dtype=torch.float32)
+        self.masks     = torch.tensor(masks,     dtype=torch.bool)
+        self.weights   = torch.tensor(weights,   dtype=torch.float32)
 
     def __len__(self):
         return len(self.targets)
 
     def __getitem__(self, idx):
-        return self.sequences[idx], self.targets[idx], self.masks[idx]
+        return self.sequences[idx], self.targets[idx], self.masks[idx], self.weights[idx]
 
 
 def create_sequences_temporal(df_scaled, df_raw, seq_len, features, target_col):
@@ -203,33 +204,63 @@ if __name__ == "__main__":
     X_test,  y_test,  masks_test  = X_all[test_idx],  y_delta_all[test_idx],  masks_all[test_idx]
 
     # Keep raw grades for evaluation reconstruction
+    last_grades_val  = last_grades_all[val_idx]
     last_grades_test = last_grades_all[test_idx]
+    y_raw_val  = y_all[val_idx]
     y_raw_test = y_all[test_idx]
 
-    # Oversample extremes (based on absolute grade, not delta)
+    # Moderate oversampling + loss weights to balance class imbalance without overfitting
+    # Elite (8% of data) → 3x oversample, 2.5x loss weight
+    # Reserve (<50)      → 2x oversample, 1.8x loss weight
+    # Borderline (70-79 or 50-59) → 1.5x, 1.3x
+    # Starter core      → 1x, 1.0x
     y_abs_train = y_all[train_idx]
-    X_boosted, y_boosted, masks_boosted = [], [], []
+    X_boosted, y_boosted, masks_boosted, w_boosted = [], [], [], []
     for xi, yi, mi, yi_abs in zip(X_train, y_train, masks_train, y_abs_train):
-        X_boosted.append(xi); y_boosted.append(yi); masks_boosted.append(mi)
-        if yi_abs >= 80.0 or yi_abs < 50.0:
-            X_boosted.append(xi); y_boosted.append(yi); masks_boosted.append(mi)
+        if yi_abs >= 80.0:
+            repeats, w = 3, 2.5
+        elif yi_abs < 50.0:
+            repeats, w = 2, 1.8
+        elif yi_abs >= 70.0 or yi_abs < 60.0:
+            repeats, w = 2, 1.3
+        else:
+            repeats, w = 1, 1.0
+        for _ in range(repeats):
+            X_boosted.append(xi); y_boosted.append(yi)
+            masks_boosted.append(mi); w_boosted.append(w)
 
-    X_train = np.array(X_boosted)
-    y_train = np.array(y_boosted)
+    X_train     = np.array(X_boosted)
+    y_train     = np.array(y_boosted)
     masks_train = np.array(masks_boosted)
+    w_train     = np.array(w_boosted)
+
+    # Val / test use uniform weight=1
+    w_val  = np.ones(len(y_val))
+    w_test = np.ones(len(y_test))
+
     print(f"  Training samples after oversampling: {len(X_train)}")
 
-    train_loader = DataLoader(PlayerDataset(X_train, y_train, masks_train), batch_size=32, shuffle=True)
-    val_loader   = DataLoader(PlayerDataset(X_val,   y_val,   masks_val),   batch_size=32, shuffle=False)
-    test_loader  = DataLoader(PlayerDataset(X_test,  y_test,  masks_test),  batch_size=32, shuffle=False)
+    train_loader = DataLoader(PlayerDataset(X_train, y_train, masks_train, w_train), batch_size=32, shuffle=True)
+    val_loader   = DataLoader(PlayerDataset(X_val,   y_val,   masks_val,   w_val),   batch_size=32, shuffle=False)
+    test_loader  = DataLoader(PlayerDataset(X_test,  y_test,  masks_test,  w_test),  batch_size=32, shuffle=False)
+
+    def weighted_mse(pred, target, weight):
+        return ((pred - target) ** 2 * weight).mean()
 
     model = CBTransformerRegressor(input_dim=len(features), seq_len=5).to(DEVICE).float()
-    criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=10)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=12)
 
-    best_val_loss = float('inf')
-    EPOCHS = 150
+    def grade_to_tier(grades_arr):
+        tiers = []
+        for g in grades_arr:
+            if g >= 80.0:   tiers.append(2)   # Elite
+            elif g >= 60.0: tiers.append(1)   # Starter
+            else:           tiers.append(0)   # Reserve
+        return tiers
+
+    best_val_f1 = -1.0
+    EPOCHS = 250
 
     print("\n" + "="*60)
     print("Starting temporal training (no leakage)...")
@@ -238,34 +269,45 @@ if __name__ == "__main__":
     for epoch in range(EPOCHS):
         model.train()
         train_loss = 0
-        for i, t, m in train_loader:
-            i, t, m = i.to(DEVICE), t.to(DEVICE), m.to(DEVICE)
+        for i, t, m, w in train_loader:
+            i, t, m, w = i.to(DEVICE), t.to(DEVICE), m.to(DEVICE), w.to(DEVICE)
             optimizer.zero_grad()
-            loss = criterion(model(i, mask=m).squeeze(), t)
+            loss = weighted_mse(model(i, mask=m).squeeze(), t, w)
             loss.backward()
             optimizer.step()
             train_loss += loss.item()
 
         model.eval()
-        val_loss = 0
+        val_delta_preds = []
         with torch.no_grad():
-            for iv, tv, mv in val_loader:
-                iv, tv, mv = iv.to(DEVICE), tv.to(DEVICE), mv.to(DEVICE)
-                val_loss += criterion(model(iv, mask=mv).squeeze(), tv).item()
+            for iv, tv, mv, wv in val_loader:
+                iv, mv = iv.to(DEVICE), mv.to(DEVICE)
+                out = model(iv, mask=mv).squeeze()
+                val_delta_preds.append(out.cpu().numpy())
+
+        val_delta_preds = np.concatenate(val_delta_preds)
+        # Reconstruct absolute grades for tier computation
+        val_abs_preds = last_grades_val[:len(val_delta_preds)] + val_delta_preds
+        val_abs_true  = y_raw_val[:len(val_delta_preds)]
+
+        val_tier_pred = grade_to_tier(val_abs_preds)
+        val_tier_true = grade_to_tier(val_abs_true)
+        val_macro_f1  = f1_score(val_tier_true, val_tier_pred, average='macro', zero_division=0)
+        val_mae       = mean_absolute_error(val_abs_true, val_abs_preds)
 
         avg_train = train_loss / len(train_loader)
-        avg_val   = val_loss   / len(val_loader)
 
-        if avg_val < best_val_loss:
-            best_val_loss = avg_val
+        # Checkpoint on macro-F1 — directly optimizes tier classification
+        if val_macro_f1 > best_val_f1:
+            best_val_f1 = val_macro_f1
             torch.save(model.state_dict(), MODEL_OUT)
             best_epoch = epoch + 1
 
-        scheduler.step(avg_val)
+        scheduler.step(val_mae)
         if (epoch + 1) % 10 == 0:
-            print(f"Epoch {epoch+1}/{EPOCHS} | Train MAE: {avg_train:.4f} | Val MAE: {avg_val:.4f}")
+            print(f"Epoch {epoch+1}/{EPOCHS} | Train wMSE: {avg_train:.4f} | Val MAE: {val_mae:.4f} | Val F1: {val_macro_f1:.4f}")
 
-    print(f"\nBest model saved from epoch {best_epoch} with Val MAE: {best_val_loss:.4f}")
+    print(f"\nBest model saved from epoch {best_epoch} with Val macro-F1: {best_val_f1:.4f}")
 
     model.load_state_dict(torch.load(MODEL_OUT))
     model.eval()
