@@ -35,6 +35,7 @@ Using the same evaluation window and settings:
 
 - `RB_Ensemble.py`
   - Trains/refreshes **XGBoost** (`rb_best_xgb.joblib`) and combines predictions with Transformer through `RBModelInference`.
+  - Adds a **Transformer(Time2Vec)-derived stacking feature** (`t2v_transformer_signal`) into XGBoost so tree-based training can directly use temporal neural signal.
   - Supports two modes:
     - `VALIDATION`: evaluates on 2024 and writes validation report.
     - `DREAM`: projects 2025 rankings.
@@ -80,6 +81,7 @@ Using the same evaluation window and settings:
 
 1. **Train base Transformer** in `Player_Model_RB.py`.
 2. **Train/refresh XGB + run blend** in `RB_Ensemble.py`.
+  - XGB now learns from both lag stats and transformer(Time2Vec) signal.
 3. **Benchmark all modes** in `test_model.py`.
 4. Use exported CSVs to compare errors and decide deployment mode.
 
