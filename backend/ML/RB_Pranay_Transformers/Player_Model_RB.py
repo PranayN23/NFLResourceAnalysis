@@ -2,11 +2,12 @@ import pandas as pd
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error
 import os
 import joblib
+import random
 
 # Check device stability
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -19,18 +20,66 @@ TRAIN_END_YEAR = 2022  # Train on 2010-2022
 VAL_YEAR = 2023        # Validate on 2023
 TEST_YEAR = 2024       # Test on 2024
 
+SEED = 42
+EPOCHS = 180
+EARLY_STOPPING_PATIENCE = 20
+
+
+def set_seed(seed=SEED):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+def grade_to_tier_idx(grades):
+    grades = np.asarray(grades)
+    return np.select(
+        [grades >= 75.0, grades >= 65.0, grades >= 55.0],
+        [3, 2, 1],
+        default=0
+    )
+
+
+def tier_accuracy(y_true, y_pred):
+    true_bins = grade_to_tier_idx(y_true)
+    pred_bins = grade_to_tier_idx(y_pred)
+    return float((true_bins == pred_bins).mean()) if len(true_bins) else 0.0
+
+
+def compute_sample_weights(y_train):
+    y_train = np.asarray(y_train)
+    tier_bins = grade_to_tier_idx(y_train)
+    counts = np.bincount(tier_bins, minlength=4).astype(np.float32)
+    counts[counts == 0] = 1.0
+
+    inv_freq = counts.sum() / (len(counts) * counts)
+    tier_weights = inv_freq[tier_bins]
+
+    thresholds = np.array([55.0, 65.0, 75.0], dtype=np.float32)
+    dist_to_boundary = np.min(np.abs(y_train[:, None] - thresholds[None, :]), axis=1)
+    boundary_boost = 1.0 + 0.35 * np.exp(-dist_to_boundary / 2.5)
+
+    sample_weights = tier_weights * boundary_boost
+    sample_weights = sample_weights / sample_weights.mean()
+    return sample_weights.astype(np.float32)
+
 # 1. Dataset Class
 class PlayerDataset(Dataset):
-    def __init__(self, sequences, targets, masks):
+    def __init__(self, sequences, targets, masks, sample_weights=None):
         self.sequences = torch.tensor(sequences, dtype=torch.float32)
         self.targets = torch.tensor(targets, dtype=torch.float32)
         self.masks = torch.tensor(masks, dtype=torch.bool)
+        if sample_weights is None:
+            sample_weights = np.ones(len(targets), dtype=np.float32)
+        self.sample_weights = torch.tensor(sample_weights, dtype=torch.float32)
         
     def __len__(self):
         return len(self.targets)
         
     def __getitem__(self, idx):
-        return self.sequences[idx], self.targets[idx], self.masks[idx]
+        return self.sequences[idx], self.targets[idx], self.masks[idx], self.sample_weights[idx]
 
 # 2. Sequence Utility with Year Tracking
 def create_sequences_temporal(df_scaled, df_raw, seq_len, features, target_col):
@@ -140,6 +189,8 @@ class PlayerTransformerRegressor(nn.Module):
         return x
 
 if __name__ == "__main__":
+    set_seed(SEED)
+
     # 5. Data Processing
     data_path = 'backend/ML/HB.csv'  # Update path as needed
     df = pd.read_csv(data_path)
@@ -224,30 +275,27 @@ if __name__ == "__main__":
     X_val, y_val, masks_val = X_all[val_idx], y_all[val_idx], masks_all[val_idx]
     X_test, y_test, masks_test = X_all[test_idx], y_all[test_idx], masks_all[test_idx]
 
-    # Calibrated Oversampling (ONLY on training data)
-    print("\nApplying oversampling to training data...")
-    X_boosted, y_boosted, masks_boosted = [], [], []
-    for xi, yi, mi in zip(X_train, y_train, masks_train):
-        X_boosted.append(xi)
-        y_boosted.append(yi)
-        masks_boosted.append(mi)
-        # Duplicate extreme performers (adjusted for RB grading scale)
-        if yi >= 75.0 or yi < 55.0:
-            X_boosted.append(xi)
-            y_boosted.append(yi)
-            masks_boosted.append(mi)
+    if len(X_train) == 0 or len(X_val) == 0 or len(X_test) == 0:
+        raise ValueError(
+            "Temporal split produced an empty train/val/test partition. "
+            "Check TRAIN_END_YEAR / VAL_YEAR / TEST_YEAR and available data years."
+        )
 
-    X_train = np.array(X_boosted)
-    y_train = np.array(y_boosted)
-    masks_train = np.array(masks_boosted)
-    
-    print(f"  Training samples after oversampling: {len(X_train)}")
+    train_sample_weights = compute_sample_weights(y_train)
+    sampler = WeightedRandomSampler(
+        weights=torch.tensor(train_sample_weights, dtype=torch.float32),
+        num_samples=len(train_sample_weights),
+        replacement=True
+    )
+
+    print("\nUsing weighted sampling instead of hard duplication...")
+    print(f"  Training samples: {len(X_train)}")
 
     # Create DataLoaders
     train_loader = DataLoader(
-        PlayerDataset(X_train, y_train, masks_train), 
+        PlayerDataset(X_train, y_train, masks_train, train_sample_weights),
         batch_size=32, 
-        shuffle=True
+        sampler=sampler
     )
     val_loader = DataLoader(
         PlayerDataset(X_val, y_val, masks_val), 
@@ -266,14 +314,16 @@ if __name__ == "__main__":
         seq_len=5
     ).to(DEVICE).float()
     
-    criterion = nn.L1Loss()
+    criterion = nn.SmoothL1Loss(beta=1.0, reduction='none')
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=10
+        optimizer, mode='min', factor=0.5, patience=6
     )
 
     best_val_loss = float('inf')
-    EPOCHS = 150
+    best_val_acc = -1.0
+    best_epoch = 0
+    no_improve_epochs = 0
     
     print("\n" + "="*60)
     print("Starting temporal training (no leakage)...")
@@ -283,40 +333,68 @@ if __name__ == "__main__":
         # Training
         model.train()
         train_loss = 0
-        for i, t, m in train_loader:
+        for i, t, m, w in train_loader:
             i, t = i.to(DEVICE), t.to(DEVICE)
-            m = m.to(DEVICE)
+            m, w = m.to(DEVICE), w.to(DEVICE)
             optimizer.zero_grad()
-            outputs = model(i, mask=m).squeeze()
-            loss = criterion(outputs, t)
+            outputs = model(i, mask=m).squeeze(-1)
+            loss_per_sample = criterion(outputs, t)
+            loss = (loss_per_sample * w).mean()
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
             train_loss += loss.item()
         
         # Validation
         model.eval()
         val_loss = 0
+        val_preds = []
+        val_targets = []
         with torch.no_grad():
-            for iv, tv, mv in val_loader:
+            for iv, tv, mv, _ in val_loader:
                 iv, tv, mv = iv.to(DEVICE), tv.to(DEVICE), mv.to(DEVICE)
-                ov = model(iv, mask=mv).squeeze()
-                val_loss += criterion(ov, tv).item()
+                ov = model(iv, mask=mv).squeeze(-1)
+                val_loss += criterion(ov, tv).mean().item()
+                val_preds.extend(ov.cpu().numpy())
+                val_targets.extend(tv.cpu().numpy())
         
         avg_train_loss = train_loss / len(train_loader)
         avg_val_loss = val_loss / len(val_loader)
+        val_tier_acc = tier_accuracy(np.array(val_targets), np.array(val_preds))
         
-        # Save best model based on validation loss
-        if avg_val_loss < best_val_loss:
+        # Save best model by tier accuracy first, then MAE-style loss tie-break
+        improved = (
+            val_tier_acc > best_val_acc + 1e-4 or
+            (abs(val_tier_acc - best_val_acc) <= 1e-4 and avg_val_loss < best_val_loss)
+        )
+
+        if improved:
             best_val_loss = avg_val_loss
+            best_val_acc = val_tier_acc
             torch.save(model.state_dict(), MODEL_OUT)
             best_epoch = epoch + 1
+            no_improve_epochs = 0
+        else:
+            no_improve_epochs += 1
         
         scheduler.step(avg_val_loss)
         
         if (epoch + 1) % 10 == 0:
-            print(f"Epoch {epoch+1}/{EPOCHS} | Train MAE: {avg_train_loss:.4f} | Val MAE: {avg_val_loss:.4f}")
+            print(
+                f"Epoch {epoch+1}/{EPOCHS} | "
+                f"Train Loss: {avg_train_loss:.4f} | "
+                f"Val Loss: {avg_val_loss:.4f} | "
+                f"Val Tier Acc: {val_tier_acc:.4f}"
+            )
 
-    print(f"\nBest model saved from epoch {best_epoch} with Val MAE: {best_val_loss:.4f}")
+        if no_improve_epochs >= EARLY_STOPPING_PATIENCE:
+            print(f"Early stopping at epoch {epoch+1} (no improvement for {EARLY_STOPPING_PATIENCE} epochs)")
+            break
+
+    print(
+        f"\nBest model saved from epoch {best_epoch} "
+        f"with Val Tier Acc: {best_val_acc:.4f} and Val Loss: {best_val_loss:.4f}"
+    )
 
     # ==========================
     # FINAL EVALUATION ON TEST SET
@@ -331,10 +409,12 @@ if __name__ == "__main__":
     with torch.no_grad():
         test_x = torch.tensor(X_test, dtype=torch.float32).to(DEVICE)
         test_m = torch.tensor(masks_test, dtype=torch.bool).to(DEVICE)
-        y_pred = model(test_x, mask=test_m).squeeze().cpu().numpy()
+        y_pred = model(test_x, mask=test_m).squeeze(-1).cpu().numpy()
     
     test_mae = mean_absolute_error(y_test, y_pred)
+    test_tier_acc = tier_accuracy(y_test, y_pred)
     print(f"\nTest Set MAE (2024): {test_mae:.4f}")
+    print(f"Test Tier Accuracy (2024): {test_tier_acc:.4f}")
     
     # Additional metrics
     residuals = y_test - y_pred
