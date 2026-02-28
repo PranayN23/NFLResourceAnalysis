@@ -1,0 +1,78 @@
+# Team Net EPA & Win % Prediction Model – Comprehensive Walkthrough
+
+This document outlines the end-to-end architecture, data pipeline, and validation strategies for the NFL Team Prediction Model. The system predicts a team's next-season Net EPA and Win Percentage using a rich feature set of lagged historic data, scheme tendencies, and individual positional grades from PFF.
+
+## Architecture & Data Flow 
+
+### 1. Data Sources (`backend/ML/data/`)
+The model builds its intelligence from several discrete CSV sources:
+- **`nflpowerrankings.csv`**: The primary anchor dataset containing historic Net EPA, Split EPA (Rush/Pass), nfelo ratings, and generic Pythagorean win expectations.
+- **`TeamTendencies.csv`**: Contains scheme-specific descriptors like pass/rush ratios, depth of target (aDOT), Shotgun/No-Huddle frequencies, and personnel groupings (e.g. 11/12 personnel).
+- **`EPA {year}.csv` (Granular EPA)**: Highly granular breakdown of an offense/defense's success rate metrics (`Success Rate (SR)`, `Dropback SR`, `Rush SR`). We parse these by dynamically scanning for any available CSV from 2010 to 2024.
+- **`nfl_epa.csv` & `nfl_win.csv`**: The ground truth dataset for the prediction targets (Net EPA, Win %).
+- **PFF Position CSVs** (e.g., `QB.csv`, `WR.csv`): Provide average grades out of 100 for players in specific position groups on a given team for a specific year.
+
+### 2. Dataset Builder (`team_epa_builder.py`)
+The pipeline runs this script to flatten the aforementioned CSVs into a single `team_dataset.csv` file structured uniquely by `(team, year)`.
+
+**Key Operations:**
+1. Loads and sanitizes all sources, enforcing correct data types and matching team abbreviations universally.
+2. Grouping & Alignment: PFF grades (which are originally per player) are clustered to build an average team-level grade (`qb_grade`, `wr_grade`, `edge_grade`).
+3. **Lag Generation**: Crucially, almost all features are shifted forward by 1 year. For example, `off_epa` from 2023 becomes `lag_off_epa` for the 2024 row. This ensures the model learns to predict *next year* based strictly on what was known *last year*.
+
+### 3. Training Script (`train_team_model.py`)
+The script uses **XGBoost Regressors** to map the lagged features to the prediction targets.
+
+**Walk-Forward Training Approach**:
+- **Train Set**: `year <= 2021` (historical context)
+- **Test/Validation Set**: `2022 <= year <= 2024` (recent out-of-sample data)
+
+**Model Targets**:
+- `epa_model`: Forecasts `next_net_epa`.
+- `win_model`: Forecasts `next_win_pct`.
+
+*Artifacts Produced:* Saves standard scaler weights (`epa_scaler.joblib`) and trained decision trees (`epa_model.joblib`), along with `shap_epa.json` mapping out the native Gain metric to see which position groups/scheme stats most influenced the trees.
+
+### 4. Inference Engine (`team_model_wrapper.py`)
+This script isolates the predictive logic from the API and provides utility access for downstream agents. We created a class `TeamModelInference` which exposes:
+
+- `evaluate_roster(team, year)`: Looks up the base year's stats inside `team_dataset.csv`, feeds them into the serialized XGBoost models, and outputs the expected EPA and win rate.
+- **Dynamic Roaster Projections (`project_roster_performance`)**: Enables "What-If" scenarios. Instead of using a team's actual historical grade for a position, an agent can pass in an explicit list of projected players (e.g. `[{"name": "P. Mahomes", "position": "QB", "projected_grade": 95.0}]`). The wrapper averages these out and substitutes the team's `lag_qb_grade` before inference.
+
+### 5. Production API (`main_api.py`)
+A FastAPI wrapper handling dynamic roster requests from user interfaces or upper-level LangGraph reasoning agents via `/evaluate-roster`.
+
+---
+
+## Verifying Model Accuracy & Testing 
+
+To make verification easy, we have created a dedicated diagnostic script: **`backend/ML/team_model/test_team_model.py`**.
+
+### How to Run Verification
+1. Open a terminal in the project root: `/Users/pranaynandkeolyar/Documents/NFLSalaryCap/`
+2. Run the build & training scripts (if not done already):
+   ```bash
+   backend/venv/bin/python backend/ML/team_model/team_epa_builder.py
+   backend/venv/bin/python backend/ML/team_model/train_team_model.py
+   ```
+3. Run the verification diagnostics:
+   ```bash
+   backend/venv/bin/python backend/ML/team_model/test_team_model.py
+   ```
+
+### What the Verification Script Tests:
+
+1. **Historical Accuracy Verification**
+   - The script pulls the 2023 base stats for all 32 NFL teams.
+   - It performs a batch prediction to guess their 2024 `next_net_epa` and `next_win_pct`.
+   - It prints a clean table comparing the Model's Predicted results against the Actual 2024 real-world results.
+   - Outputs an aggregate **MAE (Mean Absolute Error)** and **R²** over the set to quickly quantify whether the predictions are within an acceptable error bound.
+
+2. **'What-If' Roster Manipulations**
+   - Tests the sensitivity of the model to roster overrides.
+   - Computes a baseline projection for a target team (e.g. Kansas City Chiefs).
+   - Simulates trading for an **Elite QB (95.0 PFF Grade)** and prints the explicit +/- swing in Net EPA and Win %.
+   - Simulates injuries/starting a **Backup QB (55.0 PFF Grade)** and prints the resulting statistical cliff.
+   - Simulates signing a complete **Elite Offensive Line** across all 5 starting slots (LT, LG, C, RG, RT at 85.0 average) and demonstrates exactly how the model adjusts.
+
+This comprehensive testing setup acts as a production-ready sanity check to ensure the model responds rationally to agent interventions.

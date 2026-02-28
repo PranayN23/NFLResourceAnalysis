@@ -1,0 +1,13 @@
+{
+  "lag_net_epa": 0.21352042603771015,
+  "lag_win_pct": 0.21374476218135186,
+  "lag_qb_grade": 0.18640143115312183,
+  "lag_ol_grade": 0.0,
+  "lag_rb_grade": 0.09162178934759262,
+  "lag_wr_grade": 0.10691739416017065,
+  "lag_edge_grade": 0.09108868974880964,
+  "lag_idl_grade": 0.0,
+  "lag_lb_grade": 0.07075851279111192,
+  "lag_cb_grade": 0.02594699458013127,
+  "lag_s_grade": 0.0
+}

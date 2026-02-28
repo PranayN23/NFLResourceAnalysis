@@ -1,0 +1,28 @@
+{
+  "epa_features": [
+    "lag_net_epa",
+    "lag_win_pct",
+    "lag_qb_grade",
+    "lag_ol_grade",
+    "lag_rb_grade",
+    "lag_wr_grade",
+    "lag_edge_grade",
+    "lag_idl_grade",
+    "lag_lb_grade",
+    "lag_cb_grade",
+    "lag_s_grade"
+  ],
+  "win_features": [
+    "lag_net_epa",
+    "lag_win_pct",
+    "lag_qb_grade",
+    "lag_ol_grade",
+    "lag_rb_grade",
+    "lag_wr_grade",
+    "lag_edge_grade",
+    "lag_idl_grade",
+    "lag_lb_grade",
+    "lag_cb_grade",
+    "lag_s_grade"
+  ]
+}
