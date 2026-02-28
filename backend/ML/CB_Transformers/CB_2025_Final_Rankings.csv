@@ -1,0 +1,132 @@
+player,Team,Tier,Predicted_Grade,Conf_Lower,Conf_Upper,Vol_Index,Age_Adjustment,Last_Grade_2024,YoY_Change_Pred,Snap_Counts_2024
+Trent McDuffie,Chiefs,Elite,87.94,76.69,99.2,0.407,0.0,83.4,4.539999999999992,1132.0
+Cooper DeJean,Eagles,Elite,81.58,69.58,93.58,0.5,0.0,82.0,-0.4200000000000017,830.0
+Christian Gonzalez,Patriots,Starter,78.95,69.14,88.76,0.226,0.0,76.0,2.950000000000003,978.0
+Kendall Fuller,Dolphins,Starter,78.85,66.64,91.05,0.526,0.0,66.2,12.649999999999991,556.0
+Jaycee Horn,Panthers,Starter,77.89,64.58,91.19,0.663,0.0,64.5,13.39,1034.0
+Devon Witherspoon,Seahawks,Starter,77.38,66.36,88.39,0.377,0.0,76.1,1.2800000000000011,1103.0
+Sauce Gardner,Jets,Starter,77.14,63.57,90.7,0.695,0.0,70.2,6.939999999999998,879.0
+Asante Samuel Jr.,Chargers,Starter,76.09,64.0,88.18,0.511,0.0,59.3,16.790000000000006,234.0
+Derek Stingley Jr.,Texans,Starter,75.9,59.9,91.9,1.0,0.0,80.4,-4.5,1119.0
+A.J. Terrell,Falcons,Starter,75.63,63.0,88.26,0.579,0.0,69.4,6.22999999999999,1085.0
+DaRon Bland,Cowboys,Starter,74.93,61.21,88.65,0.715,0.0,70.1,4.8300000000000125,436.0
+Andru Phillips,Giants,Starter,74.29,62.29,86.29,0.5,0.0,77.5,-3.2099999999999937,614.0
+Quinyon Mitchell,Eagles,Starter,73.86,61.86,85.86,0.5,0.0,78.4,-4.540000000000006,1104.0
+Chidobe Awuzie,Titans,Starter,73.23,59.12,87.33,0.763,0.0,64.4,8.829999999999998,373.0
+Ahkello Witherspoon,Rams,Starter,72.7,57.47,87.92,0.903,0.0,65.6,7.1000000000000085,598.0
+Jalen Ramsey,Dolphins,Starter,72.53,60.16,84.91,0.547,0.0,76.9,-4.3700000000000045,1027.0
+Adoree' Jackson,Giants,Starter,72.42,58.4,86.44,0.753,0.0,69.0,3.4200000000000017,426.0
+Tyson Campbell,Jaguars,Starter,72.41,59.14,85.68,0.659,0.0,62.9,9.509999999999998,767.0
+Pat Surtain II,Broncos,Starter,72.18,58.64,85.72,0.693,0.0,83.8,-11.61999999999999,1054.0
+Kyler Gordon,Bears,Starter,71.37,56.34,86.41,0.879,0.0,76.0,-4.6299999999999955,724.0
+Garrett Williams,Cardinals,Starter,70.59,54.59,86.59,1.0,0.0,82.0,-11.409999999999997,778.0
+Mike Sainristil,Commanders,Starter,70.5,58.5,82.5,0.5,0.0,65.8,4.700000000000003,1158.0
+Mike Hilton,Bengals,Starter,70.48,60.73,80.24,0.22,1.0,75.9,-5.420000000000002,737.0
+D.J. Reed,Jets,Starter,69.97,60.11,79.83,0.233,0.0,70.7,-0.730000000000004,880.0
+Kamari Lassiter,Texans,Starter,69.89,57.89,81.89,0.5,0.0,74.7,-4.810000000000002,906.0
+Taron Johnson,Bills,Starter,69.81,57.93,81.69,0.485,0.0,58.8,11.010000000000005,785.0
+Tarheeb Still,Chargers,Starter,69.8,57.8,81.8,0.5,0.0,75.2,-5.400000000000006,826.0
+Marshon Lattimore,Commanders,Starter,69.77,56.86,82.68,0.614,0.0,56.8,12.969999999999999,687.0
+Jonathan Jones,Patriots,Starter,69.33,54.89,83.78,0.806,1.0,60.7,8.629999999999995,712.0
+Sean Murphy-Bunting,Cardinals,Starter,68.87,56.26,81.49,0.577,0.0,56.5,12.370000000000005,725.0
+Nate Wiggins,Ravens,Starter,68.7,56.7,80.7,0.5,0.0,72.6,-3.8999999999999915,769.0
+Rasul Douglas,Bills,Starter,68.47,54.6,82.34,0.734,1.0,53.9,14.57,997.0
+Denzel Ward,Browns,Starter,68.46,56.45,80.47,0.501,0.0,68.4,0.05999999999998806,757.0
+Darius Slay,Eagles,Starter,68.42,56.63,80.21,0.474,4.0,72.0,-3.5799999999999983,897.0
+Roger McCreary,Titans,Starter,68.4,57.5,79.3,0.362,0.0,61.3,7.1000000000000085,652.0
+Christian Benford,Bills,Starter,68.14,52.24,84.04,0.987,0.0,79.3,-11.159999999999997,1046.0
+Tariq Woolen,Seahawks,Starter,68.06,58.78,77.34,0.16,0.0,67.9,0.1599999999999966,889.0
+Jarrian Jones,Jaguars,Starter,67.91,55.91,79.91,0.5,0.0,69.0,-1.0900000000000034,699.0
+Ja'Quan McMillian,Broncos,Starter,67.77,57.17,78.37,0.325,0.0,61.5,6.269999999999996,918.0
+Byron Murphy Jr.,Vikings,Starter,67.61,56.35,78.87,0.407,0.0,73.4,-5.790000000000006,1109.0
+Marlon Humphrey,Ravens,Starter,67.43,55.97,78.89,0.432,0.0,79.0,-11.569999999999993,1000.0
+Greg Newsome II,Browns,Starter,67.37,55.18,79.57,0.525,0.0,52.2,15.170000000000002,571.0
+Ronald Darby,Jaguars,Starter,66.93,55.27,78.59,0.457,1.0,60.3,6.63000000000001,659.0
+Chamarri Conner,Chiefs,Starter,66.76,54.76,78.76,0.5,0.0,68.0,-1.2399999999999949,679.0
+Jamel Dean,Buccaneers,Starter,66.71,57.91,75.51,0.1,0.0,75.7,-8.990000000000009,745.0
+Kenny Moore II,Colts,Starter,66.69,54.22,79.15,0.558,0.0,70.8,-4.109999999999999,1013.0
+DJ Turner II,Bengals,Starter,66.35,52.21,80.5,0.768,0.0,67.8,-1.4500000000000028,508.0
+Terell Smith,Bears,Starter,66.32,54.96,77.67,0.42,0.0,78.5,-12.180000000000007,207.0
+Samuel Womack III,Colts,Starter,66.31,54.31,78.31,0.5,0.0,71.9,-5.590000000000003,673.0
+Tre'Davious White,Ravens,Starter,66.27,53.28,79.26,0.624,0.0,53.6,12.669999999999995,445.0
+Isaiah Rodgers,Eagles,Starter,66.16,54.77,77.55,0.424,0.0,71.5,-5.340000000000003,413.0
+Jaylon Jones,Colts,Starter,65.86,53.86,77.86,0.5,0.0,67.4,-1.5400000000000063,1146.0
+Amik Robertson,Lions,Starter,65.74,57.39,74.08,0.043,0.0,64.7,1.039999999999992,630.0
+Riley Moss,Broncos,Starter,65.72,53.72,77.72,0.5,0.0,57.8,7.920000000000002,912.0
+Trevon Diggs,Cowboys,Starter,65.64,55.29,75.99,0.294,0.0,56.6,9.04,683.0
+Tyrique Stevenson,Bears,Starter,65.61,57.12,74.1,0.061,0.0,58.9,6.710000000000001,810.0
+Charvarius Ward,49ers,Starter,65.45,50.8,80.1,0.831,0.0,56.2,9.25,694.0
+Kader Kohou,Dolphins,Starter,65.0,55.41,74.59,0.198,0.0,64.5,0.5,708.0
+Michael Carter II,Jets,Starter,64.72,48.92,80.51,0.974,0.0,50.7,14.019999999999996,285.0
+Jack Jones,Raiders,Starter,64.69,50.71,78.68,0.748,0.0,53.9,10.79,1047.0
+Kaiir Elam,Bills,Starter,64.68,54.07,75.29,0.326,0.0,64.5,0.18000000000000682,359.0
+Storm Duck,Dolphins,Starter,64.65,52.65,76.65,0.5,0.0,55.5,9.150000000000006,359.0
+Jakorian Bennett,Raiders,Starter,64.6,50.5,78.71,0.764,0.0,58.6,5.999999999999993,459.0
+Jaylon Johnson,Bears,Starter,64.48,49.16,79.8,0.915,0.0,76.2,-11.719999999999999,1031.0
+Nate Hobbs,Raiders,Starter,64.34,51.8,76.88,0.568,0.0,61.4,2.940000000000005,554.0
+Kool-Aid McKinstry,Saints,Starter,64.06,52.06,76.06,0.5,0.0,66.1,-2.039999999999992,680.0
+Max Melton,Cardinals,Starter,63.96,51.96,75.96,0.5,0.0,55.5,8.46,565.0
+Cameron Sutton,Steelers,Starter,63.92,50.73,77.11,0.649,0.0,49.5,14.420000000000002,273.0
+Cam Taylor-Britt,Bengals,Starter,63.82,53.36,74.28,0.307,0.0,63.6,0.21999999999999886,1036.0
+Alex Austin,Patriots,Starter,63.75,55.41,72.09,0.042,0.0,61.1,2.6499999999999986,234.0
+Shaquill Griffin,Vikings,Starter,63.58,53.46,73.7,0.265,0.0,63.7,-0.12000000000000455,597.0
+Martin Emerson Jr.,Browns,Starter,63.53,48.91,78.16,0.828,0.0,47.9,15.630000000000003,827.0
+Cameron Mitchell,Browns,Starter,63.5,53.35,73.65,0.269,0.0,52.9,10.600000000000001,371.0
+Mike Hughes,Falcons,Starter,63.46,49.51,77.42,0.744,0.0,71.9,-8.440000000000005,720.0
+Carlton Davis III,Lions,Starter,63.4,52.99,73.8,0.3,0.0,74.5,-11.100000000000001,697.0
+Deommodore Lenoir,49ers,Starter,63.37,50.37,76.37,0.625,0.0,67.3,-3.9299999999999997,922.0
+Dee Alford,Falcons,Starter,63.1,50.65,75.55,0.556,0.0,58.2,4.899999999999999,724.0
+Eric Stokes,Packers,Starter,62.86,51.48,74.24,0.423,0.0,61.3,1.5600000000000023,588.0
+Ja'Marcus Ingram,Bills,Starter,62.7,50.7,74.7,0.5,0.0,53.9,8.800000000000004,217.0
+Deonte Banks,Giants,Starter,62.65,54.43,70.88,0.028,0.0,50.9,11.75,788.0
+Renardo Green,49ers,Starter,62.52,50.52,74.52,0.5,0.0,69.2,-6.68,675.0
+Dax Hill,Bengals,Starter,62.37,50.37,74.37,0.5,0.0,68.2,-5.830000000000005,262.0
+Jaire Alexander,Packers,Starter,62.34,50.98,73.7,0.42,0.0,75.2,-12.86,361.0
+Cobie Durant,Rams,Starter,62.18,49.83,74.53,0.543,0.0,64.9,-2.720000000000006,843.0
+Jaylen Watson,Chiefs,Starter,62.08,49.83,74.34,0.532,0.0,71.0,-8.920000000000002,433.0
+Jarvis Brownlee Jr.,Titans,Starter,62.05,50.05,74.05,0.5,0.0,59.4,2.6499999999999986,911.0
+Josh Newton,Bengals,Starter,61.96,49.96,73.96,0.5,0.0,60.9,1.0600000000000023,504.0
+Marcus Jones,Patriots,Starter,61.94,52.96,70.92,0.123,0.0,70.2,-8.260000000000005,586.0
+Terrion Arnold,Lions,Starter,61.86,49.86,73.86,0.5,0.0,50.8,11.060000000000002,1021.0
+Clark Phillips III,Falcons,Starter,61.54,47.54,75.53,0.75,0.0,74.9,-13.360000000000007,409.0
+Nazeeh Johnson,Chiefs,Starter,61.51,49.51,73.51,0.5,0.0,53.9,7.609999999999999,547.0
+Joey Porter Jr.,Steelers,Starter,61.49,49.83,73.15,0.457,0.0,54.6,6.890000000000001,1038.0
+Chau Smith-Wade,Panthers,Starter,61.26,49.26,73.26,0.5,0.0,51.6,9.659999999999997,301.0
+Starling Thomas V,Cardinals,Starter,60.8,47.22,74.38,0.698,0.0,60.9,-0.10000000000000142,817.0
+Stephon Gilmore,Vikings,Starter,60.71,48.27,73.14,0.554,4.0,62.2,-1.490000000000002,904.0
+Donte Jackson,Steelers,Starter,60.66,48.32,73.01,0.543,0.0,49.4,11.259999999999998,832.0
+Jourdan Lewis,Cowboys,Starter,60.62,47.56,73.69,0.633,0.0,71.7,-11.080000000000005,871.0
+Josh Jobe,Seahawks,Starter,60.54,48.7,72.39,0.481,0.0,51.0,9.54,443.0
+Cor'Dale Flott,Giants,Starter,60.41,49.01,71.81,0.425,0.0,62.2,-1.7900000000000063,666.0
+Darious Williams,Rams,Starter,60.23,47.0,73.47,0.654,2.0,59.0,1.2299999999999969,865.0
+Cam Hart,Chargers,Starter,60.17,48.17,72.17,0.5,0.0,58.6,1.5700000000000003,502.0
+Kristian Fulton,Chargers,Reserve/Poor,59.5,46.72,72.27,0.596,0.0,68.9,-9.400000000000006,827.0
+Decamerion Richardson,Raiders,Reserve/Poor,59.15,47.15,71.15,0.5,0.0,45.6,13.549999999999997,559.0
+Benjamin St-Juste,Commanders,Reserve/Poor,58.96,48.03,69.88,0.365,0.0,47.7,11.259999999999998,859.0
+Mike Jackson,Panthers,Reserve/Poor,58.29,45.81,70.78,0.56,0.0,68.0,-9.71,1204.0
+Avonte Maddox,Eagles,Reserve/Poor,58.28,42.28,74.28,1.0,0.0,59.8,-1.519999999999996,352.0
+Zyon McCollum,Buccaneers,Reserve/Poor,58.19,44.22,72.16,0.746,0.0,67.4,-9.210000000000008,1123.0
+Darrell Baker Jr.,Titans,Reserve/Poor,58.13,45.38,70.89,0.594,0.0,65.5,-7.369999999999997,626.0
+Joshua Williams,Chiefs,Reserve/Poor,58.0,46.19,69.81,0.476,0.0,64.3,-6.299999999999997,411.0
+Paulson Adebo,Saints,Reserve/Poor,57.85,43.36,72.34,0.811,0.0,63.3,-5.449999999999996,436.0
+Alontae Taylor,Saints,Reserve/Poor,57.85,46.85,68.86,0.376,0.0,44.0,13.850000000000001,1075.0
+Brandin Echols,Jets,Reserve/Poor,57.81,45.66,69.96,0.519,0.0,56.0,1.8100000000000023,406.0
+Keisean Nixon,Packers,Reserve/Poor,57.67,48.57,66.76,0.137,0.0,64.0,-6.329999999999998,1077.0
+Nick McCloud,49ers,Reserve/Poor,57.55,43.1,71.99,0.805,0.0,51.1,6.449999999999996,224.0
+Israel Mukuamu,Cowboys,Reserve/Poor,57.48,45.48,69.48,0.5,0.0,51.7,5.779999999999994,201.0
+Montaric Brown,Jaguars,Reserve/Poor,57.34,45.2,69.49,0.519,0.0,62.3,-4.959999999999994,855.0
+Caelen Carson,Cowboys,Reserve/Poor,57.27,45.27,69.27,0.5,0.0,39.7,17.57,252.0
+Isaac Yiadom,49ers,Reserve/Poor,56.27,41.92,70.61,0.793,0.0,59.5,-3.229999999999997,488.0
+Carrington Valentine,Packers,Reserve/Poor,56.09,45.07,67.1,0.377,0.0,65.5,-9.409999999999997,606.0
+Beanie Bishop Jr.,Steelers,Reserve/Poor,55.72,43.72,67.72,0.5,0.0,55.6,0.11999999999999744,550.0
+Ja'Sir Taylor,Chargers,Reserve/Poor,53.7,45.51,61.89,0.024,0.0,56.7,-3.0,353.0
+Dane Jackson,Panthers,Reserve/Poor,53.25,38.14,68.36,0.889,0.0,33.8,19.450000000000003,282.0
+L'Jarius Sneed,Titans,Reserve/Poor,53.01,37.01,69.01,1.0,0.0,36.3,16.71,301.0
+Marco Wilson,Bengals,Reserve/Poor,52.25,40.31,64.19,0.492,0.0,43.5,8.75,242.0
+Tre Brown,Seahawks,Reserve/Poor,52.24,41.6,62.88,0.33,0.0,53.5,-1.259999999999998,290.0
+James Pierre,Steelers,Reserve/Poor,52.12,40.17,64.08,0.495,0.0,56.2,-4.080000000000005,207.0
+Darnay Holmes,Raiders,Reserve/Poor,49.62,38.65,60.59,0.371,0.0,54.1,-4.480000000000004,298.0
+Noah Igbinoghene,Commanders,Reserve/Poor,49.61,37.68,61.54,0.491,0.0,45.3,4.310000000000002,971.0
+Amani Oruwariye,Cowboys,Reserve/Poor,49.2,33.2,65.2,1.0,0.0,60.0,-10.799999999999997,286.0
+Troy Hill,Buccaneers,Reserve/Poor,48.01,37.02,59.0,0.374,4.0,63.2,-15.190000000000005,236.0
+Kindle Vildor,Lions,Reserve/Poor,46.95,35.98,57.93,0.372,0.0,46.7,0.25,316.0
