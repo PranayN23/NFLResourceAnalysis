@@ -1,0 +1,27 @@
+feature,success_metric,correlation,abs_correlation,p_value,n_samples
+best_rb_grade,Net EPA,0.3081,0.3081,0.0,480
+top2_avg_grade,Net EPA,0.3037,0.3037,0.0,480
+weighted_avg_grade,Net EPA,0.299,0.299,0.0,480
+grades_offense,Net EPA,0.2126,0.2126,0.0,1150
+touchdowns,Net EPA,0.2079,0.2079,0.0,1150
+grades_run,Net EPA,0.1734,0.1734,0.0,1150
+yards,Net EPA,0.1188,0.1188,5.4e-05,1150
+grades_pass_route,Net EPA,0.114,0.114,0.000106,1150
+yards_after_contact,Net EPA,0.0896,0.0896,0.002354,1150
+total_touches,Net EPA,0.0715,0.0715,0.015369,1150
+breakaway_percent,Net EPA,0.067,0.067,0.023044,1150
+elusive_rating,Net EPA,0.0598,0.0598,0.042741,1150
+receptions,Net EPA,0.0261,0.0261,0.375848,1150
+weighted_avg_grade,Win %,0.2713,0.2713,0.0,480
+best_rb_grade,Win %,0.264,0.264,0.0,480
+top2_avg_grade,Win %,0.2569,0.2569,0.0,480
+touchdowns,Win %,0.211,0.211,0.0,1150
+grades_offense,Win %,0.1955,0.1955,0.0,1150
+grades_run,Win %,0.1496,0.1496,0.0,1150
+yards,Win %,0.1356,0.1356,4e-06,1150
+yards_after_contact,Win %,0.1122,0.1122,0.000138,1150
+grades_pass_route,Win %,0.1018,0.1018,0.000547,1150
+total_touches,Win %,0.1,0.1,0.000687,1150
+elusive_rating,Win %,0.0474,0.0474,0.107953,1150
+breakaway_percent,Win %,0.0445,0.0445,0.131317,1150
+receptions,Win %,0.0272,0.0272,0.357108,1150

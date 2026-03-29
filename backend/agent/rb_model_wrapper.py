@@ -148,9 +148,9 @@ class RBModelInference:
 
             xgb_grade = self.xgb_model.predict(df_xgb[xgb_columns])[0]
 
-        # Ensemble (50/50)
-        xgb_weight = 0.50
-        trans_weight = 0.50
+        # Ensemble — XGB dominates (transformer signal already baked into XGB as a feature)
+        xgb_weight = 1.0
+        trans_weight = 0.0
         
         if mode == "transformer":
             final_grade = transformer_grade

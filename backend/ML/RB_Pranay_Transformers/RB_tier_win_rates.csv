@@ -1,0 +1,4 @@
+tier,n_team_seasons,mean_win_pct,std_win_pct,mean_net_epa,playoff_rate
+Elite,221,53.25,16.95,0.0304,0.4525
+Starter,216,46.33,18.98,-0.0216,0.338
+Rotation,43,42.47,17.2,-0.049,0.2093
