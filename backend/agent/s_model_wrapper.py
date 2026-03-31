@@ -8,6 +8,7 @@ import joblib
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.ML.S_Pranay_Transformers.Player_Model_S import PlayerTransformerRegressor, SEQ_LEN
+from backend.agent.exceptions import UngradablePlayerError
 
 
 class SModelInference:
@@ -16,20 +17,19 @@ class SModelInference:
 
         self.transformer_features = [
             "grades_defense", "grades_coverage_defense", "grades_tackle", "grades_defense_penalty",
-            "interceptions", "pass_break_ups", "receptions", "targets", "yards", "tackles", "assists",
-            "missed_tackles", "missed_tackle_rate", "stops", "qb_rating_against",
-            "snap_counts_defense", "snap_counts_fs", "snap_counts_box", "snap_counts_coverage", "snap_counts_slot",
-            "tackles_for_loss", "penalties", "forced_fumbles", "fumble_recoveries",
-            "age", "Net EPA", "adjusted_value", "Cap_Space",
-            "years_in_league", "delta_grade", "delta_coverage", "delta_epa", "team_performance_proxy",
-            "targets_per_snap", "stop_rate", "yards_per_target", "reception_rate", "int_rate",
-            "pbu_rate", "penalty_rate", "tfl_rate", "slot_share", "fs_share", "box_share",
-            "coverage_success_rate", "career_mean_grade",
+            "qb_rating_against", "targets_per_snap", "yards_per_target", "reception_rate", "coverage_success_rate",
+            "int_rate", "pbu_rate", "stop_rate", "missed_tackle_rate", "tfl_rate", "penalty_rate",
+            "slot_share", "fs_share", "box_share", "age", "years_in_league", "adjusted_value", "Cap_Space",
+            "team_performance_proxy", "delta_grade", "delta_coverage", "delta_epa", "career_mean_grade",
         ]
 
         self.max_seq_len = SEQ_LEN
         self.model = PlayerTransformerRegressor(
-            input_dim=len(self.transformer_features), seq_len=self.max_seq_len
+            input_dim=len(self.transformer_features),
+            seq_len=self.max_seq_len,
+            num_layers=2,
+            ff_dim=64,
+            dropout=0.15,
         ).to(self.device)
         self.model.load_state_dict(torch.load(transformer_path, map_location=self.device))
         self.model.eval()
@@ -48,7 +48,7 @@ class SModelInference:
         numeric_cols = [
             "grades_defense", "grades_coverage_defense", "grades_tackle", "grades_defense_penalty",
             "interceptions", "pass_break_ups", "receptions", "targets", "yards", "tackles", "assists",
-            "missed_tackles", "missed_tackle_rate", "stops", "qb_rating_against", "snap_counts_defense",
+            "missed_tackles", "stops", "qb_rating_against", "snap_counts_defense",
             "snap_counts_fs", "snap_counts_box", "snap_counts_coverage", "snap_counts_slot", "tackles_for_loss",
             "penalties", "forced_fumbles", "fumble_recoveries", "age", "Net EPA", "adjusted_value", "Cap_Space",
         ]
@@ -56,7 +56,7 @@ class SModelInference:
         for col in numeric_cols:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
-
+        
         if "Year" in df.columns:
             df = df.sort_values("Year").reset_index(drop=True)
 
@@ -78,6 +78,7 @@ class SModelInference:
         snap = df.get("snap_counts_defense", pd.Series(0, index=df.index)).astype(float)
         df["targets_per_snap"] = safe_div(df.get("targets", 0).astype(float), snap)
         df["stop_rate"] = safe_div(df.get("stops", 0).astype(float), snap)
+        df["missed_tackle_rate"] = safe_div(df.get("missed_tackles", 0).astype(float), snap)
         df["yards_per_target"] = safe_div(df.get("yards", 0).astype(float), df.get("targets", 0).astype(float))
         df["reception_rate"] = safe_div(df.get("receptions", 0).astype(float), df.get("targets", 0).astype(float))
         df["int_rate"] = safe_div(df.get("interceptions", 0).astype(float), snap)
@@ -88,6 +89,8 @@ class SModelInference:
         df["fs_share"] = safe_div(df.get("snap_counts_fs", 0).astype(float), snap)
         df["box_share"] = safe_div(df.get("snap_counts_box", 0).astype(float), snap)
         df["coverage_success_rate"] = safe_div(df.get("interceptions", 0).astype(float) + df.get("pass_break_ups", 0).astype(float), df.get("targets", 0).astype(float))
+
+        df["career_mean_grade"] = df["grades_defense"].shift(1).expanding().mean().fillna(df["grades_defense"].mean())
 
         df["career_mean_grade"] = df["grades_defense"].shift(1).expanding().mean().fillna(df["grades_defense"].mean())
 
@@ -113,6 +116,10 @@ class SModelInference:
             x_tensor = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
             m_tensor = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
             transformer_grade = self.model(x_tensor, mask=m_tensor).item()
+
+        # Check if transformer grade is valid
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
 
         final_grade = transformer_grade
 

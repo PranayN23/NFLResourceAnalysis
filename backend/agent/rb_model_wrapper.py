@@ -9,6 +9,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.ML.RB_Pranay_Transformers.Player_Model_RB import PlayerTransformerRegressor
+from backend.agent.exceptions import UngradablePlayerError
 
 class RBModelInference:
     def __init__(self, transformer_path, scaler_path=None, xgb_path=None):
@@ -109,6 +110,10 @@ class RBModelInference:
             x_tensor = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
             m_tensor = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
             transformer_grade = self.model(x_tensor, mask=m_tensor).item()
+
+        # Check if transformer grade is valid
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
 
         # XGBoost
         xgb_grade = 0.0

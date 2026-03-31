@@ -8,6 +8,7 @@ import joblib
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.ML.CB_Pranay_Transformers.Player_Model_CB import PlayerTransformerRegressor, SEQ_LEN
+from backend.agent.exceptions import UngradablePlayerError
 
 
 class CBModelInference:
@@ -43,7 +44,7 @@ class CBModelInference:
         numeric_cols = [
             "grades_defense", "grades_coverage_defense", "grades_tackle", "grades_defense_penalty",
             "qb_rating_against", "interceptions", "pass_break_ups", "receptions", "targets", "yards",
-            "tackles", "assists", "missed_tackles", "missed_tackle_rate", "stops", "snap_counts_defense",
+            "tackles", "assists", "missed_tackles", "stops", "snap_counts_defense",
             "snap_counts_corner", "snap_counts_coverage", "snap_counts_slot", "tackles_for_loss", "penalties",
             "forced_fumbles", "fumble_recoveries", "age", "Net EPA", "adjusted_value", "Cap_Space",
         ]
@@ -108,6 +109,10 @@ class CBModelInference:
             x_tensor = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
             m_tensor = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
             transformer_grade = self.model(x_tensor, mask=m_tensor).item()
+
+        # Check if transformer grade is valid
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
 
         final_grade = transformer_grade
 

@@ -8,6 +8,7 @@ from sklearn.metrics import mean_absolute_error
 from collections import defaultdict
 import os
 import joblib
+from backend.agent.exceptions import UngradablePlayerError
 
 # ==========================
 # DEVICE
@@ -57,7 +58,11 @@ class LBModelInference:
 
         self.max_seq_len = SEQ_LEN
         self.model = PlayerTransformerRegressor(
-            input_dim=len(self.transformer_features), seq_len=self.max_seq_len
+            input_dim=len(self.transformer_features),
+            seq_len=self.max_seq_len,
+            num_layers=2,
+            ff_dim=128,
+            dropout=0.2,
         ).to(self.device)
         self.model.load_state_dict(torch.load(transformer_path, map_location=self.device))
         self.model.eval()
@@ -74,11 +79,12 @@ class LBModelInference:
         df = player_history.copy()
 
         numeric_cols = [
-            "grades_defense", "pressure_rate", "sack_rate", "hit_rate", "hurry_rate",
-            "stop_rate", "tfl_rate", "penalty_rate", "missed_tackle_rate", "target_rate",
-            "int_rate", "pbu_rate", "box_share", "offball_share", "age", "adjusted_value",
-            "Cap_Space", "Net EPA", "snap_counts_defense", "snap_counts_box", "snap_counts_offball",
-            "snap_counts_run_defense", "Team",
+            "grades_defense", "grades_run_defense", "grades_pass_rush_defense",
+            "total_pressures", "sacks", "hits", "hurries", "stops",
+            "tackles_for_loss", "missed_tackles", "targets", "interceptions", 
+            "pass_break_ups", "penalties", "snap_counts_defense",
+            "snap_counts_box", "snap_counts_offball", "snap_counts_run_defense",
+            "adjusted_value", "Cap_Space", "Net EPA", "age",
         ]
 
         for col in numeric_cols:
@@ -137,6 +143,10 @@ class LBModelInference:
             x = torch.tensor(padded, dtype=torch.float32).unsqueeze(0)
             m = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
             transformer_grade = self.model(x, mask=m).item()
+
+        # Check if transformer grade is valid
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
 
         final_grade = transformer_grade
 
