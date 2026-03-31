@@ -1,0 +1,353 @@
+player,Year,Age,Touches,Actual_Grade,Actual_Tier,Pred_Grade,Pred_Tier,Transformer_Grade,XGB_Grade,Age_Adjustment,Volatility_Index,Mode
+DeMarco Murray,2014,26.0,497.0,83.1,Elite,75.12,Elite,75.12,81.51000213623047,0.0,0.292,transformer
+Marshawn Lynch,2014,28.0,385.0,90.7,Elite,74.58,Starter,76.08,90.7300033569336,1.5,0.515,transformer
+Le'Veon Bell,2014,22.0,373.0,80.8,Elite,71.63,Starter,71.63,80.37000274658203,0.0,0.6,transformer
+Matt Forte,2014,28.0,368.0,63.6,Rotation,57.55,Rotation,59.05,63.88999938964844,1.5,0.385,transformer
+LeSean McCoy,2014,26.0,340.0,57.9,Rotation,67.62,Starter,67.62,60.52000045776367,0.0,0.438,transformer
+Eddie Lacy,2014,24.0,329.0,83.0,Elite,76.39,Elite,76.39,83.4000015258789,0.0,0.6,transformer
+Justin Forsett,2014,28.0,321.0,72.0,Starter,74.13,Starter,75.63,66.13999938964844,1.5,0.601,transformer
+Arian Foster,2014,28.0,298.0,71.7,Starter,59.2,Rotation,60.7,71.76000213623047,1.5,0.443,transformer
+Alfred Morris,2014,25.0,282.0,62.8,Rotation,70.24,Starter,70.24,65.33999633789062,0.0,0.4,transformer
+Joique Bell,2014,28.0,273.0,66.1,Starter,,Reserve/Poor,,67.87999725341797,1.5,0.214,transformer
+Frank Gore,2014,31.0,266.0,62.7,Rotation,43.28,Reserve/Poor,51.28,65.91000366210938,8.0,0.391,transformer
+Jeremy Hill,2014,21.0,262.0,63.1,Rotation,0.0,No Data,,,,,transformer
+Mark Ingram II,2014,24.0,255.0,71.2,Starter,76.22,Elite,76.22,72.27999877929688,0.0,0.315,transformer
+Lamar Miller,2014,23.0,254.0,73.9,Starter,68.49,Starter,68.49,71.47000122070312,0.0,0.311,transformer
+Andre Ellington,2014,25.0,247.0,55.1,Rotation,75.4,Elite,75.4,57.81999969482422,0.0,0.6,transformer
+Jamaal Charles,2014,27.0,245.0,71.7,Starter,67.72,Starter,67.72,68.91999816894531,0.0,0.667,transformer
+Jonathan Stewart,2014,27.0,239.0,79.1,Elite,58.28,Rotation,58.28,78.5199966430664,0.0,0.49,transformer
+C.J. Anderson,2014,23.0,237.0,85.8,Elite,61.47,Rotation,61.47,74.12999725341797,0.0,0.6,transformer
+Andre Williams,2014,22.0,234.0,60.1,Rotation,0.0,No Data,,,,,transformer
+Giovani Bernard,2014,22.0,222.0,70.9,Starter,76.87,Elite,76.87,70.3499984741211,0.0,0.6,transformer
+Chris Ivory,2014,26.0,216.0,72.0,Starter,75.95,Elite,75.95,75.33999633789062,0.0,0.421,transformer
+Steven Jackson,2014,31.0,210.0,76.8,Elite,44.64,Reserve/Poor,52.64,74.94999694824219,8.0,0.361,transformer
+Matt Asiata,2014,27.0,208.0,53.4,Reserve/Poor,,Reserve/Poor,,65.1500015258789,0.0,1.0,transformer
+Fred Jackson,2014,33.0,207.0,71.3,Starter,52.14,Reserve/Poor,66.14,71.94999694824219,14.0,0.47,transformer
+Rashad Jennings,2014,29.0,197.0,58.5,Rotation,71.32,Starter,74.32,59.060001373291016,3.0,0.499,transformer
+Branden Oliver,2014,23.0,195.0,75.3,Elite,0.0,No Data,,,,,transformer
+Tre Mason,2014,21.0,195.0,65.8,Starter,0.0,No Data,,,,,transformer
+Darren McFadden,2014,27.0,190.0,60.2,Rotation,56.02,Rotation,56.02,61.90999984741211,0.0,0.606,transformer
+Trent Richardson,2014,24.0,186.0,61.3,Rotation,62.37,Rotation,62.37,61.58000183105469,0.0,0.415,transformer
+Alfred Blue,2014,23.0,183.0,55.1,Rotation,0.0,No Data,,,,,transformer
+LeGarrette Blount,2014,27.0,182.0,82.3,Elite,66.17,Starter,66.17,76.33999633789062,0.0,0.571,transformer
+Terrance West,2014,23.0,182.0,58.9,Rotation,0.0,No Data,,,,,transformer
+Adrian Peterson,2015,30.0,382.0,65.7,Starter,62.06,Rotation,67.56,70.06999969482422,5.5,0.8,transformer
+Devonta Freeman,2015,23.0,338.0,68.1,Starter,55.8,Rotation,55.8,66.69000244140625,0.0,0.6,transformer
+Doug Martin,2015,26.0,321.0,84.0,Elite,62.68,Rotation,62.68,78.12000274658203,0.0,0.704,transformer
+Jonathan Stewart,2015,28.0,312.0,71.8,Starter,74.74,Starter,76.24,71.81999969482422,1.5,0.505,transformer
+Latavius Murray,2015,25.0,307.0,64.5,Rotation,52.46,Reserve/Poor,52.46,65.41999816894531,0.0,0.6,transformer
+Frank Gore,2015,32.0,294.0,61.6,Rotation,41.66,Reserve/Poor,52.16,60.43000030517578,10.5,0.369,transformer
+Darren McFadden,2015,28.0,279.0,60.1,Rotation,52.47,Reserve/Poor,53.97,60.560001373291016,1.5,0.532,transformer
+Chris Ivory,2015,27.0,277.0,70.4,Starter,56.26,Rotation,56.26,70.30000305175781,0.0,0.423,transformer
+Ronnie Hillman,2015,23.0,264.0,57.4,Rotation,54.4,Reserve/Poor,54.4,58.2400016784668,0.0,0.293,transformer
+Matt Forte,2015,29.0,262.0,70.7,Starter,64.65,Rotation,67.65,70.37999725341797,3.0,0.415,transformer
+Jeremy Hill,2015,22.0,253.0,58.2,Rotation,57.98,Rotation,57.98,60.41999816894531,0.0,0.6,transformer
+Todd Gurley II,2015,21.0,250.0,72.9,Starter,0.0,No Data,,,,,transformer
+Lamar Miller,2015,24.0,241.0,73.7,Starter,73.25,Starter,73.25,72.11000061035156,0.0,0.358,transformer
+C.J. Anderson,2015,24.0,240.0,63.6,Rotation,73.8,Starter,73.8,65.20999908447266,0.0,0.701,transformer
+DeAngelo Williams,2015,32.0,240.0,74.4,Starter,52.17,Reserve/Poor,62.67,71.55000305175781,10.5,0.245,transformer
+DeMarco Murray,2015,27.0,237.0,56.2,Rotation,72.4,Starter,72.4,58.439998626708984,0.0,0.532,transformer
+LeSean McCoy,2015,27.0,235.0,71.1,Starter,65.88,Starter,65.88,69.77999877929688,0.0,0.528,transformer
+Eddie Lacy,2015,25.0,233.0,69.2,Starter,76.05,Elite,76.05,71.75,0.0,0.181,transformer
+Rashad Jennings,2015,30.0,224.0,71.0,Starter,49.42,Reserve/Poor,54.92,70.6500015258789,5.5,0.461,transformer
+Alfred Morris,2015,26.0,223.0,58.0,Rotation,56.69,Rotation,56.69,59.400001525878906,0.0,0.645,transformer
+T.J. Yeldon,2015,21.0,218.0,69.4,Starter,0.0,No Data,,,,,transformer
+Melvin Gordon III,2015,22.0,217.0,54.6,Reserve/Poor,0.0,No Data,,,,,transformer
+Mark Ingram II,2015,25.0,216.0,66.8,Starter,53.3,Reserve/Poor,53.3,67.05000305175781,0.0,0.367,transformer
+James Starks,2015,29.0,216.0,60.4,Rotation,72.14,Starter,75.14,60.11000061035156,3.0,0.486,transformer
+Alfred Blue,2015,24.0,215.0,60.9,Rotation,52.34,Reserve/Poor,52.34,61.25,0.0,0.6,transformer
+Giovani Bernard,2015,23.0,211.0,69.1,Starter,74.39,Starter,74.39,68.62999725341797,0.0,0.189,transformer
+Charcandrick West,2015,24.0,208.0,58.1,Rotation,,Reserve/Poor,,68.0199966430664,0.0,0.6,transformer
+David Johnson,2015,23.0,206.0,71.5,Starter,0.0,No Data,,,,,transformer
+Isaiah Crowell,2015,22.0,204.0,65.3,Starter,51.66,Reserve/Poor,51.66,64.91999816894531,0.0,0.6,transformer
+Chris Johnson,2015,29.0,202.0,47.4,Reserve/Poor,47.67,Reserve/Poor,50.67,50.22999954223633,3.0,0.414,transformer
+Javorius Allen,2015,24.0,182.0,58.0,Rotation,0.0,No Data,,,,,transformer
+Justin Forsett,2015,29.0,182.0,64.3,Rotation,51.67,Reserve/Poor,54.67,63.40999984741211,3.0,0.656,transformer
+Le'Veon Bell,2016,24.0,405.0,78.2,Elite,76.56,Elite,76.56,79.13999938964844,0.0,0.582,transformer
+Ezekiel Elliott,2016,21.0,377.0,77.2,Elite,0.0,No Data,,,,,transformer
+David Johnson,2016,24.0,373.0,79.9,Elite,76.48,Elite,76.48,77.38999938964844,0.0,0.6,transformer
+Lamar Miller,2016,25.0,353.0,61.0,Rotation,53.06,Reserve/Poor,53.06,63.79999923706055,0.0,0.327,transformer
+DeMarco Murray,2016,28.0,346.0,69.5,Starter,60.3,Rotation,61.8,68.41999816894531,1.5,0.66,transformer
+LeGarrette Blount,2016,29.0,342.0,58.5,Rotation,50.6,Reserve/Poor,53.6,59.22999954223633,3.0,0.478,transformer
+Devonta Freeman,2016,24.0,330.0,76.4,Elite,75.38,Elite,75.38,76.66000366210938,0.0,0.327,transformer
+Todd Gurley II,2016,22.0,321.0,57.3,Rotation,76.03,Elite,76.03,58.81999969482422,0.0,0.6,transformer
+Jay Ajayi,2016,23.0,306.0,77.3,Elite,76.55,Elite,76.55,77.5,0.0,0.6,transformer
+Frank Gore,2016,33.0,301.0,59.6,Rotation,37.7,Reserve/Poor,51.7,60.7400016784668,14.0,0.347,transformer
+Melvin Gordon III,2016,23.0,295.0,68.9,Starter,55.8,Rotation,55.8,69.79000091552734,0.0,0.6,transformer
+LeSean McCoy,2016,28.0,284.0,78.6,Elite,56.62,Rotation,58.12,76.11000061035156,1.5,0.498,transformer
+Jordan Howard,2016,21.0,281.0,73.8,Starter,0.0,No Data,,,,,transformer
+Spencer Ware,2016,24.0,257.0,72.3,Starter,,Reserve/Poor,,69.2699966430664,0.0,1.0,transformer
+Mark Ingram II,2016,26.0,251.0,71.2,Starter,55.05,Rotation,55.05,71.18000030517578,0.0,0.372,transformer
+Matt Forte,2016,30.0,248.0,63.8,Rotation,49.57,Reserve/Poor,55.07,65.2300033569336,5.5,0.386,transformer
+Carlos Hyde,2016,25.0,244.0,63.6,Rotation,75.45,Elite,75.45,65.98999786376953,0.0,0.239,transformer
+Jeremy Hill,2016,23.0,243.0,63.4,Rotation,56.12,Rotation,56.12,62.939998626708984,0.0,0.147,transformer
+Latavius Murray,2016,26.0,241.0,66.7,Starter,70.28,Starter,70.28,66.56999969482422,0.0,0.316,transformer
+Isaiah Crowell,2016,23.0,238.0,67.5,Starter,57.45,Rotation,57.45,66.05000305175781,0.0,0.421,transformer
+Terrance West,2016,25.0,227.0,73.9,Starter,50.8,Reserve/Poor,50.8,68.6500015258789,0.0,0.291,transformer
+Jonathan Stewart,2016,29.0,226.0,63.0,Rotation,55.24,Rotation,58.24,63.20000076293945,3.0,0.504,transformer
+Rashad Jennings,2016,31.0,222.0,55.4,Rotation,43.76,Reserve/Poor,51.76,59.779998779296875,8.0,0.438,transformer
+Devontae Booker,2016,24.0,205.0,55.3,Rotation,0.0,No Data,,,,,transformer
+Jerick McKinnon,2016,24.0,202.0,59.3,Rotation,65.94,Starter,65.94,60.369998931884766,0.0,0.228,transformer
+Bilal Powell,2016,27.0,189.0,77.8,Elite,53.36,Reserve/Poor,53.36,69.52999877929688,0.0,0.545,transformer
+Christine Michael,2016,25.0,187.0,58.3,Rotation,57.03,Rotation,57.03,60.869998931884766,0.0,0.442,transformer
+Tevin Coleman,2016,23.0,185.0,74.6,Starter,52.15,Reserve/Poor,52.15,73.79000091552734,0.0,0.6,transformer
+T.J. Yeldon,2016,22.0,180.0,66.1,Starter,61.49,Rotation,61.49,67.55000305175781,0.0,0.6,transformer
+Rob Kelley,2016,23.0,180.0,59.7,Rotation,0.0,No Data,,,,,transformer
+Ryan Mathews,2016,28.0,168.0,62.7,Rotation,49.4,Reserve/Poor,50.9,63.93000030517578,1.5,0.382,transformer
+Thomas Rawls,2016,23.0,161.0,75.2,Elite,76.41,Elite,76.41,75.56999969482422,0.0,0.6,transformer
+Le'Veon Bell,2017,25.0,431.0,72.2,Starter,76.57,Elite,76.57,71.68000030517578,0.0,0.523,transformer
+Leonard Fournette,2017,22.0,381.0,62.4,Rotation,0.0,No Data,,,,,transformer
+LeSean McCoy,2017,29.0,371.0,73.7,Starter,72.14,Starter,75.14,72.26000213623047,3.0,0.467,transformer
+Todd Gurley II,2017,23.0,361.0,82.6,Elite,53.72,Reserve/Poor,53.72,82.12999725341797,0.0,0.529,transformer
+Melvin Gordon III,2017,24.0,342.0,72.2,Starter,74.91,Starter,74.91,72.19000244140625,0.0,0.504,transformer
+Kareem Hunt,2017,22.0,339.0,82.1,Elite,0.0,No Data,,,,,transformer
+Mark Ingram II,2017,27.0,309.0,70.5,Starter,67.1,Starter,67.1,71.29000091552734,0.0,0.352,transformer
+Jordan Howard,2017,22.0,299.0,63.9,Rotation,76.78,Elite,76.78,63.959999084472656,0.0,0.6,transformer
+Carlos Hyde,2017,26.0,299.0,58.0,Rotation,67.88,Starter,67.88,61.29999923706055,0.0,0.336,transformer
+Frank Gore,2017,34.0,290.0,70.4,Starter,35.49,Reserve/Poor,52.99,69.18000030517578,17.5,0.336,transformer
+Jay Ajayi,2017,24.0,280.0,66.9,Starter,75.13,Elite,75.13,69.77999877929688,0.0,0.374,transformer
+Lamar Miller,2017,26.0,274.0,68.9,Starter,51.9,Reserve/Poor,51.9,67.63999938964844,0.0,0.427,transformer
+C.J. Anderson,2017,26.0,273.0,78.2,Elite,51.37,Reserve/Poor,51.37,74.23999786376953,0.0,0.642,transformer
+Ezekiel Elliott,2017,22.0,268.0,69.5,Starter,77.06,Elite,77.06,69.6500015258789,0.0,0.6,transformer
+Devonta Freeman,2017,25.0,266.0,68.9,Starter,76.27,Elite,76.27,70.66999816894531,0.0,0.452,transformer
+Dion Lewis,2017,26.0,261.0,85.6,Elite,74.08,Starter,74.08,82.5999984741211,0.0,0.346,transformer
+Latavius Murray,2017,27.0,260.0,67.7,Starter,68.04,Starter,68.04,67.08000183105469,0.0,0.256,transformer
+Alex Collins,2017,23.0,235.0,83.4,Elite,54.37,Reserve/Poor,54.37,80.58000183105469,0.0,0.6,transformer
+Isaiah Crowell,2017,24.0,234.0,61.2,Rotation,69.1,Starter,69.1,61.459999084472656,0.0,0.399,transformer
+Jerick McKinnon,2017,25.0,233.0,79.6,Elite,58.86,Rotation,58.86,76.58999633789062,0.0,0.404,transformer
+Alvin Kamara,2017,22.0,227.0,90.4,Elite,0.0,No Data,,,,,transformer
+Derrick Henry,2017,23.0,227.0,73.0,Starter,57.32,Rotation,57.32,71.98999786376953,0.0,0.6,transformer
+Marshawn Lynch,2017,31.0,227.0,74.6,Starter,71.5,Starter,77.0,75.9000015258789,5.5,0.548,transformer
+DeMarco Murray,2017,29.0,223.0,63.3,Rotation,65.05,Starter,68.05,63.939998626708984,3.0,0.599,transformer
+Jonathan Stewart,2017,30.0,217.0,56.4,Rotation,47.08,Reserve/Poor,52.58,55.790000915527344,5.5,0.486,transformer
+Tevin Coleman,2017,24.0,211.0,70.1,Starter,72.72,Starter,72.72,70.12000274658203,0.0,0.836,transformer
+LeGarrette Blount,2017,30.0,210.0,63.5,Rotation,48.24,Reserve/Poor,53.74,63.90999984741211,5.5,0.587,transformer
+Christian McCaffrey,2017,21.0,208.0,74.6,Starter,0.0,No Data,,,,,transformer
+Joe Mixon,2017,21.0,208.0,72.1,Starter,0.0,No Data,,,,,transformer
+Bilal Powell,2017,28.0,201.0,67.3,Starter,63.02,Rotation,64.52,68.79000091552734,1.5,0.604,transformer
+Javorius Allen,2017,26.0,199.0,68.7,Starter,53.36,Reserve/Poor,53.36,67.06999969482422,0.0,0.254,transformer
+Samaje Perine,2017,21.0,197.0,58.8,Rotation,0.0,No Data,,,,,transformer
+Ezekiel Elliott,2018,23.0,381.0,72.2,Starter,60.91,Rotation,60.91,69.66000366210938,0.0,0.366,transformer
+Saquon Barkley,2018,21.0,352.0,85.2,Elite,0.0,No Data,,,,,transformer
+Christian McCaffrey,2018,22.0,327.0,82.8,Elite,74.63,Starter,74.63,80.4800033569336,0.0,0.6,transformer
+Todd Gurley II,2018,24.0,315.0,77.8,Elite,73.82,Starter,73.82,77.69000244140625,0.0,0.609,transformer
+David Johnson,2018,26.0,308.0,64.1,Rotation,60.82,Rotation,60.82,70.97000122070312,0.0,1.0,transformer
+Joe Mixon,2018,22.0,279.0,77.8,Elite,63.34,Rotation,63.34,76.66000366210938,0.0,0.6,transformer
+Alvin Kamara,2018,23.0,275.0,82.9,Elite,74.8,Starter,74.8,82.48999786376953,0.0,0.6,transformer
+Adrian Peterson,2018,33.0,271.0,76.2,Elite,38.93,Reserve/Poor,52.93,69.30999755859375,14.0,0.975,transformer
+Jordan Howard,2018,23.0,270.0,68.1,Starter,59.23,Rotation,59.23,68.2699966430664,0.0,0.298,transformer
+James Conner,2018,23.0,270.0,72.1,Starter,53.38,Reserve/Poor,53.38,74.37000274658203,0.0,0.6,transformer
+Chris Carson,2018,23.0,267.0,83.2,Elite,66.3,Starter,66.3,81.41999816894531,0.0,0.6,transformer
+Peyton Barber,2018,24.0,254.0,66.8,Starter,61.72,Rotation,61.72,67.51000213623047,0.0,0.31,transformer
+Lamar Miller,2018,27.0,235.0,73.7,Starter,53.57,Reserve/Poor,53.57,72.2300033569336,0.0,0.387,transformer
+Derrick Henry,2018,24.0,230.0,85.3,Elite,75.24,Elite,75.24,81.0199966430664,0.0,0.312,transformer
+Phillip Lindsay,2018,24.0,227.0,82.4,Elite,0.0,No Data,,,,,transformer
+Melvin Gordon III,2018,25.0,225.0,86.6,Elite,76.31,Elite,76.31,85.66000366210938,0.0,0.49,transformer
+Sony Michel,2018,23.0,216.0,75.8,Elite,0.0,No Data,,,,,transformer
+Dion Lewis,2018,27.0,214.0,65.3,Starter,73.71,Starter,73.71,67.16999816894531,0.0,0.574,transformer
+Nick Chubb,2018,22.0,212.0,86.4,Elite,0.0,No Data,,,,,transformer
+Marlon Mack,2018,22.0,212.0,68.6,Starter,67.83,Starter,67.83,68.23999786376953,0.0,0.6,transformer
+Tevin Coleman,2018,25.0,199.0,65.7,Starter,69.25,Starter,69.25,66.9000015258789,0.0,0.829,transformer
+LeSean McCoy,2018,30.0,195.0,60.9,Rotation,49.63,Reserve/Poor,55.13,61.790000915527344,5.5,0.443,transformer
+Doug Martin,2018,29.0,190.0,66.6,Starter,49.64,Reserve/Poor,52.64,65.08000183105469,3.0,0.687,transformer
+Carlos Hyde,2018,27.0,182.0,50.4,Reserve/Poor,52.29,Reserve/Poor,52.29,52.7400016784668,0.0,0.42,transformer
+James White,2018,26.0,181.0,71.0,Starter,64.55,Rotation,64.55,70.72000122070312,0.0,0.432,transformer
+Matt Breida,2018,23.0,180.0,75.8,Elite,55.45,Rotation,55.45,74.79000091552734,0.0,0.6,transformer
+Kenyan Drake,2018,24.0,173.0,65.6,Starter,73.96,Starter,73.96,65.41000366210938,0.0,0.416,transformer
+Dalvin Cook,2018,23.0,173.0,72.6,Starter,59.89,Rotation,59.89,68.68000030517578,0.0,0.6,transformer
+Alfred Blue,2018,27.0,170.0,63.1,Rotation,49.22,Reserve/Poor,49.22,62.58000183105469,0.0,0.312,transformer
+Tarik Cohen,2018,23.0,170.0,73.2,Starter,75.12,Elite,75.12,72.98999786376953,0.0,0.6,transformer
+Frank Gore,2018,35.0,168.0,80.3,Elite,33.08,Reserve/Poor,53.08,79.76000213623047,20.0,0.322,transformer
+LeGarrette Blount,2018,31.0,164.0,45.5,Reserve/Poor,43.47,Reserve/Poor,51.47,46.970001220703125,8.0,0.568,transformer
+Christian McCaffrey,2019,23.0,403.0,86.5,Elite,75.31,Elite,75.31,85.91999816894531,0.0,0.394,transformer
+Ezekiel Elliott,2019,24.0,355.0,77.0,Elite,76.72,Elite,76.72,76.4000015258789,0.0,0.28,transformer
+Leonard Fournette,2019,24.0,341.0,64.0,Rotation,52.66,Reserve/Poor,52.66,62.61000061035156,0.0,0.534,transformer
+Nick Chubb,2019,23.0,334.0,88.7,Elite,74.81,Starter,74.81,87.11000061035156,0.0,0.6,transformer
+Derrick Henry,2019,25.0,321.0,76.2,Elite,75.32,Elite,75.32,76.4000015258789,0.0,0.485,transformer
+Chris Carson,2019,24.0,315.0,77.9,Elite,74.68,Starter,74.68,79.01000213623047,0.0,0.576,transformer
+Joe Mixon,2019,23.0,313.0,75.3,Elite,74.72,Starter,74.72,75.33999633789062,0.0,0.257,transformer
+Le'Veon Bell,2019,27.0,311.0,74.1,Starter,76.51,Elite,76.51,72.51000213623047,0.0,0.518,transformer
+Dalvin Cook,2019,24.0,303.0,81.3,Elite,75.45,Elite,75.45,79.25,0.0,0.199,transformer
+Aaron Jones,2019,24.0,285.0,84.8,Elite,75.59,Elite,75.59,79.66000366210938,0.0,0.15,transformer
+Saquon Barkley,2019,22.0,269.0,72.2,Starter,75.37,Elite,75.37,72.1500015258789,0.0,0.6,transformer
+David Montgomery,2019,22.0,267.0,66.6,Starter,0.0,No Data,,,,,transformer
+Josh Jacobs,2019,21.0,262.0,87.1,Elite,0.0,No Data,,,,,transformer
+Marlon Mack,2019,23.0,261.0,69.5,Starter,74.61,Starter,74.61,71.2699966430664,0.0,0.155,transformer
+Phillip Lindsay,2019,25.0,259.0,71.3,Starter,76.94,Elite,76.94,71.38999938964844,0.0,0.6,transformer
+Sony Michel,2019,24.0,259.0,68.0,Starter,66.02,Starter,66.02,68.12000274658203,0.0,0.6,transformer
+Carlos Hyde,2019,28.0,255.0,74.2,Starter,50.52,Reserve/Poor,52.02,73.22000122070312,1.5,0.485,transformer
+Todd Gurley II,2019,25.0,254.0,67.0,Starter,76.21,Elite,76.21,67.54000091552734,0.0,0.519,transformer
+Alvin Kamara,2019,24.0,252.0,70.0,Starter,76.03,Elite,76.03,70.01000213623047,0.0,0.274,transformer
+Devonta Freeman,2019,27.0,243.0,60.8,Rotation,70.17,Starter,70.17,69.51000213623047,0.0,0.637,transformer
+Miles Sanders,2019,22.0,229.0,62.3,Rotation,0.0,No Data,,,,,transformer
+Mark Ingram II,2019,29.0,228.0,79.8,Elite,58.15,Rotation,61.15,79.79000091552734,3.0,0.362,transformer
+Adrian Peterson,2019,34.0,228.0,67.6,Starter,50.2,Reserve/Poor,67.7,62.0,17.5,0.918,transformer
+Austin Ekeler,2019,24.0,224.0,85.2,Elite,74.82,Starter,74.82,83.69999694824219,0.0,0.364,transformer
+Kenyan Drake,2019,25.0,220.0,71.2,Starter,75.44,Elite,75.44,69.80000305175781,0.0,0.344,transformer
+Melvin Gordon III,2019,26.0,204.0,66.0,Starter,58.93,Rotation,58.93,66.18000030517578,0.0,0.63,transformer
+Ronald Jones,2019,22.0,203.0,67.6,Starter,52.96,Reserve/Poor,52.96,71.6500015258789,0.0,0.6,transformer
+Devin Singletary,2019,21.0,181.0,66.1,Starter,0.0,No Data,,,,,transformer
+Latavius Murray,2019,29.0,180.0,73.9,Starter,53.6,Reserve/Poor,56.6,73.12999725341797,3.0,0.34,transformer
+Frank Gore,2019,36.0,178.0,64.1,Rotation,36.06,Reserve/Poor,56.06,64.05000305175781,20.0,0.412,transformer
+Royce Freeman,2019,23.0,175.0,65.8,Starter,57.07,Rotation,57.07,65.23999786376953,0.0,0.6,transformer
+Peyton Barber,2019,25.0,170.0,64.9,Rotation,68.95,Starter,68.95,64.7699966430664,0.0,0.371,transformer
+Derrick Henry,2020,26.0,397.0,92.4,Elite,75.85,Elite,75.85,92.12999725341797,0.0,0.459,transformer
+Dalvin Cook,2020,25.0,356.0,89.0,Elite,75.64,Elite,75.64,86.45999908447266,0.0,0.451,transformer
+Josh Jacobs,2020,22.0,306.0,76.3,Elite,74.94,Starter,74.94,76.20999908447266,0.0,0.6,transformer
+David Montgomery,2020,23.0,301.0,81.8,Elite,58.43,Rotation,58.43,76.30999755859375,0.0,0.6,transformer
+Ezekiel Elliott,2020,25.0,296.0,65.3,Starter,74.38,Starter,74.38,65.87999725341797,0.0,0.252,transformer
+James Robinson,2020,22.0,289.0,72.9,Starter,0.0,No Data,,,,,transformer
+Alvin Kamara,2020,25.0,270.0,82.2,Elite,76.48,Elite,76.48,82.0999984741211,0.0,0.449,transformer
+Jonathan Taylor,2020,21.0,268.0,83.9,Elite,0.0,No Data,,,,,transformer
+Kenyan Drake,2020,26.0,264.0,60.9,Rotation,60.15,Rotation,60.15,64.0199966430664,0.0,0.321,transformer
+Aaron Jones,2020,25.0,248.0,79.4,Elite,75.71,Elite,75.71,77.08999633789062,0.0,0.317,transformer
+Melvin Gordon III,2020,27.0,247.0,72.5,Starter,74.62,Starter,74.62,72.31999969482422,0.0,0.568,transformer
+Kareem Hunt,2020,25.0,236.0,74.0,Starter,76.15,Elite,76.15,73.52999877929688,0.0,0.448,transformer
+Mike Davis,2020,27.0,224.0,75.1,Elite,50.99,Reserve/Poor,50.99,62.72999954223633,0.0,0.592,transformer
+Ronald Jones,2020,23.0,220.0,73.6,Starter,74.8,Starter,74.8,69.69999694824219,0.0,0.762,transformer
+Todd Gurley II,2020,26.0,220.0,54.8,Reserve/Poor,54.72,Reserve/Poor,54.72,59.150001525878906,0.0,0.477,transformer
+Clyde Edwards-Helaire,2020,21.0,217.0,75.3,Elite,0.0,No Data,,,,,transformer
+Antonio Gibson,2020,22.0,206.0,80.9,Elite,0.0,No Data,,,,,transformer
+Nick Chubb,2020,24.0,206.0,86.7,Elite,75.21,Elite,75.21,85.97000122070312,0.0,0.236,transformer
+James Conner,2020,25.0,204.0,68.0,Starter,75.0,Elite,75.0,68.05999755859375,0.0,0.294,transformer
+Frank Gore,2020,37.0,203.0,60.8,Rotation,32.44,Reserve/Poor,52.44,60.93000030517578,20.0,0.412,transformer
+Devin Singletary,2020,22.0,194.0,66.7,Starter,76.6,Elite,76.6,66.81999969482422,0.0,0.6,transformer
+Miles Sanders,2020,23.0,192.0,63.0,Rotation,63.39,Rotation,63.39,63.7400016784668,0.0,0.6,transformer
+Myles Gaskin,2020,23.0,183.0,74.5,Starter,57.02,Rotation,57.02,76.0999984741211,0.0,0.6,transformer
+David Johnson,2020,28.0,180.0,62.9,Rotation,72.94,Starter,74.44,62.36000061035156,1.5,0.864,transformer
+Chris Carson,2020,25.0,178.0,78.1,Elite,75.9,Elite,75.9,77.91999816894531,0.0,0.472,transformer
+Giovani Bernard,2020,28.0,171.0,63.4,Rotation,48.95,Reserve/Poor,50.45,63.18000030517578,1.5,0.425,transformer
+Austin Ekeler,2020,25.0,170.0,77.0,Elite,75.1,Elite,75.1,77.22000122070312,0.0,0.378,transformer
+Latavius Murray,2020,30.0,169.0,82.4,Elite,49.29,Reserve/Poor,54.79,80.76000213623047,5.5,0.333,transformer
+Wayne Gallman,2020,25.0,168.0,71.1,Starter,53.16,Reserve/Poor,53.16,70.08999633789062,0.0,0.359,transformer
+Adrian Peterson,2020,35.0,167.0,59.6,Rotation,43.68,Reserve/Poor,63.68,55.380001068115234,20.0,0.867,transformer
+J.D. McKissic,2020,27.0,165.0,62.7,Rotation,,Reserve/Poor,,61.18000030517578,0.0,0.386,transformer
+D'Andre Swift,2020,21.0,160.0,69.4,Starter,0.0,No Data,,,,,transformer
+Najee Harris,2021,23.0,381.0,70.7,Starter,0.0,No Data,,,,,transformer
+Jonathan Taylor,2021,22.0,372.0,87.1,Elite,75.7,Elite,75.7,84.4000015258789,0.0,0.6,transformer
+Joe Mixon,2021,25.0,334.0,79.5,Elite,54.27,Reserve/Poor,54.27,77.61000061035156,0.0,0.364,transformer
+Antonio Gibson,2021,23.0,300.0,63.3,Rotation,76.14,Elite,76.14,65.37999725341797,0.0,0.6,transformer
+Alvin Kamara,2021,26.0,287.0,63.2,Rotation,76.52,Elite,76.52,64.36000061035156,0.0,0.372,transformer
+Dalvin Cook,2021,26.0,284.0,65.8,Starter,76.88,Elite,76.88,66.61000061035156,0.0,0.584,transformer
+Ezekiel Elliott,2021,26.0,284.0,68.9,Starter,56.11,Rotation,56.11,69.76000213623047,0.0,0.299,transformer
+Austin Ekeler,2021,26.0,276.0,75.3,Elite,76.47,Elite,76.47,75.2300033569336,0.0,0.329,transformer
+Josh Jacobs,2021,23.0,271.0,77.7,Elite,76.64,Elite,76.64,77.3499984741211,0.0,0.359,transformer
+David Montgomery,2021,24.0,267.0,69.8,Starter,75.18,Elite,75.18,69.58999633789062,0.0,0.466,transformer
+Leonard Fournette,2021,26.0,249.0,73.9,Starter,61.76,Rotation,61.76,73.4800033569336,0.0,0.438,transformer
+Nick Chubb,2021,25.0,248.0,81.7,Elite,74.56,Starter,74.56,82.52999877929688,0.0,0.193,transformer
+Javonte Williams,2021,21.0,246.0,75.9,Elite,0.0,No Data,,,,,transformer
+James Conner,2021,26.0,239.0,82.9,Elite,53.92,Reserve/Poor,53.92,77.83999633789062,0.0,0.294,transformer
+Derrick Henry,2021,27.0,237.0,75.3,Elite,76.55,Elite,76.55,75.44999694824219,0.0,0.6,transformer
+Melvin Gordon III,2021,28.0,231.0,77.8,Elite,72.71,Starter,74.21,78.05999755859375,1.5,0.511,transformer
+Sony Michel,2021,26.0,229.0,66.1,Starter,66.09,Starter,66.09,66.52999877929688,0.0,0.433,transformer
+Devin Singletary,2021,23.0,228.0,64.7,Rotation,76.09,Elite,76.09,65.80999755859375,0.0,0.035,transformer
+Elijah Mitchell,2021,23.0,226.0,76.3,Elite,0.0,No Data,,,,,transformer
+Aaron Jones,2021,26.0,223.0,82.8,Elite,76.81,Elite,76.81,81.87999725341797,0.0,0.281,transformer
+Myles Gaskin,2021,24.0,222.0,64.8,Rotation,75.34,Elite,75.34,65.02999877929688,0.0,0.668,transformer
+AJ Dillon,2021,23.0,221.0,86.7,Elite,75.3,Elite,75.3,77.43000030517578,0.0,0.6,transformer
+Damien Harris,2021,24.0,220.0,87.8,Elite,,Reserve/Poor,,75.87999725341797,0.0,0.895,transformer
+D'Andre Swift,2021,22.0,213.0,58.0,Rotation,66.94,Starter,66.94,61.75,0.0,0.6,transformer
+Cordarrelle Patterson,2021,30.0,205.0,81.3,Elite,0.0,No Data,,,,,transformer
+Saquon Barkley,2021,24.0,203.0,59.1,Rotation,75.74,Elite,75.74,64.45999908447266,0.0,0.784,transformer
+Chuba Hubbard,2021,22.0,197.0,64.9,Rotation,0.0,No Data,,,,,transformer
+James Robinson,2021,23.0,195.0,67.4,Starter,76.65,Elite,76.65,67.44000244140625,0.0,0.6,transformer
+Darrel Williams,2021,26.0,191.0,67.2,Starter,54.2,Reserve/Poor,54.2,68.6500015258789,0.0,0.308,transformer
+Mark Ingram II,2021,31.0,187.0,67.6,Starter,64.56,Rotation,72.56,66.4800033569336,8.0,0.481,transformer
+Devontae Booker,2021,29.0,185.0,65.0,Starter,67.92,Starter,70.92,64.94000244140625,3.0,0.339,transformer
+Michael Carter,2021,22.0,183.0,71.0,Starter,0.0,No Data,,,,,transformer
+Josh Jacobs,2022,24.0,392.0,91.6,Elite,75.62,Elite,75.62,88.91999816894531,0.0,0.275,transformer
+Derrick Henry,2022,28.0,382.0,85.9,Elite,68.94,Starter,70.44,83.75,1.5,0.542,transformer
+Saquon Barkley,2022,25.0,352.0,77.1,Elite,74.57,Starter,74.57,68.0999984741211,0.0,0.752,transformer
+Nick Chubb,2022,26.0,329.0,90.3,Elite,76.34,Elite,76.34,88.94000244140625,0.0,0.233,transformer
+Christian McCaffrey,2022,26.0,329.0,88.9,Elite,76.01,Elite,76.01,87.23999786376953,0.0,0.462,transformer
+Najee Harris,2022,24.0,313.0,73.5,Starter,76.59,Elite,76.59,73.33999633789062,0.0,0.6,transformer
+Austin Ekeler,2022,27.0,311.0,81.3,Elite,76.71,Elite,76.71,79.20999908447266,0.0,0.35,transformer
+Dalvin Cook,2022,27.0,304.0,67.4,Starter,72.04,Starter,72.04,66.80999755859375,0.0,0.582,transformer
+Alvin Kamara,2022,27.0,280.0,72.7,Starter,74.81,Starter,74.81,71.6500015258789,0.0,0.472,transformer
+Rhamondre Stevenson,2022,24.0,279.0,81.3,Elite,76.16,Elite,76.16,80.27999877929688,0.0,0.6,transformer
+Miles Sanders,2022,25.0,279.0,74.0,Starter,73.26,Starter,73.26,73.3499984741211,0.0,0.268,transformer
+Jamaal Williams,2022,27.0,274.0,73.4,Starter,56.02,Rotation,56.02,72.66999816894531,0.0,0.253,transformer
+Aaron Jones,2022,27.0,273.0,86.1,Elite,77.07,Elite,77.07,83.41999816894531,0.0,0.251,transformer
+Joe Mixon,2022,26.0,270.0,79.3,Elite,75.95,Elite,75.95,78.87000274658203,0.0,0.378,transformer
+Leonard Fournette,2022,27.0,262.0,68.0,Starter,55.74,Rotation,55.74,68.8499984741211,0.0,0.451,transformer
+Travis Etienne Jr.,2022,23.0,256.0,72.1,Starter,0.0,No Data,,,,,transformer
+Kenneth Walker III,2022,21.0,255.0,76.7,Elite,0.0,No Data,,,,,transformer
+Dameon Pierce,2022,22.0,250.0,78.9,Elite,0.0,No Data,,,,,transformer
+Ezekiel Elliott,2022,27.0,248.0,71.9,Starter,74.43,Starter,74.43,72.55000305175781,0.0,0.284,transformer
+David Montgomery,2022,25.0,235.0,67.9,Starter,67.56,Starter,67.56,68.05999755859375,0.0,0.351,transformer
+Tony Pollard,2022,25.0,232.0,89.5,Elite,74.49,Starter,74.49,88.5199966430664,0.0,0.364,transformer
+James Conner,2022,27.0,229.0,69.7,Starter,76.38,Elite,76.38,71.25,0.0,0.407,transformer
+Tyler Allgeier,2022,22.0,226.0,86.7,Elite,0.0,No Data,,,,,transformer
+Jonathan Taylor,2022,23.0,220.0,67.6,Starter,75.36,Elite,75.36,68.4800033569336,0.0,0.235,transformer
+Devin Singletary,2022,24.0,215.0,75.9,Elite,76.08,Elite,76.08,74.73999786376953,0.0,0.088,transformer
+Brian Robinson,2022,23.0,214.0,82.5,Elite,0.0,No Data,,,,,transformer
+AJ Dillon,2022,24.0,213.0,81.4,Elite,74.77,Starter,74.77,80.19999694824219,0.0,0.39,transformer
+Raheem Mostert,2022,30.0,212.0,75.7,Elite,66.17,Starter,71.67,64.62999725341797,5.5,0.749,transformer
+D'Onta Foreman,2022,26.0,208.0,73.1,Starter,55.92,Rotation,55.92,69.98999786376953,0.0,0.678,transformer
+Cam Akers,2022,23.0,201.0,80.7,Elite,49.57,Reserve/Poor,49.57,64.26000213623047,0.0,0.682,transformer
+Jeff Wilson Jr.,2022,26.0,198.0,66.9,Starter,51.25,Reserve/Poor,51.25,66.91999816894531,0.0,0.414,transformer
+Latavius Murray,2022,32.0,198.0,82.5,Elite,45.32,Reserve/Poor,55.82,80.91000366210938,10.5,0.391,transformer
+Christian McCaffrey,2023,27.0,417.0,90.3,Elite,77.01,Elite,77.01,90.19999694824219,0.0,0.477,transformer
+Rachaad White,2023,24.0,368.0,67.5,Starter,57.44,Rotation,57.44,66.37999725341797,0.0,0.6,transformer
+Isiah Pacheco,2023,24.0,342.0,79.9,Elite,68.14,Starter,68.14,76.94999694824219,0.0,0.6,transformer
+Tony Pollard,2023,26.0,329.0,77.5,Elite,76.95,Elite,76.95,78.30999755859375,0.0,0.414,transformer
+James Cook,2023,23.0,325.0,71.7,Starter,76.26,Elite,76.26,72.38999938964844,0.0,0.6,transformer
+Travis Etienne Jr.,2023,24.0,325.0,77.0,Elite,76.18,Elite,76.18,76.83000183105469,0.0,0.6,transformer
+Joe Mixon,2023,27.0,309.0,71.1,Starter,67.06,Starter,67.06,70.66999816894531,0.0,0.356,transformer
+Derrick Henry,2023,29.0,308.0,90.1,Elite,73.76,Starter,76.76,88.16999816894531,3.0,0.539,transformer
+Breece Hall,2023,22.0,299.0,82.4,Elite,75.75,Elite,75.75,83.3499984741211,0.0,0.6,transformer
+Najee Harris,2023,25.0,298.0,76.2,Elite,76.68,Elite,76.68,76.19999694824219,0.0,0.173,transformer
+Saquon Barkley,2023,26.0,288.0,70.2,Starter,62.96,Rotation,62.96,69.5999984741211,0.0,0.704,transformer
+D'Andre Swift,2023,24.0,282.0,66.5,Starter,74.56,Starter,74.56,67.38999938964844,0.0,0.462,transformer
+David Montgomery,2023,26.0,280.0,79.6,Elite,64.75,Rotation,64.75,79.5,0.0,0.325,transformer
+Chuba Hubbard,2023,24.0,277.0,77.2,Elite,73.13,Starter,73.13,73.7699966430664,0.0,0.446,transformer
+Devin Singletary,2023,25.0,276.0,75.1,Elite,71.27,Starter,71.27,74.05000305175781,0.0,0.24,transformer
+Jahmyr Gibbs,2023,21.0,274.0,76.3,Elite,0.0,No Data,,,,,transformer
+Kyren Williams,2023,23.0,274.0,80.4,Elite,59.09,Rotation,59.09,66.44000244140625,0.0,0.6,transformer
+Bijan Robinson,2023,21.0,272.0,69.1,Starter,0.0,No Data,,,,,transformer
+Josh Jacobs,2023,25.0,270.0,65.0,Starter,76.55,Elite,76.55,64.83999633789062,0.0,0.406,transformer
+Javonte Williams,2023,23.0,264.0,63.3,Rotation,76.14,Elite,76.14,63.90999984741211,0.0,0.572,transformer
+Jerome Ford,2023,23.0,261.0,68.3,Starter,,Reserve/Poor,,72.3499984741211,0.0,0.6,transformer
+Alvin Kamara,2023,28.0,255.0,74.1,Starter,71.2,Starter,72.7,73.66999816894531,1.5,0.433,transformer
+Kenneth Walker III,2023,22.0,248.0,83.5,Elite,75.77,Elite,75.77,81.37000274658203,0.0,0.6,transformer
+Raheem Mostert,2023,31.0,243.0,84.7,Elite,68.0,Starter,76.0,73.05000305175781,8.0,0.757,transformer
+James Conner,2023,28.0,235.0,89.2,Elite,67.08,Starter,68.58,86.4000015258789,1.5,0.378,transformer
+Ezekiel Elliott,2023,28.0,235.0,67.6,Starter,54.45,Reserve/Poor,55.95,66.68000030517578,1.5,0.277,transformer
+Austin Ekeler,2023,28.0,230.0,60.2,Rotation,75.64,Elite,77.14,61.9900016784668,1.5,0.354,transformer
+Gus Edwards,2023,28.0,225.0,73.7,Starter,,Reserve/Poor,,66.0,1.5,0.323,transformer
+Jaylen Warren,2023,24.0,220.0,78.5,Elite,76.11,Elite,76.11,74.87999725341797,0.0,0.6,transformer
+Aaron Jones,2023,28.0,216.0,80.9,Elite,75.28,Elite,76.78,80.36000061035156,1.5,0.265,transformer
+Brian Robinson,2023,24.0,214.0,75.3,Elite,75.82,Elite,75.82,74.66000366210938,0.0,0.6,transformer
+Alexander Mattison,2023,25.0,210.0,61.8,Rotation,69.84,Starter,69.84,62.099998474121094,0.0,0.384,transformer
+Saquon Barkley,2024,27.0,451.0,87.6,Elite,58.01,Rotation,58.01,70.7699966430664,0.0,0.633,transformer
+Kyren Williams,2024,24.0,389.0,69.1,Starter,73.99,Starter,73.99,68.55000305175781,0.0,0.663,transformer
+Derrick Henry,2024,30.0,386.0,94.2,Elite,71.75,Starter,77.25,78.0,5.5,0.533,transformer
+Bijan Robinson,2024,22.0,365.0,92.8,Elite,76.01,Elite,76.01,70.12999725341797,0.0,0.6,transformer
+Josh Jacobs,2024,26.0,358.0,92.3,Elite,67.68,Starter,67.68,66.87999725341797,0.0,0.51,transformer
+Joe Mixon,2024,28.0,327.0,76.6,Elite,53.49,Reserve/Poor,54.99,70.0,1.5,0.339,transformer
+Aaron Jones,2024,29.0,322.0,75.4,Elite,74.13,Starter,77.13,73.04000091552734,3.0,0.244,transformer
+Jahmyr Gibbs,2024,22.0,322.0,90.1,Elite,75.58,Elite,75.58,80.19999694824219,0.0,0.6,transformer
+Jonathan Taylor,2024,25.0,321.0,56.9,Rotation,76.52,Elite,76.52,68.88999938964844,0.0,0.505,transformer
+Najee Harris,2024,26.0,308.0,77.2,Elite,76.53,Elite,76.53,76.95999908447266,0.0,0.195,transformer
+Tony Pollard,2024,27.0,301.0,68.7,Starter,77.04,Elite,77.04,73.55999755859375,0.0,0.457,transformer
+James Cook,2024,24.0,298.0,86.2,Elite,76.63,Elite,76.63,73.45999908447266,0.0,0.479,transformer
+Alvin Kamara,2024,29.0,296.0,73.7,Starter,73.93,Starter,76.93,69.05999755859375,3.0,0.398,transformer
+D'Andre Swift,2024,25.0,295.0,61.3,Rotation,60.55,Rotation,60.55,66.9000015258789,0.0,0.445,transformer
+Chuba Hubbard,2024,25.0,293.0,75.9,Elite,76.45,Elite,76.45,76.16999816894531,0.0,0.438,transformer
+James Conner,2024,29.0,283.0,90.4,Elite,73.54,Starter,76.54,72.08999633789062,3.0,0.467,transformer
+Chase Brown,2024,24.0,283.0,75.7,Elite,71.75,Starter,71.75,69.6500015258789,0.0,0.6,transformer
+De'Von Achane,2024,22.0,281.0,81.6,Elite,74.38,Starter,74.38,79.66000366210938,0.0,0.6,transformer
+Rico Dowdle,2024,26.0,274.0,73.9,Starter,,Reserve/Poor,,65.56999969482422,0.0,0.283,transformer
+Bucky Irving,2024,22.0,273.0,90.8,Elite,0.0,No Data,,,,,transformer
+Breece Hall,2024,23.0,266.0,62.0,Rotation,74.77,Starter,74.77,68.18000030517578,0.0,0.629,transformer
+Kareem Hunt,2024,29.0,250.0,74.3,Starter,57.7,Rotation,60.7,62.56999969482422,3.0,0.396,transformer
+Brian Robinson,2024,25.0,247.0,72.0,Starter,75.96,Elite,75.96,70.25,0.0,0.198,transformer
+Rhamondre Stevenson,2024,26.0,240.0,69.6,Starter,74.58,Starter,74.58,68.41999816894531,0.0,0.339,transformer
+J.K. Dobbins,2024,25.0,236.0,66.6,Starter,,Reserve/Poor,,65.0,0.0,0.609,transformer
+Tyrone Tracy,2024,24.0,230.0,58.4,Rotation,0.0,No Data,,,,,transformer
+David Montgomery,2024,27.0,228.0,85.9,Elite,76.41,Elite,76.41,69.01000213623047,0.0,0.322,transformer
+Javonte Williams,2024,24.0,200.0,61.7,Rotation,75.67,Elite,75.67,69.9800033569336,0.0,0.493,transformer
+Kenneth Walker III,2024,23.0,199.0,88.4,Elite,75.39,Elite,75.39,79.44000244140625,0.0,0.197,transformer
+Rachaad White,2024,25.0,198.0,73.8,Starter,75.62,Elite,75.62,72.16999816894531,0.0,0.298,transformer
+Travis Etienne Jr.,2024,25.0,189.0,60.7,Rotation,75.87,Elite,75.87,77.52999877929688,0.0,0.232,transformer
+Zach Charbonnet,2024,23.0,177.0,77.5,Elite,74.0,Starter,74.0,74.33000183105469,0.0,0.6,transformer

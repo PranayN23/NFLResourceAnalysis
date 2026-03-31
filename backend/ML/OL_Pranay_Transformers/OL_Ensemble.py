@@ -46,6 +46,8 @@ XGB_FEATURES = [
     'sacks_allowed_rate', 'hits_allowed_rate', 'hurries_allowed_rate'
 ]
 
+T2V_SIGNAL_FEATURE = 't2v_transformer_signal'
+
 
 # ==========================================
 # 2. DATA LOADING & PREPARATION
@@ -110,6 +112,36 @@ target_col = 'grades_offense'
 
 # Drop rows with missing values
 df_clean = df.dropna(subset=TRANSFORMER_FEATURES + XGB_FEATURES + [target_col]).copy()
+
+
+def add_transformer_signal_feature(df_features, df_all):
+    """Add transformer(Time2Vec)-derived signal as an XGB stacking feature."""
+    print("\nComputing transformer(Time2Vec) signal for OL XGBoost stacking feature...")
+    signal_engine = OLModelInference(MODEL_OUT, scaler_path=SCALER_OUT, xgb_path=None)
+
+    signals = []
+    total_rows = len(df_features)
+
+    for idx, (_, row) in enumerate(df_features.iterrows(), start=1):
+        history = df_all[(df_all['player'] == row['player']) & (df_all['Year'] < row['Year'])].copy()
+
+        if len(history) == 0:
+            signals.append(np.nan)
+        else:
+            _, details = signal_engine.get_prediction(history, mode="transformer", apply_calibration=False)
+            signals.append(details.get("transformer_grade", np.nan))
+
+        if idx % 200 == 0 or idx == total_rows:
+            print(f"  Processed {idx}/{total_rows} rows")
+
+    out_df = df_features.copy()
+    out_df[T2V_SIGNAL_FEATURE] = pd.to_numeric(signals, errors='coerce')
+    out_df[T2V_SIGNAL_FEATURE] = out_df[T2V_SIGNAL_FEATURE].fillna(out_df[T2V_SIGNAL_FEATURE].median())
+    return out_df
+
+
+df_clean = add_transformer_signal_feature(df_clean, df)
+XGB_FEATURES = XGB_FEATURES + [T2V_SIGNAL_FEATURE]
 
 # =========================
 # Normalize features

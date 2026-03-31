@@ -1,0 +1,353 @@
+player,Year,Age,Touches,Actual_Grade,Actual_Tier,Pred_Grade,Pred_Tier,Transformer_Grade,XGB_Grade,Age_Adjustment,Volatility_Index,Mode
+DeMarco Murray,2014,26.0,497.0,83.1,Elite,78.32,Elite,75.12,81.51000213623047,0.0,0.292,ensemble
+Marshawn Lynch,2014,28.0,385.0,90.7,Elite,81.9,Elite,76.08,90.7300033569336,1.5,0.515,ensemble
+Le'Veon Bell,2014,22.0,373.0,80.8,Elite,76.0,Elite,71.63,80.37000274658203,0.0,0.6,ensemble
+Matt Forte,2014,28.0,368.0,63.6,Rotation,59.97,Rotation,59.05,63.88999938964844,1.5,0.385,ensemble
+LeSean McCoy,2014,26.0,340.0,57.9,Rotation,64.07,Rotation,67.62,60.52000045776367,0.0,0.438,ensemble
+Eddie Lacy,2014,24.0,329.0,83.0,Elite,79.9,Elite,76.39,83.4000015258789,0.0,0.6,ensemble
+Justin Forsett,2014,28.0,321.0,72.0,Starter,69.38,Starter,75.63,66.13999938964844,1.5,0.601,ensemble
+Arian Foster,2014,28.0,298.0,71.7,Starter,64.73,Rotation,60.7,71.76000213623047,1.5,0.443,ensemble
+Alfred Morris,2014,25.0,282.0,62.8,Rotation,67.79,Starter,70.24,65.33999633789062,0.0,0.4,ensemble
+Joique Bell,2014,28.0,273.0,66.1,Starter,,Reserve/Poor,,67.87999725341797,1.5,0.214,ensemble
+Frank Gore,2014,31.0,266.0,62.7,Rotation,50.6,Reserve/Poor,51.28,65.91000366210938,8.0,0.391,ensemble
+Jeremy Hill,2014,21.0,262.0,63.1,Rotation,0.0,No Data,,,,,ensemble
+Mark Ingram II,2014,24.0,255.0,71.2,Starter,74.25,Starter,76.22,72.27999877929688,0.0,0.315,ensemble
+Lamar Miller,2014,23.0,254.0,73.9,Starter,69.98,Starter,68.49,71.47000122070312,0.0,0.311,ensemble
+Andre Ellington,2014,25.0,247.0,55.1,Rotation,66.61,Starter,75.4,57.81999969482422,0.0,0.6,ensemble
+Jamaal Charles,2014,27.0,245.0,71.7,Starter,68.32,Starter,67.72,68.91999816894531,0.0,0.667,ensemble
+Jonathan Stewart,2014,27.0,239.0,79.1,Elite,68.4,Starter,58.28,78.5199966430664,0.0,0.49,ensemble
+C.J. Anderson,2014,23.0,237.0,85.8,Elite,67.8,Starter,61.47,74.12999725341797,0.0,0.6,ensemble
+Andre Williams,2014,22.0,234.0,60.1,Rotation,0.0,No Data,,,,,ensemble
+Giovani Bernard,2014,22.0,222.0,70.9,Starter,73.61,Starter,76.87,70.3499984741211,0.0,0.6,ensemble
+Chris Ivory,2014,26.0,216.0,72.0,Starter,75.64,Elite,75.95,75.33999633789062,0.0,0.421,ensemble
+Steven Jackson,2014,31.0,210.0,76.8,Elite,55.79,Rotation,52.64,74.94999694824219,8.0,0.361,ensemble
+Matt Asiata,2014,27.0,208.0,53.4,Reserve/Poor,,Reserve/Poor,,65.1500015258789,0.0,1.0,ensemble
+Fred Jackson,2014,33.0,207.0,71.3,Starter,55.04,Rotation,66.14,71.94999694824219,14.0,0.47,ensemble
+Rashad Jennings,2014,29.0,197.0,58.5,Rotation,63.69,Rotation,74.32,59.060001373291016,3.0,0.499,ensemble
+Branden Oliver,2014,23.0,195.0,75.3,Elite,0.0,No Data,,,,,ensemble
+Tre Mason,2014,21.0,195.0,65.8,Starter,0.0,No Data,,,,,ensemble
+Darren McFadden,2014,27.0,190.0,60.2,Rotation,58.96,Rotation,56.02,61.90999984741211,0.0,0.606,ensemble
+Trent Richardson,2014,24.0,186.0,61.3,Rotation,61.98,Rotation,62.37,61.58000183105469,0.0,0.415,ensemble
+Alfred Blue,2014,23.0,183.0,55.1,Rotation,0.0,No Data,,,,,ensemble
+LeGarrette Blount,2014,27.0,182.0,82.3,Elite,71.26,Starter,66.17,76.33999633789062,0.0,0.571,ensemble
+Terrance West,2014,23.0,182.0,58.9,Rotation,0.0,No Data,,,,,ensemble
+Adrian Peterson,2015,30.0,382.0,65.7,Starter,63.32,Rotation,67.56,70.06999969482422,5.5,0.8,ensemble
+Devonta Freeman,2015,23.0,338.0,68.1,Starter,61.25,Rotation,55.8,66.69000244140625,0.0,0.6,ensemble
+Doug Martin,2015,26.0,321.0,84.0,Elite,70.4,Starter,62.68,78.12000274658203,0.0,0.704,ensemble
+Jonathan Stewart,2015,28.0,312.0,71.8,Starter,72.53,Starter,76.24,71.81999969482422,1.5,0.505,ensemble
+Latavius Murray,2015,25.0,307.0,64.5,Rotation,58.94,Rotation,52.46,65.41999816894531,0.0,0.6,ensemble
+Frank Gore,2015,32.0,294.0,61.6,Rotation,45.8,Reserve/Poor,52.16,60.43000030517578,10.5,0.369,ensemble
+Darren McFadden,2015,28.0,279.0,60.1,Rotation,55.76,Rotation,53.97,60.560001373291016,1.5,0.532,ensemble
+Chris Ivory,2015,27.0,277.0,70.4,Starter,63.28,Rotation,56.26,70.30000305175781,0.0,0.423,ensemble
+Ronnie Hillman,2015,23.0,264.0,57.4,Rotation,56.32,Rotation,54.4,58.2400016784668,0.0,0.293,ensemble
+Matt Forte,2015,29.0,262.0,70.7,Starter,66.01,Starter,67.65,70.37999725341797,3.0,0.415,ensemble
+Jeremy Hill,2015,22.0,253.0,58.2,Rotation,59.2,Rotation,57.98,60.41999816894531,0.0,0.6,ensemble
+Todd Gurley II,2015,21.0,250.0,72.9,Starter,0.0,No Data,,,,,ensemble
+Lamar Miller,2015,24.0,241.0,73.7,Starter,72.68,Starter,73.25,72.11000061035156,0.0,0.358,ensemble
+C.J. Anderson,2015,24.0,240.0,63.6,Rotation,69.51,Starter,73.8,65.20999908447266,0.0,0.701,ensemble
+DeAngelo Williams,2015,32.0,240.0,74.4,Starter,56.61,Rotation,62.67,71.55000305175781,10.5,0.245,ensemble
+DeMarco Murray,2015,27.0,237.0,56.2,Rotation,65.42,Starter,72.4,58.439998626708984,0.0,0.532,ensemble
+LeSean McCoy,2015,27.0,235.0,71.1,Starter,67.83,Starter,65.88,69.77999877929688,0.0,0.528,ensemble
+Eddie Lacy,2015,25.0,233.0,69.2,Starter,73.9,Starter,76.05,71.75,0.0,0.181,ensemble
+Rashad Jennings,2015,30.0,224.0,71.0,Starter,57.29,Rotation,54.92,70.6500015258789,5.5,0.461,ensemble
+Alfred Morris,2015,26.0,223.0,58.0,Rotation,58.05,Rotation,56.69,59.400001525878906,0.0,0.645,ensemble
+T.J. Yeldon,2015,21.0,218.0,69.4,Starter,0.0,No Data,,,,,ensemble
+Melvin Gordon III,2015,22.0,217.0,54.6,Reserve/Poor,0.0,No Data,,,,,ensemble
+Mark Ingram II,2015,25.0,216.0,66.8,Starter,60.18,Rotation,53.3,67.05000305175781,0.0,0.367,ensemble
+James Starks,2015,29.0,216.0,60.4,Rotation,64.63,Rotation,75.14,60.11000061035156,3.0,0.486,ensemble
+Alfred Blue,2015,24.0,215.0,60.9,Rotation,56.79,Rotation,52.34,61.25,0.0,0.6,ensemble
+Giovani Bernard,2015,23.0,211.0,69.1,Starter,71.51,Starter,74.39,68.62999725341797,0.0,0.189,ensemble
+Charcandrick West,2015,24.0,208.0,58.1,Rotation,,Reserve/Poor,,68.0199966430664,0.0,0.6,ensemble
+David Johnson,2015,23.0,206.0,71.5,Starter,0.0,No Data,,,,,ensemble
+Isaiah Crowell,2015,22.0,204.0,65.3,Starter,58.29,Rotation,51.66,64.91999816894531,0.0,0.6,ensemble
+Chris Johnson,2015,29.0,202.0,47.4,Reserve/Poor,47.45,Reserve/Poor,50.67,50.22999954223633,3.0,0.414,ensemble
+Javorius Allen,2015,24.0,182.0,58.0,Rotation,0.0,No Data,,,,,ensemble
+Justin Forsett,2015,29.0,182.0,64.3,Rotation,56.04,Rotation,54.67,63.40999984741211,3.0,0.656,ensemble
+Le'Veon Bell,2016,24.0,405.0,78.2,Elite,77.85,Elite,76.56,79.13999938964844,0.0,0.582,ensemble
+Ezekiel Elliott,2016,21.0,377.0,77.2,Elite,0.0,No Data,,,,,ensemble
+David Johnson,2016,24.0,373.0,79.9,Elite,76.93,Elite,76.48,77.38999938964844,0.0,0.6,ensemble
+Lamar Miller,2016,25.0,353.0,61.0,Rotation,58.43,Rotation,53.06,63.79999923706055,0.0,0.327,ensemble
+DeMarco Murray,2016,28.0,346.0,69.5,Starter,63.61,Rotation,61.8,68.41999816894531,1.5,0.66,ensemble
+LeGarrette Blount,2016,29.0,342.0,58.5,Rotation,53.42,Reserve/Poor,53.6,59.22999954223633,3.0,0.478,ensemble
+Devonta Freeman,2016,24.0,330.0,76.4,Elite,76.02,Elite,75.38,76.66000366210938,0.0,0.327,ensemble
+Todd Gurley II,2016,22.0,321.0,57.3,Rotation,67.42,Starter,76.03,58.81999969482422,0.0,0.6,ensemble
+Jay Ajayi,2016,23.0,306.0,77.3,Elite,77.03,Elite,76.55,77.5,0.0,0.6,ensemble
+Frank Gore,2016,33.0,301.0,59.6,Rotation,42.22,Reserve/Poor,51.7,60.7400016784668,14.0,0.347,ensemble
+Melvin Gordon III,2016,23.0,295.0,68.9,Starter,62.8,Rotation,55.8,69.79000091552734,0.0,0.6,ensemble
+LeSean McCoy,2016,28.0,284.0,78.6,Elite,65.61,Starter,58.12,76.11000061035156,1.5,0.498,ensemble
+Jordan Howard,2016,21.0,281.0,73.8,Starter,0.0,No Data,,,,,ensemble
+Spencer Ware,2016,24.0,257.0,72.3,Starter,,Reserve/Poor,,69.2699966430664,0.0,1.0,ensemble
+Mark Ingram II,2016,26.0,251.0,71.2,Starter,63.12,Rotation,55.05,71.18000030517578,0.0,0.372,ensemble
+Matt Forte,2016,30.0,248.0,63.8,Rotation,54.65,Reserve/Poor,55.07,65.2300033569336,5.5,0.386,ensemble
+Carlos Hyde,2016,25.0,244.0,63.6,Rotation,70.72,Starter,75.45,65.98999786376953,0.0,0.239,ensemble
+Jeremy Hill,2016,23.0,243.0,63.4,Rotation,59.53,Rotation,56.12,62.939998626708984,0.0,0.147,ensemble
+Latavius Murray,2016,26.0,241.0,66.7,Starter,68.42,Starter,70.28,66.56999969482422,0.0,0.316,ensemble
+Isaiah Crowell,2016,23.0,238.0,67.5,Starter,61.75,Rotation,57.45,66.05000305175781,0.0,0.421,ensemble
+Terrance West,2016,25.0,227.0,73.9,Starter,59.73,Rotation,50.8,68.6500015258789,0.0,0.291,ensemble
+Jonathan Stewart,2016,29.0,226.0,63.0,Rotation,57.72,Rotation,58.24,63.20000076293945,3.0,0.504,ensemble
+Rashad Jennings,2016,31.0,222.0,55.4,Rotation,47.77,Reserve/Poor,51.76,59.779998779296875,8.0,0.438,ensemble
+Devontae Booker,2016,24.0,205.0,55.3,Rotation,0.0,No Data,,,,,ensemble
+Jerick McKinnon,2016,24.0,202.0,59.3,Rotation,63.15,Rotation,65.94,60.369998931884766,0.0,0.228,ensemble
+Bilal Powell,2016,27.0,189.0,77.8,Elite,61.45,Rotation,53.36,69.52999877929688,0.0,0.545,ensemble
+Christine Michael,2016,25.0,187.0,58.3,Rotation,58.95,Rotation,57.03,60.869998931884766,0.0,0.442,ensemble
+Tevin Coleman,2016,23.0,185.0,74.6,Starter,62.97,Rotation,52.15,73.79000091552734,0.0,0.6,ensemble
+T.J. Yeldon,2016,22.0,180.0,66.1,Starter,64.52,Rotation,61.49,67.55000305175781,0.0,0.6,ensemble
+Rob Kelley,2016,23.0,180.0,59.7,Rotation,0.0,No Data,,,,,ensemble
+Ryan Mathews,2016,28.0,168.0,62.7,Rotation,55.91,Rotation,50.9,63.93000030517578,1.5,0.382,ensemble
+Thomas Rawls,2016,23.0,161.0,75.2,Elite,75.99,Elite,76.41,75.56999969482422,0.0,0.6,ensemble
+Le'Veon Bell,2017,25.0,431.0,72.2,Starter,74.13,Starter,76.57,71.68000030517578,0.0,0.523,ensemble
+Leonard Fournette,2017,22.0,381.0,62.4,Rotation,0.0,No Data,,,,,ensemble
+LeSean McCoy,2017,29.0,371.0,73.7,Starter,70.7,Starter,75.14,72.26000213623047,3.0,0.467,ensemble
+Todd Gurley II,2017,23.0,361.0,82.6,Elite,67.92,Starter,53.72,82.12999725341797,0.0,0.529,ensemble
+Melvin Gordon III,2017,24.0,342.0,72.2,Starter,73.55,Starter,74.91,72.19000244140625,0.0,0.504,ensemble
+Kareem Hunt,2017,22.0,339.0,82.1,Elite,0.0,No Data,,,,,ensemble
+Mark Ingram II,2017,27.0,309.0,70.5,Starter,69.19,Starter,67.1,71.29000091552734,0.0,0.352,ensemble
+Jordan Howard,2017,22.0,299.0,63.9,Rotation,70.37,Starter,76.78,63.959999084472656,0.0,0.6,ensemble
+Carlos Hyde,2017,26.0,299.0,58.0,Rotation,64.59,Rotation,67.88,61.29999923706055,0.0,0.336,ensemble
+Frank Gore,2017,34.0,290.0,70.4,Starter,43.59,Reserve/Poor,52.99,69.18000030517578,17.5,0.336,ensemble
+Jay Ajayi,2017,24.0,280.0,66.9,Starter,72.45,Starter,75.13,69.77999877929688,0.0,0.374,ensemble
+Lamar Miller,2017,26.0,274.0,68.9,Starter,59.77,Rotation,51.9,67.63999938964844,0.0,0.427,ensemble
+C.J. Anderson,2017,26.0,273.0,78.2,Elite,62.8,Rotation,51.37,74.23999786376953,0.0,0.642,ensemble
+Ezekiel Elliott,2017,22.0,268.0,69.5,Starter,73.35,Starter,77.06,69.6500015258789,0.0,0.6,ensemble
+Devonta Freeman,2017,25.0,266.0,68.9,Starter,73.47,Starter,76.27,70.66999816894531,0.0,0.452,ensemble
+Dion Lewis,2017,26.0,261.0,85.6,Elite,78.34,Elite,74.08,82.5999984741211,0.0,0.346,ensemble
+Latavius Murray,2017,27.0,260.0,67.7,Starter,67.56,Starter,68.04,67.08000183105469,0.0,0.256,ensemble
+Alex Collins,2017,23.0,235.0,83.4,Elite,67.48,Starter,54.37,80.58000183105469,0.0,0.6,ensemble
+Isaiah Crowell,2017,24.0,234.0,61.2,Rotation,65.28,Starter,69.1,61.459999084472656,0.0,0.399,ensemble
+Jerick McKinnon,2017,25.0,233.0,79.6,Elite,67.73,Starter,58.86,76.58999633789062,0.0,0.404,ensemble
+Alvin Kamara,2017,22.0,227.0,90.4,Elite,0.0,No Data,,,,,ensemble
+Derrick Henry,2017,23.0,227.0,73.0,Starter,64.65,Rotation,57.32,71.98999786376953,0.0,0.6,ensemble
+Marshawn Lynch,2017,31.0,227.0,74.6,Starter,70.95,Starter,77.0,75.9000015258789,5.5,0.548,ensemble
+DeMarco Murray,2017,29.0,223.0,63.3,Rotation,62.99,Rotation,68.05,63.939998626708984,3.0,0.599,ensemble
+Jonathan Stewart,2017,30.0,217.0,56.4,Rotation,48.68,Reserve/Poor,52.58,55.790000915527344,5.5,0.486,ensemble
+Tevin Coleman,2017,24.0,211.0,70.1,Starter,71.42,Starter,72.72,70.12000274658203,0.0,0.836,ensemble
+LeGarrette Blount,2017,30.0,210.0,63.5,Rotation,53.33,Reserve/Poor,53.74,63.90999984741211,5.5,0.587,ensemble
+Christian McCaffrey,2017,21.0,208.0,74.6,Starter,0.0,No Data,,,,,ensemble
+Joe Mixon,2017,21.0,208.0,72.1,Starter,0.0,No Data,,,,,ensemble
+Bilal Powell,2017,28.0,201.0,67.3,Starter,65.16,Starter,64.52,68.79000091552734,1.5,0.604,ensemble
+Javorius Allen,2017,26.0,199.0,68.7,Starter,60.21,Rotation,53.36,67.06999969482422,0.0,0.254,ensemble
+Samaje Perine,2017,21.0,197.0,58.8,Rotation,0.0,No Data,,,,,ensemble
+Ezekiel Elliott,2018,23.0,381.0,72.2,Starter,65.28,Starter,60.91,69.66000366210938,0.0,0.366,ensemble
+Saquon Barkley,2018,21.0,352.0,85.2,Elite,0.0,No Data,,,,,ensemble
+Christian McCaffrey,2018,22.0,327.0,82.8,Elite,77.56,Elite,74.63,80.4800033569336,0.0,0.6,ensemble
+Todd Gurley II,2018,24.0,315.0,77.8,Elite,75.75,Elite,73.82,77.69000244140625,0.0,0.609,ensemble
+David Johnson,2018,26.0,308.0,64.1,Rotation,65.9,Starter,60.82,70.97000122070312,0.0,1.0,ensemble
+Joe Mixon,2018,22.0,279.0,77.8,Elite,70.0,Starter,63.34,76.66000366210938,0.0,0.6,ensemble
+Alvin Kamara,2018,23.0,275.0,82.9,Elite,78.64,Elite,74.8,82.48999786376953,0.0,0.6,ensemble
+Adrian Peterson,2018,33.0,271.0,76.2,Elite,47.12,Reserve/Poor,52.93,69.30999755859375,14.0,0.975,ensemble
+Jordan Howard,2018,23.0,270.0,68.1,Starter,63.75,Rotation,59.23,68.2699966430664,0.0,0.298,ensemble
+James Conner,2018,23.0,270.0,72.1,Starter,63.87,Rotation,53.38,74.37000274658203,0.0,0.6,ensemble
+Chris Carson,2018,23.0,267.0,83.2,Elite,73.86,Starter,66.3,81.41999816894531,0.0,0.6,ensemble
+Peyton Barber,2018,24.0,254.0,66.8,Starter,64.62,Rotation,61.72,67.51000213623047,0.0,0.31,ensemble
+Lamar Miller,2018,27.0,235.0,73.7,Starter,62.9,Rotation,53.57,72.2300033569336,0.0,0.387,ensemble
+Derrick Henry,2018,24.0,230.0,85.3,Elite,78.13,Elite,75.24,81.0199966430664,0.0,0.312,ensemble
+Phillip Lindsay,2018,24.0,227.0,82.4,Elite,0.0,No Data,,,,,ensemble
+Melvin Gordon III,2018,25.0,225.0,86.6,Elite,80.99,Elite,76.31,85.66000366210938,0.0,0.49,ensemble
+Sony Michel,2018,23.0,216.0,75.8,Elite,0.0,No Data,,,,,ensemble
+Dion Lewis,2018,27.0,214.0,65.3,Starter,70.44,Starter,73.71,67.16999816894531,0.0,0.574,ensemble
+Nick Chubb,2018,22.0,212.0,86.4,Elite,0.0,No Data,,,,,ensemble
+Marlon Mack,2018,22.0,212.0,68.6,Starter,68.04,Starter,67.83,68.23999786376953,0.0,0.6,ensemble
+Tevin Coleman,2018,25.0,199.0,65.7,Starter,68.07,Starter,69.25,66.9000015258789,0.0,0.829,ensemble
+LeSean McCoy,2018,30.0,195.0,60.9,Rotation,52.96,Reserve/Poor,55.13,61.790000915527344,5.5,0.443,ensemble
+Doug Martin,2018,29.0,190.0,66.6,Starter,55.86,Rotation,52.64,65.08000183105469,3.0,0.687,ensemble
+Carlos Hyde,2018,27.0,182.0,50.4,Reserve/Poor,52.52,Reserve/Poor,52.29,52.7400016784668,0.0,0.42,ensemble
+James White,2018,26.0,181.0,71.0,Starter,67.63,Starter,64.55,70.72000122070312,0.0,0.432,ensemble
+Matt Breida,2018,23.0,180.0,75.8,Elite,65.12,Starter,55.45,74.79000091552734,0.0,0.6,ensemble
+Kenyan Drake,2018,24.0,173.0,65.6,Starter,69.69,Starter,73.96,65.41000366210938,0.0,0.416,ensemble
+Dalvin Cook,2018,23.0,173.0,72.6,Starter,64.29,Rotation,59.89,68.68000030517578,0.0,0.6,ensemble
+Alfred Blue,2018,27.0,170.0,63.1,Rotation,55.9,Rotation,49.22,62.58000183105469,0.0,0.312,ensemble
+Tarik Cohen,2018,23.0,170.0,73.2,Starter,74.05,Starter,75.12,72.98999786376953,0.0,0.6,ensemble
+Frank Gore,2018,35.0,168.0,80.3,Elite,46.42,Reserve/Poor,53.08,79.76000213623047,20.0,0.322,ensemble
+LeGarrette Blount,2018,31.0,164.0,45.5,Reserve/Poor,41.22,Reserve/Poor,51.47,46.970001220703125,8.0,0.568,ensemble
+Christian McCaffrey,2019,23.0,403.0,86.5,Elite,80.62,Elite,75.31,85.91999816894531,0.0,0.394,ensemble
+Ezekiel Elliott,2019,24.0,355.0,77.0,Elite,76.56,Elite,76.72,76.4000015258789,0.0,0.28,ensemble
+Leonard Fournette,2019,24.0,341.0,64.0,Rotation,57.64,Rotation,52.66,62.61000061035156,0.0,0.534,ensemble
+Nick Chubb,2019,23.0,334.0,88.7,Elite,80.96,Elite,74.81,87.11000061035156,0.0,0.6,ensemble
+Derrick Henry,2019,25.0,321.0,76.2,Elite,75.86,Elite,75.32,76.4000015258789,0.0,0.485,ensemble
+Chris Carson,2019,24.0,315.0,77.9,Elite,76.84,Elite,74.68,79.01000213623047,0.0,0.576,ensemble
+Joe Mixon,2019,23.0,313.0,75.3,Elite,75.03,Elite,74.72,75.33999633789062,0.0,0.257,ensemble
+Le'Veon Bell,2019,27.0,311.0,74.1,Starter,74.51,Starter,76.51,72.51000213623047,0.0,0.518,ensemble
+Dalvin Cook,2019,24.0,303.0,81.3,Elite,77.35,Elite,75.45,79.25,0.0,0.199,ensemble
+Aaron Jones,2019,24.0,285.0,84.8,Elite,77.62,Elite,75.59,79.66000366210938,0.0,0.15,ensemble
+Saquon Barkley,2019,22.0,269.0,72.2,Starter,73.76,Starter,75.37,72.1500015258789,0.0,0.6,ensemble
+David Montgomery,2019,22.0,267.0,66.6,Starter,0.0,No Data,,,,,ensemble
+Josh Jacobs,2019,21.0,262.0,87.1,Elite,0.0,No Data,,,,,ensemble
+Marlon Mack,2019,23.0,261.0,69.5,Starter,72.94,Starter,74.61,71.2699966430664,0.0,0.155,ensemble
+Phillip Lindsay,2019,25.0,259.0,71.3,Starter,74.16,Starter,76.94,71.38999938964844,0.0,0.6,ensemble
+Sony Michel,2019,24.0,259.0,68.0,Starter,67.07,Starter,66.02,68.12000274658203,0.0,0.6,ensemble
+Carlos Hyde,2019,28.0,255.0,74.2,Starter,61.12,Rotation,52.02,73.22000122070312,1.5,0.485,ensemble
+Todd Gurley II,2019,25.0,254.0,67.0,Starter,71.88,Starter,76.21,67.54000091552734,0.0,0.519,ensemble
+Alvin Kamara,2019,24.0,252.0,70.0,Starter,73.02,Starter,76.03,70.01000213623047,0.0,0.274,ensemble
+Devonta Freeman,2019,27.0,243.0,60.8,Rotation,69.84,Starter,70.17,69.51000213623047,0.0,0.637,ensemble
+Miles Sanders,2019,22.0,229.0,62.3,Rotation,0.0,No Data,,,,,ensemble
+Mark Ingram II,2019,29.0,228.0,79.8,Elite,67.47,Starter,61.15,79.79000091552734,3.0,0.362,ensemble
+Adrian Peterson,2019,34.0,228.0,67.6,Starter,47.35,Reserve/Poor,67.7,62.0,17.5,0.918,ensemble
+Austin Ekeler,2019,24.0,224.0,85.2,Elite,79.26,Elite,74.82,83.69999694824219,0.0,0.364,ensemble
+Kenyan Drake,2019,25.0,220.0,71.2,Starter,72.62,Starter,75.44,69.80000305175781,0.0,0.344,ensemble
+Melvin Gordon III,2019,26.0,204.0,66.0,Starter,62.55,Rotation,58.93,66.18000030517578,0.0,0.63,ensemble
+Ronald Jones,2019,22.0,203.0,67.6,Starter,62.3,Rotation,52.96,71.6500015258789,0.0,0.6,ensemble
+Devin Singletary,2019,21.0,181.0,66.1,Starter,0.0,No Data,,,,,ensemble
+Latavius Murray,2019,29.0,180.0,73.9,Starter,61.87,Rotation,56.6,73.12999725341797,3.0,0.34,ensemble
+Frank Gore,2019,36.0,178.0,64.1,Rotation,40.06,Reserve/Poor,56.06,64.05000305175781,20.0,0.412,ensemble
+Royce Freeman,2019,23.0,175.0,65.8,Starter,61.16,Rotation,57.07,65.23999786376953,0.0,0.6,ensemble
+Peyton Barber,2019,25.0,170.0,64.9,Rotation,66.86,Starter,68.95,64.7699966430664,0.0,0.371,ensemble
+Derrick Henry,2020,26.0,397.0,92.4,Elite,83.99,Elite,75.85,92.12999725341797,0.0,0.459,ensemble
+Dalvin Cook,2020,25.0,356.0,89.0,Elite,81.05,Elite,75.64,86.45999908447266,0.0,0.451,ensemble
+Josh Jacobs,2020,22.0,306.0,76.3,Elite,75.58,Elite,74.94,76.20999908447266,0.0,0.6,ensemble
+David Montgomery,2020,23.0,301.0,81.8,Elite,67.37,Starter,58.43,76.30999755859375,0.0,0.6,ensemble
+Ezekiel Elliott,2020,25.0,296.0,65.3,Starter,70.13,Starter,74.38,65.87999725341797,0.0,0.252,ensemble
+James Robinson,2020,22.0,289.0,72.9,Starter,0.0,No Data,,,,,ensemble
+Alvin Kamara,2020,25.0,270.0,82.2,Elite,79.29,Elite,76.48,82.0999984741211,0.0,0.449,ensemble
+Jonathan Taylor,2020,21.0,268.0,83.9,Elite,0.0,No Data,,,,,ensemble
+Kenyan Drake,2020,26.0,264.0,60.9,Rotation,62.09,Rotation,60.15,64.0199966430664,0.0,0.321,ensemble
+Aaron Jones,2020,25.0,248.0,79.4,Elite,76.4,Elite,75.71,77.08999633789062,0.0,0.317,ensemble
+Melvin Gordon III,2020,27.0,247.0,72.5,Starter,73.47,Starter,74.62,72.31999969482422,0.0,0.568,ensemble
+Kareem Hunt,2020,25.0,236.0,74.0,Starter,74.84,Starter,76.15,73.52999877929688,0.0,0.448,ensemble
+Mike Davis,2020,27.0,224.0,75.1,Elite,56.86,Rotation,50.99,62.72999954223633,0.0,0.592,ensemble
+Ronald Jones,2020,23.0,220.0,73.6,Starter,72.25,Starter,74.8,69.69999694824219,0.0,0.762,ensemble
+Todd Gurley II,2020,26.0,220.0,54.8,Reserve/Poor,56.94,Rotation,54.72,59.150001525878906,0.0,0.477,ensemble
+Clyde Edwards-Helaire,2020,21.0,217.0,75.3,Elite,0.0,No Data,,,,,ensemble
+Antonio Gibson,2020,22.0,206.0,80.9,Elite,0.0,No Data,,,,,ensemble
+Nick Chubb,2020,24.0,206.0,86.7,Elite,80.59,Elite,75.21,85.97000122070312,0.0,0.236,ensemble
+James Conner,2020,25.0,204.0,68.0,Starter,71.53,Starter,75.0,68.05999755859375,0.0,0.294,ensemble
+Frank Gore,2020,37.0,203.0,60.8,Rotation,36.69,Reserve/Poor,52.44,60.93000030517578,20.0,0.412,ensemble
+Devin Singletary,2020,22.0,194.0,66.7,Starter,71.71,Starter,76.6,66.81999969482422,0.0,0.6,ensemble
+Miles Sanders,2020,23.0,192.0,63.0,Rotation,63.57,Rotation,63.39,63.7400016784668,0.0,0.6,ensemble
+Myles Gaskin,2020,23.0,183.0,74.5,Starter,66.56,Starter,57.02,76.0999984741211,0.0,0.6,ensemble
+David Johnson,2020,28.0,180.0,62.9,Rotation,66.9,Starter,74.44,62.36000061035156,1.5,0.864,ensemble
+Chris Carson,2020,25.0,178.0,78.1,Elite,76.91,Elite,75.9,77.91999816894531,0.0,0.472,ensemble
+Giovani Bernard,2020,28.0,171.0,63.4,Rotation,55.32,Rotation,50.45,63.18000030517578,1.5,0.425,ensemble
+Austin Ekeler,2020,25.0,170.0,77.0,Elite,76.16,Elite,75.1,77.22000122070312,0.0,0.378,ensemble
+Latavius Murray,2020,30.0,169.0,82.4,Elite,62.27,Rotation,54.79,80.76000213623047,5.5,0.333,ensemble
+Wayne Gallman,2020,25.0,168.0,71.1,Starter,61.63,Rotation,53.16,70.08999633789062,0.0,0.359,ensemble
+Adrian Peterson,2020,35.0,167.0,59.6,Rotation,39.53,Reserve/Poor,63.68,55.380001068115234,20.0,0.867,ensemble
+J.D. McKissic,2020,27.0,165.0,62.7,Rotation,,Reserve/Poor,,61.18000030517578,0.0,0.386,ensemble
+D'Andre Swift,2020,21.0,160.0,69.4,Starter,0.0,No Data,,,,,ensemble
+Najee Harris,2021,23.0,381.0,70.7,Starter,0.0,No Data,,,,,ensemble
+Jonathan Taylor,2021,22.0,372.0,87.1,Elite,80.05,Elite,75.7,84.4000015258789,0.0,0.6,ensemble
+Joe Mixon,2021,25.0,334.0,79.5,Elite,65.94,Starter,54.27,77.61000061035156,0.0,0.364,ensemble
+Antonio Gibson,2021,23.0,300.0,63.3,Rotation,70.76,Starter,76.14,65.37999725341797,0.0,0.6,ensemble
+Alvin Kamara,2021,26.0,287.0,63.2,Rotation,70.44,Starter,76.52,64.36000061035156,0.0,0.372,ensemble
+Dalvin Cook,2021,26.0,284.0,65.8,Starter,71.74,Starter,76.88,66.61000061035156,0.0,0.584,ensemble
+Ezekiel Elliott,2021,26.0,284.0,68.9,Starter,62.93,Rotation,56.11,69.76000213623047,0.0,0.299,ensemble
+Austin Ekeler,2021,26.0,276.0,75.3,Elite,75.85,Elite,76.47,75.2300033569336,0.0,0.329,ensemble
+Josh Jacobs,2021,23.0,271.0,77.7,Elite,77.0,Elite,76.64,77.3499984741211,0.0,0.359,ensemble
+David Montgomery,2021,24.0,267.0,69.8,Starter,72.39,Starter,75.18,69.58999633789062,0.0,0.466,ensemble
+Leonard Fournette,2021,26.0,249.0,73.9,Starter,67.62,Starter,61.76,73.4800033569336,0.0,0.438,ensemble
+Nick Chubb,2021,25.0,248.0,81.7,Elite,78.55,Elite,74.56,82.52999877929688,0.0,0.193,ensemble
+Javonte Williams,2021,21.0,246.0,75.9,Elite,0.0,No Data,,,,,ensemble
+James Conner,2021,26.0,239.0,82.9,Elite,65.88,Starter,53.92,77.83999633789062,0.0,0.294,ensemble
+Derrick Henry,2021,27.0,237.0,75.3,Elite,76.0,Elite,76.55,75.44999694824219,0.0,0.6,ensemble
+Melvin Gordon III,2021,28.0,231.0,77.8,Elite,74.63,Starter,74.21,78.05999755859375,1.5,0.511,ensemble
+Sony Michel,2021,26.0,229.0,66.1,Starter,66.31,Starter,66.09,66.52999877929688,0.0,0.433,ensemble
+Devin Singletary,2021,23.0,228.0,64.7,Rotation,70.95,Starter,76.09,65.80999755859375,0.0,0.035,ensemble
+Elijah Mitchell,2021,23.0,226.0,76.3,Elite,0.0,No Data,,,,,ensemble
+Aaron Jones,2021,26.0,223.0,82.8,Elite,79.35,Elite,76.81,81.87999725341797,0.0,0.281,ensemble
+Myles Gaskin,2021,24.0,222.0,64.8,Rotation,70.18,Starter,75.34,65.02999877929688,0.0,0.668,ensemble
+AJ Dillon,2021,23.0,221.0,86.7,Elite,76.37,Elite,75.3,77.43000030517578,0.0,0.6,ensemble
+Damien Harris,2021,24.0,220.0,87.8,Elite,,Reserve/Poor,,75.87999725341797,0.0,0.895,ensemble
+D'Andre Swift,2021,22.0,213.0,58.0,Rotation,64.34,Rotation,66.94,61.75,0.0,0.6,ensemble
+Cordarrelle Patterson,2021,30.0,205.0,81.3,Elite,0.0,No Data,,,,,ensemble
+Saquon Barkley,2021,24.0,203.0,59.1,Rotation,70.1,Starter,75.74,64.45999908447266,0.0,0.784,ensemble
+Chuba Hubbard,2021,22.0,197.0,64.9,Rotation,0.0,No Data,,,,,ensemble
+James Robinson,2021,23.0,195.0,67.4,Starter,72.05,Starter,76.65,67.44000244140625,0.0,0.6,ensemble
+Darrel Williams,2021,26.0,191.0,67.2,Starter,61.42,Rotation,54.2,68.6500015258789,0.0,0.308,ensemble
+Mark Ingram II,2021,31.0,187.0,67.6,Starter,61.52,Rotation,72.56,66.4800033569336,8.0,0.481,ensemble
+Devontae Booker,2021,29.0,185.0,65.0,Starter,64.93,Rotation,70.92,64.94000244140625,3.0,0.339,ensemble
+Michael Carter,2021,22.0,183.0,71.0,Starter,0.0,No Data,,,,,ensemble
+Josh Jacobs,2022,24.0,392.0,91.6,Elite,82.27,Elite,75.62,88.91999816894531,0.0,0.275,ensemble
+Derrick Henry,2022,28.0,382.0,85.9,Elite,75.59,Elite,70.44,83.75,1.5,0.542,ensemble
+Saquon Barkley,2022,25.0,352.0,77.1,Elite,71.34,Starter,74.57,68.0999984741211,0.0,0.752,ensemble
+Nick Chubb,2022,26.0,329.0,90.3,Elite,82.64,Elite,76.34,88.94000244140625,0.0,0.233,ensemble
+Christian McCaffrey,2022,26.0,329.0,88.9,Elite,81.62,Elite,76.01,87.23999786376953,0.0,0.462,ensemble
+Najee Harris,2022,24.0,313.0,73.5,Starter,74.97,Starter,76.59,73.33999633789062,0.0,0.6,ensemble
+Austin Ekeler,2022,27.0,311.0,81.3,Elite,77.96,Elite,76.71,79.20999908447266,0.0,0.35,ensemble
+Dalvin Cook,2022,27.0,304.0,67.4,Starter,69.43,Starter,72.04,66.80999755859375,0.0,0.582,ensemble
+Alvin Kamara,2022,27.0,280.0,72.7,Starter,73.23,Starter,74.81,71.6500015258789,0.0,0.472,ensemble
+Rhamondre Stevenson,2022,24.0,279.0,81.3,Elite,78.22,Elite,76.16,80.27999877929688,0.0,0.6,ensemble
+Miles Sanders,2022,25.0,279.0,74.0,Starter,73.31,Starter,73.26,73.3499984741211,0.0,0.268,ensemble
+Jamaal Williams,2022,27.0,274.0,73.4,Starter,64.35,Rotation,56.02,72.66999816894531,0.0,0.253,ensemble
+Aaron Jones,2022,27.0,273.0,86.1,Elite,80.25,Elite,77.07,83.41999816894531,0.0,0.251,ensemble
+Joe Mixon,2022,26.0,270.0,79.3,Elite,77.41,Elite,75.95,78.87000274658203,0.0,0.378,ensemble
+Leonard Fournette,2022,27.0,262.0,68.0,Starter,62.29,Rotation,55.74,68.8499984741211,0.0,0.451,ensemble
+Travis Etienne Jr.,2022,23.0,256.0,72.1,Starter,0.0,No Data,,,,,ensemble
+Kenneth Walker III,2022,21.0,255.0,76.7,Elite,0.0,No Data,,,,,ensemble
+Dameon Pierce,2022,22.0,250.0,78.9,Elite,0.0,No Data,,,,,ensemble
+Ezekiel Elliott,2022,27.0,248.0,71.9,Starter,73.49,Starter,74.43,72.55000305175781,0.0,0.284,ensemble
+David Montgomery,2022,25.0,235.0,67.9,Starter,67.81,Starter,67.56,68.05999755859375,0.0,0.351,ensemble
+Tony Pollard,2022,25.0,232.0,89.5,Elite,81.51,Elite,74.49,88.5199966430664,0.0,0.364,ensemble
+James Conner,2022,27.0,229.0,69.7,Starter,73.82,Starter,76.38,71.25,0.0,0.407,ensemble
+Tyler Allgeier,2022,22.0,226.0,86.7,Elite,0.0,No Data,,,,,ensemble
+Jonathan Taylor,2022,23.0,220.0,67.6,Starter,71.92,Starter,75.36,68.4800033569336,0.0,0.235,ensemble
+Devin Singletary,2022,24.0,215.0,75.9,Elite,75.41,Elite,76.08,74.73999786376953,0.0,0.088,ensemble
+Brian Robinson,2022,23.0,214.0,82.5,Elite,0.0,No Data,,,,,ensemble
+AJ Dillon,2022,24.0,213.0,81.4,Elite,77.49,Elite,74.77,80.19999694824219,0.0,0.39,ensemble
+Raheem Mostert,2022,30.0,212.0,75.7,Elite,62.65,Rotation,71.67,64.62999725341797,5.5,0.749,ensemble
+D'Onta Foreman,2022,26.0,208.0,73.1,Starter,62.95,Rotation,55.92,69.98999786376953,0.0,0.678,ensemble
+Cam Akers,2022,23.0,201.0,80.7,Elite,56.91,Rotation,49.57,64.26000213623047,0.0,0.682,ensemble
+Jeff Wilson Jr.,2022,26.0,198.0,66.9,Starter,59.08,Rotation,51.25,66.91999816894531,0.0,0.414,ensemble
+Latavius Murray,2022,32.0,198.0,82.5,Elite,57.86,Rotation,55.82,80.91000366210938,10.5,0.391,ensemble
+Christian McCaffrey,2023,27.0,417.0,90.3,Elite,83.6,Elite,77.01,90.19999694824219,0.0,0.477,ensemble
+Rachaad White,2023,24.0,368.0,67.5,Starter,61.91,Rotation,57.44,66.37999725341797,0.0,0.6,ensemble
+Isiah Pacheco,2023,24.0,342.0,79.9,Elite,72.54,Starter,68.14,76.94999694824219,0.0,0.6,ensemble
+Tony Pollard,2023,26.0,329.0,77.5,Elite,77.63,Elite,76.95,78.30999755859375,0.0,0.414,ensemble
+James Cook,2023,23.0,325.0,71.7,Starter,74.33,Starter,76.26,72.38999938964844,0.0,0.6,ensemble
+Travis Etienne Jr.,2023,24.0,325.0,77.0,Elite,76.5,Elite,76.18,76.83000183105469,0.0,0.6,ensemble
+Joe Mixon,2023,27.0,309.0,71.1,Starter,68.87,Starter,67.06,70.66999816894531,0.0,0.356,ensemble
+Derrick Henry,2023,29.0,308.0,90.1,Elite,79.47,Elite,76.76,88.16999816894531,3.0,0.539,ensemble
+Breece Hall,2023,22.0,299.0,82.4,Elite,79.55,Elite,75.75,83.3499984741211,0.0,0.6,ensemble
+Najee Harris,2023,25.0,298.0,76.2,Elite,76.44,Elite,76.68,76.19999694824219,0.0,0.173,ensemble
+Saquon Barkley,2023,26.0,288.0,70.2,Starter,66.28,Starter,62.96,69.5999984741211,0.0,0.704,ensemble
+D'Andre Swift,2023,24.0,282.0,66.5,Starter,70.97,Starter,74.56,67.38999938964844,0.0,0.462,ensemble
+David Montgomery,2023,26.0,280.0,79.6,Elite,72.13,Starter,64.75,79.5,0.0,0.325,ensemble
+Chuba Hubbard,2023,24.0,277.0,77.2,Elite,73.45,Starter,73.13,73.7699966430664,0.0,0.446,ensemble
+Devin Singletary,2023,25.0,276.0,75.1,Elite,72.66,Starter,71.27,74.05000305175781,0.0,0.24,ensemble
+Jahmyr Gibbs,2023,21.0,274.0,76.3,Elite,0.0,No Data,,,,,ensemble
+Kyren Williams,2023,23.0,274.0,80.4,Elite,62.77,Rotation,59.09,66.44000244140625,0.0,0.6,ensemble
+Bijan Robinson,2023,21.0,272.0,69.1,Starter,0.0,No Data,,,,,ensemble
+Josh Jacobs,2023,25.0,270.0,65.0,Starter,70.7,Starter,76.55,64.83999633789062,0.0,0.406,ensemble
+Javonte Williams,2023,23.0,264.0,63.3,Rotation,70.02,Starter,76.14,63.90999984741211,0.0,0.572,ensemble
+Jerome Ford,2023,23.0,261.0,68.3,Starter,,Reserve/Poor,,72.3499984741211,0.0,0.6,ensemble
+Alvin Kamara,2023,28.0,255.0,74.1,Starter,71.69,Starter,72.7,73.66999816894531,1.5,0.433,ensemble
+Kenneth Walker III,2023,22.0,248.0,83.5,Elite,78.57,Elite,75.77,81.37000274658203,0.0,0.6,ensemble
+Raheem Mostert,2023,31.0,243.0,84.7,Elite,66.52,Starter,76.0,73.05000305175781,8.0,0.757,ensemble
+James Conner,2023,28.0,235.0,89.2,Elite,75.99,Elite,68.58,86.4000015258789,1.5,0.378,ensemble
+Ezekiel Elliott,2023,28.0,235.0,67.6,Starter,59.81,Rotation,55.95,66.68000030517578,1.5,0.277,ensemble
+Austin Ekeler,2023,28.0,230.0,60.2,Rotation,68.07,Starter,77.14,61.9900016784668,1.5,0.354,ensemble
+Gus Edwards,2023,28.0,225.0,73.7,Starter,,Reserve/Poor,,66.0,1.5,0.323,ensemble
+Jaylen Warren,2023,24.0,220.0,78.5,Elite,75.5,Elite,76.11,74.87999725341797,0.0,0.6,ensemble
+Aaron Jones,2023,28.0,216.0,80.9,Elite,77.07,Elite,76.78,80.36000061035156,1.5,0.265,ensemble
+Brian Robinson,2023,24.0,214.0,75.3,Elite,75.24,Elite,75.82,74.66000366210938,0.0,0.6,ensemble
+Alexander Mattison,2023,25.0,210.0,61.8,Rotation,65.97,Starter,69.84,62.099998474121094,0.0,0.384,ensemble
+Saquon Barkley,2024,27.0,451.0,87.6,Elite,64.39,Rotation,58.01,70.7699966430664,0.0,0.633,ensemble
+Kyren Williams,2024,24.0,389.0,69.1,Starter,71.27,Starter,73.99,68.55000305175781,0.0,0.663,ensemble
+Derrick Henry,2024,30.0,386.0,94.2,Elite,72.12,Starter,77.25,78.0,5.5,0.533,ensemble
+Bijan Robinson,2024,22.0,365.0,92.8,Elite,73.07,Starter,76.01,70.12999725341797,0.0,0.6,ensemble
+Josh Jacobs,2024,26.0,358.0,92.3,Elite,67.28,Starter,67.68,66.87999725341797,0.0,0.51,ensemble
+Joe Mixon,2024,28.0,327.0,76.6,Elite,60.99,Rotation,54.99,70.0,1.5,0.339,ensemble
+Aaron Jones,2024,29.0,322.0,75.4,Elite,72.08,Starter,77.13,73.04000091552734,3.0,0.244,ensemble
+Jahmyr Gibbs,2024,22.0,322.0,90.1,Elite,77.89,Elite,75.58,80.19999694824219,0.0,0.6,ensemble
+Jonathan Taylor,2024,25.0,321.0,56.9,Rotation,72.7,Starter,76.52,68.88999938964844,0.0,0.505,ensemble
+Najee Harris,2024,26.0,308.0,77.2,Elite,76.75,Elite,76.53,76.95999908447266,0.0,0.195,ensemble
+Tony Pollard,2024,27.0,301.0,68.7,Starter,75.3,Elite,77.04,73.55999755859375,0.0,0.457,ensemble
+James Cook,2024,24.0,298.0,86.2,Elite,75.05,Elite,76.63,73.45999908447266,0.0,0.479,ensemble
+Alvin Kamara,2024,29.0,296.0,73.7,Starter,69.99,Starter,76.93,69.05999755859375,3.0,0.398,ensemble
+D'Andre Swift,2024,25.0,295.0,61.3,Rotation,63.73,Rotation,60.55,66.9000015258789,0.0,0.445,ensemble
+Chuba Hubbard,2024,25.0,293.0,75.9,Elite,76.31,Elite,76.45,76.16999816894531,0.0,0.438,ensemble
+James Conner,2024,29.0,283.0,90.4,Elite,71.31,Starter,76.54,72.08999633789062,3.0,0.467,ensemble
+Chase Brown,2024,24.0,283.0,75.7,Elite,70.7,Starter,71.75,69.6500015258789,0.0,0.6,ensemble
+De'Von Achane,2024,22.0,281.0,81.6,Elite,77.02,Elite,74.38,79.66000366210938,0.0,0.6,ensemble
+Rico Dowdle,2024,26.0,274.0,73.9,Starter,,Reserve/Poor,,65.56999969482422,0.0,0.283,ensemble
+Bucky Irving,2024,22.0,273.0,90.8,Elite,0.0,No Data,,,,,ensemble
+Breece Hall,2024,23.0,266.0,62.0,Rotation,71.48,Starter,74.77,68.18000030517578,0.0,0.629,ensemble
+Kareem Hunt,2024,29.0,250.0,74.3,Starter,58.64,Rotation,60.7,62.56999969482422,3.0,0.396,ensemble
+Brian Robinson,2024,25.0,247.0,72.0,Starter,73.11,Starter,75.96,70.25,0.0,0.198,ensemble
+Rhamondre Stevenson,2024,26.0,240.0,69.6,Starter,71.5,Starter,74.58,68.41999816894531,0.0,0.339,ensemble
+J.K. Dobbins,2024,25.0,236.0,66.6,Starter,,Reserve/Poor,,65.0,0.0,0.609,ensemble
+Tyrone Tracy,2024,24.0,230.0,58.4,Rotation,0.0,No Data,,,,,ensemble
+David Montgomery,2024,27.0,228.0,85.9,Elite,72.71,Starter,76.41,69.01000213623047,0.0,0.322,ensemble
+Javonte Williams,2024,24.0,200.0,61.7,Rotation,72.82,Starter,75.67,69.9800033569336,0.0,0.493,ensemble
+Kenneth Walker III,2024,23.0,199.0,88.4,Elite,77.41,Elite,75.39,79.44000244140625,0.0,0.197,ensemble
+Rachaad White,2024,25.0,198.0,73.8,Starter,73.89,Starter,75.62,72.16999816894531,0.0,0.298,ensemble
+Travis Etienne Jr.,2024,25.0,189.0,60.7,Rotation,76.7,Elite,75.87,77.52999877929688,0.0,0.232,ensemble
+Zach Charbonnet,2024,23.0,177.0,77.5,Elite,74.16,Starter,74.0,74.33000183105469,0.0,0.6,ensemble
