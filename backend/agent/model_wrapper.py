@@ -9,6 +9,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.ML.QB_Pranay_Transformers.Player_Model_QB import PlayerTransformerRegressor
+from backend.agent.exceptions import UngradablePlayerError
 
 class PlayerModelInference:
     def __init__(self, transformer_path, scaler_path=None, xgb_path=None):
@@ -45,7 +46,15 @@ class PlayerModelInference:
     def _prepare_features(self, player_history):
         """Prepare both original and lagged features for a player's history."""
         df = player_history.copy()
-        df['adjusted_value'] = pd.to_numeric(df['adjusted_value'], errors='coerce').fillna(0)
+        numeric_cols = [
+            'grades_pass', 'grades_offense', 'qb_rating', 'adjusted_value',
+            'Cap_Space', 'ypa', 'twp_rate', 'btt_rate', 'completion_percent',
+            'Net EPA', 'dropbacks', 'age', 'Year'
+        ]
+        for col in numeric_cols:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+        
         df = df.sort_values('Year')
         
         # Engineering (Original Logic)
@@ -100,6 +109,10 @@ class PlayerModelInference:
             x_tensor = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
             m_tensor = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
             transformer_grade = self.model(x_tensor, mask=m_tensor).item()
+
+        # Check if transformer grade is valid
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
 
         # 2. XGBoost Prediction
         xgb_grade = 0.0

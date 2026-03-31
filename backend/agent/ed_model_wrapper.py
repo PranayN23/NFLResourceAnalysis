@@ -12,6 +12,7 @@ from backend.ML.ED_Pranay_Transformers.Player_Model_ED import (
     PlayerTransformerRegressor,
     SEQ_LEN,
 )
+from backend.agent.exceptions import UngradablePlayerError
 
 
 class EDModelInference:
@@ -154,7 +155,7 @@ class EDModelInference:
             df["team_performance_proxy"] = 0.0
 
         def safe_div(a, b):
-            return np.where(b == 0, 0.0, a / b)
+            return np.divide(a, b, out=np.zeros_like(a, dtype=float), where=b != 0)
 
         snap    = df["snap_counts_defense"].values
         snap_dl = df["snap_counts_dl"].values
@@ -235,6 +236,9 @@ class EDModelInference:
 
         # Raw transformer prediction
         transformer_grade = self._transformer_predict(df_eng)
+        
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
 
         # Stretch-calibrate back to PFF grade scale
         transformer_grade = (
