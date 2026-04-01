@@ -4,72 +4,66 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, f1_score
 import os
 import joblib
 
-# Check device stability
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Using device: {DEVICE}")
 
-# ==========================
-# TEMPORAL SPLIT CONFIG
-# ==========================
-TRAIN_END_YEAR = 2022  # Train on 2010-2022
-VAL_YEAR = 2023        # Validate on 2023
-TEST_YEAR = 2024       # Test on 2024
+TRAIN_END_YEAR = 2022
+VAL_YEAR = 2023
+TEST_YEAR = 2024
 
-# 1. Dataset Class
+
 class PlayerDataset(Dataset):
-    def __init__(self, sequences, targets, masks):
+    def __init__(self, sequences, targets, masks, weights):
         self.sequences = torch.tensor(sequences, dtype=torch.float32)
-        self.targets = torch.tensor(targets, dtype=torch.float32)
-        self.masks = torch.tensor(masks, dtype=torch.bool)
+        self.targets   = torch.tensor(targets,   dtype=torch.float32)
+        self.masks     = torch.tensor(masks,     dtype=torch.bool)
+        self.weights   = torch.tensor(weights,   dtype=torch.float32)
 
     def __len__(self):
         return len(self.targets)
 
     def __getitem__(self, idx):
-        return self.sequences[idx], self.targets[idx], self.masks[idx]
+        return self.sequences[idx], self.targets[idx], self.masks[idx], self.weights[idx]
 
-# 2. Sequence Utility with Year Tracking
+
 def create_sequences_temporal(df_scaled, df_raw, seq_len, features, target_col):
-    """Create sequences with year labels for temporal splitting"""
-    sequences, targets, masks, years = [], [], [], []
+    sequences, targets, masks, years, last_grades = [], [], [], [], []
     players = df_raw['player'].unique()
 
     for p in players:
         p_data_scaled = df_scaled[df_raw['player'] == p]
-        p_data_raw = df_raw[df_raw['player'] == p]
+        p_data_raw    = df_raw[df_raw['player'] == p]
 
         for i in range(len(p_data_raw)):
-            # Target is current year (i)
-            target_year = p_data_raw.iloc[i]['Year']
-            target = p_data_raw.iloc[i][target_col]
-
-            # Historical sequence up to previous years (before i)
+            target_year  = p_data_raw.iloc[i]['Year']
+            target       = p_data_raw.iloc[i][target_col]
+            history_raw    = p_data_raw.iloc[:i]
             history_scaled = p_data_scaled.iloc[:i]
 
             if len(history_scaled) == 0:
-                continue # No history to predict from
+                continue
 
-            # Take last seq_len years
+            last_grade = history_raw.iloc[-1][target_col]
+
             history_scaled = history_scaled.tail(seq_len)
             actual_len = len(history_scaled)
-
-            # Padding
-            pad_len = seq_len - actual_len
-            seq = np.vstack([np.zeros((pad_len, len(features))), history_scaled[features].values])
+            pad_len    = seq_len - actual_len
+            seq  = np.vstack([np.zeros((pad_len, len(features))), history_scaled[features].values])
             mask = [True] * pad_len + [False] * actual_len
 
             sequences.append(seq)
             targets.append(target)
             masks.append(mask)
             years.append(target_year)
+            last_grades.append(last_grade)
 
-    return np.array(sequences), np.array(targets), np.array(masks), np.array(years)
+    return np.array(sequences), np.array(targets), np.array(masks), np.array(years), np.array(last_grades)
 
-# 3. Time2Vec Layer (Structural)
+
 class Time2Vec(nn.Module):
     def __init__(self, input_dim, kernel_size=1):
         super(Time2Vec, self).__init__()
@@ -81,18 +75,18 @@ class Time2Vec(nn.Module):
         self.bk = nn.Parameter(torch.randn(input_dim, kernel_size))
 
     def forward(self, x):
-        x_uns = x.unsqueeze(-1)
-        linear = x_uns * self.w0 + self.b0
+        x_uns   = x.unsqueeze(-1)
+        linear  = x_uns * self.w0 + self.b0
         periodic = torch.sin(x_uns * self.wk + self.bk)
         out = torch.cat([linear, periodic], dim=-1)
         out = out.reshape(x.size(0), x.size(1), -1)
         return out
 
-# 4. Transformer Regressor
+
 class LBTransformerRegressor(nn.Module):
     def __init__(self, input_dim, seq_len, kernel_size=1, num_heads=4, ff_dim=64, num_layers=2, dropout=0.1):
         super(LBTransformerRegressor, self).__init__()
-        self.time2vec = Time2Vec(input_dim, kernel_size)
+        self.time2vec  = Time2Vec(input_dim, kernel_size)
         self.embed_dim = input_dim * (kernel_size + 1)
 
         if self.embed_dim % num_heads != 0:
@@ -103,14 +97,11 @@ class LBTransformerRegressor(nn.Module):
             self.pad_proj = nn.Identity()
 
         encoder_layer = nn.TransformerEncoderLayer(
-            d_model=self.embed_dim,
-            nhead=num_heads,
-            dim_feedforward=ff_dim,
-            dropout=dropout,
-            batch_first=True
+            d_model=self.embed_dim, nhead=num_heads,
+            dim_feedforward=ff_dim, dropout=dropout, batch_first=True
         )
-        self.pos_embedding = nn.Parameter(torch.randn(1, seq_len + 1, self.embed_dim))
-        self.cls_token = nn.Parameter(torch.randn(1, 1, self.embed_dim))
+        self.pos_embedding      = nn.Parameter(torch.randn(1, seq_len + 1, self.embed_dim))
+        self.cls_token          = nn.Parameter(torch.randn(1, 1, self.embed_dim))
         self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
 
         self.regressor = nn.Sequential(
@@ -128,7 +119,7 @@ class LBTransformerRegressor(nn.Module):
         x = torch.cat((cls_tokens, x), dim=1)
 
         if mask is not None:
-            cls_mask = torch.zeros((batch_size, 1), dtype=torch.bool, device=x.device)
+            cls_mask  = torch.zeros((batch_size, 1), dtype=torch.bool, device=x.device)
             full_mask = torch.cat([cls_mask, mask], dim=1)
         else:
             full_mask = None
@@ -139,12 +130,11 @@ class LBTransformerRegressor(nn.Module):
         x = self.regressor(x)
         return x
 
+
 if __name__ == "__main__":
-    # 5. Data Processing
     data_path = os.path.join(os.path.dirname(__file__), '../LB.csv')
     df = pd.read_csv(data_path)
     df['adjusted_value'] = pd.to_numeric(df['adjusted_value'], errors='coerce')
-    # Coerce all numeric columns that may be stored as strings
     numeric_cols = [
         'grades_defense', 'grades_coverage_defense', 'grades_pass_rush_defense',
         'grades_run_defense', 'grades_tackle', 'missed_tackle_rate',
@@ -155,15 +145,13 @@ if __name__ == "__main__":
     for col in numeric_cols:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
+
     df = df[df['snap_counts_defense'] >= 200].copy()
     df.sort_values(by=['player', 'Year'], inplace=True)
 
-    # Engineering
     df["years_in_league"] = df.groupby("player").cumcount()
-    df["delta_grade"] = df.groupby("player")["grades_defense"].diff().fillna(0)
+    df["delta_grade"]     = df.groupby("player")["grades_defense"].diff().fillna(0)
 
-    # NOTE: Including grades_defense is VALID because sequences use iloc[:i]
-    # This means we use PAST years' grades to predict CURRENT year's grade
     features = [
         'grades_defense', 'grades_coverage_defense', 'grades_pass_rush_defense',
         'grades_run_defense', 'grades_tackle', 'missed_tackle_rate',
@@ -175,14 +163,11 @@ if __name__ == "__main__":
 
     df_clean = df.dropna(subset=features + [target_col]).copy()
 
-    # Normalize Features (Fit ONLY on training data)
     print("Fitting scaler on training data only (no leakage)...")
     train_data = df_clean[df_clean['Year'] <= TRAIN_END_YEAR]
-
     scaler = StandardScaler()
     scaler.fit(train_data[features])
 
-    # Transform all data using training scaler
     df_clean_scaled = df_clean.copy()
     df_clean_scaled[features] = scaler.transform(df_clean[features])
 
@@ -191,155 +176,150 @@ if __name__ == "__main__":
     joblib.dump(scaler, SCALER_OUT)
     print(f"Scaler saved to {SCALER_OUT}")
 
-    # Create sequences with year tracking
-    X_all, y_all, masks_all, years_all = create_sequences_temporal(
+    X_all, y_all, masks_all, years_all, last_grades_all = create_sequences_temporal(
         df_clean_scaled, df_clean, 5, features, target_col
     )
 
+    # Delta learning — predict year-over-year change, not absolute grade
+    y_delta_all = y_all - last_grades_all
+
     print(f"\nTotal sequences created: {len(X_all)}")
     print(f"Year range: {years_all.min()} - {years_all.max()}")
+    print(f"Delta target mean: {y_delta_all.mean():.3f}, std: {y_delta_all.std():.3f}")
 
-    # ==========================
-    # TEMPORAL SPLIT (NO LEAKAGE)
-    # ==========================
     train_idx = years_all <= TRAIN_END_YEAR
-    val_idx = years_all == VAL_YEAR
-    test_idx = years_all == TEST_YEAR
+    val_idx   = years_all == VAL_YEAR
+    test_idx  = years_all == TEST_YEAR
 
     print(f"\nTemporal Split:")
     print(f"  Train (≤{TRAIN_END_YEAR}): {train_idx.sum()} samples")
-    print(f"  Val ({VAL_YEAR}): {val_idx.sum()} samples")
+    print(f"  Val ({VAL_YEAR}):  {val_idx.sum()} samples")
     print(f"  Test ({TEST_YEAR}): {test_idx.sum()} samples")
 
-    X_train, y_train, masks_train = X_all[train_idx], y_all[train_idx], masks_all[train_idx]
-    X_val, y_val, masks_val = X_all[val_idx], y_all[val_idx], masks_all[val_idx]
-    X_test, y_test, masks_test = X_all[test_idx], y_all[test_idx], masks_all[test_idx]
+    X_train, y_train, masks_train = X_all[train_idx], y_delta_all[train_idx], masks_all[train_idx]
+    X_val,   y_val,   masks_val   = X_all[val_idx],   y_delta_all[val_idx],   masks_all[val_idx]
+    X_test,  y_test,  masks_test  = X_all[test_idx],  y_delta_all[test_idx],  masks_all[test_idx]
 
-    # Calibrated Oversampling (ONLY on training data)
-    print("\nApplying oversampling to training data...")
-    X_boosted, y_boosted, masks_boosted = [], [], []
-    for xi, yi, mi in zip(X_train, y_train, masks_train):
-        X_boosted.append(xi)
-        y_boosted.append(yi)
-        masks_boosted.append(mi)
-        # Duplicate extreme performers
-        if yi >= 80.0 or yi < 50.0:
-            X_boosted.append(xi)
-            y_boosted.append(yi)
-            masks_boosted.append(mi)
+    last_grades_val  = last_grades_all[val_idx]
+    last_grades_test = last_grades_all[test_idx]
+    y_raw_val  = y_all[val_idx]
+    y_raw_test = y_all[test_idx]
 
-    X_train = np.array(X_boosted)
-    y_train = np.array(y_boosted)
+    # Moderate oversampling + loss weights to address 8% Elite class imbalance
+    y_abs_train = y_all[train_idx]
+    X_boosted, y_boosted, masks_boosted, w_boosted = [], [], [], []
+    for xi, yi, mi, yi_abs in zip(X_train, y_train, masks_train, y_abs_train):
+        if yi_abs >= 80.0:
+            repeats, w = 3, 2.5
+        elif yi_abs < 50.0:
+            repeats, w = 2, 1.8
+        elif yi_abs >= 70.0 or yi_abs < 60.0:
+            repeats, w = 2, 1.3
+        else:
+            repeats, w = 1, 1.0
+        for _ in range(repeats):
+            X_boosted.append(xi); y_boosted.append(yi)
+            masks_boosted.append(mi); w_boosted.append(w)
+
+    X_train     = np.array(X_boosted)
+    y_train     = np.array(y_boosted)
     masks_train = np.array(masks_boosted)
+    w_train     = np.array(w_boosted)
+    w_val       = np.ones(len(y_val))
+    w_test      = np.ones(len(y_test))
 
     print(f"  Training samples after oversampling: {len(X_train)}")
 
-    # Create DataLoaders
-    train_loader = DataLoader(
-        PlayerDataset(X_train, y_train, masks_train),
-        batch_size=32,
-        shuffle=True
-    )
-    val_loader = DataLoader(
-        PlayerDataset(X_val, y_val, masks_val),
-        batch_size=32,
-        shuffle=False
-    )
-    test_loader = DataLoader(
-        PlayerDataset(X_test, y_test, masks_test),
-        batch_size=32,
-        shuffle=False
-    )
+    train_loader = DataLoader(PlayerDataset(X_train, y_train, masks_train, w_train), batch_size=32, shuffle=True)
+    val_loader   = DataLoader(PlayerDataset(X_val,   y_val,   masks_val,   w_val),   batch_size=32, shuffle=False)
+    test_loader  = DataLoader(PlayerDataset(X_test,  y_test,  masks_test,  w_test),  batch_size=32, shuffle=False)
 
-    # Model initialization
-    model = LBTransformerRegressor(
-        input_dim=len(features),
-        seq_len=5
-    ).to(DEVICE).float()
+    def weighted_mse(pred, target, weight):
+        return ((pred - target) ** 2 * weight).mean()
 
-    criterion = nn.L1Loss()
+    def grade_to_tier(grades_arr):
+        tiers = []
+        for g in grades_arr:
+            if g >= 80.0:   tiers.append(2)
+            elif g >= 60.0: tiers.append(1)
+            else:           tiers.append(0)
+        return tiers
+
+    model = LBTransformerRegressor(input_dim=len(features), seq_len=5).to(DEVICE).float()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=10
-    )
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=12)
 
-    best_val_loss = float('inf')
-    EPOCHS = 150
+    best_val_f1   = -1.0
+    WARMUP_EPOCHS = 30   # don't checkpoint until model has learned basic patterns
+    EPOCHS        = 250
 
     print("\n" + "="*60)
     print("Starting temporal training (no leakage)...")
     print("="*60)
 
     for epoch in range(EPOCHS):
-        # Training
         model.train()
         train_loss = 0
-        for i, t, m in train_loader:
-            i, t = i.to(DEVICE), t.to(DEVICE)
-            m = m.to(DEVICE)
+        for i, t, m, w in train_loader:
+            i, t, m, w = i.to(DEVICE), t.to(DEVICE), m.to(DEVICE), w.to(DEVICE)
             optimizer.zero_grad()
-            outputs = model(i, mask=m).squeeze()
-            loss = criterion(outputs, t)
+            loss = weighted_mse(model(i, mask=m).squeeze(), t, w)
             loss.backward()
             optimizer.step()
             train_loss += loss.item()
 
-        # Validation
         model.eval()
-        val_loss = 0
+        val_delta_preds = []
         with torch.no_grad():
-            for iv, tv, mv in val_loader:
-                iv, tv, mv = iv.to(DEVICE), tv.to(DEVICE), mv.to(DEVICE)
-                ov = model(iv, mask=mv).squeeze()
-                val_loss += criterion(ov, tv).item()
+            for iv, tv, mv, wv in val_loader:
+                iv, mv = iv.to(DEVICE), mv.to(DEVICE)
+                out = model(iv, mask=mv).squeeze()
+                val_delta_preds.append(out.cpu().numpy())
 
-        avg_train_loss = train_loss / len(train_loader)
-        avg_val_loss = val_loss / len(val_loader)
+        val_delta_preds = np.concatenate(val_delta_preds)
+        val_abs_preds   = last_grades_val[:len(val_delta_preds)] + val_delta_preds
+        val_abs_true    = y_raw_val[:len(val_delta_preds)]
 
-        # Save best model based on validation loss
-        if avg_val_loss < best_val_loss:
-            best_val_loss = avg_val_loss
+        val_tier_pred = grade_to_tier(val_abs_preds)
+        val_tier_true = grade_to_tier(val_abs_true)
+        val_macro_f1  = f1_score(val_tier_true, val_tier_pred, average='macro', zero_division=0)
+        val_mae       = mean_absolute_error(val_abs_true, val_abs_preds)
+
+        avg_train = train_loss / len(train_loader)
+
+        # Checkpoint on macro-F1 (only after warmup so random init can't win)
+        if epoch >= WARMUP_EPOCHS and val_macro_f1 > best_val_f1:
+            best_val_f1 = val_macro_f1
             torch.save(model.state_dict(), MODEL_OUT)
             best_epoch = epoch + 1
 
-        scheduler.step(avg_val_loss)
-
+        scheduler.step(val_mae)
         if (epoch + 1) % 10 == 0:
-            print(f"Epoch {epoch+1}/{EPOCHS} | Train MAE: {avg_train_loss:.4f} | Val MAE: {avg_val_loss:.4f}")
+            print(f"Epoch {epoch+1}/{EPOCHS} | Train wMSE: {avg_train:.4f} | Val MAE: {val_mae:.4f} | Val F1: {val_macro_f1:.4f}")
 
-    print(f"\nBest model saved from epoch {best_epoch} with Val MAE: {best_val_loss:.4f}")
-
-    # ==========================
-    # FINAL EVALUATION ON TEST SET
-    # ==========================
-    print("\n" + "="*60)
-    print("Final Evaluation on Test Set (2024)")
-    print("="*60)
+    print(f"\nBest model saved from epoch {best_epoch} with Val macro-F1: {best_val_f1:.4f}")
 
     model.load_state_dict(torch.load(MODEL_OUT))
     model.eval()
-
     with torch.no_grad():
         test_x = torch.tensor(X_test, dtype=torch.float32).to(DEVICE)
         test_m = torch.tensor(masks_test, dtype=torch.bool).to(DEVICE)
-        y_pred = model(test_x, mask=test_m).squeeze().cpu().numpy()
+        y_pred_delta = model(test_x, mask=test_m).squeeze().cpu().numpy()
 
-    test_mae = mean_absolute_error(y_test, y_pred)
+    # Reconstruct absolute grades
+    y_pred = last_grades_test + y_pred_delta
+
+    test_mae  = mean_absolute_error(y_raw_test, y_pred)
+    residuals = y_raw_test - y_pred
     print(f"\nTest Set MAE (2024): {test_mae:.4f}")
-
-    # Additional metrics
-    residuals = y_test - y_pred
     print(f"Mean Residual: {residuals.mean():.4f}")
-    print(f"Std Residual: {residuals.std():.4f}")
-    print(f"Max Overestimate: {residuals.min():.4f}")
-    print(f"Max Underestimate: {residuals.max():.4f}")
+    print(f"Std Residual:  {residuals.std():.4f}")
+    print(f"Pred range: {y_pred.min():.1f} – {y_pred.max():.1f}")
 
-    # Performance by grade range
     print("\nPerformance by Grade Range:")
     for threshold in [60, 70, 80]:
-        mask = y_test >= threshold
-        if mask.sum() > 0:
-            mae_subset = mean_absolute_error(y_test[mask], y_pred[mask])
-            print(f"  Grade ≥{threshold}: MAE = {mae_subset:.4f} (n={mask.sum()})")
+        mask_t = y_raw_test >= threshold
+        if mask_t.sum() > 0:
+            print(f"  Grade ≥{threshold}: MAE = {mean_absolute_error(y_raw_test[mask_t], y_pred[mask_t]):.4f} (n={mask_t.sum()})")
 
-    print(f"\nModel training complete. Best model saved to {MODEL_OUT}")
+    print(f"\nModel training complete. Saved to {MODEL_OUT}")

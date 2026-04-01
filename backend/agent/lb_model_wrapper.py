@@ -73,14 +73,20 @@ class LBModelInference:
         padded_x = np.vstack([pad, history_vals])
         mask = [True] * (self.max_seq_len - actual_len) + [False] * actual_len
 
+        # Last known grade for delta reconstruction
+        last_grade = df_history.iloc[-1]['grades_defense']
+
         with torch.no_grad():
             x_tensor = torch.tensor(padded_x, dtype=torch.float32).unsqueeze(0)
             m_tensor = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
-            final_grade = self.model(x_tensor, mask=m_tensor).item()
+            predicted_delta = self.model(x_tensor, mask=m_tensor).item()
+
+        # Reconstruct absolute grade: last_grade + predicted_delta
+        final_grade = last_grade + predicted_delta
 
         # AGE-AWARE DECAY (Post-Processing)
         age_adjustment = 0.0
-        if 'age' in df_history.columns:
+        if apply_calibration and 'age' in df_history.columns:
             current_age = df_history.iloc[-1]['age']
             if pd.notna(current_age):
                 age_adjustment = self.get_age_decay_factor(current_age)
@@ -94,7 +100,7 @@ class LBModelInference:
 
         return tier, {
             "predicted_grade": round(final_grade, 2),
-            "transformer_grade": round(final_grade + age_adjustment, 2),
+            "transformer_grade": round(last_grade + predicted_delta, 2),
             "age_adjustment": round(age_adjustment, 2),
             "volatility_index": round(vol_score, 3),
             "confidence_interval": conf_interval
