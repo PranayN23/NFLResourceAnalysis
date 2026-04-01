@@ -1,6 +1,10 @@
 # Exclude the venv directory
 venv/
 
+# Environment variables (API keys — never commit)
+.env
+.env.*
+
 .DS_Store
 .idea/
 frontend/node_modules/
