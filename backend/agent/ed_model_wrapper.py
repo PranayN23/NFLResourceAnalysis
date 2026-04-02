@@ -1,5 +1,6 @@
 import os
 import sys
+import xgboost  # must import before torch to avoid OpenMP conflict on macOS
 import torch
 import pandas as pd
 import numpy as np
@@ -98,6 +99,9 @@ class EDModelInference:
         self.model.load_state_dict(
             torch.load(transformer_path, map_location=self.device, weights_only=True)
         )
+        # Disable nested tensor optimization (hangs on PyTorch 2.6+ with padding masks)
+        self.model.transformer_encoder.enable_nested_tensor = False
+        self.model.transformer_encoder.use_nested_tensor = False
         self.model.eval()
 
         # Load scaler (required for Transformer inference)
