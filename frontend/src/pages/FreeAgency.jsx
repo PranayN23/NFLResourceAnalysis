@@ -4,18 +4,18 @@ import './FreeAgency.css';
 const ED_API = 'http://127.0.0.1:8002';
 
 const POSITIONS = [
-  { label: 'QB',   name: 'Quarterback',        available: false },
-  { label: 'HB',   name: 'Running Back',        available: false },
-  { label: 'WR',   name: 'Wide Receiver',       available: false },
-  { label: 'TE',   name: 'Tight End',           available: false },
-  { label: 'T',    name: 'Tackle',              available: false },
-  { label: 'G',    name: 'Guard',               available: false },
-  { label: 'C',    name: 'Center',              available: false },
-  { label: 'ED',   name: 'Edge Defender',       available: true  },
-  { label: 'DI',   name: 'Defensive Interior',  available: false },
-  { label: 'LB',   name: 'Linebacker',          available: false },
-  { label: 'CB',   name: 'Cornerback',          available: false },
-  { label: 'S',    name: 'Safety',              available: false },
+  { label: 'QB',  name: 'Quarterback',       available: false },
+  { label: 'HB',  name: 'Running Back',       available: false },
+  { label: 'WR',  name: 'Wide Receiver',      available: false },
+  { label: 'TE',  name: 'Tight End',          available: false },
+  { label: 'T',   name: 'Tackle',             available: false },
+  { label: 'G',   name: 'Guard',              available: false },
+  { label: 'C',   name: 'Center',             available: false },
+  { label: 'ED',  name: 'Edge Defender',      available: true  },
+  { label: 'DI',  name: 'Defensive Interior', available: false },
+  { label: 'LB',  name: 'Linebacker',         available: false },
+  { label: 'CB',  name: 'Cornerback',         available: false },
+  { label: 'S',   name: 'Safety',             available: false },
 ];
 
 /* ─── Position Picker ─── */
@@ -44,18 +44,64 @@ function PositionPicker({ onSelect }) {
   );
 }
 
+/* ─── Year Breakdown Table ─── */
+function YearBreakdown({ rows, salaryAsk }) {
+  return (
+    <div className="fa-breakdown">
+      <p className="fa-breakdown-title">Year-by-Year Projection</p>
+      <table className="fa-breakdown-table">
+        <thead>
+          <tr>
+            <th>Yr</th>
+            <th>Age</th>
+            <th>Grade</th>
+            <th>Mkt Value</th>
+            <th>Disc. Value</th>
+            <th>AAV Ask</th>
+            <th>Δ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => {
+            const delta = r.market_value - salaryAsk;
+            return (
+              <tr key={r.year}>
+                <td>{r.year}</td>
+                <td>{r.age}</td>
+                <td>{r.projected_grade}</td>
+                <td>${r.market_value}M</td>
+                <td>${r.discounted_value}M</td>
+                <td>${salaryAsk}M</td>
+                <td className={delta >= 0 ? 'fa-pos-delta' : 'fa-neg-delta'}>
+                  {delta >= 0 ? '+' : ''}{delta.toFixed(2)}M
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <p className="fa-breakdown-note">
+        Grade rises for developing players (≤26), peaks at 27–29, then declines.
+        Disc. Value applies 8%/yr discount for roster uncertainty &amp; cap risk.
+        Δ = raw market value minus salary ask per year.
+      </p>
+    </div>
+  );
+}
+
 /* ─── ED Evaluator ─── */
 function EDEvaluator({ onBack }) {
   const [players, setPlayers] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [salaryAsk, setSalaryAsk] = useState('');
+  const [contractYears, setContractYears] = useState(1);
   const [loading, setLoading] = useState(false);
   const [fetchingPlayers, setFetchingPlayers] = useState(true);
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
       content:
-        'Welcome to the Edge Defender Free Agency Evaluator. Select a player and enter a contract value (AAV in $M), then click Analyze to get a SIGN / PASS recommendation.',
+        'Welcome to the Edge Defender Free Agency Evaluator. Select a player, set the contract AAV and length, then click Analyze to get a SIGN / PASS recommendation with a year-by-year projection.',
     },
   ]);
   const [error, setError] = useState('');
@@ -68,7 +114,9 @@ function EDEvaluator({ onBack }) {
         setPlayers(data.players || []);
         setSelectedPlayer(data.players?.[0] || '');
       })
-      .catch(() => setError('Could not load player list. Make sure the ED API is running on port 8002.'))
+      .catch(() =>
+        setError('Could not load player list. Make sure the ED API is running on port 8002.')
+      )
       .finally(() => setFetchingPlayers(false));
   }, []);
 
@@ -76,27 +124,38 @@ function EDEvaluator({ onBack }) {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const buildDetailLines = (result, ask) => {
+  const buildStructured = (result, ask, years) => {
     const { decision, reasoning, data } = result;
-    const { predicted_tier, valuation_estimate, confidence } = data;
+    const {
+      predicted_tier, current_age, effective_fair_aav,
+      total_fair_value, total_ask, confidence, year_breakdown,
+    } = data;
     const { predicted_grade, transformer_grade, xgb_grade, age_adjustment } = confidence || {};
 
-    const lines = [
-      { label: 'Decision',          value: decision, highlight: decision === 'SIGN' ? 'sign' : 'pass' },
-      { label: 'Projected Tier',    value: predicted_tier },
-      { label: 'Predicted Grade',   value: predicted_grade != null ? `${Number(predicted_grade).toFixed(1)} / 100` : 'N/A' },
-      { label: 'Fair Market Value', value: `$${valuation_estimate}M / yr` },
-      { label: 'Salary Ask',        value: `$${ask}M / yr` },
+    const stats = [
+      { label: 'Projected Tier',      value: predicted_tier },
+      { label: 'Current Age',         value: current_age },
+      { label: 'Predicted Grade',     value: predicted_grade != null ? `${Number(predicted_grade).toFixed(1)} / 100` : 'N/A' },
+      { label: 'Contract',            value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
+      { label: 'Effective Fair AAV',  value: `$${effective_fair_aav}M / yr` },
+      { label: 'Total Fair Value',    value: `$${total_fair_value}M` },
     ];
 
     if (transformer_grade != null)
-      lines.push({ label: 'Transformer Grade', value: Number(transformer_grade).toFixed(1) });
+      stats.push({ label: 'Transformer Grade', value: Number(transformer_grade).toFixed(1) });
     if (xgb_grade != null)
-      lines.push({ label: 'XGBoost Grade', value: Number(xgb_grade).toFixed(1) });
+      stats.push({ label: 'XGBoost Grade', value: Number(xgb_grade).toFixed(1) });
     if (age_adjustment != null && age_adjustment !== 0)
-      lines.push({ label: 'Age Adjustment', value: `-${Number(age_adjustment).toFixed(1)} pts` });
+      stats.push({ label: 'Age Penalty (applied)', value: `-${Number(age_adjustment).toFixed(1)} pts` });
 
-    return { lines, reasoning };
+    return {
+      decision,
+      highlight: decision === 'SIGN' ? 'sign' : 'pass',
+      stats,
+      reasoning,
+      year_breakdown,
+      salaryAsk: ask,
+    };
   };
 
   const handleAnalyze = async () => {
@@ -110,7 +169,10 @@ function EDEvaluator({ onBack }) {
 
     setMessages((prev) => [
       ...prev,
-      { role: 'user', content: `Evaluate ${selectedPlayer} at $${ask}M/yr AAV.` },
+      {
+        role: 'user',
+        content: `Evaluate ${selectedPlayer} — $${ask}M/yr × ${contractYears} yr contract.`,
+      },
     ]);
     setLoading(true);
 
@@ -118,7 +180,11 @@ function EDEvaluator({ onBack }) {
       const resp = await fetch(`${ED_API}/evaluate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ player_name: selectedPlayer, salary_ask: ask }),
+        body: JSON.stringify({
+          player_name:    selectedPlayer,
+          salary_ask:     ask,
+          contract_years: contractYears,
+        }),
       });
 
       if (!resp.ok) {
@@ -127,11 +193,13 @@ function EDEvaluator({ onBack }) {
       }
 
       const result = await resp.json();
-      const { lines, reasoning } = buildDetailLines(result, ask);
-
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: null, structured: { lines, reasoning } },
+        {
+          role: 'assistant',
+          content: null,
+          structured: buildStructured(result, ask, contractYears),
+        },
       ]);
     } catch (e) {
       setMessages((prev) => [
@@ -145,7 +213,7 @@ function EDEvaluator({ onBack }) {
 
   return (
     <div className="fa-page">
-      {/* Left panel */}
+      {/* ── Left panel ── */}
       <div className="fa-panel">
         <button className="fa-back-btn" onClick={onBack}>← Change Position</button>
         <h2 className="fa-panel-title">Edge Defender Scout</h2>
@@ -185,6 +253,30 @@ function EDEvaluator({ onBack }) {
           </div>
         </div>
 
+        <div className="fa-field">
+          <label className="fa-label">Contract Length — {contractYears} yr</label>
+          <input
+            type="range"
+            min="1"
+            max="7"
+            step="1"
+            className="fa-slider"
+            value={contractYears}
+            onChange={(e) => setContractYears(Number(e.target.value))}
+          />
+          <div className="fa-slider-ticks">
+            {[1,2,3,4,5,6,7].map((n) => (
+              <span
+                key={n}
+                className={n === contractYears ? 'fa-tick fa-tick--active' : 'fa-tick'}
+                onClick={() => setContractYears(n)}
+              >
+                {n}
+              </span>
+            ))}
+          </div>
+        </div>
+
         {error && <p className="fa-error">{error}</p>}
 
         <button
@@ -196,15 +288,16 @@ function EDEvaluator({ onBack }) {
         </button>
 
         <div className="fa-legend">
-          <p className="fa-legend-title">Tier Fair Values</p>
-          <div className="fa-legend-row"><span className="tier-badge elite">Elite</span><span>$28M / yr</span></div>
-          <div className="fa-legend-row"><span className="tier-badge starter">Starter</span><span>$16M / yr</span></div>
-          <div className="fa-legend-row"><span className="tier-badge rotation">Rotation</span><span>$6M / yr</span></div>
-          <div className="fa-legend-row"><span className="tier-badge reserve">Reserve</span><span>$1.5M / yr</span></div>
+          <p className="fa-legend-title">Tier Value Ranges</p>
+          <div className="fa-legend-row"><span className="tier-badge elite">Elite</span><span>$22–35M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge starter">Starter</span><span>$7.5–22M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge rotation">Rotation</span><span>$2.5–7.5M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge reserve">Reserve</span><span>&lt;$2.5M</span></div>
+          <p className="fa-legend-note">Each player's value is grade-specific.<br/>≤26: grade rises · 27-29: peak · 30+: declines.<br/>Future years discounted at 8%/yr.</p>
         </div>
       </div>
 
-      {/* Right chat panel */}
+      {/* ── Right chat panel ── */}
       <div className="fa-chat">
         <div className="fa-chat-header">GM Decision Feed — Edge Defender</div>
         <div className="fa-chat-body">
@@ -216,17 +309,30 @@ function EDEvaluator({ onBack }) {
                 <div className="fa-msg-text">{msg.content}</div>
               ) : (
                 <div className="fa-msg-card">
-                  <div className={`fa-decision-badge ${msg.structured.lines[0].highlight}`}>
-                    {msg.structured.lines[0].value}
+                  {/* Decision badge */}
+                  <div className={`fa-decision-badge ${msg.structured.highlight}`}>
+                    {msg.structured.decision}
                   </div>
+
+                  {/* Stats grid */}
                   <div className="fa-stats-grid">
-                    {msg.structured.lines.slice(1).map((line, j) => (
+                    {msg.structured.stats.map((s, j) => (
                       <div key={j} className="fa-stat-row">
-                        <span className="fa-stat-label">{line.label}</span>
-                        <span className="fa-stat-value">{line.value}</span>
+                        <span className="fa-stat-label">{s.label}</span>
+                        <span className="fa-stat-value">{s.value}</span>
                       </div>
                     ))}
                   </div>
+
+                  {/* Year breakdown */}
+                  {msg.structured.year_breakdown?.length > 0 && (
+                    <YearBreakdown
+                      rows={msg.structured.year_breakdown}
+                      salaryAsk={msg.structured.salaryAsk}
+                    />
+                  )}
+
+                  {/* Reasoning */}
                   <div className="fa-reasoning">
                     <p className="fa-reasoning-title">Reasoning</p>
                     <p className="fa-reasoning-text">{msg.structured.reasoning}</p>
@@ -258,7 +364,6 @@ function FreeAgency() {
     return <PositionPicker onSelect={setSelectedPosition} />;
   }
 
-  // Only ED is available right now
   return <EDEvaluator onBack={() => setSelectedPosition(null)} />;
 }
 
