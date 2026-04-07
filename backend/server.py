@@ -4,11 +4,82 @@ from flask_cors import CORS
 from pymongo import MongoClient
 import os
 import re
+import sys
+import json
 import pandas as pd
 from bson import ObjectId
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(__file__), "../.env"))
+
+# ── CB/LB GM Agent imports ─────────────────────────────────────────────────────
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+try:
+    from google import genai as _genai
+    from google.genai import types as _gtypes
+    from backend.agent.cb_agent_graph import cb_gm_agent
+    from backend.agent.lb_agent_graph import lb_gm_agent
+    from backend.agent.cb_model_wrapper import CBModelInference
+    from backend.agent.lb_model_wrapper import LBModelInference
+
+    _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    _df_cb = pd.read_csv(os.path.join(_BASE, "backend/ML/CB.csv"))
+    _df_lb = pd.read_csv(os.path.join(_BASE, "backend/ML/LB.csv"))
+    for _col in ['grades_defense','grades_coverage_defense','grades_tackle','snap_counts_defense',
+                 'qb_rating_against','pass_break_ups','interceptions','targets',
+                 'snap_counts_corner','snap_counts_coverage','snap_counts_slot','Cap_Space','age']:
+        if _col in _df_cb.columns:
+            _df_cb[_col] = pd.to_numeric(_df_cb[_col], errors='coerce')
+    _df_cb['adjusted_value'] = pd.to_numeric(_df_cb['adjusted_value'], errors='coerce').fillna(0)
+    for _col in ['grades_defense','grades_coverage_defense','grades_pass_rush_defense',
+                 'grades_run_defense','grades_tackle','missed_tackle_rate','tackles','sacks',
+                 'stops','total_pressures','snap_counts_defense','Cap_Space','age']:
+        if _col in _df_lb.columns:
+            _df_lb[_col] = pd.to_numeric(_df_lb[_col], errors='coerce')
+    _df_lb['adjusted_value'] = pd.to_numeric(_df_lb['adjusted_value'], errors='coerce').fillna(0)
+
+    _cb_engine = CBModelInference(
+        os.path.join(_BASE, "backend/ML/CB_Transformers/best_cb_classifier.pth"),
+        scaler_path=os.path.join(_BASE, "backend/ML/CB_Transformers/cb_scaler.joblib")
+    )
+    _lb_engine = LBModelInference(
+        os.path.join(_BASE, "backend/ML/LB_Transformers/best_lb_classifier.pth"),
+        scaler_path=os.path.join(_BASE, "backend/ML/LB_Transformers/lb_scaler.joblib")
+    )
+
+    _gemini = _genai.Client(api_key=os.environ.get("GEMINI_API_KEY", ""))
+    _GEMINI_MODEL = "gemini-2.5-flash"
+
+    # Per-session chat histories keyed by session_id
+    _chat_histories = {}
+
+    GM_SYSTEM = """You are a sharp NFL General Manager with deep analytical knowledge.
+You have access to Time2Vec Transformer model predictions for cornerbacks and linebackers.
+Speak confidently, use football language, and be direct. Keep responses concise (3-6 sentences).
+When given player data, interpret it meaningfully — don't just repeat numbers back.
+Reference tier names (Elite, Starter, Reserve) and cap context naturally.
+If no model data is available, answer from general NFL knowledge."""
+
+    PARSE_PROMPT = """You are a parser for an NFL GM assistant. Extract structured intent from the user's message.
+Return ONLY valid JSON (no markdown fences) with these fields:
+{{"intent": "evaluate_player" | "compare_players" | "list_best" | "general_question", "players": ["Player Name"], "salary_ask": 0.0, "position": "CB" | "LB" | "both" | null}}
+Rules:
+- intent "evaluate_player": user asks about 1 player
+- intent "compare_players": 2+ players
+- intent "list_best": no specific player, asks for best
+- intent "general_question": general question
+- salary_ask: float in millions if mentioned, else 0.0
+- Proper-cased player names
+User message: {msg}"""
+
+    ML_AGENTS_LOADED = True
+    print("✅ CB/LB ML agents loaded")
+except Exception as _e:
+    ML_AGENTS_LOADED = False
+    print(f"⚠️  CB/LB ML agents not loaded: {_e}")
 
 # Map ML model feature columns to the corresponding Mongo fields
 ml_to_mongo_map = {
@@ -940,6 +1011,157 @@ def get_player_cap_space():
         return jsonify({"error": "Player not found or Cap_Space unavailable"}), 404
 
     return jsonify(result_list), 200
+
+
+# ── CB/LB GM Agent Routes ──────────────────────────────────────────────────────
+
+def _run_agent(player_name, salary_ask, position):
+    if position == "CB":
+        history = _df_cb[_df_cb['player'].str.lower() == player_name.lower()]
+        history = history[history['snap_counts_defense'] >= 200].copy()
+    else:
+        history = _df_lb[_df_lb['player'].str.lower() == player_name.lower()]
+        history = history[history['snap_counts_defense'] >= 200].copy()
+    if history.empty:
+        return None
+    state = {
+        "player_name": player_name,
+        "salary_ask": salary_ask if salary_ask > 0 else 10.0,
+        "player_history": history,
+        "predicted_tier": "", "confidence": {}, "valuation": 0.0,
+        "decision": "", "reasoning": ""
+    }
+    result = cb_gm_agent.invoke(state) if position == "CB" else lb_gm_agent.invoke(state)
+    conf = result["confidence"]
+    ci = conf.get("confidence_interval", (0.0, 0.0))
+    return {
+        "player": player_name, "position": position,
+        "predicted_tier": result["predicted_tier"],
+        "predicted_grade": round(conf.get("predicted_grade", 0.0), 1),
+        "age_adjustment": round(conf.get("age_adjustment", 0.0), 1),
+        "volatility_index": round(conf.get("volatility_index", 0.0), 2),
+        "conf_low": round(ci[0], 1), "conf_high": round(ci[1], 1),
+        "fair_value": result["valuation"],
+        "decision": result["decision"],
+        "reasoning": result["reasoning"],
+    }
+
+
+def _detect_position(name):
+    lo = name.lower()
+    in_cb = lo in set(_df_cb['player'].str.lower().unique())
+    in_lb = lo in set(_df_lb['player'].str.lower().unique())
+    if in_cb and not in_lb: return "CB"
+    if in_lb and not in_cb: return "LB"
+    if in_cb: return "CB"
+    return None
+
+
+@app.route("/evaluate-player", methods=["POST"])
+def evaluate_player():
+    if not ML_AGENTS_LOADED:
+        return jsonify({"error": "ML agents not available"}), 503
+    data = request.json or {}
+    name = data.get("player_name", "").strip()
+    salary = float(data.get("salary_ask", 0.0))
+    position = data.get("position") or _detect_position(name)
+    if not name:
+        return jsonify({"error": "player_name required"}), 400
+    if not position:
+        return jsonify({"error": f"Player '{name}' not found in CB or LB database"}), 404
+    result = _run_agent(name, salary, position)
+    if result is None:
+        return jsonify({"error": f"No qualifying seasons found for '{name}'"}), 404
+    return jsonify(result), 200
+
+
+@app.route("/gm-chat", methods=["POST"])
+def gm_chat():
+    if not ML_AGENTS_LOADED:
+        return jsonify({"error": "ML agents not available"}), 503
+    data = request.json or {}
+    user_msg = data.get("message", "").strip()
+    session_id = data.get("session_id", "default")
+    position_filter = data.get("position")  # "CB", "LB", or None
+    if not user_msg:
+        return jsonify({"error": "message required"}), 400
+
+    # Parse intent
+    try:
+        parse_resp = _gemini.models.generate_content(
+            model=_GEMINI_MODEL,
+            contents=PARSE_PROMPT.format(msg=user_msg)
+        )
+        raw = parse_resp.text.strip()
+        if raw.startswith("```"):
+            raw = raw.split("```")[1]
+            if raw.startswith("json"): raw = raw[4:]
+        parsed = json.loads(raw.strip())
+    except Exception:
+        parsed = {"intent": "general_question", "players": [], "salary_ask": 0.0, "position": None}
+
+    # Constrain position to page context if provided
+    if position_filter and not parsed.get("position"):
+        parsed["position"] = position_filter
+
+    agent_results = []
+    if parsed["intent"] in ("evaluate_player", "compare_players"):
+        for pname in parsed.get("players", []):
+            pos = _detect_position(pname) or parsed.get("position")
+            if pos:
+                r = _run_agent(pname, parsed.get("salary_ask", 0.0), pos)
+                if r: agent_results.append(r)
+    elif parsed["intent"] == "list_best":
+        pos = parsed.get("position") or position_filter
+        if pos in ("CB", "LB"):
+            df_pos = _df_cb if pos == "CB" else _df_lb
+            top = df_pos[df_pos['Year'] == 2024].sort_values('grades_defense', ascending=False).head(5)
+            for _, row in top.iterrows():
+                r = _run_agent(row['player'], 0.0, pos)
+                if r: agent_results.append(r)
+
+    # Build context string
+    context = ""
+    if agent_results:
+        context = "\n\n[MODEL DATA]\n"
+        for d in agent_results:
+            context += (f"{d['player']} ({d['position']}): grade {d['predicted_grade']} "
+                       f"[{d['conf_low']}–{d['conf_high']}], tier {d['predicted_tier']}, "
+                       f"fair value ${d['fair_value']}M, vol {d['volatility_index']}, "
+                       f"age penalty {d['age_adjustment']}pts")
+            context += f", asking ${parsed.get('salary_ask',0)}M → {d['decision']}. {d['reasoning']}\n" \
+                if parsed.get('salary_ask', 0) > 0 else "\n"
+
+    # Build multi-turn history
+    history = _chat_histories.get(session_id, [])
+    contents = []
+    for turn in history:
+        contents.append(_gtypes.Content(role=turn["role"], parts=[_gtypes.Part(text=turn["content"])]))
+    contents.append(_gtypes.Content(role="user", parts=[_gtypes.Part(text=user_msg + context)]))
+
+    resp = _gemini.models.generate_content(
+        model=_GEMINI_MODEL, contents=contents,
+        config=_gtypes.GenerateContentConfig(system_instruction=GM_SYSTEM)
+    )
+    reply = resp.text.strip()
+
+    # Update history
+    history.append({"role": "user", "content": user_msg})
+    history.append({"role": "model", "content": reply})
+    _chat_histories[session_id] = history[-20:]
+
+    return jsonify({
+        "reply": reply,
+        "agent_data": agent_results,
+        "intent": parsed.get("intent")
+    }), 200
+
+
+@app.route("/gm-chat/reset", methods=["POST"])
+def reset_chat():
+    session_id = (request.json or {}).get("session_id", "default")
+    _chat_histories.pop(session_id, None)
+    return jsonify({"status": "reset"}), 200
 
 
 if __name__ == "__main__":
