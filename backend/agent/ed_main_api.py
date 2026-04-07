@@ -10,6 +10,7 @@ Usage:
 """
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from backend.agent.ed_agent_graph import ed_gm_agent, ED_CSV_PATH
 import pandas as pd
@@ -17,6 +18,13 @@ import uvicorn
 import os
 
 app = FastAPI(title="NFL ED GM Agent API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Load player data once at startup
 if os.path.exists(ED_CSV_PATH):
@@ -31,6 +39,15 @@ if os.path.exists(ED_CSV_PATH):
 else:
     print(f"WARNING: ED player CSV not found at {ED_CSV_PATH}. Agent will fail to retrieve history.")
     df_players = pd.DataFrame()
+
+
+@app.get("/ed-players")
+async def get_ed_players():
+    """Return sorted list of all ED player names available for evaluation."""
+    if df_players.empty:
+        raise HTTPException(status_code=503, detail="Player database not loaded.")
+    names = sorted(df_players["player"].dropna().unique().tolist())
+    return {"players": names}
 
 
 class EvaluationRequest(BaseModel):
