@@ -29,11 +29,20 @@ ed_engine = EDModelInference(ED_TRANSFORMER, scaler_path=ED_SCALER, xgb_path=ED_
 # ─────────────────────────────────────────────
 # Grade → Market Value curve
 #
-# Continuous interpolation from PFF grade to AAV ($M).
-# Calibrated to the 2022-2025 NFL edge rusher market.
+# Calibrated to the 2026 NFL edge rusher market (OTC data).
+# Reference contracts:
+#   Parsons $46.5M, Hutchinson $45M, Watt $41M,
+#   Garrett $40M  → grades ~90-95 map to $40-47M
+#   Crosby $35.5M, Bosa $34M       → grades ~85-88 map to $32-36M
+#   Burns $28.2M, Oweh $24M        → grades ~80-84 map to $24-30M
+#   Highsmith $17M, Greenard $19M  → grades ~73-77 map to $16-21M
+#   Cooper $13.5M, Landry $14.5M   → grades ~68-72 map to $12-16M
+#   Ossai $11.5M, Armstrong $11M   → grades ~63-67 map to $9-13M
+#   Walker $9.3M, Enagbare $9M     → grades ~60-63 map to $7-10M
+#   Depth / practice squad         → grades <58 map to $1-4M
 # ─────────────────────────────────────────────
-_GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   90,   95,   100]
-_VALUE_ANCHORS = [0.75, 1.50, 2.50, 4.50, 7.50, 12.0, 17.0, 22.5, 28.0, 32.0, 35.0]
+_GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
+_VALUE_ANCHORS = [0.75, 2.00, 4.00, 8.50, 13.5, 19.0, 26.0, 33.0, 37.0, 42.0, 46.0, 50.0]
 
 
 def grade_to_market_value(grade: float) -> float:
@@ -43,88 +52,125 @@ def grade_to_market_value(grade: float) -> float:
 
 
 # ─────────────────────────────────────────────
-# Age-based annual grade delta (growth + decline)
+# Age-based annual grade delta — derived from ED.csv (n=1,433 transitions)
 #
-# Edge defenders develop through their mid-20s and peak ~27-29.
-# Positive = improvement, negative = decline.
+# Empirical median year-over-year grade change by age:
+#   Age 21 → +3.4   Age 22 → +3.5   Age 23 → +2.9
+#   Age 24 → +1.2   Age 25 → -2.1   Age 26 → -0.8
+#   Age 27 → -2.7   Age 28 → -0.1   Age 29 → -0.9
+#   Age 30 → -4.1   Age 31 → -0.5   Age 32 → -8.8
+#   Age 33 → -1.2   Age 34+ → -5.0  (small sample, use conservative)
 #
-#   ≤ 22  → +2.5 pts/yr  (rookie development)
-#   23-24 → +1.5 pts/yr  (sophomore breakout)
-#   25-26 → +0.75 pts/yr (approaching prime)
-#   27-29 →  0.0 pts/yr  (prime — stable peak)
-#   30-31 → -1.0 pts/yr  (early decline)
-#   32-33 → -1.5 pts/yr  (post-prime)
-#   34+   → -2.5 pts/yr  (steep decline)
+# Age 36+ has <5 observations; capped at -5.0/yr.
 # ─────────────────────────────────────────────
+_AGE_DELTAS = {
+    20: +3.0,
+    21: +3.4,
+    22: +3.5,
+    23: +2.9,
+    24: +1.2,
+    25: -2.1,
+    26: -0.8,
+    27: -2.7,
+    28: -0.1,
+    29: -0.9,
+    30: -4.1,
+    31: -0.5,
+    32: -8.8,
+    33: -1.2,
+    34: -5.0,
+    35: -5.0,
+}
+
+
 def _annual_grade_delta(age: int) -> float:
-    if age <= 22:
-        return +2.5
-    elif age <= 24:
-        return +1.5
-    elif age <= 26:
-        return +0.75
-    elif age <= 29:
-        return  0.0
-    elif age <= 31:
-        return -1.0
-    elif age <= 33:
-        return -1.5
-    else:
-        return -2.5
+    """Return empirically-derived annual grade delta for a given age."""
+    if age <= 20:
+        return +3.0
+    if age >= 36:
+        return -5.0
+    return _AGE_DELTAS.get(age, -3.0)
 
 
 # ─────────────────────────────────────────────
 # Contract-adjusted valuation
 #
-# Projects grade forward year-by-year, converts each year's
-# grade to a market value, then applies a time-discount factor
-# (8% / yr) to reflect roster uncertainty and cap risk.
-# Returns the effective fair AAV and a per-year breakdown.
+# Two adjustments are applied per contract year:
+#
+# 1. CAP INFLATION — the NFL salary cap grows ~6.5%/yr.
+#    A player's market value grows proportionally with the cap,
+#    so their nominal worth in year N is:
+#        base_value × (1 + CAP_GROWTH) ^ (N-1)
+#    Conversely, a fixed AAV becomes a smaller % of the cap each
+#    year, so the real cost of the ask shrinks:
+#        cap_adj_ask = AAV / (1 + CAP_GROWTH) ^ (N-1)
+#
+# 2. TIME DISCOUNT — 8%/yr for roster uncertainty and cap-hit risk.
+#    Applied to the cap-inflated player value to get its PV.
+#    Net effective rate ≈ 8% - 6.5% = ~1.5%/yr, meaning future
+#    years are barely discounted once cap growth is factored in.
+#
+# Decision comparison:
+#   fair_aav (PV of cap-adjusted player value)
+#   vs effective_cap_burden (PV of cap-adjusted ask)
 # ─────────────────────────────────────────────
-DISCOUNT_RATE = 0.08  # 8% annual discount
+DISCOUNT_RATE   = 0.08   # 8%/yr — roster uncertainty & cap risk
+CAP_GROWTH_RATE = 0.065  # 6.5%/yr — historical NFL cap growth average
 
 
 def compute_contract_value(
     grade: float,
     current_age: int,
     contract_years: int,
-) -> tuple[float, float, List[dict]]:
+    salary_ask: float,
+) -> tuple[float, float, float, List[dict]]:
     """
     Returns:
-        fair_aav        – effective fair AAV accounting for decline & discounting ($M)
-        total_fair_val  – sum of undiscounted yearly market values ($M)
-        breakdown       – list of per-year dicts for display
+        fair_aav             – PV of cap-inflated player value / yr ($M)
+        effective_cap_burden – PV of cap-adjusted ask / yr ($M, decreases over time)
+        total_nominal_value  – sum of nominal (cap-inflated) player values ($M)
+        breakdown            – list of per-year dicts for display
     """
-    breakdown = []
-    total_discounted = 0.0
-    total_fair_val   = 0.0
-    current_grade    = float(grade)
+    breakdown               = []
+    total_disc_value        = 0.0
+    total_disc_ask          = 0.0
+    total_nominal_value     = 0.0
+    current_grade           = float(grade)
 
     for yr in range(1, contract_years + 1):
         age_this_year = current_age + yr - 1
 
-        # Apply age-curve delta from year 2 onward (year 1 = current model projection)
+        # Age-curve delta applied from year 2 onward
         if yr > 1:
             current_grade = max(45.0, min(99.0, current_grade + _annual_grade_delta(age_this_year - 1)))
 
-        year_value  = grade_to_market_value(current_grade)
-        discount    = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
-        disc_value  = round(year_value * discount, 2)
+        cap_factor    = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
+        time_discount = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
 
-        total_fair_val   += year_value
-        total_discounted += disc_value
+        base_value    = grade_to_market_value(current_grade)   # today's cap dollars
+        nominal_value = base_value * cap_factor                 # inflated to future cap
+        disc_value    = nominal_value * time_discount           # present value of inflated value
+
+        cap_adj_ask   = salary_ask / cap_factor                 # ask in today's cap % terms
+        disc_ask      = cap_adj_ask * time_discount             # PV of cap-adjusted ask
+
+        total_nominal_value  += nominal_value
+        total_disc_value     += disc_value
+        total_disc_ask       += disc_ask
 
         breakdown.append({
             "year":             yr,
             "age":              age_this_year,
             "projected_grade":  round(current_grade, 1),
-            "market_value":     year_value,
-            "discounted_value": disc_value,
+            "market_value":     base_value,
+            "nominal_value":    round(nominal_value, 2),
+            "cap_adj_ask":      round(cap_adj_ask, 2),
+            "discounted_value": round(disc_value, 2),
         })
 
-    # Effective fair AAV = total discounted value / years
-    fair_aav = round(total_discounted / contract_years, 2)
-    return fair_aav, round(total_fair_val, 2), breakdown
+    fair_aav             = round(total_disc_value    / contract_years, 2)
+    effective_cap_burden = round(total_disc_ask      / contract_years, 2)
+    return fair_aav, effective_cap_burden, round(total_nominal_value, 2), breakdown
 
 
 # ─────────────────────────────────────────────
@@ -138,14 +184,15 @@ class EDAgentState(TypedDict):
     player_history:  pd.DataFrame   # raw historical rows from ED.csv
 
     # Outputs (populated by graph nodes)
-    predicted_tier:  str
-    confidence:      Dict[str, float]
-    current_age:     int
-    valuation:       float          # effective fair AAV (contract-adjusted)
-    total_fair_val:  float          # sum of undiscounted yearly values
-    year_breakdown:  List[dict]
-    decision:        str            # "SIGN" or "PASS"
-    reasoning:       str
+    predicted_tier:       str
+    confidence:           Dict[str, float]
+    current_age:          int
+    valuation:            float   # fair AAV — PV of cap-inflated player value
+    effective_cap_burden: float   # PV of cap-adjusted ask (real cost of contract)
+    total_nominal_value:  float   # sum of nominal (cap-inflated) yearly player values
+    year_breakdown:       List[dict]
+    decision:             str     # "SIGN" or "PASS"
+    reasoning:            str
 
 
 # ─────────────────────────────────────────────
@@ -185,19 +232,21 @@ def predict_performance(state: EDAgentState):
 # Node 2: Evaluate Value
 # ─────────────────────────────────────────────
 def evaluate_value(state: EDAgentState):
-    """Project value over the contract length, discounting future years."""
-    grade         = state["confidence"].get("predicted_grade", 55.0)
-    current_age   = state.get("current_age", 28)
+    """Project value over the contract length with cap inflation and time discounting."""
+    grade          = state["confidence"].get("predicted_grade", 55.0)
+    current_age    = state.get("current_age", 28)
     contract_years = state.get("contract_years", 1)
+    salary_ask     = state["salary_ask"]
 
-    fair_aav, total_fair_val, breakdown = compute_contract_value(
-        grade, current_age, contract_years
+    fair_aav, effective_cap_burden, total_nominal_value, breakdown = compute_contract_value(
+        grade, current_age, contract_years, salary_ask
     )
 
     return {
-        "valuation":      fair_aav,
-        "total_fair_val": total_fair_val,
-        "year_breakdown": breakdown,
+        "valuation":            fair_aav,
+        "effective_cap_burden": effective_cap_burden,
+        "total_nominal_value":  total_nominal_value,
+        "year_breakdown":       breakdown,
     }
 
 
@@ -205,20 +254,23 @@ def evaluate_value(state: EDAgentState):
 # Node 3: Make Decision
 # ─────────────────────────────────────────────
 def make_decision(state: EDAgentState):
-    """Return SIGN or PASS based on effective fair AAV vs. salary ask."""
-    ask    = state["salary_ask"]
-    val    = state["valuation"]          # effective fair AAV
-    tier   = state["predicted_tier"]
-    grade  = state["confidence"].get("predicted_grade", "N/A")
-    age    = state.get("current_age", "?")
-    years  = state.get("contract_years", 1)
-    total  = state.get("total_fair_val", val * years)
-    adj    = state["confidence"].get("age_adjustment", None)
+    """
+    SIGN if fair_aav (cap-inflated player value) >= effective_cap_burden (cap-adjusted ask).
+    Both figures are in present-value terms so they're directly comparable.
+    """
+    ask      = state["salary_ask"]
+    val      = state["valuation"]            # PV of cap-inflated player value
+    burden   = state["effective_cap_burden"] # PV of cap-adjusted ask
+    tier     = state["predicted_tier"]
+    grade    = state["confidence"].get("predicted_grade", "N/A")
+    age      = state.get("current_age", "?")
+    years    = state.get("contract_years", 1)
+    total_nv = state.get("total_nominal_value", 0.0)
+    adj      = state["confidence"].get("age_adjustment", None)
 
     adj_str   = f", age penalty applied: -{adj} pts" if adj else ""
     total_ask = round(ask * years, 2)
 
-    # Describe trajectory based on age
     if age <= 26:
         trajectory = "still developing and approaching his prime"
     elif age <= 29:
@@ -228,27 +280,37 @@ def make_decision(state: EDAgentState):
     else:
         trajectory = "in steep age-related decline"
 
-    if ask <= val:
+    cap_note = (
+        f"With the cap growing at ~{int(CAP_GROWTH_RATE*100)}%/yr, the fixed "
+        f"AAV of ${ask}M becomes progressively cheaper as a cap percentage — "
+        f"the cap-adjusted real cost averages ${burden}M/yr over the deal."
+    )
+
+    if val >= burden:
         decision = "SIGN"
-        surplus  = round(val - ask, 2)
+        surplus  = round(val - burden, 2)
         reason   = (
             f"{state['player_name']} (age {age}) projects as a {tier} edge defender "
             f"(predicted grade: {grade}{adj_str}). He is {trajectory}. "
-            f"Over a {years}-year contract, the year-by-year grade trajectory and "
-            f"a {int(DISCOUNT_RATE*100)}% annual time discount yield an effective fair AAV "
-            f"of ${val}M/yr (total undiscounted fair value: ${total}M vs. total ask: ${total_ask}M). "
-            f"At ${ask}M/yr this is a surplus of ${surplus}M/yr. Recommend signing."
+            f"Over a {years}-year contract his cap-inflation-adjusted fair value averages "
+            f"${val}M/yr vs. an effective cap burden of ${burden}M/yr — "
+            f"a surplus of ${surplus}M/yr in real cap terms. "
+            f"{cap_note} "
+            f"Total nominal player value over the deal: ${total_nv}M vs. total ask: ${total_ask}M. "
+            f"Recommend signing."
         )
     else:
         decision = "PASS"
-        overpay  = round(ask - val, 2)
+        overpay  = round(burden - val, 2)
         reason   = (
             f"{state['player_name']} (age {age}) projects as a {tier} edge defender "
             f"(predicted grade: {grade}{adj_str}). He is {trajectory}. "
-            f"Over a {years}-year contract, the year-by-year grade trajectory and "
-            f"a {int(DISCOUNT_RATE*100)}% annual time discount yield an effective fair AAV "
-            f"of ${val}M/yr (total undiscounted fair value: ${total}M vs. total ask: ${total_ask}M). "
-            f"At ${ask}M/yr this is an overpay of ${overpay}M/yr. Recommend passing."
+            f"Over a {years}-year contract his cap-inflation-adjusted fair value averages "
+            f"${val}M/yr vs. an effective cap burden of ${burden}M/yr — "
+            f"an overpay of ${overpay}M/yr even after accounting for cap growth. "
+            f"{cap_note} "
+            f"Total nominal player value over the deal: ${total_nv}M vs. total ask: ${total_ask}M. "
+            f"Recommend passing."
         )
 
     return {"decision": decision, "reasoning": reason}

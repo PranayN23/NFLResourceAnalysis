@@ -78,14 +78,15 @@ async def evaluate_player(req: EvaluationRequest):
         "contract_years": req.contract_years,
         "player_history": player_data,
         # Output fields — initialised to defaults
-        "predicted_tier": "",
-        "confidence":     {},
-        "current_age":    28,
-        "valuation":      0.0,
-        "total_fair_val": 0.0,
-        "year_breakdown": [],
-        "decision":       "",
-        "reasoning":      "",
+        "predicted_tier":       "",
+        "confidence":           {},
+        "current_age":          28,
+        "valuation":            0.0,
+        "effective_cap_burden": 0.0,
+        "total_nominal_value":  0.0,
+        "year_breakdown":       [],
+        "decision":             "",
+        "reasoning":            "",
     }
 
     final_state = ed_gm_agent.invoke(initial_state)
@@ -95,14 +96,15 @@ async def evaluate_player(req: EvaluationRequest):
         "decision":       final_state["decision"],
         "reasoning":      final_state["reasoning"],
         "data": {
-            "predicted_tier":    final_state["predicted_tier"],
-            "current_age":       final_state["current_age"],
-            "contract_years":    req.contract_years,
-            "effective_fair_aav": final_state["valuation"],
-            "total_fair_value":  final_state["total_fair_val"],
-            "total_ask":         round(req.salary_ask * req.contract_years, 2),
-            "confidence":        final_state["confidence"],
-            "year_breakdown":    final_state["year_breakdown"],
+            "predicted_tier":       final_state["predicted_tier"],
+            "current_age":          final_state["current_age"],
+            "contract_years":       req.contract_years,
+            "effective_fair_aav":   final_state["valuation"],
+            "effective_cap_burden": final_state["effective_cap_burden"],
+            "total_nominal_value":  final_state["total_nominal_value"],
+            "total_ask":            round(req.salary_ask * req.contract_years, 2),
+            "confidence":           final_state["confidence"],
+            "year_breakdown":       final_state["year_breakdown"],
         },
     }
 

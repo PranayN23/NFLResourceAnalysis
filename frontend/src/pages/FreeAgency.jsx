@@ -45,7 +45,7 @@ function PositionPicker({ onSelect }) {
 }
 
 /* ─── Year Breakdown Table ─── */
-function YearBreakdown({ rows, salaryAsk }) {
+function YearBreakdown({ rows }) {
   return (
     <div className="fa-breakdown">
       <p className="fa-breakdown-title">Year-by-Year Projection</p>
@@ -55,23 +55,21 @@ function YearBreakdown({ rows, salaryAsk }) {
             <th>Yr</th>
             <th>Age</th>
             <th>Grade</th>
-            <th>Mkt Value</th>
-            <th>Disc. Value</th>
-            <th>AAV Ask</th>
+            <th>Mkt Val</th>
+            <th>Cap-Adj Ask</th>
             <th>Δ</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => {
-            const delta = r.market_value - salaryAsk;
+            const delta = r.market_value - r.cap_adj_ask;
             return (
               <tr key={r.year}>
                 <td>{r.year}</td>
                 <td>{r.age}</td>
                 <td>{r.projected_grade}</td>
                 <td>${r.market_value}M</td>
-                <td>${r.discounted_value}M</td>
-                <td>${salaryAsk}M</td>
+                <td>${r.cap_adj_ask}M</td>
                 <td className={delta >= 0 ? 'fa-pos-delta' : 'fa-neg-delta'}>
                   {delta >= 0 ? '+' : ''}{delta.toFixed(2)}M
                 </td>
@@ -81,9 +79,9 @@ function YearBreakdown({ rows, salaryAsk }) {
         </tbody>
       </table>
       <p className="fa-breakdown-note">
-        Grade rises for developing players (≤26), peaks at 27–29, then declines.
-        Disc. Value applies 8%/yr discount for roster uncertainty &amp; cap risk.
-        Δ = raw market value minus salary ask per year.
+        Cap-Adj Ask = fixed AAV deflated by 6.5%/yr cap growth — shows the real cap burden shrinks each year.
+        Grade curve: rises for developing players (≤26), peaks at 27–29, then declines per empirical data.
+        Δ = player market value minus cap-adjusted ask.
       </p>
     </div>
   );
@@ -127,18 +125,19 @@ function EDEvaluator({ onBack }) {
   const buildStructured = (result, ask, years) => {
     const { decision, reasoning, data } = result;
     const {
-      predicted_tier, current_age, effective_fair_aav,
-      total_fair_value, total_ask, confidence, year_breakdown,
+      predicted_tier, current_age, effective_fair_aav, effective_cap_burden,
+      total_nominal_value, total_ask, confidence, year_breakdown,
     } = data;
     const { predicted_grade, transformer_grade, xgb_grade, age_adjustment } = confidence || {};
 
     const stats = [
-      { label: 'Projected Tier',      value: predicted_tier },
-      { label: 'Current Age',         value: current_age },
-      { label: 'Predicted Grade',     value: predicted_grade != null ? `${Number(predicted_grade).toFixed(1)} / 100` : 'N/A' },
-      { label: 'Contract',            value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
-      { label: 'Effective Fair AAV',  value: `$${effective_fair_aav}M / yr` },
-      { label: 'Total Fair Value',    value: `$${total_fair_value}M` },
+      { label: 'Projected Tier',        value: predicted_tier },
+      { label: 'Current Age',           value: current_age },
+      { label: 'Predicted Grade',       value: predicted_grade != null ? `${Number(predicted_grade).toFixed(1)} / 100` : 'N/A' },
+      { label: 'Contract',              value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
+      { label: 'Fair AAV (cap-adj PV)', value: `$${effective_fair_aav}M / yr` },
+      { label: 'Real Cap Burden (PV)',  value: `$${effective_cap_burden}M / yr` },
+      { label: 'Total Nominal Value',   value: `$${total_nominal_value}M` },
     ];
 
     if (transformer_grade != null)
@@ -154,7 +153,6 @@ function EDEvaluator({ onBack }) {
       stats,
       reasoning,
       year_breakdown,
-      salaryAsk: ask,
     };
   };
 
@@ -288,12 +286,12 @@ function EDEvaluator({ onBack }) {
         </button>
 
         <div className="fa-legend">
-          <p className="fa-legend-title">Tier Value Ranges</p>
-          <div className="fa-legend-row"><span className="tier-badge elite">Elite</span><span>$22–35M</span></div>
-          <div className="fa-legend-row"><span className="tier-badge starter">Starter</span><span>$7.5–22M</span></div>
-          <div className="fa-legend-row"><span className="tier-badge rotation">Rotation</span><span>$2.5–7.5M</span></div>
-          <div className="fa-legend-row"><span className="tier-badge reserve">Reserve</span><span>&lt;$2.5M</span></div>
-          <p className="fa-legend-note">Each player's value is grade-specific.<br/>≤26: grade rises · 27-29: peak · 30+: declines.<br/>Future years discounted at 8%/yr.</p>
+          <p className="fa-legend-title">2026 Market Ranges</p>
+          <div className="fa-legend-row"><span className="tier-badge elite">Elite</span><span>$33–50M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge starter">Starter</span><span>$13–33M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge rotation">Rotation</span><span>$4–13M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge reserve">Reserve</span><span>&lt;$4M</span></div>
+          <p className="fa-legend-note">Calibrated to 2026 OTC contracts.<br/>Age curve derived from 1,433 ED seasons.<br/>Future years discounted at 8%/yr.</p>
         </div>
       </div>
 
@@ -326,10 +324,7 @@ function EDEvaluator({ onBack }) {
 
                   {/* Year breakdown */}
                   {msg.structured.year_breakdown?.length > 0 && (
-                    <YearBreakdown
-                      rows={msg.structured.year_breakdown}
-                      salaryAsk={msg.structured.salaryAsk}
-                    />
+                    <YearBreakdown rows={msg.structured.year_breakdown} />
                   )}
 
                   {/* Reasoning */}
