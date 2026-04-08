@@ -78,15 +78,20 @@ async def evaluate_player(req: EvaluationRequest):
         "contract_years": req.contract_years,
         "player_history": player_data,
         # Output fields — initialised to defaults
-        "predicted_tier":       "",
-        "confidence":           {},
-        "current_age":          28,
+        "predicted_tier":    "",
+        "confidence":        {},
+        "current_age":       28,
+        "last_season_stats": {},
+        "career_stats":      [],
+        "stats_score":       0.0,
+        "composite_grade":   0.0,
         "valuation":            0.0,
         "effective_cap_burden": 0.0,
         "total_nominal_value":  0.0,
-        "year_breakdown":       [],
-        "decision":             "",
-        "reasoning":            "",
+        "year_breakdown":    [],
+        "projected_stats":   [],
+        "decision":          "",
+        "reasoning":         "",
     }
 
     final_state = ed_gm_agent.invoke(initial_state)
@@ -105,6 +110,9 @@ async def evaluate_player(req: EvaluationRequest):
             "total_ask":            round(req.salary_ask * req.contract_years, 2),
             "confidence":           final_state["confidence"],
             "year_breakdown":       final_state["year_breakdown"],
+            "last_season_stats":    final_state["last_season_stats"],
+            "projected_stats":      final_state["projected_stats"],
+            "career_stats":         final_state["career_stats"],
         },
     }
 

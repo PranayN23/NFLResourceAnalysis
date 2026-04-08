@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './FreeAgency.css';
 
 const ED_API = 'http://127.0.0.1:8002';
@@ -87,6 +87,76 @@ function YearBreakdown({ rows }) {
   );
 }
 
+/* ─── Stats Panel ─── */
+const STAT_ROWS = [
+  { key: 'sacks',          label: 'Sacks' },
+  { key: 'pressures',      label: 'Pressures' },
+  { key: 'pressure_pct',   label: 'Pressure %',   fmt: v => `${v}%` },
+  { key: 'stops',          label: 'Stops' },
+  { key: 'pass_rush_grade',label: 'PR Grade' },
+  { key: 'run_def_grade',  label: 'RD Grade' },
+  { key: 'overall_grade',  label: 'Overall Grade' },
+];
+
+function StatsPanel({ careerStats, projectedStats }) {
+  const lastCareer = careerStats[careerStats.length - 1];
+  return (
+    <div className="fa-stats-panel">
+      <p className="fa-stats-panel-title">Career Stats + Projection</p>
+      <div className="fa-stats-scroll">
+        <table className="fa-stats-tbl">
+          <thead>
+            <tr>
+              <th className="fa-stats-row-hdr">Stat</th>
+              {careerStats.map(s => (
+                <th key={s.season} className="fa-stats-col-career">
+                  <div className="fa-stats-col-hdr">{s.season}</div>
+                  <div className="fa-stats-col-sub">{s.games_played}/{s.max_games}g</div>
+                </th>
+              ))}
+              {projectedStats.map(yr => (
+                <th key={`proj-${yr.year}`} className="fa-stats-col-proj">
+                  <div className="fa-stats-col-hdr">Yr {yr.year}</div>
+                  <div className="fa-stats-col-sub">Age {yr.age}</div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {STAT_ROWS.map(({ key, label, fmt }) => (
+              <tr key={key}>
+                <td className="fa-stats-row-hdr">{label}</td>
+                {careerStats.map(s => (
+                  <td key={s.season} className="fa-stats-career-cell">
+                    {s[key] != null ? (fmt ? fmt(s[key]) : s[key]) : '—'}
+                  </td>
+                ))}
+                {projectedStats.map(yr => {
+                  const val = yr[key];
+                  const last = lastCareer?.[key];
+                  const delta = (val != null && last != null && last !== 0 && key !== 'overall_grade')
+                    ? (val - last) : null;
+                  return (
+                    <td key={yr.year} className={
+                      delta == null ? '' : delta > 0.05 ? 'fa-stat-up' : delta < -0.05 ? 'fa-stat-down' : ''
+                    }>
+                      {val != null ? (fmt ? fmt(val) : val) : '—'}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="fa-breakdown-note">
+        Career columns show actual per-season stats. Projected years assume 17 healthy games, scaled by the composite grade trajectory.
+        Composite = 30% model PFF grade + 70% stats-based grade (pressure %, sack rate, stops).
+      </p>
+    </div>
+  );
+}
+
 /* ─── ED Evaluator ─── */
 function EDEvaluator({ onBack }) {
   const [players, setPlayers] = useState([]);
@@ -103,7 +173,12 @@ function EDEvaluator({ onBack }) {
     },
   ]);
   const [error, setError] = useState('');
+  const [statsOpen, setStatsOpen] = useState({});  // msgIndex → bool
   const chatEndRef = useRef(null);
+
+  const toggleStats = useCallback((i) => {
+    setStatsOpen(prev => ({ ...prev, [i]: !prev[i] }));
+  }, []);
 
   useEffect(() => {
     fetch(`${ED_API}/ed-players`)
@@ -127,13 +202,19 @@ function EDEvaluator({ onBack }) {
     const {
       predicted_tier, current_age, effective_fair_aav, effective_cap_burden,
       total_nominal_value, total_ask, confidence, year_breakdown,
+      last_season_stats, projected_stats, career_stats,
     } = data;
-    const { predicted_grade, transformer_grade, xgb_grade, age_adjustment } = confidence || {};
+    const { model_grade, stats_grade, composite_grade, health_factor, avg_availability,
+            transformer_grade, xgb_grade, age_adjustment } = confidence || {};
 
-    const stats = [
+    const statRows = [
       { label: 'Projected Tier',        value: predicted_tier },
       { label: 'Current Age',           value: current_age },
-      { label: 'Predicted Grade',       value: predicted_grade != null ? `${Number(predicted_grade).toFixed(1)} / 100` : 'N/A' },
+      { label: 'Model Grade',           value: model_grade != null ? `${Number(model_grade).toFixed(1)} / 100` : 'N/A' },
+      { label: 'Stats Grade',           value: stats_grade != null ? `${Number(stats_grade).toFixed(1)} / 100` : 'N/A' },
+      { label: 'Composite Grade',       value: composite_grade != null ? `${Number(composite_grade).toFixed(1)} / 100` : 'N/A' },
+      { label: 'Availability (3yr)',    value: avg_availability != null ? `${Math.round(avg_availability * 100)}%` : 'N/A' },
+      { label: 'Health Factor',         value: health_factor != null ? `${health_factor >= 0 ? '+' : ''}${Number(health_factor).toFixed(1)} pts` : 'N/A' },
       { label: 'Contract',              value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
       { label: 'Fair AAV (cap-adj PV)', value: `$${effective_fair_aav}M / yr` },
       { label: 'Real Cap Burden (PV)',  value: `$${effective_cap_burden}M / yr` },
@@ -141,18 +222,30 @@ function EDEvaluator({ onBack }) {
     ];
 
     if (transformer_grade != null)
-      stats.push({ label: 'Transformer Grade', value: Number(transformer_grade).toFixed(1) });
+      statRows.push({ label: 'Transformer Grade', value: Number(transformer_grade).toFixed(1) });
     if (xgb_grade != null)
-      stats.push({ label: 'XGBoost Grade', value: Number(xgb_grade).toFixed(1) });
+      statRows.push({ label: 'XGBoost Grade', value: Number(xgb_grade).toFixed(1) });
     if (age_adjustment != null && age_adjustment !== 0)
-      stats.push({ label: 'Age Penalty (applied)', value: `-${Number(age_adjustment).toFixed(1)} pts` });
+      statRows.push({ label: 'Age Penalty (applied)', value: `-${Number(age_adjustment).toFixed(1)} pts` });
+
+    const DECISION_CLASS = {
+      'Exceptional Value': 'exceptional',
+      'Good Signing':      'good',
+      'Fair Deal':         'fair',
+      'Slight Overpay':    'slight-overpay',
+      'Overpay':           'overpay',
+      'Poor Signing':      'poor',
+    };
 
     return {
       decision,
-      highlight: decision === 'SIGN' ? 'sign' : 'pass',
-      stats,
+      highlight: DECISION_CLASS[decision] || 'fair',
+      stats: statRows,
       reasoning,
       year_breakdown,
+      last_season_stats,
+      projected_stats,
+      career_stats: career_stats || [],
     };
   };
 
@@ -321,6 +414,26 @@ function EDEvaluator({ onBack }) {
                       </div>
                     ))}
                   </div>
+
+                  {/* Stats projection toggle */}
+                  {msg.structured.projected_stats?.length > 0 && (
+                    <div className="fa-stats-toggle-row">
+                      <button
+                        className="fa-stats-toggle-btn"
+                        onClick={() => toggleStats(i)}
+                      >
+                        {statsOpen[i] ? '▲ Hide Stats Projection' : '▼ View Stats Projection'}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Stats panel */}
+                  {statsOpen[i] && msg.structured.career_stats?.length > 0 && (
+                    <StatsPanel
+                      careerStats={msg.structured.career_stats}
+                      projectedStats={msg.structured.projected_stats}
+                    />
+                  )}
 
                   {/* Year breakdown */}
                   {msg.structured.year_breakdown?.length > 0 && (
