@@ -808,6 +808,8 @@ function DIEvaluator({ onBack }) {
           <div className="fa-legend-row"><span className="tier-badge reserve">Reserve</span><span>&lt;$3M</span></div>
           <p className="fa-legend-note">Stop rate weighted 50% in stats grade.<br/>Age curve derived from DI season data.<br/>Future years discounted at 8%/yr.</p>
         </div>
+
+        <DecisionTierLegend />
       </div>
 
       <div className="fa-chat">
