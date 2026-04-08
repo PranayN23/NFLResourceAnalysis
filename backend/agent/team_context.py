@@ -41,15 +41,25 @@ def _safe_float(val, default=0.0) -> float:
 # ─────────────────────────────────────────────
 # Roster extraction from the position CSV
 # ─────────────────────────────────────────────
-def get_team_roster(team: str, position_df: pd.DataFrame) -> List[dict]:
+def get_team_roster(
+    team: str,
+    position_df: pd.DataFrame,
+    exclude_player: str = "",
+) -> List[dict]:
     """
     Return the team's players at this position from the most recent year
     in the dataframe, sorted by snap count descending.
+
+    If *exclude_player* is provided, that player is omitted from the
+    roster — used for re-signing scenarios where we need to see what
+    the roster looks like WITHOUT the player.
     """
     max_year = int(position_df["Year"].max())
     team_df = position_df[
         (position_df["Team"] == team) & (position_df["Year"] == max_year)
     ].copy()
+
+    exclude_norm = exclude_player.strip().lower()
 
     roster = []
     for _, row in team_df.iterrows():
@@ -72,6 +82,23 @@ def get_team_roster(team: str, position_df: pd.DataFrame) -> List[dict]:
 
     roster.sort(key=lambda r: r["snaps"], reverse=True)
     return roster
+
+
+def is_player_on_team(player_name: str, team: str, position_df: pd.DataFrame) -> bool:
+    """Check if a player is currently on the team's roster."""
+    max_year = int(position_df["Year"].max())
+    team_df = position_df[
+        (position_df["Team"] == team) & (position_df["Year"] == max_year)
+    ]
+    return any(
+        team_df["player"].str.strip().str.lower() == player_name.strip().lower()
+    )
+
+
+def get_roster_without_player(roster: List[dict], player_name: str) -> List[dict]:
+    """Return a copy of the roster excluding the named player."""
+    norm = player_name.strip().lower()
+    return [p for p in roster if p["player"].strip().lower() != norm]
 
 
 # ─────────────────────────────────────────────
@@ -155,42 +182,110 @@ def _get_league_stats(position_df: pd.DataFrame) -> pd.DataFrame:
     return _league_cache[key]
 
 
+def _recompute_team_row(
+    position_df: pd.DataFrame,
+    team: str,
+    exclude_player: str = "",
+) -> pd.Series:
+    """
+    Recompute a single team's raw aggregate metrics from the CSV,
+    optionally excluding a player (for re-signing scenarios).
+    Returns a Series with the same raw columns as the league table.
+    """
+    max_year = int(position_df["Year"].max())
+    team_rows = position_df[
+        (position_df["Team"] == team) & (position_df["Year"] == max_year)
+    ].copy()
+
+    if exclude_player:
+        norm = exclude_player.strip().lower()
+        team_rows = team_rows[team_rows["player"].str.strip().str.lower() != norm]
+
+    if team_rows.empty:
+        return None
+
+    team_rows["_composite"] = _player_composite(team_rows)
+
+    composites = team_rows["_composite"]
+    row = {
+        "best_composite":    composites.max(),
+        "avg_composite_top2": composites.nlargest(2).mean(),
+        "best_grade":        team_rows["grades_defense"].max(),
+        "n_quality":         int((composites >= composites.quantile(0.55)).sum()),
+        "total_snaps":       team_rows["snap_counts_defense"].sum(),
+    }
+    for stat_col in ["sacks", "total_pressures", "stops"]:
+        if stat_col in team_rows.columns:
+            row[f"total_{stat_col}"] = team_rows[stat_col].sum()
+
+    return pd.Series(row)
+
+
+def _rank_team_against_league(
+    league: pd.DataFrame,
+    team: str,
+    team_row: pd.Series,
+) -> dict:
+    """
+    Temporarily replace a team's row in the league table, re-rank,
+    and return the team's new percentiles.
+    """
+    modified = league.copy()
+    raw_cols = [c for c in modified.columns if not c.endswith("_pctile")]
+    for col in raw_cols:
+        if col in team_row.index:
+            modified.loc[team, col] = team_row[col]
+
+    pctile_map = {}
+    for col in raw_cols:
+        pctile_col = f"{col}_pctile"
+        modified[pctile_col] = modified[col].rank(pct=True)
+        pctile_map[pctile_col] = modified.loc[team, pctile_col]
+
+    return pctile_map
+
+
 def compute_positional_need(
     roster: List[dict],
     position_df: pd.DataFrame = None,
     team: str = "",
+    exclude_player: str = "",
 ) -> Tuple[float, str]:
     """
-    Score 0-100 how badly a team needs this position, ranked against
+    Score 0-100 how strong a team is at this position, ranked against
     the rest of the league. Blends five factors:
 
-    1. **Star power** (25%) — best player's composite (grade + per-snap
-       production) percentile. A superstar's stats count, not just
-       their PFF grade.
-    2. **Starter quality** (25%) — avg composite of top-2 players,
-       percentile vs. league.
-    3. **Team production** (25%) — total sacks + pressures + stops
-       percentile vs. league.
+    1. **Star power** (25%) — best player's composite percentile.
+    2. **Starter quality** (25%) — avg composite of top-2 players.
+    3. **Team production** (25%) — total sacks + pressures + stops.
     4. **Depth** (15%) — count of above-median composite players.
     5. **Age risk** (10%) — top-2 starters' age.
 
-    Need = 100 minus the weighted composite percentile.
+    When *exclude_player* is set (re-signing), the team's stats are
+    recomputed without that player and re-ranked vs. the league.
     """
     if not roster:
-        return 100.0, "Weak"
+        return 0.0, "Weak"
 
     if position_df is not None and team:
         league = _get_league_stats(position_df)
         if team in league.index:
-            row = league.loc[team]
+            if exclude_player:
+                team_row = _recompute_team_row(position_df, team, exclude_player)
+                if team_row is None:
+                    return 0.0, "Weak"
+                pctiles = _rank_team_against_league(league, team, team_row)
+            else:
+                row = league.loc[team]
+                pctiles = {c: row[c] for c in row.index if c.endswith("_pctile")}
 
-            star_pctile = row.get("best_composite_pctile", 0.5)
-            starter_pctile = row.get("avg_composite_top2_pctile", 0.5)
-            depth_pctile = row.get("n_quality_pctile", 0.5)
+            star_pctile = pctiles.get("best_composite_pctile", 0.5)
+            starter_pctile = pctiles.get("avg_composite_top2_pctile", 0.5)
+            depth_pctile = pctiles.get("n_quality_pctile", 0.5)
 
-            prod_cols = [c for c in row.index if c.startswith("total_") and c.endswith("_pctile")
-                         and c not in ("total_snaps_pctile",)]
-            production_pctile = np.mean([row[c] for c in prod_cols]) if prod_cols else 0.5
+            prod_cols = [c for c in pctiles if c.startswith("total_") and c.endswith("_pctile")
+                         and c != "total_snaps_pctile"]
+            production_pctile = np.mean([pctiles[c] for c in prod_cols]) if prod_cols else 0.5
 
             qualified = [p for p in roster if p["snaps"] >= 40]
             top_2 = sorted(qualified, key=lambda r: r["grade"], reverse=True)[:2]

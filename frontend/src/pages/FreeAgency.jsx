@@ -100,39 +100,73 @@ const TIER_LADDER_BASE = [
 ];
 
 const TIER_LADDER_TEAM = [
-  { key: 'must-sign',          label: 'Must Sign — Elite Value + Need', range: 'Elite value + weak position',    color: '#00e5ff' },
-  { key: 'priority',           label: 'Priority Target',                range: 'Good value + weak position',     color: '#00bcd4' },
-  { key: 'exceptional',        label: 'Exceptional Value',              range: '> 20% surplus, avg need',        color: '#3de87a' },
-  { key: 'luxury-great',       label: 'Luxury Add — Great Value',      range: 'Elite value + strong position',  color: '#66ffb2' },
-  { key: 'good',               label: 'Good Signing',                   range: '5 – 20% surplus, avg need',     color: '#5dbb6e' },
-  { key: 'fill-gap',           label: 'Fill the Gap',                   range: 'Market rate + weak position',    color: '#8bc34a' },
-  { key: 'luxury',             label: 'Luxury Add',                     range: 'Good value + strong position',   color: '#a5d6a7' },
-  { key: 'fair',               label: 'Fair Deal',                      range: '± 5% of value, avg need',       color: '#d4c94a' },
-  { key: 'justifiable',        label: 'Justifiable Overpay',            range: 'Slight premium + weak position', color: '#cddc39' },
-  { key: 'slight-overpay',     label: 'Slight Overpay',                 range: '5 – 15% over, avg need',        color: '#e8a44a' },
-  { key: 'unnecessary',        label: 'Unnecessary Spend',              range: 'Market rate + strong position',  color: '#ff9800' },
-  { key: 'overpay-consider',   label: 'Overpay — But Consider',         range: 'Overpay + weak position',       color: '#ef6c00' },
-  { key: 'overpay',            label: 'Overpay',                        range: '15 – 30% over, avg need',       color: '#e07030' },
-  { key: 'wasteful',           label: 'Wasteful Overpay',               range: 'Overpay + strong position',     color: '#d84315' },
-  { key: 'desperation',        label: 'Desperation Overpay',            range: 'Severe overpay + weak position', color: '#c62828' },
-  { key: 'poor',               label: 'Poor Signing',                   range: '> 30% over',                    color: '#e05555' },
-  { key: 'cap-mismanage',      label: 'Cap Mismanagement',              range: 'Severe overpay + strong pos',   color: '#b71c1c' },
-  { key: 'exceeds-cap',        label: 'Exceeds Cap',                    range: 'Over available cap',            color: '#ff1744' },
+  { key: 'must-sign',          label: 'Must Sign',            color: '#00e5ff' },
+  { key: 'priority',           label: 'Priority Target',      color: '#00bcd4' },
+  { key: 'exceptional',        label: 'Exceptional Value',    color: '#3de87a' },
+  { key: 'luxury-great',       label: 'Luxury — Great Value', color: '#66ffb2' },
+  { key: 'good',               label: 'Good Signing',         color: '#5dbb6e' },
+  { key: 'fill-gap',           label: 'Fill the Gap',         color: '#8bc34a' },
+  { key: 'luxury',             label: 'Luxury Add',           color: '#a5d6a7' },
+  { key: 'fair',               label: 'Fair Deal',            color: '#d4c94a' },
+  { key: 'justifiable',        label: 'Justifiable Overpay',  color: '#cddc39' },
+  { key: 'slight-overpay',     label: 'Slight Overpay',       color: '#e8a44a' },
+  { key: 'unnecessary',        label: 'Unnecessary Spend',    color: '#ff9800' },
+  { key: 'overpay-consider',   label: 'Overpay — Consider',   color: '#ef6c00' },
+  { key: 'overpay',            label: 'Overpay',              color: '#e07030' },
+  { key: 'wasteful',           label: 'Wasteful Overpay',     color: '#d84315' },
+  { key: 'desperation',        label: 'Desperation Overpay',  color: '#c62828' },
+  { key: 'poor',               label: 'Poor Signing',         color: '#e05555' },
+  { key: 'cap-mismanage',      label: 'Cap Mismanagement',    color: '#b71c1c' },
+  { key: 'exceeds-cap',        label: 'Exceeds Cap',          color: '#ff1744' },
 ];
 
+const TIER_DESCRIPTION = {
+  'Must Sign':                     'Elite value at a position of need — cap-friendly deal you can\'t pass up.',
+  'Priority Target':               'Good value at a weak position group — fits the cap and fills a real need.',
+  'Exceptional Value':             'More than 20% below fair value — a steal regardless of team context.',
+  'Luxury Add — Great Value':      'Elite value, but the position is already strong — a luxury the team can afford.',
+  'Good Signing':                  'Solid 5–20% surplus — good player at a fair price for a moderate need.',
+  'Fill the Gap':                  'Market rate at a weak position — worth paying to address a clear hole.',
+  'Luxury Add':                    'Good value at an already-strong position — nice depth if cap allows.',
+  'Fair Deal':                     'Right at market value — reasonable deal for a moderate positional need.',
+  'Justifiable Overpay':           'Slight premium, but the team badly needs help here — cap is manageable.',
+  'Slight Overpay':                '5–15% above fair value — moderate need doesn\'t fully justify the premium.',
+  'Unnecessary Spend':             'Paying market rate at a stacked position — cap dollars better spent elsewhere.',
+  'Overpay — But Consider':        'Significant overpay with heavy cap impact, but positional weakness may warrant it.',
+  'Overpay':                       '15–30% above fair value — strains the cap with no strong positional justification.',
+  'Wasteful Overpay':              'Overpaying at an already-strong position — wastes cap space on redundancy.',
+  'Desperation Overpay':           'Severe overpay even for a position of need — cripples future cap flexibility.',
+  'Poor Signing':                  'More than 30% over fair value — no positional need or cap room justifies this.',
+  'Cap Mismanagement':             'Massive overpay at a position that\'s already stacked — destructive to the cap.',
+  'Exceeds Cap':                   'This signing doesn\'t fit under the team\'s available salary cap.',
+};
+
 function DecisionTierLegend({ teamMode }) {
+  const [open, setOpen] = useState(false);
   const ladder = teamMode ? TIER_LADDER_TEAM : TIER_LADDER_BASE;
   return (
     <div className="fa-tier-legend">
-      <p className="fa-legend-title">{teamMode ? 'Team-Aware Decision Tiers' : 'Decision Tiers'}</p>
-      {ladder.map((t, i) => (
-        <div key={t.key} className="fa-tier-row">
-          <span className="fa-tier-rank">{i + 1}</span>
-          <span className="fa-tier-dot" style={{ background: t.color }} />
-          <span className="fa-tier-label" style={{ color: t.color }}>{t.label}</span>
-          <span className="fa-tier-range">{t.range}</span>
-        </div>
-      ))}
+      <p className="fa-legend-title fa-legend-toggle" onClick={() => setOpen(o => !o)}>
+        {teamMode ? 'Team-Aware Decision Tiers' : 'Decision Tiers'}
+        <span className={`fa-toggle-arrow ${open ? 'open' : ''}`}>▸</span>
+      </p>
+      {open && (
+        <>
+          {ladder.map((t, i) => (
+            <div key={t.key} className="fa-tier-row">
+              <span className="fa-tier-rank">{i + 1}</span>
+              <span className="fa-tier-dot" style={{ background: t.color }} />
+              <span className="fa-tier-label" style={{ color: t.color }}>{t.label}</span>
+            </div>
+          ))}
+          {teamMode && (
+            <p className="fa-legend-note">
+              Accounts for value, positional strength, and cap space.<br/>
+              Full explanation shown below each result.
+            </p>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -253,6 +287,10 @@ function NeedBadge({ label, score }) {
 }
 
 /* ─── Roster Preview ─── */
+const SALARY_CAP_M = 255.4;
+function pctToDollars(pct) { return (pct / 100 * SALARY_CAP_M).toFixed(1); }
+function capDisplay(pct) { return `${pct.toFixed(1)}% ($${pctToDollars(pct)}M)`; }
+
 function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePct, positionLabel }) {
   const top = roster.slice(0, 5);
   return (
@@ -267,16 +305,16 @@ function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePc
         <div className="fa-cap-bar">
           <div className="fa-cap-fill" style={{ width: `${Math.min(allocatedPct, 100)}%` }} />
         </div>
-        <span className="fa-cap-text">{allocatedPct.toFixed(1)}%</span>
+        <span className="fa-cap-text">{allocatedPct.toFixed(1)}% (${pctToDollars(allocatedPct)}M)</span>
       </div>
       <div className="fa-cap-bar-row">
         <span className="fa-cap-label">Available</span>
-        <span className="fa-cap-text fa-cap-avail">{availablePct.toFixed(1)}%</span>
+        <span className="fa-cap-text fa-cap-avail">{availablePct.toFixed(1)}% (${pctToDollars(availablePct)}M)</span>
       </div>
       {top.length > 0 && (
         <table className="fa-roster-tbl">
           <thead>
-            <tr><th>Player</th><th>Age</th><th>Grade</th><th>Snaps</th><th>Cap %</th></tr>
+            <tr><th>Player</th><th>Age</th><th>Grade</th><th>Snaps</th><th>Cap Hit</th></tr>
           </thead>
           <tbody>
             {top.map((p, i) => (
@@ -285,7 +323,7 @@ function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePc
                 <td>{p.age}</td>
                 <td>{p.grade}</td>
                 <td>{p.snaps}</td>
-                <td>{p.cap_pct}%</td>
+                <td>{p.cap_pct}% (${pctToDollars(p.cap_pct)}M)</td>
               </tr>
             ))}
           </tbody>
@@ -306,31 +344,40 @@ function TeamFitSection({ teamCtx, signingPcts, positionLabel }) {
       <div className="fa-stat-section-hdr">Team Fit — {positionLabel}</div>
       <div className="fa-stat-row">
         <span className="fa-stat-label">Team</span>
-        <span className="fa-stat-value">{teamCtx.team}</span>
+        <span className="fa-stat-value">
+          {teamCtx.team}
+          {teamCtx.is_re_signing && <span className="fa-re-sign-tag">RE-SIGNING</span>}
+        </span>
       </div>
+      {teamCtx.is_re_signing && (
+        <div className="fa-re-sign-note">
+          Player is already on this roster. Need is calculated without them (what if they leave?),
+          and their current cap hit ({teamCtx.freed_cap_pct?.toFixed(1)}% / ${pctToDollars(teamCtx.freed_cap_pct || 0)}M) is freed up.
+        </div>
+      )}
       <div className="fa-stat-row">
-        <span className="fa-stat-label">{positionLabel} Need</span>
+        <span className="fa-stat-label">{positionLabel} Need{teamCtx.is_re_signing ? ' (without player)' : ''}</span>
         <span className="fa-stat-value">
           <NeedBadge label={teamCtx.need_label} score={teamCtx.positional_need} />
         </span>
       </div>
       <div className="fa-stat-row">
-        <span className="fa-stat-label">Available Cap</span>
-        <span className="fa-stat-value">{teamCtx.available_cap_pct?.toFixed(1)}%</span>
+        <span className="fa-stat-label">Available Cap{teamCtx.is_re_signing ? ' (after freeing)' : ''}</span>
+        <span className="fa-stat-value">{capDisplay(teamCtx.available_cap_pct || 0)}</span>
       </div>
       <div className="fa-stat-row">
         <span className="fa-stat-label">Yr 1 Cap Hit</span>
-        <span className="fa-stat-value">{yr1.toFixed(1)}%</span>
+        <span className="fa-stat-value">{capDisplay(yr1)}</span>
       </div>
       {signingPcts?.length > 1 && (
         <div className="fa-stat-row">
           <span className="fa-stat-label">Yr {signingPcts.length} Cap Hit</span>
-          <span className="fa-stat-value">{yrLast.toFixed(1)}% (shrinks with cap growth)</span>
+          <span className="fa-stat-value">{yrLast.toFixed(1)}% (${pctToDollars(yrLast)}M) — shrinks with cap growth</span>
         </div>
       )}
       <div className="fa-stat-row">
         <span className="fa-stat-label">Cap After Signing</span>
-        <span className="fa-stat-value">{capAfter.toFixed(1)}%</span>
+        <span className="fa-stat-value">{capDisplay(capAfter)}</span>
       </div>
       {teamCtx.fit_summary && (
         <div className="fa-stat-row">
@@ -456,7 +503,7 @@ function StatsPanel({ careerStats, projectedStats }) {
                   </td>
                 ))}
                 {projectedStats.map(yr => {
-                  const val = yr[key];
+                  const val = key === 'overall_grade' ? (yr[key] ?? yr['projected_grade']) : yr[key];
                   const last = lastCareer?.[key];
                   const delta = (val != null && last != null && last !== 0 && key !== 'overall_grade')
                     ? (val - last) : null;
@@ -611,6 +658,7 @@ function EDEvaluator({ onBack }) {
       decision,
       highlight: DECISION_CLASS[decision] || 'fair',
       signing_grade: signingGradeFromData(effective_fair_aav, effective_cap_burden, team_context),
+      tier_description: TIER_DESCRIPTION[decision] || '',
       stats: statRows,
       reasoning,
       year_breakdown,
@@ -832,6 +880,10 @@ function EDEvaluator({ onBack }) {
 
                   <SigningGrade grade={msg.structured.signing_grade} />
 
+                  {msg.structured.tier_description && (
+                    <div className="fa-tier-desc">{msg.structured.tier_description}</div>
+                  )}
+
                   <div className="fa-stats-grid">
                     {msg.structured.stats.map((s, j) =>
                       s.divider ? (
@@ -944,7 +996,7 @@ function DIStatsPanel({ careerStats, projectedStats }) {
                   </td>
                 ))}
                 {projectedStats.map(yr => {
-                  const val = yr[key];
+                  const val = key === 'overall_grade' ? (yr[key] ?? yr['projected_grade']) : yr[key];
                   const last = lastCareer?.[key];
                   const delta = (val != null && last != null && last !== 0 && key !== 'overall_grade')
                     ? (val - last) : null;
@@ -1067,6 +1119,7 @@ function DIEvaluator({ onBack }) {
       decision,
       highlight: DECISION_CLASS[decision] || 'fair',
       signing_grade: signingGradeFromData(effective_fair_aav, effective_cap_burden, team_context),
+      tier_description: TIER_DESCRIPTION[decision] || '',
       stats: statRows,
       reasoning,
       year_breakdown,
@@ -1241,6 +1294,10 @@ function DIEvaluator({ onBack }) {
                   </div>
 
                   <SigningGrade grade={msg.structured.signing_grade} />
+
+                  {msg.structured.tier_description && (
+                    <div className="fa-tier-desc">{msg.structured.tier_description}</div>
+                  )}
 
                   <div className="fa-stats-grid">
                     {msg.structured.stats.map((s, j) =>

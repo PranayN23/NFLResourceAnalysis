@@ -128,9 +128,11 @@ html, body {
   display: flex;
   gap: 24px;
   padding: 24px;
-  min-height: calc(100vh - 60px); /* leave room for navbar */
-  align-items: flex-start;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  align-items: stretch;
 }
+
 
 /* ══════════════════════════════════════════
    Left control panel
@@ -144,7 +146,13 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-height: calc(100vh - 108px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #444 transparent;
 }
+.fa-panel::-webkit-scrollbar { width: 6px; }
+.fa-panel::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
 
 .fa-panel-title {
   color: #ffffff;
@@ -291,13 +299,34 @@ html, body {
   flex-direction: column;
   gap: 7px;
   border: 1px solid #333;
+  max-width: 100%;
+}
+
+.fa-legend-toggle {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+.fa-legend-toggle:hover { color: #fff; }
+
+.fa-toggle-arrow {
+  font-size: 14px;
+  color: #888;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.fa-toggle-arrow.open {
+  transform: rotate(90deg);
 }
 
 .fa-tier-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: baseline;
+  gap: 6px;
   font-size: 13px;
+  flex-wrap: wrap;
 }
 
 .fa-tier-rank {
@@ -317,15 +346,18 @@ html, body {
 
 .fa-tier-label {
   font-weight: bold;
-  flex: 1;
-  min-width: 0;
+  white-space: nowrap;
 }
 
 .fa-tier-range {
   color: #666;
-  font-size: 11px;
+  font-size: 10px;
+  flex: 1;
+  min-width: 0;
   text-align: right;
-  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ── Contract length slider ── */
@@ -529,14 +561,13 @@ html, body {
    ══════════════════════════════════════════ */
 .fa-chat {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   background: #242424;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  min-height: 600px;
-  max-height: calc(100vh - 108px);
 }
 
 .fa-chat-header {
@@ -656,6 +687,42 @@ html, body {
   background: linear-gradient(135deg, #3a1010, #4a1414);
   color: #e05555;
   border-bottom: 2px solid #a03030;
+}
+
+/* ── Re-signing indicator ── */
+.fa-re-sign-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #ffa726;
+  background: rgba(255, 167, 38, 0.12);
+  border: 1px solid rgba(255, 167, 38, 0.35);
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.fa-re-sign-note {
+  font-size: 10px;
+  color: #999;
+  font-style: italic;
+  padding: 2px 0 6px;
+  line-height: 1.5;
+  border-bottom: 1px solid #333;
+  margin-bottom: 4px;
+}
+
+/* ── Tier Description (below signing grade) ── */
+.fa-tier-desc {
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  font-style: italic;
+  padding: 6px 16px 10px;
+  line-height: 1.5;
+  border-bottom: 1px solid #3a3a3a;
 }
 
 /* ── Signing Grade Ring ── */
@@ -1128,7 +1195,7 @@ html, body {
 
 /* ── Responsive: stack on small screens ── */
 @media (max-width: 720px) {
-  .fa-page { flex-direction: column; padding: 16px; }
-  .fa-panel { flex: none; width: 100%; }
+  .fa-page { flex-direction: column; padding: 16px; height: auto; overflow: visible; }
+  .fa-panel { flex: none; width: 100%; max-height: none; overflow-y: visible; }
   .fa-chat  { min-height: 400px; max-height: 70vh; }
 }

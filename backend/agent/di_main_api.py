@@ -21,7 +21,8 @@ _thread_pool = ThreadPoolExecutor(max_workers=2)
 from backend.agent.di_agent_graph import di_gm_agent, DI_CSV_PATH
 from backend.agent.team_context import (
     get_team_roster, compute_positional_need, get_team_cap,
-    get_all_teams, aav_to_cap_pcts,
+    get_all_teams, aav_to_cap_pcts, is_player_on_team,
+    get_roster_without_player,
 )
 import pandas as pd
 import uvicorn
@@ -117,9 +118,29 @@ async def evaluate_player(req: EvaluationRequest):
 
     if req.team:
         roster = get_team_roster(req.team, df_players)
-        need_score, need_label = compute_positional_need(roster, position_df=df_players, team=req.team)
+        re_signing = is_player_on_team(req.player_name, req.team, df_players)
+
+        if re_signing:
+            roster_without = get_roster_without_player(roster, req.player_name)
+            need_score, need_label = compute_positional_need(
+                roster_without, position_df=df_players, team=req.team,
+                exclude_player=req.player_name,
+            )
+            player_cap = next(
+                (p["cap_pct"] for p in roster if p["player"].strip().lower() == req.player_name.strip().lower()),
+                0.0,
+            )
+        else:
+            roster_without = roster
+            need_score, need_label = compute_positional_need(
+                roster, position_df=df_players, team=req.team,
+            )
+            player_cap = 0.0
+
         allocated_pct, available_pct = get_team_cap(req.team)
         cap_avail = req.cap_available_pct if req.cap_available_pct > 0 else available_pct
+        if re_signing:
+            cap_avail = cap_avail + player_cap
         signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years)
 
         team_state_fields = {
@@ -127,7 +148,7 @@ async def evaluate_player(req: EvaluationRequest):
             "team_cap_available_pct": cap_avail,
             "positional_need": need_score,
             "need_label": need_label,
-            "current_roster": roster,
+            "current_roster": roster_without if re_signing else roster,
             "signing_cap_pcts": signing_pcts,
             "team_fit_summary": "",
         }
@@ -138,7 +159,9 @@ async def evaluate_player(req: EvaluationRequest):
             "signing_cap_pcts": signing_pcts,
             "positional_need": need_score,
             "need_label": need_label,
-            "current_roster": roster,
+            "current_roster": roster_without if re_signing else roster,
+            "is_re_signing": re_signing,
+            "freed_cap_pct": player_cap,
         }
 
     initial_state = {
