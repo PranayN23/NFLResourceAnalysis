@@ -46,28 +46,48 @@ function DecisionTierLegend() {
 }
 
 /* ─── Signing Grade ─── */
+const _SURPLUS_ANCHORS = [-60, -30, -15,  -5,   0,   5,  15,  25,  40,  60];
+const _GRADE_ANCHORS   = [  0,  20,  35,  50,  58,  68,  80,  88,  95, 100];
+
+function _lerp(xs, ys, x) {
+  if (x <= xs[0]) return ys[0];
+  if (x >= xs[xs.length - 1]) return ys[ys.length - 1];
+  for (let i = 1; i < xs.length; i++) {
+    if (x <= xs[i]) {
+      const t = (x - xs[i - 1]) / (xs[i] - xs[i - 1]);
+      return ys[i - 1] + t * (ys[i] - ys[i - 1]);
+    }
+  }
+  return ys[ys.length - 1];
+}
+
 function signingGradeFromData(fair_aav, cap_burden) {
   const surplus_pct = (fair_aav - cap_burden) / Math.max(fair_aav, 0.01) * 100;
-  return Math.round(Math.max(0, Math.min(100, 65 + surplus_pct * 1.5)));
+  return Math.round(_lerp(_SURPLUS_ANCHORS, _GRADE_ANCHORS, surplus_pct));
 }
 
 function gradeColor(g) {
   if (g >= 80) return '#3de87a';
-  if (g >= 70) return '#5dbb6e';
-  if (g >= 60) return '#d4c94a';
-  if (g >= 50) return '#e8a44a';
-  if (g >= 35) return '#e07030';
+  if (g >= 68) return '#5dbb6e';
+  if (g >= 55) return '#d4c94a';
+  if (g >= 40) return '#e8a44a';
+  if (g >= 22) return '#e07030';
   return '#e05555';
 }
 
 function gradeLetter(g) {
-  if (g >= 93) return 'A+';
-  if (g >= 85) return 'A';
-  if (g >= 78) return 'B+';
-  if (g >= 70) return 'B';
-  if (g >= 63) return 'C+';
-  if (g >= 55) return 'C';
-  if (g >= 47) return 'D';
+  if (g >= 97) return 'A+';
+  if (g >= 90) return 'A';
+  if (g >= 83) return 'A-';
+  if (g >= 76) return 'B+';
+  if (g >= 68) return 'B';
+  if (g >= 60) return 'B-';
+  if (g >= 52) return 'C+';
+  if (g >= 44) return 'C';
+  if (g >= 36) return 'C-';
+  if (g >= 28) return 'D+';
+  if (g >= 20) return 'D';
+  if (g >= 12) return 'D-';
   return 'F';
 }
 
@@ -281,25 +301,31 @@ function EDEvaluator({ onBack }) {
             transformer_grade, xgb_grade, age_adjustment } = confidence || {};
 
     const statRows = [
+      { divider: true, title: 'Player Profile' },
       { label: 'Projected Tier',        value: predicted_tier },
       { label: 'Current Age',           value: current_age },
+      { divider: true, title: 'Grade Breakdown' },
       { label: 'Model Grade',           value: model_grade != null ? `${Number(model_grade).toFixed(1)} / 100` : 'N/A' },
       { label: 'Stats Grade',           value: stats_grade != null ? `${Number(stats_grade).toFixed(1)} / 100` : 'N/A' },
       { label: 'Composite Grade',       value: composite_grade != null ? `${Number(composite_grade).toFixed(1)} / 100` : 'N/A' },
-      { label: 'Availability (3yr)',    value: avg_availability != null ? `${Math.round(avg_availability * 100)}%` : 'N/A' },
-      { label: 'Health Factor',         value: health_factor != null ? `${health_factor >= 0 ? '+' : ''}${Number(health_factor).toFixed(1)} pts` : 'N/A' },
-      { label: 'Contract',              value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
-      { label: 'Fair AAV (cap-adj PV)', value: `$${effective_fair_aav}M / yr` },
-      { label: 'Real Cap Burden (PV)',  value: `$${effective_cap_burden}M / yr` },
-      { label: 'Total Nominal Value',   value: `$${total_nominal_value}M` },
     ];
-
     if (transformer_grade != null)
       statRows.push({ label: 'Transformer Grade', value: Number(transformer_grade).toFixed(1) });
     if (xgb_grade != null)
       statRows.push({ label: 'XGBoost Grade', value: Number(xgb_grade).toFixed(1) });
     if (age_adjustment != null && age_adjustment !== 0)
       statRows.push({ label: 'Age Penalty (applied)', value: `-${Number(age_adjustment).toFixed(1)} pts` });
+
+    statRows.push(
+      { divider: true, title: 'Health & Availability' },
+      { label: 'Availability (3yr)',    value: avg_availability != null ? `${Math.round(avg_availability * 100)}%` : 'N/A' },
+      { label: 'Health Factor',         value: health_factor != null ? `${health_factor >= 0 ? '+' : ''}${Number(health_factor).toFixed(1)} pts` : 'N/A' },
+      { divider: true, title: 'Contract Valuation' },
+      { label: 'Contract',              value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
+      { label: 'Fair AAV (cap-adj PV)', value: `$${effective_fair_aav}M / yr` },
+      { label: 'Real Cap Burden (PV)',  value: `$${effective_cap_burden}M / yr` },
+      { label: 'Total Nominal Value',   value: `$${total_nominal_value}M` },
+    );
 
     const DECISION_CLASS = {
       'Exceptional Value': 'exceptional',
@@ -313,6 +339,7 @@ function EDEvaluator({ onBack }) {
     return {
       decision,
       highlight: DECISION_CLASS[decision] || 'fair',
+      signing_grade: signingGradeFromData(effective_fair_aav, effective_cap_burden),
       stats: statRows,
       reasoning,
       year_breakdown,
@@ -459,6 +486,8 @@ function EDEvaluator({ onBack }) {
           <div className="fa-legend-row"><span className="tier-badge reserve">Reserve</span><span>&lt;$4M</span></div>
           <p className="fa-legend-note">Calibrated to 2026 OTC contracts.<br/>Age curve derived from 1,433 ED seasons.<br/>Future years discounted at 8%/yr.</p>
         </div>
+
+        <DecisionTierLegend />
       </div>
 
       {/* ── Right chat panel ── */}
@@ -473,22 +502,25 @@ function EDEvaluator({ onBack }) {
                 <div className="fa-msg-text">{msg.content}</div>
               ) : (
                 <div className="fa-msg-card">
-                  {/* Decision badge */}
                   <div className={`fa-decision-badge ${msg.structured.highlight}`}>
                     {msg.structured.decision}
                   </div>
 
-                  {/* Stats grid */}
+                  <SigningGrade grade={msg.structured.signing_grade} />
+
                   <div className="fa-stats-grid">
-                    {msg.structured.stats.map((s, j) => (
-                      <div key={j} className="fa-stat-row">
-                        <span className="fa-stat-label">{s.label}</span>
-                        <span className="fa-stat-value">{s.value}</span>
-                      </div>
-                    ))}
+                    {msg.structured.stats.map((s, j) =>
+                      s.divider ? (
+                        <div key={j} className="fa-stat-section-hdr">{s.title}</div>
+                      ) : (
+                        <div key={j} className="fa-stat-row">
+                          <span className="fa-stat-label">{s.label}</span>
+                          <span className="fa-stat-value">{s.value}</span>
+                        </div>
+                      )
+                    )}
                   </div>
 
-                  {/* Stats projection toggle */}
                   {msg.structured.projected_stats?.length > 0 && (
                     <div className="fa-stats-toggle-row">
                       <button
@@ -500,7 +532,6 @@ function EDEvaluator({ onBack }) {
                     </div>
                   )}
 
-                  {/* Stats panel */}
                   {statsOpen[i] && msg.structured.career_stats?.length > 0 && (
                     <StatsPanel
                       careerStats={msg.structured.career_stats}
@@ -508,12 +539,10 @@ function EDEvaluator({ onBack }) {
                     />
                   )}
 
-                  {/* Year breakdown */}
                   {msg.structured.year_breakdown?.length > 0 && (
                     <YearBreakdown rows={msg.structured.year_breakdown} />
                   )}
 
-                  {/* Reasoning */}
                   <div className="fa-reasoning">
                     <p className="fa-reasoning-title">Reasoning</p>
                     <p className="fa-reasoning-text">{msg.structured.reasoning}</p>
@@ -651,22 +680,29 @@ function DIEvaluator({ onBack }) {
             transformer_grade, xgb_grade, age_adjustment } = confidence || {};
 
     const statRows = [
+      { divider: true, title: 'Player Profile' },
       { label: 'Projected Tier',        value: predicted_tier },
       { label: 'Current Age',           value: current_age },
+      { divider: true, title: 'Grade Breakdown' },
       { label: 'Model Grade',           value: model_grade != null ? `${Number(model_grade).toFixed(1)} / 100` : 'N/A' },
       { label: 'Stats Grade',           value: stats_grade != null ? `${Number(stats_grade).toFixed(1)} / 100` : 'N/A' },
       { label: 'Composite Grade',       value: composite_grade != null ? `${Number(composite_grade).toFixed(1)} / 100` : 'N/A' },
-      { label: 'Availability (3yr)',    value: avg_availability != null ? `${Math.round(avg_availability * 100)}%` : 'N/A' },
-      { label: 'Health Factor',         value: health_factor != null ? `${health_factor >= 0 ? '+' : ''}${Number(health_factor).toFixed(1)} pts` : 'N/A' },
-      { label: 'Contract',              value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
-      { label: 'Fair AAV (cap-adj PV)', value: `$${effective_fair_aav}M / yr` },
-      { label: 'Real Cap Burden (PV)',  value: `$${effective_cap_burden}M / yr` },
-      { label: 'Total Nominal Value',   value: `$${total_nominal_value}M` },
     ];
     if (transformer_grade != null)
       statRows.push({ label: 'Transformer Grade', value: Number(transformer_grade).toFixed(1) });
     if (age_adjustment != null && age_adjustment !== 0)
       statRows.push({ label: 'Age Penalty (applied)', value: `-${Number(age_adjustment).toFixed(1)} pts` });
+
+    statRows.push(
+      { divider: true, title: 'Health & Availability' },
+      { label: 'Availability (3yr)',    value: avg_availability != null ? `${Math.round(avg_availability * 100)}%` : 'N/A' },
+      { label: 'Health Factor',         value: health_factor != null ? `${health_factor >= 0 ? '+' : ''}${Number(health_factor).toFixed(1)} pts` : 'N/A' },
+      { divider: true, title: 'Contract Valuation' },
+      { label: 'Contract',              value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
+      { label: 'Fair AAV (cap-adj PV)', value: `$${effective_fair_aav}M / yr` },
+      { label: 'Real Cap Burden (PV)',  value: `$${effective_cap_burden}M / yr` },
+      { label: 'Total Nominal Value',   value: `$${total_nominal_value}M` },
+    );
 
     const DECISION_CLASS = {
       'Exceptional Value': 'exceptional',
@@ -680,6 +716,7 @@ function DIEvaluator({ onBack }) {
     return {
       decision,
       highlight: DECISION_CLASS[decision] || 'fair',
+      signing_grade: signingGradeFromData(effective_fair_aav, effective_cap_burden),
       stats: statRows,
       reasoning,
       year_breakdown,
@@ -786,13 +823,20 @@ function DIEvaluator({ onBack }) {
                   <div className={`fa-decision-badge ${msg.structured.highlight}`}>
                     {msg.structured.decision}
                   </div>
+
+                  <SigningGrade grade={msg.structured.signing_grade} />
+
                   <div className="fa-stats-grid">
-                    {msg.structured.stats.map((s, j) => (
-                      <div key={j} className="fa-stat-row">
-                        <span className="fa-stat-label">{s.label}</span>
-                        <span className="fa-stat-value">{s.value}</span>
-                      </div>
-                    ))}
+                    {msg.structured.stats.map((s, j) =>
+                      s.divider ? (
+                        <div key={j} className="fa-stat-section-hdr">{s.title}</div>
+                      ) : (
+                        <div key={j} className="fa-stat-row">
+                          <span className="fa-stat-label">{s.label}</span>
+                          <span className="fa-stat-value">{s.value}</span>
+                        </div>
+                      )
+                    )}
                   </div>
                   {msg.structured.projected_stats?.length > 0 && (
                     <div className="fa-stats-toggle-row">

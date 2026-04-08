@@ -282,6 +282,52 @@ html, body {
   line-height: 1.5;
 }
 
+/* ── Decision Tier Legend ── */
+.fa-tier-legend {
+  background: #222;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border: 1px solid #333;
+}
+
+.fa-tier-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.fa-tier-rank {
+  color: #555;
+  font-size: 11px;
+  width: 14px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.fa-tier-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fa-tier-label {
+  font-weight: bold;
+  flex: 1;
+  min-width: 0;
+}
+
+.fa-tier-range {
+  color: #666;
+  font-size: 11px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
 /* ── Contract length slider ── */
 .fa-slider {
   -webkit-appearance: none;
@@ -597,32 +643,76 @@ html, body {
   border-bottom: 2px solid #a03030;
 }
 
-/* Stats grid */
-.fa-stats-grid {
-  padding: 14px 18px;
+/* ── Signing Grade Ring ── */
+.fa-signing-grade {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  padding: 16px 0 12px;
   border-bottom: 1px solid #3a3a3a;
+}
+
+.fa-grade-ring {
+  width: 90px;
+  height: 90px;
+}
+
+.fa-grade-label {
+  color: #888;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+/* Stats grid */
+.fa-stats-grid {
+  padding: 10px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.fa-stat-section-hdr {
+  color: #7e6aff;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 12px 0 6px;
+  border-bottom: 1px solid #3a3a3a;
+  margin-bottom: 2px;
+}
+
+.fa-stat-section-hdr:first-child {
+  padding-top: 4px;
 }
 
 .fa-stat-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.fa-stat-row:last-child {
+  border-bottom: none;
 }
 
 .fa-stat-label {
   color: #888;
-  font-size: 13px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .fa-stat-value {
   color: #e0e0e0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: bold;
+  text-align: right;
 }
 
 /* Reasoning block */
