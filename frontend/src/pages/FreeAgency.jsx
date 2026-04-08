@@ -19,6 +19,78 @@ const POSITIONS = [
   { label: 'S',   name: 'Safety',             available: false },
 ];
 
+/* ─── Decision Tier Legend (shared) ─── */
+const TIER_LADDER = [
+  { key: 'exceptional', label: 'Exceptional Value', range: '> 20% surplus',   color: '#3de87a' },
+  { key: 'good',        label: 'Good Signing',       range: '5 – 20% surplus', color: '#5dbb6e' },
+  { key: 'fair',        label: 'Fair Deal',           range: '± 5% of value',  color: '#d4c94a' },
+  { key: 'slight-overpay', label: 'Slight Overpay',  range: '5 – 15% over',   color: '#e8a44a' },
+  { key: 'overpay',     label: 'Overpay',             range: '15 – 30% over',  color: '#e07030' },
+  { key: 'poor',        label: 'Poor Signing',        range: '> 30% over',     color: '#e05555' },
+];
+
+function DecisionTierLegend() {
+  return (
+    <div className="fa-tier-legend">
+      <p className="fa-legend-title">Decision Tiers</p>
+      {TIER_LADDER.map((t, i) => (
+        <div key={t.key} className="fa-tier-row">
+          <span className="fa-tier-rank">{i + 1}</span>
+          <span className="fa-tier-dot" style={{ background: t.color }} />
+          <span className="fa-tier-label" style={{ color: t.color }}>{t.label}</span>
+          <span className="fa-tier-range">{t.range}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Signing Grade ─── */
+function signingGradeFromData(fair_aav, cap_burden) {
+  const surplus_pct = (fair_aav - cap_burden) / Math.max(fair_aav, 0.01) * 100;
+  return Math.round(Math.max(0, Math.min(100, 65 + surplus_pct * 1.5)));
+}
+
+function gradeColor(g) {
+  if (g >= 80) return '#3de87a';
+  if (g >= 70) return '#5dbb6e';
+  if (g >= 60) return '#d4c94a';
+  if (g >= 50) return '#e8a44a';
+  if (g >= 35) return '#e07030';
+  return '#e05555';
+}
+
+function gradeLetter(g) {
+  if (g >= 93) return 'A+';
+  if (g >= 85) return 'A';
+  if (g >= 78) return 'B+';
+  if (g >= 70) return 'B';
+  if (g >= 63) return 'C+';
+  if (g >= 55) return 'C';
+  if (g >= 47) return 'D';
+  return 'F';
+}
+
+function SigningGrade({ grade }) {
+  const color = gradeColor(grade);
+  const letter = gradeLetter(grade);
+  const pct = grade;
+  return (
+    <div className="fa-signing-grade">
+      <svg className="fa-grade-ring" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="34" fill="none" stroke="#2a2a2a" strokeWidth="7" />
+        <circle cx="40" cy="40" r="34" fill="none" stroke={color} strokeWidth="7"
+          strokeDasharray={`${2 * Math.PI * 34 * pct / 100} ${2 * Math.PI * 34 * (1 - pct / 100)}`}
+          strokeDashoffset={2 * Math.PI * 34 * 0.25}
+          strokeLinecap="round" />
+        <text x="40" y="37" textAnchor="middle" fill={color} fontSize="16" fontWeight="bold">{grade}</text>
+        <text x="40" y="52" textAnchor="middle" fill={color} fontSize="10">{letter}</text>
+      </svg>
+      <p className="fa-grade-label">Signing Grade</p>
+    </div>
+  );
+}
+
 /* ─── Position Picker ─── */
 function PositionPicker({ onSelect }) {
   return (
