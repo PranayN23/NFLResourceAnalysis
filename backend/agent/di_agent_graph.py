@@ -4,7 +4,7 @@ DI GM Agent — Defensive Interior (DT/NT)
 LangGraph agent that evaluates a Defensive Interior free agent and returns a
 graded SIGN / PASS recommendation. Run-stopping is the primary value driver:
 the stats grade weights stop rate (50%), TFL rate (25%), and pressure rate (25%).
-The composite grade blends 30% model PFF grade + 70% stats-based grade, then
+The composite grade blends 40% model PFF grade + 60% stats-based grade, then
 projects year-by-year over the contract length accounting for the empirical DI
 age curve, cap inflation, and time discounting.
 """
@@ -85,8 +85,8 @@ def _stats_grade(stop_rate: float, tfl_rate: float,
 
 
 def _composite_grade(model_grade: float, stats_gr: float) -> float:
-    """Blend model PFF grade (30%) with stats-based grade (70%)."""
-    return round(0.30 * model_grade + 0.70 * stats_gr, 2)
+    """Blend model PFF grade (40%) with stats-based grade (60%)."""
+    return round(0.40 * model_grade + 0.60 * stats_gr, 2)
 
 
 def _grade_to_tier(grade: float) -> str:
@@ -412,7 +412,7 @@ class DIAgentState(TypedDict):
     last_season_stats: dict
     career_stats:      List[dict]
     stats_score:       float   # stats-based grade
-    composite_grade:   float   # 30% model + 70% stats
+    composite_grade:   float   # 40% model + 60% stats
 
     valuation:            float
     effective_cap_burden: float
@@ -464,7 +464,7 @@ def predict_performance(state: DIAgentState):
         last_stats["sack_rate"],
     )
 
-    # Composite: 30% model, 70% stats, then nudge by health history
+    # Composite: 40% model, 60% stats, then nudge by health history
     raw_cg = _composite_grade(model_grade, sg)
     cg     = round(max(45.0, min(99.0, raw_cg + health_adj)), 2)
 

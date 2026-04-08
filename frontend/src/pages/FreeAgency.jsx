@@ -522,7 +522,7 @@ function StatsPanel({ careerStats, projectedStats }) {
       </div>
       <p className="fa-breakdown-note">
         Career columns show actual per-season stats. Projected years assume 17 healthy games, scaled by the composite grade trajectory.
-        Composite = 30% model PFF grade + 70% stats-based grade (pressure %, sack rate, stops).
+        Composite = 40% model PFF grade + 60% stats-based grade (pressure %, sack rate, stops).
       </p>
     </div>
   );
@@ -1015,7 +1015,7 @@ function DIStatsPanel({ careerStats, projectedStats }) {
       </div>
       <p className="fa-breakdown-note">
         Career columns show actual per-season stats. Projected years assume 17 healthy games.
-        Composite = 30% model PFF grade + 70% stats-based grade (stop rate 40%, TFL 20%, pressure 20%, sacks 20%).
+        Composite = 40% model PFF grade + 60% stats-based grade (stop rate 40%, TFL 20%, pressure 20%, sacks 20%).
       </p>
     </div>
   );
