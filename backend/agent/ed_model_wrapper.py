@@ -1,6 +1,6 @@
 import os
 import sys
-import xgboost  # must import before torch to avoid OpenMP conflict on macOS
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 import torch
 import pandas as pd
 import numpy as np

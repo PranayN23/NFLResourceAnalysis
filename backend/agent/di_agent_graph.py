@@ -4,7 +4,7 @@ DI GM Agent — Defensive Interior (DT/NT)
 LangGraph agent that evaluates a Defensive Interior free agent and returns a
 graded SIGN / PASS recommendation. Run-stopping is the primary value driver:
 the stats grade weights stop rate (50%), TFL rate (25%), and pressure rate (25%).
-The composite grade blends 30% model PFF grade + 70% stats-based grade, then
+The composite grade blends 40% model PFF grade + 60% stats-based grade, then
 projects year-by-year over the contract length accounting for the empirical DI
 age curve, cap inflation, and time discounting.
 """
@@ -12,6 +12,7 @@ age curve, cap inflation, and time discounting.
 from typing import TypedDict, Dict, List
 from langgraph.graph import StateGraph, END
 from backend.agent.di_model_wrapper import DIModelInference
+from backend.agent.team_context import assess_team_fit as _assess_team_fit_logic, aav_to_cap_pcts
 import pandas as pd
 import numpy as np
 import os, datetime
@@ -84,8 +85,8 @@ def _stats_grade(stop_rate: float, tfl_rate: float,
 
 
 def _composite_grade(model_grade: float, stats_gr: float) -> float:
-    """Blend model PFF grade (30%) with stats-based grade (70%)."""
-    return round(0.30 * model_grade + 0.70 * stats_gr, 2)
+    """Blend model PFF grade (40%) with stats-based grade (60%)."""
+    return round(0.40 * model_grade + 0.60 * stats_gr, 2)
 
 
 def _grade_to_tier(grade: float) -> str:
@@ -411,13 +412,22 @@ class DIAgentState(TypedDict):
     last_season_stats: dict
     career_stats:      List[dict]
     stats_score:       float   # stats-based grade
-    composite_grade:   float   # 30% model + 70% stats
+    composite_grade:   float   # 40% model + 60% stats
 
     valuation:            float
     effective_cap_burden: float
     total_nominal_value:  float
     year_breakdown:       List[dict]
     projected_stats:      List[dict]
+
+    # Optional team context (empty when not in team mode)
+    team_name:              str
+    team_cap_available_pct: float
+    positional_need:        float
+    need_label:             str
+    current_roster:         List[dict]
+    signing_cap_pcts:       List[float]
+    team_fit_summary:       str
 
     decision:  str
     reasoning: str
@@ -454,7 +464,7 @@ def predict_performance(state: DIAgentState):
         last_stats["sack_rate"],
     )
 
-    # Composite: 30% model, 70% stats, then nudge by health history
+    # Composite: 40% model, 60% stats, then nudge by health history
     raw_cg = _composite_grade(model_grade, sg)
     cg     = round(max(45.0, min(99.0, raw_cg + health_adj)), 2)
 
@@ -499,6 +509,18 @@ def evaluate_value(state: DIAgentState):
         "year_breakdown":       breakdown,
         "projected_stats":      stat_proj,
     }
+
+
+# ─────────────────────────────────────────────
+# Node 2b: Assess Team Fit (optional — no-op without team)
+# ─────────────────────────────────────────────
+def assess_team_fit(state: DIAgentState):
+    team = state.get("team_name", "")
+    if not team:
+        return {}
+
+    cap_pcts = aav_to_cap_pcts(state["salary_ask"], state["contract_years"])
+    return {"signing_cap_pcts": cap_pcts}
 
 
 # ─────────────────────────────────────────────
@@ -574,7 +596,30 @@ def make_decision(state: DIAgentState):
         f"{rec}"
     )
 
-    return {"decision": decision, "reasoning": reason}
+    # Team-mode adjustment
+    team = state.get("team_name", "")
+    fit_summary = ""
+    if team:
+        need_score = state.get("positional_need", 50)
+        need_lbl = state.get("need_label", "Average")
+        cap_pcts = state.get("signing_cap_pcts", [])
+        avail_pct = state.get("team_cap_available_pct", 100)
+        roster = state.get("current_roster", [])
+
+        adjusted_decision, fit_summary, team_reason = _assess_team_fit_logic(
+            base_decision=decision,
+            surplus_pct=surplus_pct,
+            need_score=need_score,
+            need_label=need_lbl,
+            signing_cap_pcts=cap_pcts,
+            available_cap_pct=avail_pct,
+            roster=roster,
+            player_name=state["player_name"],
+        )
+        decision = adjusted_decision
+        reason = reason + " " + team_reason
+
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary}
 
 
 # ─────────────────────────────────────────────
@@ -583,9 +628,11 @@ def make_decision(state: DIAgentState):
 _workflow = StateGraph(DIAgentState)
 _workflow.add_node("predict_performance", predict_performance)
 _workflow.add_node("evaluate_value",      evaluate_value)
+_workflow.add_node("assess_team_fit",     assess_team_fit)
 _workflow.add_node("make_decision",       make_decision)
 _workflow.set_entry_point("predict_performance")
 _workflow.add_edge("predict_performance", "evaluate_value")
-_workflow.add_edge("evaluate_value",      "make_decision")
+_workflow.add_edge("evaluate_value",      "assess_team_fit")
+_workflow.add_edge("assess_team_fit",     "make_decision")
 _workflow.add_edge("make_decision",       END)
 di_gm_agent = _workflow.compile()

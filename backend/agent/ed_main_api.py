@@ -9,10 +9,21 @@ Usage:
     POST /evaluate  {"player_name": "Myles Garrett", "salary_ask": 25.0, "contract_years": 3}
 """
 
-from fastapi import FastAPI, HTTPException
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from typing import Optional
+
+_thread_pool = ThreadPoolExecutor(max_workers=2)
 from backend.agent.ed_agent_graph import ed_gm_agent, ED_CSV_PATH
+from backend.agent.team_context import (
+    get_team_roster, compute_positional_need, get_team_cap,
+    get_all_teams, aav_to_cap_pcts, is_player_on_team,
+    get_roster_without_player,
+)
 import pandas as pd
 import uvicorn
 import os
@@ -49,10 +60,41 @@ async def get_ed_players():
     return {"players": names}
 
 
+@app.get("/teams")
+async def get_teams():
+    """Return sorted list of all 32 team names from cap data."""
+    teams = get_all_teams()
+    if not teams:
+        teams = sorted(df_players["Team"].dropna().unique().tolist()) if not df_players.empty else []
+    return {"teams": teams}
+
+
+@app.get("/team-roster")
+async def team_roster(team: str = Query(..., description="Team name")):
+    """Return the team's ED players, cap summary, and positional need."""
+    if df_players.empty:
+        raise HTTPException(status_code=503, detail="Player database not loaded.")
+
+    roster = get_team_roster(team, df_players)
+    need_score, need_label = compute_positional_need(roster, position_df=df_players, team=team)
+    allocated_pct, available_pct = get_team_cap(team)
+
+    return {
+        "team": team,
+        "roster": roster,
+        "positional_need": need_score,
+        "need_label": need_label,
+        "allocated_cap_pct": allocated_pct,
+        "available_cap_pct": available_pct,
+    }
+
+
 class EvaluationRequest(BaseModel):
     player_name:    str
     salary_ask:     float           # AAV in $M
-    contract_years: int = Field(default=1, ge=1, le=10)  # length of contract
+    contract_years: int = Field(default=1, ge=1, le=10)
+    team:              str   = ""
+    cap_available_pct: float = 0.0
 
 
 @app.post("/evaluate")
@@ -72,12 +114,71 @@ async def evaluate_player(req: EvaluationRequest):
             detail=f"Player '{req.player_name}' not found in database.",
         )
 
+    # Build team context if team mode is active
+    team_ctx = {}
+    team_state_fields = {
+        "team_name": "",
+        "team_cap_available_pct": 0.0,
+        "positional_need": 0.0,
+        "need_label": "",
+        "current_roster": [],
+        "signing_cap_pcts": [],
+        "team_fit_summary": "",
+    }
+
+    if req.team:
+        roster = get_team_roster(req.team, df_players)
+        re_signing = is_player_on_team(req.player_name, req.team, df_players)
+
+        if re_signing:
+            roster_without = get_roster_without_player(roster, req.player_name)
+            need_score, need_label = compute_positional_need(
+                roster_without, position_df=df_players, team=req.team,
+                exclude_player=req.player_name,
+            )
+            player_cap = next(
+                (p["cap_pct"] for p in roster if p["player"].strip().lower() == req.player_name.strip().lower()),
+                0.0,
+            )
+        else:
+            roster_without = roster
+            need_score, need_label = compute_positional_need(
+                roster, position_df=df_players, team=req.team,
+            )
+            player_cap = 0.0
+
+        allocated_pct, available_pct = get_team_cap(req.team)
+        cap_avail = req.cap_available_pct if req.cap_available_pct > 0 else available_pct
+        if re_signing:
+            cap_avail = cap_avail + player_cap
+        signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years)
+
+        team_state_fields = {
+            "team_name": req.team,
+            "team_cap_available_pct": cap_avail,
+            "positional_need": need_score,
+            "need_label": need_label,
+            "current_roster": roster_without if re_signing else roster,
+            "signing_cap_pcts": signing_pcts,
+            "team_fit_summary": "",
+        }
+        team_ctx = {
+            "team": req.team,
+            "allocated_cap_pct": allocated_pct,
+            "available_cap_pct": cap_avail,
+            "signing_cap_pcts": signing_pcts,
+            "positional_need": need_score,
+            "need_label": need_label,
+            "current_roster": roster_without if re_signing else roster,
+            "is_re_signing": re_signing,
+            "freed_cap_pct": player_cap,
+        }
+
     initial_state = {
         "player_name":    req.player_name,
         "salary_ask":     req.salary_ask,
         "contract_years": req.contract_years,
         "player_history": player_data,
-        # Output fields — initialised to defaults
         "predicted_tier":    "",
         "confidence":        {},
         "current_age":       28,
@@ -92,11 +193,18 @@ async def evaluate_player(req: EvaluationRequest):
         "projected_stats":   [],
         "decision":          "",
         "reasoning":         "",
+        **team_state_fields,
     }
 
-    final_state = ed_gm_agent.invoke(initial_state)
+    loop = asyncio.get_event_loop()
+    final_state = await loop.run_in_executor(
+        _thread_pool, ed_gm_agent.invoke, initial_state
+    )
 
-    return {
+    if req.team:
+        team_ctx["fit_summary"] = final_state.get("team_fit_summary", "")
+
+    response = {
         "player":         req.player_name,
         "decision":       final_state["decision"],
         "reasoning":      final_state["reasoning"],
@@ -115,6 +223,10 @@ async def evaluate_player(req: EvaluationRequest):
             "career_stats":         final_state["career_stats"],
         },
     }
+    if team_ctx:
+        response["team_context"] = team_ctx
+
+    return response
 
 
 if __name__ == "__main__":

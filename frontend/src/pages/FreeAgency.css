@@ -128,9 +128,11 @@ html, body {
   display: flex;
   gap: 24px;
   padding: 24px;
-  min-height: calc(100vh - 60px); /* leave room for navbar */
-  align-items: flex-start;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  align-items: stretch;
 }
+
 
 /* ══════════════════════════════════════════
    Left control panel
@@ -144,7 +146,13 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-height: calc(100vh - 108px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #444 transparent;
 }
+.fa-panel::-webkit-scrollbar { width: 6px; }
+.fa-panel::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
 
 .fa-panel-title {
   color: #ffffff;
@@ -280,6 +288,76 @@ html, body {
   margin-top: 4px;
   font-style: italic;
   line-height: 1.5;
+}
+
+/* ── Decision Tier Legend ── */
+.fa-tier-legend {
+  background: #222;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border: 1px solid #333;
+  max-width: 100%;
+}
+
+.fa-legend-toggle {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+.fa-legend-toggle:hover { color: #fff; }
+
+.fa-toggle-arrow {
+  font-size: 14px;
+  color: #888;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.fa-toggle-arrow.open {
+  transform: rotate(90deg);
+}
+
+.fa-tier-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.fa-tier-rank {
+  color: #555;
+  font-size: 11px;
+  width: 14px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.fa-tier-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fa-tier-label {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.fa-tier-range {
+  color: #666;
+  font-size: 10px;
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ── Contract length slider ── */
@@ -483,14 +561,13 @@ html, body {
    ══════════════════════════════════════════ */
 .fa-chat {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   background: #242424;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  min-height: 600px;
-  max-height: calc(100vh - 108px);
 }
 
 .fa-chat-header {
@@ -501,6 +578,21 @@ html, body {
   letter-spacing: 0.5px;
   border-bottom: 1px solid #333;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fa-chat-team-tag {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #7e6aff;
+  background: rgba(126, 106, 255, 0.12);
+  border: 1px solid rgba(126, 106, 255, 0.3);
+  border-radius: 4px;
+  padding: 2px 8px;
 }
 
 .fa-chat-body {
@@ -597,32 +689,112 @@ html, body {
   border-bottom: 2px solid #a03030;
 }
 
-/* Stats grid */
-.fa-stats-grid {
-  padding: 14px 18px;
+/* ── Re-signing indicator ── */
+.fa-re-sign-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #ffa726;
+  background: rgba(255, 167, 38, 0.12);
+  border: 1px solid rgba(255, 167, 38, 0.35);
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.fa-re-sign-note {
+  font-size: 10px;
+  color: #999;
+  font-style: italic;
+  padding: 2px 0 6px;
+  line-height: 1.5;
+  border-bottom: 1px solid #333;
+  margin-bottom: 4px;
+}
+
+/* ── Tier Description (below signing grade) ── */
+.fa-tier-desc {
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  font-style: italic;
+  padding: 6px 16px 10px;
+  line-height: 1.5;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+/* ── Signing Grade Ring ── */
+.fa-signing-grade {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  padding: 16px 0 12px;
   border-bottom: 1px solid #3a3a3a;
+}
+
+.fa-grade-ring {
+  width: 90px;
+  height: 90px;
+}
+
+.fa-grade-label {
+  color: #888;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+/* Stats grid */
+.fa-stats-grid {
+  padding: 10px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.fa-stat-section-hdr {
+  color: #7e6aff;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 12px 0 6px;
+  border-bottom: 1px solid #3a3a3a;
+  margin-bottom: 2px;
+}
+
+.fa-stat-section-hdr:first-child {
+  padding-top: 4px;
 }
 
 .fa-stat-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.fa-stat-row:last-child {
+  border-bottom: none;
 }
 
 .fa-stat-label {
   color: #888;
-  font-size: 13px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .fa-stat-value {
   color: #e0e0e0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: bold;
+  text-align: right;
 }
 
 /* Reasoning block */
@@ -673,9 +845,357 @@ html, body {
   40%           { transform: scale(1.0); opacity: 1; }
 }
 
+/* ══════════════════════════════════════════
+   Searchable Select (combobox)
+   ══════════════════════════════════════════ */
+.fa-searchable-select {
+  position: relative;
+  width: 100%;
+}
+
+.fa-ss-input {
+  width: 100%;
+  background: #3a3a3a;
+  color: #ffffff;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 10px 32px 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  cursor: text;
+  transition: border-color 0.2s;
+}
+.fa-ss-input:focus { border-color: #7e6aff; }
+.fa-ss-input::placeholder { color: #888; }
+.fa-ss-input.fa-ss-has-value { cursor: pointer; }
+
+.fa-ss-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 10px;
+  pointer-events: none;
+}
+
+.fa-ss-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 6px;
+  z-index: 100;
+  list-style: none;
+  padding: 4px 0;
+  margin: 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
+}
+.fa-ss-list::-webkit-scrollbar { width: 6px; }
+.fa-ss-list::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+
+.fa-ss-item {
+  padding: 8px 12px;
+  color: #ccc;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.fa-ss-item.fa-ss-highlight {
+  background: #444;
+  color: #fff;
+}
+
+.fa-ss-item.fa-ss-selected {
+  color: #7e6aff;
+  font-weight: bold;
+}
+
+.fa-ss-empty {
+  padding: 8px 12px;
+  color: #666;
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════════
+   Team Simulation Mode
+   ══════════════════════════════════════════ */
+
+/* Toggle */
+.fa-team-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.fa-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fa-toggle-label input[type="checkbox"] {
+  display: none;
+}
+
+.fa-toggle-slider {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  background: #444;
+  border-radius: 11px;
+  transition: background 0.25s;
+  flex-shrink: 0;
+}
+
+.fa-toggle-slider::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #aaa;
+  transition: transform 0.25s, background 0.25s;
+}
+
+.fa-toggle-label input:checked + .fa-toggle-slider {
+  background: #7e6aff;
+}
+
+.fa-toggle-label input:checked + .fa-toggle-slider::after {
+  transform: translateX(20px);
+  background: #fff;
+}
+
+.fa-toggle-text {
+  color: #ccc;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* Team section */
+.fa-team-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  background: #222;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+}
+
+/* Need badge */
+.fa-need-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid;
+  background: rgba(0,0,0,0.2);
+}
+
+/* Roster card */
+.fa-roster-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fa-roster-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fa-roster-title {
+  color: #aaa;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fa-roster-note {
+  color: #666;
+  font-size: 10px;
+  font-style: italic;
+  margin: -4px 0 0;
+}
+
+/* Cap bar */
+.fa-cap-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fa-cap-label {
+  color: #777;
+  font-size: 11px;
+  min-width: 55px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.fa-cap-bar {
+  flex: 1;
+  height: 8px;
+  background: #333;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fa-cap-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7e6aff, #e05555);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+.fa-cap-text {
+  color: #ccc;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 42px;
+  text-align: right;
+}
+
+.fa-cap-avail {
+  color: #3de87a;
+}
+
+/* Roster table */
+.fa-roster-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.fa-roster-tbl th {
+  color: #666;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 4px 4px;
+  text-align: right;
+  border-bottom: 1px solid #3a3a3a;
+}
+.fa-roster-tbl th:first-child { text-align: left; }
+
+.fa-roster-tbl td {
+  color: #bbb;
+  padding: 4px 4px;
+  text-align: right;
+  border-bottom: 1px solid #2a2a2a;
+}
+.fa-roster-tbl tr:last-child td { border-bottom: none; }
+
+.fa-roster-name {
+  text-align: left !important;
+  color: #ddd !important;
+  font-weight: bold;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Team fit section (in result card) */
+.fa-team-fit-section {
+  border-top: 2px solid #7e6aff;
+  padding: 0 18px 10px;
+}
+
+.fa-fit-note {
+  font-size: 12px !important;
+  font-weight: normal !important;
+  color: #aaa !important;
+  font-style: italic;
+  max-width: 260px;
+  line-height: 1.4;
+}
+
+/* ── Team-aware decision badge tiers ── */
+.fa-decision-badge.must-sign {
+  background: linear-gradient(135deg, #002a3a, #004455);
+  color: #00e5ff;
+  border-bottom: 2px solid #00b8d4;
+}
+.fa-decision-badge.priority {
+  background: linear-gradient(135deg, #002530, #003d4d);
+  color: #00bcd4;
+  border-bottom: 2px solid #0097a7;
+}
+.fa-decision-badge.luxury-great {
+  background: linear-gradient(135deg, #0a2e20, #124028);
+  color: #66ffb2;
+  border-bottom: 2px solid #40c88a;
+}
+.fa-decision-badge.fill-gap {
+  background: linear-gradient(135deg, #1a2e10, #243a16);
+  color: #8bc34a;
+  border-bottom: 2px solid #689f38;
+}
+.fa-decision-badge.luxury {
+  background: linear-gradient(135deg, #1a2e1a, #243824);
+  color: #a5d6a7;
+  border-bottom: 2px solid #66bb6a;
+}
+.fa-decision-badge.justifiable {
+  background: linear-gradient(135deg, #242e10, #2e3a14);
+  color: #cddc39;
+  border-bottom: 2px solid #afb42b;
+}
+.fa-decision-badge.unnecessary {
+  background: linear-gradient(135deg, #2e2210, #3a2a10);
+  color: #ff9800;
+  border-bottom: 2px solid #f57c00;
+}
+.fa-decision-badge.overpay-consider {
+  background: linear-gradient(135deg, #301a08, #42220a);
+  color: #ef6c00;
+  border-bottom: 2px solid #e65100;
+}
+.fa-decision-badge.wasteful {
+  background: linear-gradient(135deg, #34120a, #461a0e);
+  color: #ff5722;
+  border-bottom: 2px solid #d84315;
+}
+.fa-decision-badge.desperation {
+  background: linear-gradient(135deg, #3a0a0a, #500e0e);
+  color: #ef5350;
+  border-bottom: 2px solid #c62828;
+}
+.fa-decision-badge.cap-mismanage {
+  background: linear-gradient(135deg, #380808, #4a0a0a);
+  color: #e53935;
+  border-bottom: 2px solid #b71c1c;
+}
+.fa-decision-badge.exceeds-cap {
+  background: linear-gradient(135deg, #3a0010, #5a0018);
+  color: #ff1744;
+  border-bottom: 2px solid #d50000;
+}
+
 /* ── Responsive: stack on small screens ── */
 @media (max-width: 720px) {
-  .fa-page { flex-direction: column; padding: 16px; }
-  .fa-panel { flex: none; width: 100%; }
+  .fa-page { flex-direction: column; padding: 16px; height: auto; overflow: visible; }
+  .fa-panel { flex: none; width: 100%; max-height: none; overflow-y: visible; }
   .fa-chat  { min-height: 400px; max-height: 70vh; }
 }
