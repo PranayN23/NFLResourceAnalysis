@@ -97,15 +97,23 @@ class DIModelInference:
                 f"Transformer checkpoint not found: {transformer_path}\n"
                 "Run Player_Model_DI.py first to generate the checkpoint."
             )
+        # Auto-detect seq_len from checkpoint's pos_embedding shape
+        # (pos_embedding shape is [1, seq_len+1, embed_dim])
+        _ckpt = torch.load(transformer_path, map_location=self.device, weights_only=True)
+        _detected_seq_len = SEQ_LEN
+        for _k, _v in _ckpt.items():
+            if "pos_embedding" in _k:
+                _detected_seq_len = _v.shape[1] - 1
+                break
+        self._seq_len = _detected_seq_len
+
         self.model = PlayerTransformerRegressor(
             input_dim=len(self.TRANSFORMER_FEATURES),
-            seq_len=SEQ_LEN,          # imported constant — always in sync
+            seq_len=self._seq_len,
             num_layers=1,
             dropout=0.3,
         ).to(self.device)
-        self.model.load_state_dict(
-            torch.load(transformer_path, map_location=self.device, weights_only=True)
-        )
+        self.model.load_state_dict(_ckpt)
         self.model.eval()
 
         # Load scaler (required for Transformer inference)
@@ -217,11 +225,11 @@ class DIModelInference:
         if self.scaler is None:
             raise RuntimeError("Scaler not loaded — cannot run Transformer inference.")
 
-        history = df_engineered[self.TRANSFORMER_FEATURES].tail(SEQ_LEN)
+        history = df_engineered[self.TRANSFORMER_FEATURES].tail(self._seq_len)
         scaled  = self.scaler.transform(history)
 
         actual_len = len(scaled)
-        pad_len    = SEQ_LEN - actual_len
+        pad_len    = self._seq_len - actual_len
         padded     = np.vstack([np.zeros((pad_len, len(self.TRANSFORMER_FEATURES))), scaled])
         mask       = [True] * pad_len + [False] * actual_len
 
