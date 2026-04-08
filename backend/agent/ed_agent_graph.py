@@ -12,6 +12,7 @@ cap inflation, and time discounting.
 from typing import TypedDict, Dict, List
 from langgraph.graph import StateGraph, END
 from backend.agent.ed_model_wrapper import EDModelInference
+from backend.agent.team_context import assess_team_fit as _assess_team_fit_logic, aav_to_cap_pcts
 import pandas as pd
 import numpy as np
 import os, datetime
@@ -26,7 +27,7 @@ ED_TRANSFORMER = os.path.join(_BASE, "ML", "ED_Transformers", "ed_best_classifie
 ED_SCALER      = os.path.join(_BASE, "ML", "ED_Transformers", "ed_player_scaler.joblib")
 ED_XGB         = os.path.join(_BASE, "ML", "ED_Transformers", "ed_best_xgb.joblib")
 
-ed_engine = EDModelInference(ED_TRANSFORMER, scaler_path=ED_SCALER, xgb_path=ED_XGB)
+ed_engine = EDModelInference(ED_TRANSFORMER, scaler_path=ED_SCALER, xgb_path=None)
 
 
 # ─────────────────────────────────────────────
@@ -416,6 +417,15 @@ class EDAgentState(TypedDict):
     year_breakdown:       List[dict]
     projected_stats:      List[dict]
 
+    # Optional team context (empty when not in team mode)
+    team_name:              str
+    team_cap_available_pct: float
+    positional_need:        float
+    need_label:             str
+    current_roster:         List[dict]
+    signing_cap_pcts:       List[float]
+    team_fit_summary:       str
+
     # Populated by make_decision
     decision:  str
     reasoning: str
@@ -506,6 +516,18 @@ def evaluate_value(state: EDAgentState):
 
 
 # ─────────────────────────────────────────────
+# Node 2b: Assess Team Fit (optional — no-op without team)
+# ─────────────────────────────────────────────
+def assess_team_fit(state: EDAgentState):
+    team = state.get("team_name", "")
+    if not team:
+        return {}
+
+    cap_pcts = aav_to_cap_pcts(state["salary_ask"], state["contract_years"])
+    return {"signing_cap_pcts": cap_pcts}
+
+
+# ─────────────────────────────────────────────
 # Node 3: Make Decision
 # ─────────────────────────────────────────────
 def make_decision(state: EDAgentState):
@@ -579,7 +601,30 @@ def make_decision(state: EDAgentState):
         f"{rec}"
     )
 
-    return {"decision": decision, "reasoning": reason}
+    # Team-mode adjustment
+    team = state.get("team_name", "")
+    fit_summary = ""
+    if team:
+        need_score = state.get("positional_need", 50)
+        need_lbl = state.get("need_label", "Average")
+        cap_pcts = state.get("signing_cap_pcts", [])
+        avail_pct = state.get("team_cap_available_pct", 100)
+        roster = state.get("current_roster", [])
+
+        adjusted_decision, fit_summary, team_reason = _assess_team_fit_logic(
+            base_decision=decision,
+            surplus_pct=surplus_pct,
+            need_score=need_score,
+            need_label=need_lbl,
+            signing_cap_pcts=cap_pcts,
+            available_cap_pct=avail_pct,
+            roster=roster,
+            player_name=state["player_name"],
+        )
+        decision = adjusted_decision
+        reason = reason + " " + team_reason
+
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary}
 
 
 # ─────────────────────────────────────────────
@@ -588,9 +633,11 @@ def make_decision(state: EDAgentState):
 _workflow = StateGraph(EDAgentState)
 _workflow.add_node("predict_performance", predict_performance)
 _workflow.add_node("evaluate_value",      evaluate_value)
+_workflow.add_node("assess_team_fit",     assess_team_fit)
 _workflow.add_node("make_decision",       make_decision)
 _workflow.set_entry_point("predict_performance")
 _workflow.add_edge("predict_performance", "evaluate_value")
-_workflow.add_edge("evaluate_value",      "make_decision")
+_workflow.add_edge("evaluate_value",      "assess_team_fit")
+_workflow.add_edge("assess_team_fit",     "make_decision")
 _workflow.add_edge("make_decision",       END)
 ed_gm_agent = _workflow.compile()
