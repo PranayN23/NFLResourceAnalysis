@@ -1,23 +1,23 @@
 """
-ED GM Agent API
+DI GM Agent API
 
-FastAPI endpoint for evaluating Edge Defender free agents.
+FastAPI endpoint for evaluating Defensive Interior free agents.
 Accepts player name, salary ask (AAV), and contract length in years.
 
 Usage:
-    uvicorn backend.agent.ed_main_api:app --host 0.0.0.0 --port 8002
-    POST /evaluate  {"player_name": "Myles Garrett", "salary_ask": 25.0, "contract_years": 3}
+    uvicorn backend.agent.di_main_api:app --host 0.0.0.0 --port 8003
+    POST /evaluate  {"player_name": "Aaron Donald", "salary_ask": 22.0, "contract_years": 3}
 """
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from backend.agent.ed_agent_graph import ed_gm_agent, ED_CSV_PATH
+from backend.agent.di_agent_graph import di_gm_agent, DI_CSV_PATH
 import pandas as pd
 import uvicorn
 import os
 
-app = FastAPI(title="NFL ED GM Agent API")
+app = FastAPI(title="NFL DI GM Agent API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,23 +26,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load player data once at startup
-if os.path.exists(ED_CSV_PATH):
-    df_players = pd.read_csv(ED_CSV_PATH)
+if os.path.exists(DI_CSV_PATH):
+    df_players = pd.read_csv(DI_CSV_PATH)
     if "player" not in df_players.columns:
         for candidate in ["Player", "Name", "name"]:
             if candidate in df_players.columns:
                 df_players.rename(columns={candidate: "player"}, inplace=True)
                 break
-    print(f"[ED API] Loaded player database: {len(df_players)} rows")
+    print(f"[DI API] Loaded player database: {len(df_players)} rows")
 else:
-    print(f"WARNING: ED player CSV not found at {ED_CSV_PATH}.")
+    print(f"WARNING: DI player CSV not found at {DI_CSV_PATH}.")
     df_players = pd.DataFrame()
 
 
-@app.get("/ed-players")
-async def get_ed_players():
-    """Return sorted list of all ED player names available for evaluation."""
+@app.get("/di-players")
+async def get_di_players():
     if df_players.empty:
         raise HTTPException(status_code=503, detail="Player database not loaded.")
     names = sorted(df_players["player"].dropna().unique().tolist())
@@ -51,19 +49,12 @@ async def get_ed_players():
 
 class EvaluationRequest(BaseModel):
     player_name:    str
-    salary_ask:     float           # AAV in $M
-    contract_years: int = Field(default=1, ge=1, le=10)  # length of contract
+    salary_ask:     float
+    contract_years: int = Field(default=1, ge=1, le=10)
 
 
 @app.post("/evaluate")
 async def evaluate_player(req: EvaluationRequest):
-    """
-    Evaluate an Edge Defender free agent.
-
-    Runs the ED GM agent workflow accounting for contract length,
-    age-based performance decay, and time discounting.
-    Returns a SIGN / PASS recommendation with per-year breakdown.
-    """
     player_data = df_players[df_players["player"] == req.player_name].copy()
 
     if len(player_data) == 0:
@@ -77,7 +68,6 @@ async def evaluate_player(req: EvaluationRequest):
         "salary_ask":     req.salary_ask,
         "contract_years": req.contract_years,
         "player_history": player_data,
-        # Output fields — initialised to defaults
         "predicted_tier":    "",
         "confidence":        {},
         "current_age":       28,
@@ -94,12 +84,12 @@ async def evaluate_player(req: EvaluationRequest):
         "reasoning":         "",
     }
 
-    final_state = ed_gm_agent.invoke(initial_state)
+    final_state = di_gm_agent.invoke(initial_state)
 
     return {
-        "player":         req.player_name,
-        "decision":       final_state["decision"],
-        "reasoning":      final_state["reasoning"],
+        "player":    req.player_name,
+        "decision":  final_state["decision"],
+        "reasoning": final_state["reasoning"],
         "data": {
             "predicted_tier":       final_state["predicted_tier"],
             "current_age":          final_state["current_age"],
@@ -118,4 +108,4 @@ async def evaluate_player(req: EvaluationRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8002)
+    uvicorn.run(app, host="0.0.0.0", port=8003)
