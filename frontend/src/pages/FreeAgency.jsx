@@ -189,6 +189,20 @@ function signingGradeFromData(fair_aav, cap_burden, teamCtx) {
   const surplus_pct = (fair_aav - cap_burden) / Math.max(fair_aav, 0.01) * 100;
   let base = _lerp(_SURPLUS_ANCHORS, _GRADE_ANCHORS, surplus_pct);
 
+  // Prevent tiny-dollar deals from auto-scoring in the 90s/100s.
+  // Even cheap deals consume cap and should not grade like elite-impact signings.
+  const lowValuePenalty = _lerp(
+    [0,   1,   2,   3,   5,   8,   12,  20],
+    [14, 12,  10,   8,   5,   3,    1,   0],
+    Number(fair_aav) || 0
+  );
+  const capFootprintPenalty = _lerp(
+    [0,   0.5, 1,   2,   3,   5,   8,   12],
+    [14, 12,  10,   8,   6,   3,   1,    0],
+    Number(cap_burden) || 0
+  );
+  base = base - (0.7 * lowValuePenalty + 0.6 * capFootprintPenalty);
+
   if (teamCtx && teamCtx.need_label) {
     const strength = teamCtx.positional_need || 50;
     const teamAdj = (50 - strength) * 0.24;
@@ -198,31 +212,39 @@ function signingGradeFromData(fair_aav, cap_burden, teamCtx) {
     const capRatio = yr1Pct / Math.max(availPct, 0.01);
 
     // Cap flexibility adjustment — continuous scale:
-    //   capRatio ~0.10 (tiny % of cap) → +6 pts  (team can easily absorb this)
-    //   capRatio ~0.25                  → +3 pts
-    //   capRatio ~0.35                  →  0 pts  (neutral)
+    //   capRatio ~0.10 (tiny % of cap) →  0 pts
+    //   capRatio ~0.25                  →  0 pts
+    //   capRatio ~0.35                  → -2 pts
     //   capRatio ~0.50                  → -5 pts  (eating half the remaining cap)
     //   capRatio ~0.75                  → -12 pts (almost no room left after)
     //   capRatio ~1.00+                 → -18 pts (barely fits or exceeds cap)
     const capAdj = _lerp(
       [0.0,  0.10, 0.25, 0.35, 0.50, 0.75, 1.0],
-      [8,    6,    3,    0,    -5,   -12,  -18],
+      [0,    0,    0,   -2,    -5,   -12,  -18],
       capRatio
     );
 
-    // Absolute cap room bonus: teams with lots of space can afford overpays
-    //   availPct >= 25% → +4 pts (flush with cash)
-    //   availPct ~15%   → +2 pts
-    //   availPct ~10%   →  0 pts (neutral)
+    // Absolute cap room adjustment (no upside bonus for "cheap" signings):
+    //   availPct >= 25% →  0 pts
+    //   availPct ~15%   →  0 pts
+    //   availPct ~10%   → -1 pts
     //   availPct <= 5%  → -4 pts (cap-strapped, every dollar matters)
     const roomAdj = _lerp(
       [2,   5,   10,  15,  25],
-      [-4,  -3,   0,   2,   4],
+      [-4,  -3,  -1,   0,   0],
       availPct
     );
 
     base = base + teamAdj + capAdj + roomAdj;
   }
+
+  // Hard ceiling by player value tier: low-value deals should not hit top-end grades.
+  const valueCeiling = _lerp(
+    [0,  2,  4,  6,  8,  12, 20, 35],
+    [70, 74, 78, 82, 86, 90, 95, 100],
+    Number(fair_aav) || 0
+  );
+  base = Math.min(base, valueCeiling);
 
   return Math.round(Math.max(0, Math.min(100, base)));
 }

@@ -46,7 +46,7 @@ di_engine = DIModelInference(DI_TRANSFORMER, scaler_path=DI_SCALER, xgb_path=Non
 # Buckner $21M, D.Payne $22M, J.Allen $20M
 # ─────────────────────────────────────────────
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,  100]
-_VALUE_ANCHORS = [0.50, 1.50, 2.75, 5.00, 8.00, 11.0, 14.0, 18.0, 20.5, 23.0, 25.5, 28.0]
+_VALUE_ANCHORS = [1.59, 3.41, 13.64, 19.32, 21.59, 23.86, 30.68, 32.39, 33.30, 34.32, 35.23, 36.02]
 MARKET_CALIBRATION_FACTOR = 0.88
 
 

@@ -27,7 +27,7 @@ _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CB_CSV_PATH = os.path.join(_BASE, "ML", "CB.csv")
 
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [0.75, 2.00, 4.50, 8.50, 13.0, 17.5, 22.5, 27.5, 30.5, 33.0, 35.0, 36.0]
+_VALUE_ANCHORS = [1.59, 3.41, 12.50, 18.18, 18.75, 19.89, 28.41, 30.68, 31.82, 32.95, 34.09, 35.23]
 MARKET_CALIBRATION_FACTOR = 0.88
 
 

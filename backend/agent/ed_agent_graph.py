@@ -44,7 +44,7 @@ ed_engine = EDModelInference(ED_TRANSFORMER, scaler_path=ED_SCALER, xgb_path=Non
 # Grade → Market Value curve (2026 OTC calibrated)
 # ─────────────────────────────────────────────
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [0.75, 2.00, 4.50, 9.50, 15.0, 22.0, 40.0, 44.0, 47.0, 50.0, 53.0, 56.0]
+_VALUE_ANCHORS = [1.59, 3.41, 14.77, 20.45, 27.27, 31.82, 45.45, 48.86, 50.57, 52.27, 53.41, 54.55]
 MARKET_CALIBRATION_FACTOR = 0.88
 
 

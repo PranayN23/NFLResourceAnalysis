@@ -43,7 +43,7 @@ QB_CSV_PATH = os.path.join(_BASE, "ML", "QB.csv")
 # Grade → Market Value (2026 OTC calibrated — QBs command highest AAV)
 # ─────────────────────────────────────────────
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [1.00, 4.00, 10.0, 20.0, 30.0, 40.0, 48.0, 54.0, 58.0, 62.0, 68.0, 75.0]
+_VALUE_ANCHORS = [1.14, 4.55, 26.14, 31.82, 38.64, 47.73, 62.50, 65.91, 68.18, 70.45, 72.73, 75.00]
 MARKET_CALIBRATION_FACTOR = 0.88
 
 

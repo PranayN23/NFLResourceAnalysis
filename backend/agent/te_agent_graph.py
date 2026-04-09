@@ -27,7 +27,7 @@ _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 TE_CSV_PATH = os.path.join(_BASE, "ML", "TightEnds", "TE.csv")
 
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [0.75, 1.50, 3.50, 6.50, 9.50, 12.5, 16.0, 20.0, 23.0, 27.0, 31.0, 35.0]
+_VALUE_ANCHORS = [1.59, 3.41, 7.95, 10.80, 11.93, 13.07, 18.18, 19.89, 20.45, 21.02, 21.59, 21.93]
 MARKET_CALIBRATION_FACTOR = 0.88
 
 
