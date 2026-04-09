@@ -668,10 +668,20 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
     projected_stats: normalizedProjected,
     career_stats: normalizedCareer,
     team_context: team_context || null,
+    meta: {
+      positionKey,
+      ask: Number(ask),
+      years: Number(years),
+      fairAav: Number(effective_fair_aav),
+      burdenAav: Number(effective_cap_burden),
+      playerName: result?.player || '',
+      team: team_context?.team || '',
+      analysisYear: Number(data?.analysis_year || 2025),
+    },
   };
 }
 
-function PositionEvaluator({ positionKey, onBack }) {
+function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
   const cfg = POSITION_FREE_AGENCY[positionKey];
   const apiBase = `http://127.0.0.1:${cfg.port}`;
   const contractMax = 7;
@@ -698,6 +708,12 @@ function PositionEvaluator({ positionKey, onBack }) {
   const [showRankingsDialog, setShowRankingsDialog] = useState(false);
   const [loadingRankings, setLoadingRankings] = useState(false);
   const [teamRankings, setTeamRankings] = useState([]);
+  const [classBuilderOn, setClassBuilderOn] = useState(false);
+  const [classSignings, setClassSignings] = useState([]);
+  const [showClassDialog, setShowClassDialog] = useState(false);
+  const [classStartCapPct, setClassStartCapPct] = useState(null);
+  const [classStartCapInput, setClassStartCapInput] = useState('');
+  const [classCapLocked, setClassCapLocked] = useState(false);
   const [analysisYear, setAnalysisYear] = useState(latestAnalysisYear);
   const [analysisYearMin, setAnalysisYearMin] = useState(2010);
 
@@ -720,6 +736,12 @@ function PositionEvaluator({ positionKey, onBack }) {
     setCapOverrideDirty(false);
     setShowRankingsDialog(false);
     setTeamRankings([]);
+    setClassBuilderOn(false);
+    setClassSignings([]);
+    setShowClassDialog(false);
+    setClassStartCapPct(null);
+    setClassStartCapInput('');
+    setClassCapLocked(false);
     setAnalysisYear(latestAnalysisYear);
     setAnalysisYearMin(2010);
     setStatsOpen({});
@@ -852,6 +874,34 @@ function PositionEvaluator({ positionKey, onBack }) {
     () => [...teamRankings].sort((a, b) => Number(a.rank) - Number(b.rank)),
     [teamRankings]
   );
+  const classGradeSummary = useMemo(() => {
+    if (!classSignings.length) return null;
+    const POS_IMPORTANCE = {
+      QB: 1.45, ED: 1.25, WR: 1.18, CB: 1.15, T: 1.12, DI: 1.08,
+      C: 1.03, G: 1.02, LB: 1.0, S: 0.98, TE: 0.95, HB: 0.9,
+    };
+    let num = 0;
+    let den = 0;
+    const rows = classSignings.map((s) => {
+      const posW = POS_IMPORTANCE[s.positionKey] || 1.0;
+      const profileW = Math.max(0.8, Math.min(1.8, 0.8 + (Number(s.ask) || 0) / 30));
+      const w = posW * profileW;
+      const g = Number(s.signingGrade) || 0;
+      num += g * w;
+      den += w;
+      return { ...s, weight: w, weightedScore: g * w };
+    });
+    const grade = den > 0 ? Math.round(num / den) : 0;
+    return { grade, letter: gradeLetter(grade), rows };
+  }, [classSignings]);
+  const classUsedCapPct = useMemo(
+    () => classSignings.reduce((acc, s) => acc + Number(s.yr1CapPct || 0), 0),
+    [classSignings]
+  );
+  const classRemainingCapPct = useMemo(() => {
+    if (classStartCapPct == null) return null;
+    return Number(classStartCapPct) - classUsedCapPct;
+  }, [classStartCapPct, classUsedCapPct]);
   const handleTeamChange = useCallback((team) => {
     setSelectedTeam(team);
     setCapOverrideDirty(false);
@@ -920,7 +970,60 @@ function PositionEvaluator({ positionKey, onBack }) {
     }
   }, [selectedTeam, analysisYear, apiBase]);
 
+  const handleAddToClass = useCallback((structured) => {
+    if (!structured?.meta) return;
+    const m = structured.meta;
+    if (!m.team) {
+      setError('Enable Team Mode with a selected team to add class signings.');
+      return;
+    }
+    const key = `${m.playerName}::${m.positionKey}::${m.team}::${m.analysisYear}`;
+    setClassSignings((prev) => {
+      if (prev.some((x) => x.key === key)) return prev;
+      const contexts = new Set(prev.map((x) => `${x.team}::${x.analysisYear}`));
+      if (contexts.size > 0 && !contexts.has(`${m.team}::${m.analysisYear}`)) {
+        setError(`Class builder is currently scoped to ${[...contexts][0].replace('::', ' / ')}. Clear class to switch context.`);
+        return prev;
+      }
+      return [
+        ...prev,
+        {
+          key,
+          playerName: m.playerName,
+          positionKey: m.positionKey,
+          team: m.team,
+          analysisYear: m.analysisYear,
+          ask: m.ask,
+          years: m.years,
+          signingGrade: structured.signing_grade,
+          decision: structured.decision,
+          yr1CapPct: Number(structured?.team_context?.signing_cap_pcts?.[0] || 0),
+        },
+      ];
+    });
+  }, []);
+
+  const handleClearClass = useCallback(() => {
+    setClassSignings([]);
+    setClassStartCapPct(null);
+    setClassStartCapInput('');
+    setClassCapLocked(false);
+  }, []);
+
   return (
+    <div className="fa-evaluator-wrap">
+      <div className="fa-top-pos-bar">
+        {POSITIONS.map((pos) => (
+          <button
+            key={pos.label}
+            type="button"
+            className={`fa-top-pos-btn ${pos.label === positionKey ? 'active' : ''}`}
+            onClick={() => onSwitchPosition(pos.label)}
+          >
+            {pos.label}
+          </button>
+        ))}
+      </div>
     <div className="fa-page">
       <div className="fa-panel">
         <button type="button" className="fa-back-btn" onClick={onBack}>← Change Position</button>
@@ -974,6 +1077,35 @@ function PositionEvaluator({ positionKey, onBack }) {
                 >
                   {summarizingTeam ? 'Running Team Evaluation…' : `Smart Team Evaluation (${analysisYear})`}
                 </button>
+                <label className="fa-toggle-label">
+                  <input type="checkbox" checked={classBuilderOn} onChange={(e) => setClassBuilderOn(e.target.checked)} />
+                  <span className="fa-toggle-slider" />
+                  <span className="fa-toggle-text">Free Agency Class Builder</span>
+                </label>
+                <button
+                  type="button"
+                  className="fa-btn"
+                  onClick={() => {
+                    if (!classBuilderOn) setClassBuilderOn(true);
+                    if (classStartCapPct == null) {
+                      const capPct = !isNaN(parseFloat(capOverride)) && parseFloat(capOverride) >= 0
+                        ? (parseFloat(capOverride) / SALARY_CAP_M) * 100
+                        : Number(teamRoster?.available_cap_pct || 0);
+                      setClassStartCapPct(capPct);
+                      setClassStartCapInput((capPct || 0).toFixed(1));
+                    }
+                    setShowClassDialog(true);
+                  }}
+                >
+                  {classBuilderOn
+                    ? `Open Free Agency Class (${classSignings.length})`
+                    : 'Enable + Open Free Agency Class'}
+                </button>
+                {classBuilderOn && (
+                  <p className="fa-hint">
+                    Analyze players, then click <strong>Add this signing to class</strong> in each result card.
+                  </p>
+                )}
               </>
             )}
 
@@ -1116,6 +1248,15 @@ function PositionEvaluator({ positionKey, onBack }) {
                   <div className={`fa-decision-badge ${msg.structured.highlight}`}>
                     {msg.structured.decision}
                   </div>
+                  {classBuilderOn && msg.structured?.meta?.team && (
+                    <button
+                      type="button"
+                      className="fa-summary-link-btn"
+                      onClick={() => handleAddToClass(msg.structured)}
+                    >
+                      Add this signing to class
+                    </button>
+                  )}
 
                   <SigningGrade grade={msg.structured.signing_grade} />
 
@@ -1232,6 +1373,89 @@ function PositionEvaluator({ positionKey, onBack }) {
           </div>
         </div>
       )}
+      {showClassDialog && (
+        <div className="fa-rankings-overlay" onClick={() => setShowClassDialog(false)}>
+          <div className="fa-rankings-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="fa-rankings-header">
+              <h3>Free Agency Class Grade</h3>
+              <button type="button" className="fa-back-btn" onClick={() => setShowClassDialog(false)}>Close</button>
+            </div>
+            {!classGradeSummary ? (
+              <p className="fa-hint">No signings added yet.</p>
+            ) : (
+              <div>
+                <div className="fa-field" style={{ marginBottom: 10 }}>
+                  <label className="fa-label">Starting Cap for Class (%)</label>
+                  <div className="fa-price-row">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      className="fa-input"
+                      value={classStartCapInput}
+                      disabled={classCapLocked}
+                      onChange={(e) => setClassStartCapInput(e.target.value)}
+                    />
+                    <span className="fa-million">%</span>
+                  </div>
+                  <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+                    <button
+                      type="button"
+                      className="fa-btn"
+                      onClick={() => {
+                        const v = Number(classStartCapInput);
+                        if (Number.isFinite(v) && v >= 0) {
+                          setClassStartCapPct(v);
+                          setClassCapLocked(true);
+                        }
+                      }}
+                      disabled={classCapLocked}
+                    >
+                      {classCapLocked ? 'Starting Cap Locked' : 'Lock Starting Cap'}
+                    </button>
+                    {classCapLocked && (
+                      <button
+                        type="button"
+                        className="fa-btn"
+                        onClick={() => setClassCapLocked(false)}
+                      >
+                        Unlock
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <p className="fa-msg-text">
+                  Class Grade: <strong>{classGradeSummary.grade} ({classGradeSummary.letter})</strong>
+                </p>
+                <p className="fa-msg-text">
+                  Cap Used (Yr 1): <strong>{classUsedCapPct.toFixed(1)}%</strong>
+                  {' '}· Remaining:{' '}
+                  <strong style={{ color: classRemainingCapPct != null && classRemainingCapPct < 0 ? '#e05555' : '#3de87a' }}>
+                    {classRemainingCapPct == null ? 'N/A' : `${classRemainingCapPct.toFixed(1)}%`}
+                  </strong>
+                </p>
+                <div className="fa-rankings-grid">
+                  {classGradeSummary.rows.map((r) => (
+                    <div key={r.key} className="fa-ranking-card">
+                      <div className="fa-ranking-row">
+                        <span className="fa-ranking-pos">{r.positionKey} — {r.playerName}</span>
+                        <span className="fa-ranking-badge mid">{Math.round(r.signingGrade)}</span>
+                      </div>
+                      <div className="fa-hint">
+                        ${r.ask}M x {r.years}y · Yr1 cap {Number(r.yr1CapPct || 0).toFixed(1)}% · weight {r.weight.toFixed(2)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 10 }}>
+                  <button type="button" className="fa-btn" onClick={handleClearClass}>Clear Class</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
     </div>
   );
 }
@@ -1248,6 +1472,7 @@ function FreeAgency() {
     <PositionEvaluator
       positionKey={selectedPosition}
       onBack={() => setSelectedPosition(null)}
+      onSwitchPosition={setSelectedPosition}
     />
   );
 }
