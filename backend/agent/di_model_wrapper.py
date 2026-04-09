@@ -252,7 +252,7 @@ class DIModelInference:
 
         Returns
         -------
-        tier    : str  — "Elite" | "Starter" | "Rotation" | "Reserve/Poor"
+        tier    : str  — "Elite" | "Good" | "Starter" | "Rotation/backup"
         details : dict — predicted_grade, transformer_grade, xgb_grade, age_adjustment
         """
         if player_history.empty:
@@ -326,14 +326,8 @@ class DIModelInference:
     # ============================================================
     @staticmethod
     def _tier(grade: float) -> str:
-        if grade >= 80:
-            return "Elite"
-        elif grade >= 70:
-            return "Starter"
-        elif grade >= 60:
-            return "Rotation"
-        else:
-            return "Reserve/Poor"
+        from backend.agent.grade_projection import grade_to_tier_universal
+        return grade_to_tier_universal(grade)
 
     # ============================================================
     # Legacy alias — keeps any existing callers working

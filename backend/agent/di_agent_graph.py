@@ -12,7 +12,17 @@ age curve, cap inflation, and time discounting.
 from typing import TypedDict, Dict, List
 from langgraph.graph import StateGraph, END
 from backend.agent.di_model_wrapper import DIModelInference
-from backend.agent.team_context import assess_team_fit as _assess_team_fit_logic, aav_to_cap_pcts
+from backend.agent.team_context import (
+    assess_team_fit as _assess_team_fit_logic,
+    aav_to_cap_pcts,
+    decision_fair_aav_with_replacement,
+)
+from backend.agent.grade_projection import (
+    grade_to_tier_universal,
+    player_recent_grade_yoy,
+    apply_yearly_grade_step,
+)
+from backend.agent.stat_projection_utils import run_def_snap_load_17, inactivity_retirement_penalty, apply_inactivity_to_projection_list, apply_projection_plausibility_caps
 import pandas as pd
 import numpy as np
 import os, datetime
@@ -90,16 +100,12 @@ def _composite_grade(model_grade: float, stats_gr: float) -> float:
 
 
 def _grade_to_tier(grade: float) -> str:
-    if grade >= 80: return "Elite"
-    if grade >= 70: return "Starter"
-    if grade >= 60: return "Rotation"
-    return "Reserve/Poor"
+    return grade_to_tier_universal(grade)
 
 
 # ─────────────────────────────────────────────
-# Age-based annual grade delta
-# Derived from empirical medians across DI season transitions.
-# DI linemen peak earlier (22-23) and have a pronounced cliff at 33.
+# Age-based annual grade delta (DI-specific; from empirical DI season transitions).
+# Interior peak/cliff pattern differs from EDGE and from offensive skill positions.
 # ─────────────────────────────────────────────
 _AGE_DELTAS = {
     21: +2.4, 22: +4.7, 23: -0.3, 24: +0.5,
@@ -244,9 +250,9 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     career_pressure_rate = c_prs    / c_d_snaps * 100
     career_sack_rate     = c_sacks  / c_d_snaps * 100
 
-    # Career average snaps per game → 17-game projections
-    proj_snaps_d  = round(c_d_snaps  / c_games * 17)
-    proj_snaps_dl = round(c_dl_snaps / c_games * 17)
+    # Career average snaps per game → 17-game projections (starter-role floor)
+    proj_snaps_d  = round(run_def_snap_load_17(c_d_snaps, c_games))
+    proj_snaps_dl = round(run_def_snap_load_17(c_dl_snaps, c_games, floor_17=600.0))
 
     stops_17g = round(career_stop_rate     / 100 * proj_snaps_d,  1)
     tfl_17g   = round(career_tfl_rate      / 100 * proj_snaps_d,  1)
@@ -316,19 +322,26 @@ def _compute_health_factor(history: pd.DataFrame) -> tuple:
 # ─────────────────────────────────────────────
 # Stat projection
 # ─────────────────────────────────────────────
-def project_stats(last_stats: dict, composite_gr: float,
-                  current_age: int, contract_years: int) -> List[dict]:
+def project_stats(
+    last_stats: dict,
+    composite_gr: float,
+    current_age: int,
+    contract_years: int,
+    history: pd.DataFrame = None,
+    grade_col: str = "grades_defense",
+) -> List[dict]:
     """
     Project stats forward year-by-year (17 healthy games assumed).
     Counts scaled by grade ratio; capped at historical maximums.
     """
     projections = []
     grade = composite_gr
+    player_yoy = player_recent_grade_yoy(history, grade_col)
 
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
-            grade = max(45.0, min(99.0, grade + _annual_grade_delta(age - 1)))
+            grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
 
         scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
 
@@ -355,17 +368,25 @@ DISCOUNT_RATE   = 0.08    # 8%/yr — roster uncertainty & cap risk
 CAP_GROWTH_RATE = 0.065   # 6.5%/yr — historical NFL cap growth
 
 
-def compute_contract_value(composite_gr, current_age, contract_years, salary_ask):
+def compute_contract_value(
+    composite_gr,
+    current_age,
+    contract_years,
+    salary_ask,
+    history: pd.DataFrame = None,
+    grade_col: str = "grades_defense",
+):
     breakdown           = []
     total_disc_value    = 0.0
     total_disc_ask      = 0.0
     total_nominal_value = 0.0
     grade               = float(composite_gr)
+    player_yoy = player_recent_grade_yoy(history, grade_col)
 
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
-            grade = max(45.0, min(99.0, grade + _annual_grade_delta(age - 1)))
+            grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
 
         cap_factor    = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
         time_discount = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
@@ -456,6 +477,7 @@ def predict_performance(state: DIAgentState):
     career_stats = extract_career_stats(history)
 
     health_adj, avg_avail = _compute_health_factor(history)
+    inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=current_year)
 
     sg = _stats_grade(
         last_stats["stop_rate"],
@@ -466,7 +488,7 @@ def predict_performance(state: DIAgentState):
 
     # Composite: 40% model, 60% stats, then nudge by health history
     raw_cg = _composite_grade(model_grade, sg)
-    cg     = round(max(45.0, min(99.0, raw_cg + health_adj)), 2)
+    cg     = round(max(45.0, min(99.0, raw_cg + health_adj + inactivity_adj)), 2)
 
     return {
         "predicted_tier":    _grade_to_tier(cg),
@@ -480,6 +502,7 @@ def predict_performance(state: DIAgentState):
             "stats_grade":       sg,
             "composite_grade":   cg,
             "health_factor":     health_adj,
+            "inactivity_penalty": inactivity_adj,
             "avg_availability":  avg_avail,
             "xgb_grade":         details.get("xgb_grade"),
             "transformer_grade": details.get("transformer_grade"),
@@ -497,10 +520,17 @@ def evaluate_value(state: DIAgentState):
     contract_years = state["contract_years"]
     salary_ask     = state["salary_ask"]
 
+    hist = state.get("player_history")
     fair_aav, eff_burden, total_nom, breakdown = compute_contract_value(
-        cg, current_age, contract_years, salary_ask
+        cg, current_age, contract_years, salary_ask, history=hist, grade_col="grades_defense",
     )
-    stat_proj = project_stats(state["last_season_stats"], cg, current_age, contract_years)
+    stat_proj = project_stats(
+        state["last_season_stats"], cg, current_age, contract_years,
+        history=hist, grade_col="grades_defense",
+    )
+    inact_pen = float((state.get("confidence") or {}).get("inactivity_penalty", 0.0))
+    stat_proj = apply_inactivity_to_projection_list(stat_proj, inact_pen)
+    stat_proj = apply_projection_plausibility_caps(stat_proj, state.get("career_stats") or [])
 
     return {
         "valuation":            fair_aav,
@@ -557,8 +587,17 @@ def make_decision(state: DIAgentState):
     elif age <= 32: trajectory = "entering post-prime decline"
     else:           trajectory = "in steep age-related decline"
 
-    surplus     = round(val - burden, 2)
-    surplus_pct = (val - burden) / max(val, 0.01) * 100
+    team_nm = state.get("team_name", "")
+    roster = state.get("current_roster") or []
+    val_dec = val
+    rep_note = ""
+    if team_nm and roster:
+        val_dec, rep_note = decision_fair_aav_with_replacement(
+            val, grade_to_market_value, cg, roster, "DI",
+        )
+
+    surplus = round(val_dec - burden, 2)
+    surplus_pct = (val_dec - burden) / max(val_dec, 0.01) * 100
 
     if surplus_pct >= 20:
         decision    = "Exceptional Value"
@@ -595,6 +634,8 @@ def make_decision(state: DIAgentState):
         f"{cap_note} Total nominal player value: ${total}M vs. total ask: ${total_ask}M. "
         f"{rec}"
     )
+    if rep_note:
+        reason = reason + rep_note
 
     # Team-mode adjustment
     team = state.get("team_name", "")

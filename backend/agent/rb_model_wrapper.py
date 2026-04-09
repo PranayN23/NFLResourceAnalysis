@@ -216,11 +216,5 @@ class RBModelInference:
             return min(base_penalty + additional, 20.0)
 
     def get_tier(self, grade):
-        if grade >= 75.0:
-            return "Elite"
-        elif grade >= 65.0:
-            return "Starter"
-        elif grade >= 55.0:
-            return "Rotation"
-        else:
-            return "Reserve/Poor"
+        from backend.agent.grade_projection import grade_to_tier_universal
+        return grade_to_tier_universal(grade)

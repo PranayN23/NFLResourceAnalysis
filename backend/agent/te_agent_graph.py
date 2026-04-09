@@ -1,8 +1,9 @@
 """
-HB/RB GM Agent — Running Back Free Agency Evaluator
+TE GM Agent — Tight End Free Agency Evaluator
 
-Stats grade weighted by: yco_attempt 30%, ypc 25%, elusive_rating 20%,
-receptions_per_game 15%, epa_per_touch 10%.
+Stats grade weighted by: pass_block_grade 25%, yprr 25%,
+yards_per_reception 20%, epa_per_target 20%, drop_rate_inverse 10%.
+Blocking is a key differentiator at this position.
 """
 
 from typing import TypedDict, Dict, List
@@ -23,10 +24,10 @@ import numpy as np
 import os, datetime
 
 _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-HB_CSV_PATH = os.path.join(_BASE, "ML", "HB.csv")
+TE_CSV_PATH = os.path.join(_BASE, "ML", "TightEnds", "TE.csv")
 
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [0.75, 1.50, 3.00, 6.00, 10.0, 14.0, 18.0, 22.0, 26.0, 30.0, 34.0, 38.0]
+_VALUE_ANCHORS = [0.75, 1.50, 4.00, 8.00, 12.0, 16.0, 21.0, 26.0, 31.0, 36.0, 42.0, 48.0]
 MARKET_CALIBRATION_FACTOR = 0.88
 
 
@@ -35,22 +36,23 @@ def grade_to_market_value(grade: float) -> float:
     return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)) * MARKET_CALIBRATION_FACTOR, 2)
 
 
-# Stats anchors: empirical league medians for HBs
-_YCO_ANCHORS = [0.0, 2.0, 2.5, 3.0, 3.5, 5.0]
-_YPC_ANCHORS = [0.0, 3.5, 4.0, 4.5, 5.0, 6.5]
-_ELU_ANCHORS = [0.0, 30.0, 45.0, 60.0, 75.0, 100.0]
-_REC_ANCHORS = [0.0, 1.0,  2.0,  3.5,  4.5,  6.5]   # receptions per game
-_EPA_ANCHORS = [-0.4, -0.10, 0.00, 0.05, 0.10, 0.20]  # epa per touch
+# Stats anchors for TEs
+_PB_ANCHORS   = [0.0, 50.0, 60.0, 70.0, 80.0, 92.0]   # pass_block_grade
+_YPRR_ANCHORS = [0.0, 0.8,  1.2,  1.6,  2.0,  3.0]    # yards per route run
+_YPR_ANCHORS  = [0.0, 7.0,  9.0, 11.0, 13.0, 16.0]    # yards per reception
+_EPA_T_ANCHORS= [-0.3, -0.1, 0.0,  0.1,  0.2,  0.35]  # epa per target
+_DROP_ANCHORS = [0.0, 0.85, 0.90, 0.94, 0.97, 1.0]    # 1 - drop_rate
 _STAT_GRD_SCALE = [45.0, 55.0, 65.0, 75.0, 85.0, 99.0]
 
 
-def _stats_grade(yco_attempt, ypc, elusive_rating, rec_per_game, epa_per_touch):
-    yc = float(np.interp(yco_attempt,  _YCO_ANCHORS, _STAT_GRD_SCALE))
-    yp = float(np.interp(ypc,          _YPC_ANCHORS, _STAT_GRD_SCALE))
-    el = float(np.interp(elusive_rating, _ELU_ANCHORS, _STAT_GRD_SCALE))
-    rc = float(np.interp(rec_per_game, _REC_ANCHORS, _STAT_GRD_SCALE))
-    ep = float(np.interp(epa_per_touch, _EPA_ANCHORS, _STAT_GRD_SCALE))
-    return round(0.30 * yc + 0.25 * yp + 0.20 * el + 0.15 * rc + 0.10 * ep, 2)
+def _stats_grade(pass_block_grade, yprr, yards_per_rec, epa_per_target, drop_rate):
+    drop_inverse = max(0.0, 1.0 - drop_rate)
+    pb = float(np.interp(pass_block_grade, _PB_ANCHORS, _STAT_GRD_SCALE))
+    yp = float(np.interp(yprr,          _YPRR_ANCHORS, _STAT_GRD_SCALE))
+    yr = float(np.interp(yards_per_rec,  _YPR_ANCHORS, _STAT_GRD_SCALE))
+    ep = float(np.interp(epa_per_target, _EPA_T_ANCHORS, _STAT_GRD_SCALE))
+    dr = float(np.interp(drop_inverse,   _DROP_ANCHORS, _STAT_GRD_SCALE))
+    return round(0.25 * pb + 0.25 * yp + 0.20 * yr + 0.20 * ep + 0.10 * dr, 2)
 
 
 def _composite_grade(model_grade, stats_gr):
@@ -61,11 +63,11 @@ def _grade_to_tier(grade):
     return grade_to_tier_universal(grade)
 
 
-# HB/RB: median YoY grades_offense change on consecutive ML/HB.csv seasons (key = age at start of transition).
-# Regenerate: backend/agent/compute_position_age_curves.py
+# TE-specific: median YoY grades_offense on consecutive ML/TightEnds/TE.csv seasons.
 _AGE_DELTAS = {
-    20: -0.8, 21: -0.8, 22: +1.8, 23: -0.9, 24: -1.3, 25: -1.1, 26: -1.6,
-    27: +0.2, 28: -4.6, 29: -4.3, 30: -2.7, 31: -1.1, 32: +0.2, 33: -4.0,
+    20: +2.0, 21: +2.0, 22: +1.4, 23: -0.8, 24: +0.1, 25: -2.3, 26: -1.7,
+    27: -2.9, 28: -1.5, 29: -1.9, 30: -0.9, 31: -3.1, 32: -4.4, 33: +1.4,
+    34: -4.0,
 }
 
 
@@ -84,41 +86,36 @@ def _safe_float(val, default=0.0):
 
 
 def _has_valid_stats(row):
-    for col in ("yards", "attempts", "grades_offense", "total_touches"):
+    for col in ("yards", "receptions", "grades_offense"):
         val = row.get(col)
         try:
             f = float(val)
-            if not np.isnan(f):
-                return True
-        except Exception:
-            pass
+            if not np.isnan(f): return True
+        except Exception: pass
     return False
 
 
 def extract_career_stats(history: pd.DataFrame) -> List[dict]:
     seasons = []
     for _, row in history.sort_values("Year").iterrows():
-        if not _has_valid_stats(row):
-            continue
+        if not _has_valid_stats(row): continue
         year = int(_safe_float(row.get("Year"), 2024))
         max_g = 17.0 if year >= 2021 else 16.0
         games = max(1.0, min(max_g, _safe_float(row.get("player_game_count"), max_g)))
-        att = max(1.0, _safe_float(row.get("attempts"), 1.0))
+        recs = max(1.0, _safe_float(row.get("receptions"), 1.0))
         seasons.append({
             "season":          year,
             "games_played":    int(games),
             "max_games":       int(max_g),
+            "receptions":      round(recs),
             "yards":           round(_safe_float(row.get("yards"))),
-            "attempts":        round(att),
-            "ypc":             round(_safe_float(row.get("yards")) / att, 2),
-            "yco_attempt":     round(_safe_float(row.get("yco_attempt")), 2),
-            "touchdowns":      round(_safe_float(row.get("touchdowns"))),
-            "receptions":      round(_safe_float(row.get("receptions"))),
-            "rec_yards":       round(_safe_float(row.get("rec_yards"))),
-            "elusive_rating":  round(_safe_float(row.get("elusive_rating")), 1),
-            "broken_tackles":  round(_safe_float(row.get("avoided_tackles"))),
+            "yards_per_rec":   round(_safe_float(row.get("yards_per_reception")), 2),
+            "yprr":            round(_safe_float(row.get("yprr")), 3),
+            "drop_rate":       round(_safe_float(row.get("drop_rate")), 4),
+            "drops":           round(_safe_float(row.get("drops"))),
             "epa":             round(_safe_float(row.get("Net EPA")), 2),
-            "run_grade":       round(_safe_float(row.get("grades_run")), 1),
+            "pass_block_grade":round(_safe_float(row.get("grades_pass_block")), 1),
+            "run_block_grade": round(_safe_float(row.get("snap_counts_run_block")), 0) if "snap_counts_run_block" in row.index else 0,
             "overall_grade":   round(_safe_float(row.get("grades_offense")), 1),
         })
     return seasons
@@ -127,71 +124,48 @@ def extract_career_stats(history: pd.DataFrame) -> List[dict]:
 def extract_last_season_stats(history: pd.DataFrame) -> dict:
     sorted_hist = history.sort_values("Year")
     valid_rows = sorted_hist[sorted_hist.apply(_has_valid_stats, axis=1)]
-    if valid_rows.empty:
-        valid_rows = sorted_hist
+    if valid_rows.empty: valid_rows = sorted_hist
     row = valid_rows.iloc[-1]
     year = int(_safe_float(row.get("Year"), 2024))
     max_g = 17.0 if year >= 2021 else 16.0
     games = max(1.0, min(max_g, _safe_float(row.get("player_game_count"), max_g)))
     avail = round(games / max_g, 3)
 
-    # Career-weighted rates
-    c_yards = c_att = c_rec = c_tgts = c_rec_yds = c_tds = c_touches = c_btts = 0.0
-    c_yco = c_elu = c_epa = c_games = 0.0
+    c_yards = c_recs = c_tgts = c_drops = c_routes = c_epa = c_games = 0.0
     for _, r in valid_rows.iterrows():
         yr_g = 17.0 if int(_safe_float(r.get("Year"), 2024)) >= 2021 else 16.0
         g = max(1.0, min(yr_g, _safe_float(r.get("player_game_count"), yr_g)))
-        c_yards   += _safe_float(r.get("yards"))
-        c_att     += _safe_float(r.get("attempts"))
-        c_rec     += _safe_float(r.get("receptions"))
-        c_tgts    += _safe_float(r.get("targets"))
-        c_rec_yds += _safe_float(r.get("rec_yards"))
-        c_tds     += _safe_float(r.get("touchdowns"))
-        c_touches += _safe_float(r.get("total_touches"))
-        c_btts    += _safe_float(r.get("avoided_tackles"))
-        c_yco     += _safe_float(r.get("yco_attempt")) * max(1, _safe_float(r.get("attempts")))
-        c_elu     += _safe_float(r.get("elusive_rating"))
-        c_epa     += _safe_float(r.get("Net EPA"))
-        c_games   += g
+        c_yards  += _safe_float(r.get("yards"))
+        c_recs   += _safe_float(r.get("receptions"))
+        c_tgts   += _safe_float(r.get("targets"))
+        c_drops  += _safe_float(r.get("drops"))
+        c_routes += _safe_float(r.get("routes"))
+        c_epa    += _safe_float(r.get("Net EPA"))
+        c_games  += g
 
-    c_att   = max(c_att, 1.0)
-    c_games = max(c_games, 1.0)
-    c_touches = max(c_touches, 1.0)
-
-    career_ypc       = c_yards / c_att
-    career_yco       = c_yco / c_att
-    career_elu       = c_elu / max(len(valid_rows), 1)
-    career_rec_pg    = c_rec / c_games
-    career_epa_touch = c_epa / c_touches
-    c_tgts = max(c_tgts, 1.0)
-    proj_att_17g     = max(round(c_att / c_games * 17), 188)
-    tgt_17 = offense_target_load_17(c_tgts, c_games, floor_17=42.0, max_17=98.0)
-    proj_rec_17g     = max(round(c_rec / c_games * 17), round(tgt_17 * 0.82))
+    c_recs  = max(c_recs, 1.0); c_tgts = max(c_tgts, 1.0)
+    c_routes= max(c_routes, 1.0); c_games = max(c_games, 1.0)
+    tgt_17 = offense_target_load_17(c_tgts, c_games, floor_17=58.0, max_17=118.0)
+    proj_recs_17g = max(round(c_recs / c_games * 17), round(tgt_17 * 0.62))
 
     return {
-        "season":         year,
-        "games_played":   int(games),
-        "max_games":      int(max_g),
-        "availability":   avail,
-        "yards":          round(_safe_float(row.get("yards"))),
-        "attempts":       round(_safe_float(row.get("attempts"))),
-        "touchdowns":     round(_safe_float(row.get("touchdowns"))),
-        "receptions":     round(_safe_float(row.get("receptions"))),
-        "rec_yards":      round(_safe_float(row.get("rec_yards"))),
-        "broken_tackles": round(_safe_float(row.get("avoided_tackles"))),
-        "run_grade":      round(_safe_float(row.get("grades_run")), 1),
+        "season":          year,
+        "games_played":    int(games),
+        "max_games":       int(max_g),
+        "availability":    avail,
+        "receptions":      round(_safe_float(row.get("receptions"))),
+        "yards":           round(_safe_float(row.get("yards"))),
+        "drops":           round(_safe_float(row.get("drops"))),
+        "pass_block_grade":round(_safe_float(row.get("grades_pass_block")), 1),
         # Career rates
-        "ypc":            round(career_ypc, 2),
-        "yco_attempt":    round(career_yco, 2),
-        "elusive_rating": round(career_elu, 1),
-        "rec_per_game":   round(career_rec_pg, 2),
-        "epa_per_touch":  round(career_epa_touch, 4),
+        "yprr":            round(c_yards / c_routes, 3),
+        "yards_per_rec":   round(c_yards / c_recs, 2),
+        "drop_rate":       round(c_drops / c_tgts, 4),
+        "epa_per_target":  round(c_epa / c_tgts, 4),
         # 17g projections
-        "yards_17g":      round(career_ypc * proj_att_17g),
-        "tds_17g":        round(c_tds / c_games * 17, 1),
-        "rec_17g":        proj_rec_17g,
-        "rec_yards_17g":  round(c_rec_yds / c_games * 17),
-        "proj_att_17g":   proj_att_17g,
+        "yards_17g":       round((c_yards / c_recs) * proj_recs_17g),
+        "recs_17g":        proj_recs_17g,
+        "proj_recs_17g":   proj_recs_17g,
     }
 
 
@@ -208,8 +182,7 @@ def _compute_health_factor(history: pd.DataFrame) -> tuple:
     w = weights[-n:]
     w = [x / sum(w) for x in w]
     avg_avail = sum(a * wt for a, wt in zip(avail_list, w))
-    adj = (avg_avail - 0.75) * 10.0
-    adj = max(-5.0, min(2.5, adj))
+    adj = max(-5.0, min(2.5, (avg_avail - 0.75) * 10.0))
     return round(adj, 2), round(avg_avail, 3)
 
 
@@ -230,22 +203,18 @@ def project_stats(
             grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
         scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
         projections.append({
-            "year":           yr,
-            "age":            age,
-            "projected_grade": round(grade, 1),
-            "yards":          round(min(2500, last_stats["yards_17g"] * scale)),
-            "touchdowns":     round(min(25, last_stats["tds_17g"] * scale), 1),
-            "receptions":     round(min(100, last_stats["rec_17g"] * scale)),
-            "rec_yards":      round(min(1200, last_stats["rec_yards_17g"] * scale)),
-            "ypc":            round(min(8, last_stats["ypc"] * scale), 2),
-            "elusive_rating": round(min(100, last_stats["elusive_rating"] * scale), 1),
-            "run_grade":      round(min(99, last_stats["run_grade"] * scale), 1),
+            "year": yr, "age": age, "projected_grade": round(grade, 1),
+            "receptions":      round(min(120, last_stats["recs_17g"] * scale)),
+            "yards":           round(min(1700, last_stats["yards_17g"] * scale)),
+            "yprr":            round(min(4, last_stats["yprr"] * scale), 3),
+            "yards_per_rec":   round(min(20, last_stats["yards_per_rec"] * scale), 2),
+            "pass_block_grade":round(min(99, last_stats["pass_block_grade"] * scale), 1),
+            "drop_rate":       round(max(0, last_stats["drop_rate"] / max(scale, 0.5)), 4),
         })
     return projections
 
 
-DISCOUNT_RATE   = 0.08
-CAP_GROWTH_RATE = 0.065
+DISCOUNT_RATE = 0.08; CAP_GROWTH_RATE = 0.065
 
 
 def compute_contract_value(
@@ -256,39 +225,34 @@ def compute_contract_value(
     history: pd.DataFrame = None,
     grade_col: str = "grades_offense",
 ):
-    breakdown = []
-    total_disc_value = total_disc_ask = total_nominal_value = 0.0
+    breakdown = []; total_disc_value = total_disc_ask = total_nominal_value = 0.0
     grade = float(composite_gr)
     player_yoy = player_recent_grade_yoy(history, grade_col)
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
             grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
-        cap_factor    = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
+        cap_factor = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
         time_discount = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
-        base_value    = grade_to_market_value(grade)
+        base_value = grade_to_market_value(grade)
         nominal_value = base_value * cap_factor
-        disc_value    = nominal_value * time_discount
-        cap_adj_ask   = salary_ask / cap_factor
-        disc_ask      = cap_adj_ask * time_discount
+        cap_adj_ask = salary_ask / cap_factor
         total_nominal_value += nominal_value
-        total_disc_value    += disc_value
-        total_disc_ask      += disc_ask
+        total_disc_value += nominal_value * time_discount
+        total_disc_ask += cap_adj_ask * time_discount
         breakdown.append({
-            "year": yr, "age": age,
-            "projected_grade": round(grade, 1),
-            "market_value":    base_value,
-            "nominal_value":   round(nominal_value, 2),
-            "cap_adj_ask":     round(cap_adj_ask, 2),
-            "discounted_value":round(disc_value, 2),
-            "year_surplus":    round(base_value - cap_adj_ask, 2),
+            "year": yr, "age": age, "projected_grade": round(grade, 1),
+            "market_value": base_value, "nominal_value": round(nominal_value, 2),
+            "cap_adj_ask": round(cap_adj_ask, 2),
+            "discounted_value": round(nominal_value * time_discount, 2),
+            "year_surplus": round(base_value - cap_adj_ask, 2),
         })
-    fair_aav             = round(total_disc_value / contract_years, 2)
-    effective_cap_burden = round(total_disc_ask   / contract_years, 2)
-    return fair_aav, effective_cap_burden, round(total_nominal_value, 2), breakdown
+    return (round(total_disc_value / contract_years, 2),
+            round(total_disc_ask / contract_years, 2),
+            round(total_nominal_value, 2), breakdown)
 
 
-class HBAgentState(TypedDict):
+class TEAgentState(TypedDict):
     player_name: str; salary_ask: float; contract_years: int; player_history: pd.DataFrame
     predicted_tier: str; confidence: Dict[str, float]; current_age: int
     last_season_stats: dict; career_stats: List[dict]; stats_score: float; composite_grade: float
@@ -299,31 +263,23 @@ class HBAgentState(TypedDict):
     decision: str; reasoning: str
 
 
-def predict_performance(state: HBAgentState):
-    print(f"[HB Agent] Predicting for {state['player_name']}...")
+def predict_performance(state: TEAgentState):
     history = state["player_history"]
     current_year = datetime.date.today().year
     if "age" in history.columns and "Year" in history.columns:
         last_row = history.sort_values("Year").iloc[-1]
         current_age = int(float(last_row["age"])) + (current_year - int(float(last_row["Year"])))
     else:
-        current_age = 26
-
-    last_stats   = extract_last_season_stats(history)
+        current_age = 27
+    last_stats = extract_last_season_stats(history)
     career_stats = extract_career_stats(history)
     health_adj, avg_avail = _compute_health_factor(history)
     inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=current_year)
-
     model_grade = _safe_float(history.sort_values("Year").iloc[-1].get("grades_offense"), 60.0)
-
-    sg = _stats_grade(
-        last_stats["yco_attempt"], last_stats["ypc"],
-        last_stats["elusive_rating"], last_stats["rec_per_game"],
-        last_stats["epa_per_touch"],
-    )
+    sg = _stats_grade(last_stats["pass_block_grade"], last_stats["yprr"],
+                      last_stats["yards_per_rec"], last_stats["epa_per_target"], last_stats["drop_rate"])
     raw_cg = _composite_grade(model_grade, sg)
     cg = round(max(45.0, min(99.0, raw_cg + health_adj + inactivity_adj)), 2)
-
     return {
         "predicted_tier": _grade_to_tier(cg), "current_age": current_age,
         "last_season_stats": last_stats, "career_stats": career_stats,
@@ -333,7 +289,7 @@ def predict_performance(state: HBAgentState):
     }
 
 
-def evaluate_value(state: HBAgentState):
+def evaluate_value(state: TEAgentState):
     hist = state.get("player_history")
     fair_aav, eff_burden, total_nom, breakdown = compute_contract_value(
         state["composite_grade"],
@@ -358,45 +314,40 @@ def evaluate_value(state: HBAgentState):
             "total_nominal_value": total_nom, "year_breakdown": breakdown, "projected_stats": stat_proj}
 
 
-def assess_team_fit(state: HBAgentState):
-    if not state.get("team_name"):
-        return {}
+def assess_team_fit(state: TEAgentState):
+    if not state.get("team_name"): return {}
     return {"signing_cap_pcts": aav_to_cap_pcts(state["salary_ask"], state["contract_years"])}
 
 
-def make_decision(state: HBAgentState):
+def make_decision(state: TEAgentState):
     ask = state["salary_ask"]; val = state["valuation"]; burden = state["effective_cap_burden"]
     tier = state["predicted_tier"]; cg = state["composite_grade"]
     mg = state["confidence"].get("model_grade", cg); sg = state["stats_score"]
     age = state["current_age"]; years = state["contract_years"]; total = state["total_nominal_value"]
     health_adj = state["confidence"].get("health_factor", 0)
-    avg_avail  = state["confidence"].get("avg_availability", 1.0)
+    avg_avail = state["confidence"].get("avg_availability", 1.0)
     health_str = f" Health: {'+' if health_adj >= 0 else ''}{health_adj} pts ({round(avg_avail*100)}% availability)."
-    trajectory = ("still developing" if age <= 24 else "in his prime" if age <= 27 else
-                  "entering decline" if age <= 29 else "in steep age-related decline")
-    total_ask = round(ask * years, 2)
     team_nm = state.get("team_name", "")
     roster = state.get("current_roster") or []
     val_dec = val
     rep_note = ""
     if team_nm and roster:
         val_dec, rep_note = decision_fair_aav_with_replacement(
-            val, grade_to_market_value, cg, roster, "HB",
+            val, grade_to_market_value, cg, roster, "TE",
         )
     surplus = round(val_dec - burden, 2)
     surplus_pct = (val_dec - burden) / max(val_dec, 0.01) * 100
-    if surplus_pct >= 20:    decision = "Exceptional Value"; rec = "Strongly recommend signing."
-    elif surplus_pct >= 5:   decision = "Good Signing";      rec = "Recommend signing."
-    elif surplus_pct >= -5:  decision = "Fair Deal";         rec = "Acceptable signing."
-    elif surplus_pct >= -15: decision = "Slight Overpay";    rec = "Proceed with caution."
-    elif surplus_pct >= -30: decision = "Overpay";           rec = "Recommend passing."
-    else:                    decision = "Poor Signing";      rec = "Strongly recommend passing."
-
+    if surplus_pct >= 20:    decision = "Exceptional Value"
+    elif surplus_pct >= 5:   decision = "Good Signing"
+    elif surplus_pct >= -5:  decision = "Fair Deal"
+    elif surplus_pct >= -15: decision = "Slight Overpay"
+    elif surplus_pct >= -30: decision = "Overpay"
+    else:                    decision = "Poor Signing"
     reason = (
-        f"{state['player_name']} (age {age}) projects as a {tier} running back. "
-        f"PFF run grade: {mg:.1f} · Stats grade: {sg:.1f} → Composite: {cg:.1f}.{health_str} "
-        f"He is {trajectory}. RB value: ${val}M/yr vs. ${burden}M/yr effective cap burden "
-        f"(surplus: ${surplus}M/yr, {surplus_pct:.0f}%). Total ask: ${total_ask}M. {rec}"
+        f"{state['player_name']} (age {age}) projects as a {tier} tight end. "
+        f"PFF grade: {mg:.1f} · Stats grade (blocking 25%, receiving 75%): {sg:.1f} → Composite: {cg:.1f}.{health_str} "
+        f"Fair value: ${val}M/yr vs. ${burden}M/yr cap burden (surplus: ${surplus}M/yr, {surplus_pct:.0f}%). "
+        f"Total nominal value: ${total}M."
     )
     if rep_note:
         reason = reason + rep_note
@@ -413,7 +364,7 @@ def make_decision(state: HBAgentState):
     return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary}
 
 
-_workflow = StateGraph(HBAgentState)
+_workflow = StateGraph(TEAgentState)
 _workflow.add_node("predict_performance", predict_performance)
 _workflow.add_node("evaluate_value",      evaluate_value)
 _workflow.add_node("assess_team_fit",     assess_team_fit)
@@ -423,4 +374,4 @@ _workflow.add_edge("predict_performance", "evaluate_value")
 _workflow.add_edge("evaluate_value",      "assess_team_fit")
 _workflow.add_edge("assess_team_fit",     "make_decision")
 _workflow.add_edge("make_decision",       END)
-hb_gm_agent = _workflow.compile()
+te_gm_agent = _workflow.compile()

@@ -552,9 +552,18 @@ html, body {
   text-transform: uppercase;
 }
 .tier-badge.elite    { background: #2a1f6b; color: #a58bff; border: 1px solid #7e6aff; }
+.tier-badge.good     { background: #1a3048; color: #6ec8ff; border: 1px solid #3d7aa0; }
 .tier-badge.starter  { background: #1a3a1f; color: #5dbb6e; border: 1px solid #3d8b4a; }
 .tier-badge.rotation { background: #3a2e10; color: #d4a843; border: 1px solid #a07d20; }
 .tier-badge.reserve  { background: #3a1a1a; color: #e05555; border: 1px solid #a03030; }
+
+/* Projected Tier in GM card — same palette as sidebar legend, slightly larger */
+.fa-stats-grid .fa-projected-tier-badge {
+  font-size: 13px;
+  padding: 5px 14px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
 
 /* ══════════════════════════════════════════
    Right chatbot panel

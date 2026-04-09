@@ -12,7 +12,17 @@ cap inflation, and time discounting.
 from typing import TypedDict, Dict, List
 from langgraph.graph import StateGraph, END
 from backend.agent.ed_model_wrapper import EDModelInference
-from backend.agent.team_context import assess_team_fit as _assess_team_fit_logic, aav_to_cap_pcts
+from backend.agent.team_context import (
+    assess_team_fit as _assess_team_fit_logic,
+    aav_to_cap_pcts,
+    decision_fair_aav_with_replacement,
+)
+from backend.agent.grade_projection import (
+    grade_to_tier_universal,
+    player_recent_grade_yoy,
+    apply_yearly_grade_step,
+)
+from backend.agent.stat_projection_utils import pass_rush_snap_load_17, run_def_snap_load_17, inactivity_retirement_penalty, apply_inactivity_to_projection_list, apply_projection_plausibility_caps
 import pandas as pd
 import numpy as np
 import os, datetime
@@ -77,15 +87,12 @@ def _composite_grade(model_grade: float, stats_gr: float) -> float:
 
 
 def _grade_to_tier(grade: float) -> str:
-    if grade >= 80: return "Elite"
-    if grade >= 70: return "Starter"
-    if grade >= 60: return "Rotation"
-    return "Reserve/Poor"
+    return grade_to_tier_universal(grade)
 
 
 # ─────────────────────────────────────────────
-# Age-based annual grade delta
-# Derived from empirical medians across 1,433 ED season transitions.
+# Age-based annual grade delta (EDGE-specific; from empirical ED season transitions).
+# Do not reuse for QB/WR/RB — those agents use position-tailored tables.
 # ─────────────────────────────────────────────
 _AGE_DELTAS = {
     20: +3.0, 21: +3.4, 22: +3.5, 23: +2.9, 24: +1.2,
@@ -223,9 +230,9 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     career_pressure_pct = c_prs   / c_pr_snaps * 100
     career_stop_rate    = c_stops  / c_d_snaps             # stops per D snap
 
-    # Career average snaps per game → scale to 17 healthy games
-    proj_snaps_pr = round(c_pr_snaps / c_games * 17)
-    proj_snaps_d  = round(c_d_snaps  / c_games * 17)
+    # Career average snaps per game → scale to 17 healthy games (starter-role floor)
+    proj_snaps_pr = round(pass_rush_snap_load_17(c_pr_snaps, c_games))
+    proj_snaps_d  = round(run_def_snap_load_17(c_d_snaps, c_games))
 
     sacks_17g     = round(career_sack_rate    / 100 * proj_snaps_pr, 1)
     pressures_17g = round(career_pressure_pct / 100 * proj_snaps_pr, 1)
@@ -296,8 +303,14 @@ def _compute_health_factor(history: pd.DataFrame) -> tuple:
 # ─────────────────────────────────────────────
 # Stat projection forward over contract
 # ─────────────────────────────────────────────
-def project_stats(last_stats: dict, composite_gr: float,
-                  current_age: int, contract_years: int) -> List[dict]:
+def project_stats(
+    last_stats: dict,
+    composite_gr: float,
+    current_age: int,
+    contract_years: int,
+    history: pd.DataFrame = None,
+    grade_col: str = "grades_defense",
+) -> List[dict]:
     """
     Project stats forward year-by-year assuming full 17-game healthy seasons.
     Base = 17g-projected stats from last season; each year scaled by the
@@ -305,11 +318,12 @@ def project_stats(last_stats: dict, composite_gr: float,
     """
     projections = []
     grade = composite_gr
+    player_yoy = player_recent_grade_yoy(history, grade_col)
 
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
-            grade = max(45.0, min(99.0, grade + _annual_grade_delta(age - 1)))
+            grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
 
         scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
 
@@ -341,6 +355,8 @@ def compute_contract_value(
     current_age: int,
     contract_years: int,
     salary_ask: float,
+    history: pd.DataFrame = None,
+    grade_col: str = "grades_defense",
 ) -> tuple:
     """
     Returns:
@@ -354,11 +370,12 @@ def compute_contract_value(
     total_disc_ask      = 0.0
     total_nominal_value = 0.0
     grade               = float(composite_gr)
+    player_yoy = player_recent_grade_yoy(history, grade_col)
 
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
-            grade = max(45.0, min(99.0, grade + _annual_grade_delta(age - 1)))
+            grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
 
         cap_factor    = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
         time_discount = 1.0 / ((1.0 + DISCOUNT_RATE)   ** (yr - 1))
@@ -457,6 +474,7 @@ def predict_performance(state: EDAgentState):
 
     # Health factor from last 3 seasons' availability (weighted recent-heavy)
     health_adj, avg_avail = _compute_health_factor(history)
+    inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=current_year)
 
     # Stats grade uses snap-rate metrics + 17g-projected stops (health-independent)
     sg = _stats_grade(
@@ -467,7 +485,7 @@ def predict_performance(state: EDAgentState):
 
     # Composite: 40% model, 60% stats, then nudge by health history
     raw_cg = _composite_grade(model_grade, sg)
-    cg     = round(max(45.0, min(99.0, raw_cg + health_adj)), 2)
+    cg     = round(max(45.0, min(99.0, raw_cg + health_adj + inactivity_adj)), 2)
 
     return {
         "predicted_tier":    _grade_to_tier(cg),
@@ -481,6 +499,7 @@ def predict_performance(state: EDAgentState):
             "stats_grade":       sg,
             "composite_grade":   cg,
             "health_factor":     health_adj,
+            "inactivity_penalty": inactivity_adj,
             "avg_availability":  avg_avail,
             "xgb_grade":         details.get("xgb_grade"),
             "transformer_grade": details.get("transformer_grade"),
@@ -498,13 +517,18 @@ def evaluate_value(state: EDAgentState):
     contract_years = state["contract_years"]
     salary_ask     = state["salary_ask"]
 
+    hist = state.get("player_history")
     fair_aav, eff_burden, total_nom, breakdown = compute_contract_value(
-        cg, current_age, contract_years, salary_ask
+        cg, current_age, contract_years, salary_ask, history=hist, grade_col="grades_defense",
     )
 
     stat_proj = project_stats(
-        state["last_season_stats"], cg, current_age, contract_years
+        state["last_season_stats"], cg, current_age, contract_years,
+        history=hist, grade_col="grades_defense",
     )
+    inact_pen = float((state.get("confidence") or {}).get("inactivity_penalty", 0.0))
+    stat_proj = apply_inactivity_to_projection_list(stat_proj, inact_pen)
+    stat_proj = apply_projection_plausibility_caps(stat_proj, state.get("career_stats") or [])
 
     return {
         "valuation":            fair_aav,
@@ -562,8 +586,17 @@ def make_decision(state: EDAgentState):
         f"costs effectively ${burden}M/yr in present-value cap terms."
     )
 
-    surplus     = round(val - burden, 2)
-    surplus_pct = (val - burden) / max(val, 0.01) * 100
+    team_nm = state.get("team_name", "")
+    roster = state.get("current_roster") or []
+    val_dec = val
+    rep_note = ""
+    if team_nm and roster:
+        val_dec, rep_note = decision_fair_aav_with_replacement(
+            val, grade_to_market_value, cg, roster, "ED",
+        )
+
+    surplus = round(val_dec - burden, 2)
+    surplus_pct = (val_dec - burden) / max(val_dec, 0.01) * 100
 
     if surplus_pct >= 20:
         decision    = "Exceptional Value"
@@ -600,6 +633,8 @@ def make_decision(state: EDAgentState):
         f"{cap_note} Total nominal player value: ${total}M vs. total ask: ${total_ask}M. "
         f"{rec}"
     )
+    if rep_note:
+        reason = reason + rep_note
 
     # Team-mode adjustment
     team = state.get("team_name", "")

@@ -9,7 +9,7 @@ analysis, and AAV-to-cap-% conversion using the same CAP_GROWTH_RATE
 import pandas as pd
 import numpy as np
 import os
-from typing import List, Tuple
+from typing import Callable, List, Tuple, Optional
 
 CAP_GROWTH_RATE = 0.065
 BASE_CAP_YEAR = 2024
@@ -45,6 +45,8 @@ def get_team_roster(
     team: str,
     position_df: pd.DataFrame,
     exclude_player: str = "",
+    grade_col: str = "grades_defense",
+    snap_col: str = "snap_counts_defense",
 ) -> List[dict]:
     """
     Return the team's players at this position from the most recent year
@@ -61,13 +63,27 @@ def get_team_roster(
 
     exclude_norm = exclude_player.strip().lower()
 
+    # Fall back to alternative column names if specified ones not present
+    _grade_col = grade_col if grade_col in team_df.columns else (
+        "grades_defense" if "grades_defense" in team_df.columns else
+        "grades_offense" if "grades_offense" in team_df.columns else None
+    )
+    _snap_col = snap_col if snap_col in team_df.columns else (
+        "snap_counts_defense" if "snap_counts_defense" in team_df.columns else
+        "snap_counts_offense" if "snap_counts_offense" in team_df.columns else
+        "total_snaps" if "total_snaps" in team_df.columns else None
+    )
+
     roster = []
     for _, row in team_df.iterrows():
-        grade = _safe_float(row.get("grades_defense"))
-        snaps = _safe_float(row.get("snap_counts_defense"))
+        grade = _safe_float(row.get(_grade_col)) if _grade_col else 0.0
+        snaps = _safe_float(row.get(_snap_col)) if _snap_col else 0.0
         cap_pct = _safe_float(row.get("Cap_Space"))
         age = _safe_float(row.get("age"))
         name = row.get("player", "Unknown")
+
+        if name.strip().lower() == exclude_norm and exclude_norm:
+            continue
 
         if snaps < 1 and grade < 1:
             continue
@@ -108,10 +124,20 @@ def get_roster_without_player(roster: List[dict], player_name: str) -> List[dict
 # Production stats used to build per-player composite scores.
 # Each is normalised to a per-snap rate so low-snap players aren't
 # penalised for volume, then the rate is percentile-ranked league-wide.
-_PROD_STATS = ["sacks", "total_pressures", "stops", "hits", "hurries", "tackles"]
+_PROD_STATS_DEF = ["sacks", "total_pressures", "stops", "hits", "hurries", "tackles"]
+_PROD_STATS_OFF = ["yards", "receptions", "touchdowns", "first_downs"]
+_PROD_STATS_OL  = ["sacks_allowed", "hurries_allowed", "block_percent"]
+
+# Legacy alias
+_PROD_STATS = _PROD_STATS_DEF
 
 
-def _player_composite(latest: pd.DataFrame) -> pd.Series:
+def _player_composite(
+    latest: pd.DataFrame,
+    grade_col: str = "grades_defense",
+    snap_col: str = "snap_counts_defense",
+    prod_stat_cols: list = None,
+) -> pd.Series:
     """
     Build a composite score per player that blends PFF grade (40%)
     with per-snap production rate percentiles (60%).
@@ -119,11 +145,27 @@ def _player_composite(latest: pd.DataFrame) -> pd.Series:
     This means star power / starter quality reflect both how well
     PFF graded a player AND how productive they actually were.
     """
-    snaps = latest["snap_counts_defense"].clip(lower=1)
+    if prod_stat_cols is None:
+        prod_stat_cols = _PROD_STATS_DEF
 
-    available = [c for c in _PROD_STATS if c in latest.columns]
+    if grade_col not in latest.columns:
+        # fall back to any grade column
+        for alt in ("grades_defense", "grades_offense", "grades_pass"):
+            if alt in latest.columns:
+                grade_col = alt
+                break
+
+    if snap_col not in latest.columns:
+        for alt in ("snap_counts_defense", "snap_counts_offense", "total_snaps", "passing_snaps"):
+            if alt in latest.columns:
+                snap_col = alt
+                break
+
+    snaps = latest[snap_col].clip(lower=1) if snap_col in latest.columns else pd.Series(1, index=latest.index)
+
+    available = [c for c in prod_stat_cols if c in latest.columns]
     if not available:
-        return latest["grades_defense"]
+        return latest[grade_col] if grade_col in latest.columns else pd.Series(50.0, index=latest.index)
 
     rate_pctiles = pd.DataFrame(index=latest.index)
     for col in available:
@@ -133,12 +175,17 @@ def _player_composite(latest: pd.DataFrame) -> pd.Series:
     avg_prod_pctile = rate_pctiles.mean(axis=1)
     prod_score = avg_prod_pctile * 100  # scale to 0-100
 
-    grade_pctile = latest["grades_defense"].rank(pct=True) * 100
+    grade_pctile = latest[grade_col].rank(pct=True) * 100
 
     return 0.40 * grade_pctile + 0.60 * prod_score
 
 
-def _compute_league_percentiles(position_df: pd.DataFrame) -> pd.DataFrame:
+def _compute_league_percentiles(
+    position_df: pd.DataFrame,
+    grade_col: str = "grades_defense",
+    snap_col: str = "snap_counts_defense",
+    prod_stat_cols: list = None,
+) -> pd.DataFrame:
     """
     Aggregate per-team metrics for the most recent year and percentile-
     rank them across the league.
@@ -152,21 +199,39 @@ def _compute_league_percentiles(position_df: pd.DataFrame) -> pd.DataFrame:
     max_year = int(position_df["Year"].max())
     latest = position_df[position_df["Year"] == max_year].copy()
 
-    latest["_composite"] = _player_composite(latest)
+    if prod_stat_cols is None:
+        prod_stat_cols = _PROD_STATS_DEF
 
-    agg = latest.groupby("Team").agg(
-        best_composite=("_composite", "max"),
-        avg_composite_top2=("_composite", lambda x: x.nlargest(2).mean()),
-        best_grade=("grades_defense", "max"),
-        n_quality=("_composite", lambda x: int((x >= x.quantile(0.55)).sum())),
-        total_snaps=("snap_counts_defense", "sum"),
+    _snap_col = snap_col if snap_col in latest.columns else (
+        "snap_counts_defense" if "snap_counts_defense" in latest.columns else
+        "snap_counts_offense" if "snap_counts_offense" in latest.columns else
+        "total_snaps" if "total_snaps" in latest.columns else None
+    )
+    _grade_col = grade_col if grade_col in latest.columns else (
+        "grades_defense" if "grades_defense" in latest.columns else
+        "grades_offense" if "grades_offense" in latest.columns else None
     )
 
-    for stat_col in ["sacks", "total_pressures", "stops"]:
+    latest["_composite"] = _player_composite(latest, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
+
+    agg_dict = {
+        "best_composite":    ("_composite", "max"),
+        "avg_composite_top2": ("_composite", lambda x: x.nlargest(2).mean()),
+        "n_quality":         ("_composite", lambda x: int((x >= x.quantile(0.55)).sum())),
+    }
+    if _grade_col:
+        agg_dict["best_grade"] = (_grade_col, "max")
+    if _snap_col:
+        agg_dict["total_snaps"] = (_snap_col, "sum")
+
+    agg = latest.groupby("Team").agg(**agg_dict)
+
+    prod_agg_stats = prod_stat_cols if prod_stat_cols else ["sacks", "total_pressures", "stops"]
+    for stat_col in prod_agg_stats:
         if stat_col in latest.columns:
             agg[f"total_{stat_col}"] = latest.groupby("Team")[stat_col].sum()
 
-    for col in agg.columns:
+    for col in list(agg.columns):
         agg[f"{col}_pctile"] = agg[col].rank(pct=True)
 
     return agg
@@ -175,10 +240,15 @@ def _compute_league_percentiles(position_df: pd.DataFrame) -> pd.DataFrame:
 _league_cache: dict = {}
 
 
-def _get_league_stats(position_df: pd.DataFrame) -> pd.DataFrame:
-    key = id(position_df)
+def _get_league_stats(
+    position_df: pd.DataFrame,
+    grade_col: str = "grades_defense",
+    snap_col: str = "snap_counts_defense",
+    prod_stat_cols: list = None,
+) -> pd.DataFrame:
+    key = (id(position_df), grade_col, snap_col)
     if key not in _league_cache:
-        _league_cache[key] = _compute_league_percentiles(position_df)
+        _league_cache[key] = _compute_league_percentiles(position_df, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
     return _league_cache[key]
 
 
@@ -186,12 +256,18 @@ def _recompute_team_row(
     position_df: pd.DataFrame,
     team: str,
     exclude_player: str = "",
+    grade_col: str = "grades_defense",
+    snap_col: str = "snap_counts_defense",
+    prod_stat_cols: list = None,
 ) -> pd.Series:
     """
     Recompute a single team's raw aggregate metrics from the CSV,
     optionally excluding a player (for re-signing scenarios).
     Returns a Series with the same raw columns as the league table.
     """
+    if prod_stat_cols is None:
+        prod_stat_cols = _PROD_STATS_DEF
+
     max_year = int(position_df["Year"].max())
     team_rows = position_df[
         (position_df["Team"] == team) & (position_df["Year"] == max_year)
@@ -204,17 +280,19 @@ def _recompute_team_row(
     if team_rows.empty:
         return None
 
-    team_rows["_composite"] = _player_composite(team_rows)
+    team_rows["_composite"] = _player_composite(team_rows, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
 
     composites = team_rows["_composite"]
+    snaps_col = snap_col if snap_col in team_rows.columns else "snap_counts_defense"
+    grade_c = grade_col if grade_col in team_rows.columns else "grades_defense"
     row = {
         "best_composite":    composites.max(),
         "avg_composite_top2": composites.nlargest(2).mean(),
-        "best_grade":        team_rows["grades_defense"].max(),
+        "best_grade":        team_rows[grade_c].max() if grade_c in team_rows.columns else 50.0,
         "n_quality":         int((composites >= composites.quantile(0.55)).sum()),
-        "total_snaps":       team_rows["snap_counts_defense"].sum(),
+        "total_snaps":       team_rows[snaps_col].sum() if snaps_col in team_rows.columns else 0,
     }
-    for stat_col in ["sacks", "total_pressures", "stops"]:
+    for stat_col in prod_stat_cols:
         if stat_col in team_rows.columns:
             row[f"total_{stat_col}"] = team_rows[stat_col].sum()
 
@@ -250,6 +328,9 @@ def compute_positional_need(
     position_df: pd.DataFrame = None,
     team: str = "",
     exclude_player: str = "",
+    grade_col: str = "grades_defense",
+    snap_col: str = "snap_counts_defense",
+    prod_stat_cols: list = None,
 ) -> Tuple[float, str]:
     """
     Score 0-100 how strong a team is at this position, ranked against
@@ -267,11 +348,14 @@ def compute_positional_need(
     if not roster:
         return 0.0, "Weak"
 
+    if prod_stat_cols is None:
+        prod_stat_cols = _PROD_STATS_DEF
+
     if position_df is not None and team:
-        league = _get_league_stats(position_df)
+        league = _get_league_stats(position_df, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
         if team in league.index:
             if exclude_player:
-                team_row = _recompute_team_row(position_df, team, exclude_player)
+                team_row = _recompute_team_row(position_df, team, exclude_player, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
                 if team_row is None:
                     return 0.0, "Weak"
                 pctiles = _rank_team_against_league(league, team, team_row)
@@ -411,6 +495,61 @@ def get_all_teams(cap_df: pd.DataFrame = None) -> List[str]:
 # ─────────────────────────────────────────────
 # AAV → per-year cap %
 # ─────────────────────────────────────────────
+# ─────────────────────────────────────────────
+# Replacement / snap overlap — signing often displaces an incumbent, not pure addition
+# ─────────────────────────────────────────────
+# Weight on incumbent's market value to subtract from headline fair AAV when making
+# SIGN/PASS surplus (stronger for true one-starter roles).
+REPLACEMENT_INCUMBENT_WEIGHT: dict[str, float] = {
+    "QB": 0.88,
+    "HB": 0.82,
+    "TE": 0.52,
+    "WR": 0.36,
+    "T": 0.26,
+    "G": 0.26,
+    "C": 0.26,
+    "ED": 0.38,
+    "DI": 0.38,
+    "LB": 0.40,
+    "CB": 0.38,
+    "S": 0.36,
+}
+
+
+def decision_fair_aav_with_replacement(
+    pv_fair_aav: float,
+    grade_to_mv: Callable[[float], float],
+    signee_composite_grade: float,
+    roster: Optional[List[dict]],
+    position_key: str,
+    incumbent_grade_floor: float = 54.0,
+) -> Tuple[float, str]:
+    """
+    When team mode supplies a roster, reduce the fair AAV used for surplus_pct so
+    overlapping value vs a decent incumbent is not double-counted.
+
+    Returns (adjusted_fair_aav, note_suffix). If no adjustment, note is "".
+    """
+    if not roster:
+        return float(pv_fair_aav), ""
+    top = roster[0]
+    top_g = float(top.get("grade") or 0.0)
+    if top_g < incumbent_grade_floor:
+        return float(pv_fair_aav), ""
+
+    w = REPLACEMENT_INCUMBENT_WEIGHT.get(position_key, 0.34)
+    mv_i = float(grade_to_mv(max(45.0, min(100.0, top_g))))
+    overlap = w * mv_i
+    base = max(float(pv_fair_aav), 0.01)
+    adj = max(0.10 * base, base - overlap)
+    note = (
+        f" Roster replacement: top incumbent ~{top_g:.0f} grade — "
+        f"~{int(round(w * 100))}% of their fair AAV (${overlap:.1f}M/yr) overlaps with this role; "
+        f"decision surplus uses adjusted fair ${adj:.1f}M/yr vs ${base:.1f}M/yr headline."
+    )
+    return adj, note
+
+
 def aav_to_cap_pcts(aav_dollars: float, contract_years: int) -> List[float]:
     """
     Convert a fixed $M AAV to year-by-year cap percentages.
