@@ -10,6 +10,7 @@ _thread_pool = ThreadPoolExecutor(max_workers=2)
 from backend.agent.te_agent_graph import te_gm_agent, TE_CSV_PATH
 from backend.agent.api_year_utils import clamp_analysis_year, history_as_of_year
 from backend.agent.team_summary import build_team_year_summary, build_team_position_rankings, build_player_directory
+from backend.agent.scheme_personnel import compact_scheme_personnel_for_api
 from backend.agent.team_context import (
     get_team_roster, compute_positional_need, get_team_cap,
     get_all_teams, aav_to_cap_pcts, is_player_on_team, get_roster_without_player,
@@ -71,8 +72,15 @@ async def team_roster(team: str = Query(...), analysis_year: int = Query(2025)):
                                                       prod_stat_cols=TE_PROD_STATS, reference_year=analysis_year,
                                                       position_key="TE")
     allocated_pct, available_pct = get_team_cap(team, reference_year=analysis_year)
-    return {"team": team, "roster": roster, "positional_need": need_score,
-            "need_label": need_label, "allocated_cap_pct": allocated_pct, "available_cap_pct": available_pct}
+    return {
+        "team": team,
+        "roster": roster,
+        "positional_need": need_score,
+        "need_label": need_label,
+        "allocated_cap_pct": allocated_pct,
+        "available_cap_pct": available_pct,
+        "scheme_personnel": compact_scheme_personnel_for_api(team, reference_year=analysis_year),
+    }
 
 
 class EvaluationRequest(BaseModel):
