@@ -604,6 +604,51 @@ REPLACEMENT_INCUMBENT_WEIGHT: dict[str, float] = {
     "S": 0.36,
 }
 
+# Approximate starters by position for depth-chart replacement inference.
+POSITION_STARTER_SLOTS: dict[str, int] = {
+    "QB": 1,
+    "HB": 1,
+    "WR": 3,
+    "TE": 1,
+    "T": 2,
+    "G": 2,
+    "C": 1,
+    "ED": 2,
+    "DI": 2,
+    "LB": 2,
+    "CB": 3,
+    "S": 2,
+}
+
+
+def _infer_replacement_target(
+    roster: List[dict],
+    signee_composite_grade: float,
+    position_key: str,
+) -> Tuple[Optional[dict], int, str]:
+    """
+    Infer which incumbent depth slot this signee would displace.
+    Returns: (incumbent_row_or_none, slot_idx_1_based, role_label)
+    """
+    if not roster:
+        return None, 1, "starter"
+
+    depth_sorted = sorted(
+        roster,
+        key=lambda r: (
+            -_safe_float(r.get("snaps"), 0.0),
+            -_safe_float(r.get("grade"), 0.0),
+        ),
+    )
+    sig_g = float(signee_composite_grade)
+    # Number of incumbents clearly ahead on grade approximates signee's depth slot.
+    ahead = sum(1 for r in depth_sorted if _safe_float(r.get("grade"), 0.0) > (sig_g + 0.75))
+    slot = max(1, min(len(depth_sorted), ahead + 1))
+    incumbent = depth_sorted[slot - 1] if depth_sorted else None
+    starter_slots = int(POSITION_STARTER_SLOTS.get(position_key, 1))
+    role = "starter" if slot <= starter_slots else "backup/depth"
+    return incumbent, slot, role
+
 
 def decision_fair_aav_with_replacement(
     pv_fair_aav: float,
@@ -621,19 +666,32 @@ def decision_fair_aav_with_replacement(
     """
     if not roster:
         return float(pv_fair_aav), ""
-    top = roster[0]
-    top_g = float(top.get("grade") or 0.0)
-    if top_g < incumbent_grade_floor:
+    incumbent, slot, role = _infer_replacement_target(roster, signee_composite_grade, position_key)
+    if not incumbent:
+        return float(pv_fair_aav), ""
+    inc_g = float(incumbent.get("grade") or 0.0)
+    inc_name = str(incumbent.get("player") or "incumbent")
+    starter_slots = int(POSITION_STARTER_SLOTS.get(position_key, 1))
+    if inc_g < incumbent_grade_floor:
         return float(pv_fair_aav), ""
 
     w = REPLACEMENT_INCUMBENT_WEIGHT.get(position_key, 0.34)
-    mv_i = float(grade_to_mv(max(45.0, min(100.0, top_g))))
+    # Backup/depth displacement should have a lighter overlap effect than QB1/CB1-type replacement.
+    if role != "starter":
+        w *= 0.55
+    mv_i = float(grade_to_mv(max(45.0, min(100.0, inc_g))))
     overlap = w * mv_i
     base = max(float(pv_fair_aav), 0.01)
     adj = max(0.10 * base, base - overlap)
+    role_note = (
+        f"starter slot (#{slot} of {starter_slots})"
+        if role == "starter"
+        else f"backup/depth slot (#{slot})"
+    )
     note = (
-        f" Roster replacement: top incumbent ~{top_g:.0f} grade — "
-        f"~{int(round(w * 100))}% of their fair AAV (${overlap:.1f}M/yr) overlaps with this role; "
+        f" Roster replacement: projected to displace {inc_name} "
+        f"({role_note}, ~{inc_g:.0f} grade). "
+        f"~{int(round(w * 100))}% of that incumbent fair AAV (${overlap:.1f}M/yr) overlaps with this role; "
         f"decision surplus uses adjusted fair ${adj:.1f}M/yr vs ${base:.1f}M/yr headline."
     )
     return adj, note

@@ -1183,13 +1183,13 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     () => playerDirectory.map((p) => p.player),
     [playerDirectory]
   );
-  const classGradeBadgeClass = useCallback((g) => {
-    const n = Number(g);
-    if (!Number.isFinite(n)) return 'mid';
-    // Match SigningGrade color thresholds to avoid UI mismatch confusion.
-    if (n >= 68) return 'top';
-    if (n >= 55) return 'mid';
-    return 'low';
+  const classGradeBadgeStyle = useCallback((g) => {
+    const c = gradeColor(Number(g));
+    return {
+      color: c,
+      borderColor: c,
+      background: 'rgba(255, 255, 255, 0.02)',
+    };
   }, []);
   const handleGoToClassPlayer = useCallback(() => {
     if (!classSearchPlayer) return;
@@ -1905,7 +1905,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                     >
                       <div className="fa-ranking-row">
                         <span className="fa-ranking-pos">{r.positionKey} — {r.playerName}</span>
-                        <span className={`fa-ranking-badge ${classGradeBadgeClass(r.signingGrade)}`}>
+                        <span className="fa-ranking-badge" style={classGradeBadgeStyle(r.signingGrade)}>
                           {Math.round(r.signingGrade)}
                         </span>
                       </div>
