@@ -12,6 +12,7 @@ import os
 from typing import Callable, List, Tuple, Optional
 
 from backend.agent.scheme_personnel import (
+    SCHEME_PERSONNEL_POSITION_KEYS,
     adjust_positional_need_blend_weights,
     get_team_scheme_personnel_row,
 )
@@ -470,9 +471,10 @@ def compute_positional_need(
     5. **Age risk** — for QB/HB/TE, snap-weighted roster age; else top-2
        by grade.
 
-    For offensive positions, blend weights are further adjusted using
-    each team's **offensive personnel / scheme** file under
-    ``backend/ML/scheme/data/*_schemes_with_personnel.csv`` when present.
+    For **HB, WR, and TE**, blend weights are further adjusted using each
+    team's **offensive personnel** file under
+    ``backend/ML/scheme/data/*_schemes_with_personnel.csv`` when present
+    (latest available year ≤ analysis year).
 
     When *exclude_player* is set (re-signing), the team's stats are
     recomputed without that player and re-ranked vs. the league.
@@ -547,10 +549,11 @@ def compute_positional_need(
                 age_factor = 0.90
 
             w_star, w_starter, w_prod, w_depth, w_age = _positional_need_blend_weights(position_key)
-            scheme_row = get_team_scheme_personnel_row(team, reference_year)
-            w_star, w_starter, w_prod, w_depth, w_age = adjust_positional_need_blend_weights(
-                w_star, w_starter, w_prod, w_depth, w_age, position_key, scheme_row
-            )
+            if position_key in SCHEME_PERSONNEL_POSITION_KEYS:
+                scheme_row = get_team_scheme_personnel_row(team, reference_year)
+                w_star, w_starter, w_prod, w_depth, w_age = adjust_positional_need_blend_weights(
+                    w_star, w_starter, w_prod, w_depth, w_age, position_key, scheme_row
+                )
             composite = (
                 w_star * star_pctile
                 + w_starter * starter_pctile
