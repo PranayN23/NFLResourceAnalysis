@@ -2222,42 +2222,99 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       )}
       {showSigningClassDialog && classGradeSummary && (
         <div className="fa-rankings-overlay" onClick={() => setShowSigningClassDialog(false)}>
-          <div className="fa-rankings-dialog" onClick={(e) => e.stopPropagation()}>
+          <div className="fa-rankings-dialog fa-class-explain-modal" onClick={(e) => e.stopPropagation()}>
             <div className="fa-rankings-header">
               <h3>Signing class — {selectedTeam} ({analysisYear})</h3>
               <button type="button" className="fa-back-btn" onClick={() => setShowSigningClassDialog(false)}>Close</button>
             </div>
-            <p className="fa-msg-text">
-              Score: <strong>{classGradeSummary.grade}/100</strong> ({classGradeSummary.letter})
-            </p>
-            <p className="fa-hint" style={{ marginTop: 10 }}>
-              This measures only how good the <strong>incoming contracts</strong> are (signing grades), weighted by position importance and deal size.
-              It does <strong>not</strong> change when you add departures — use “Roster net impact” for that.
-            </p>
+            <div className="fa-class-explain-body">
+              <div className="fa-class-explain-hero">
+                <ClassMetricRing
+                  title="Weighted class grade"
+                  subtitle="Position × deal size"
+                  grade={classGradeSummary.grade}
+                  letter={classGradeSummary.letter}
+                  variant="signing"
+                />
+              </div>
+              <ul className="fa-class-explain-bullets">
+                <li>Each signing’s grade is weighted by <strong>position importance</strong> and <strong>contract size</strong> (AAV).</li>
+                <li>This score is <strong>only incoming deals</strong> — it does not move when you add departures.</li>
+                <li>Use <strong>Roster net impact</strong> to combine signings with modeled departures.</li>
+              </ul>
+            </div>
           </div>
         </div>
       )}
       {showRosterNetDialog && classRosterNetSummary && (
         <div className="fa-rankings-overlay" onClick={() => setShowRosterNetDialog(false)}>
-          <div className="fa-rankings-dialog" onClick={(e) => e.stopPropagation()}>
+          <div className="fa-rankings-dialog fa-class-explain-modal fa-class-explain-modal--wide" onClick={(e) => e.stopPropagation()}>
             <div className="fa-rankings-header">
               <h3>Roster net impact — {selectedTeam} ({analysisYear})</h3>
               <button type="button" className="fa-back-btn" onClick={() => setShowRosterNetDialog(false)}>Close</button>
             </div>
-            <p className="fa-msg-text">
-              Net score: <strong>{classRosterNetSummary.grade}/100</strong> ({classRosterNetSummary.letter})
-            </p>
-            <p className="fa-msg-text" style={{ marginTop: 8 }}>
-              Signing class baseline: <strong>{classRosterNetSummary.signingGrade}/100</strong>
-              {classRosterNetSummary.hasDepartures && (
-                <>
-                  {' '}· Adjusted for need (×<strong>{classRosterNetSummary.signingEmphasis}</strong>): <strong>{classRosterNetSummary.adjustedSigningBaseline}/100</strong>
-                  {' '}· Avg departure grade (weighted): ~<strong>{classRosterNetSummary.avgDepartureGrade}</strong>
-                  {' '}· Talent-out penalty: <strong>−{classRosterNetSummary.lossPenalty}</strong> pts
-                </>
-              )}
-            </p>
-            <p className="fa-hint" style={{ marginTop: 10 }}>
+            <div className="fa-class-explain-body fa-class-explain-body--split">
+              <div className="fa-class-explain-hero">
+                <ClassMetricRing
+                  title="Roster net"
+                  subtitle={classRosterNetSummary.hasDepartures ? 'Signings − losses − gaps' : 'Same as signing class'}
+                  grade={classRosterNetSummary.grade}
+                  letter={classRosterNetSummary.letter}
+                  variant="net"
+                />
+              </div>
+              <div className="fa-class-explain-stats">
+                {classRosterNetSummary.hasSignings && (
+                  <div className="fa-class-stat-pill">
+                    <span className="fa-class-stat-pill-label">Signing class</span>
+                    <span className="fa-class-stat-pill-val">{classRosterNetSummary.signingGrade}/100</span>
+                  </div>
+                )}
+                {classRosterNetSummary.hasSignings && classRosterNetSummary.signingEmphasis != null && (
+                  <div className="fa-class-stat-pill fa-class-stat-pill--accent">
+                    <span className="fa-class-stat-pill-label">Adjusted for need (×)</span>
+                    <span className="fa-class-stat-pill-val">{classRosterNetSummary.signingEmphasis}</span>
+                  </div>
+                )}
+                {classRosterNetSummary.hasSignings && classRosterNetSummary.adjustedSigningBaseline != null && (
+                  <div className="fa-class-stat-pill">
+                    <span className="fa-class-stat-pill-label">After stress scale</span>
+                    <span className="fa-class-stat-pill-val">{classRosterNetSummary.adjustedSigningBaseline}</span>
+                  </div>
+                )}
+                {classRosterNetSummary.hasDepartures && (
+                  <div className="fa-class-stat-pill fa-class-stat-pill--warn">
+                    <span className="fa-class-stat-pill-label">Avg departure grade</span>
+                    <span className="fa-class-stat-pill-val">~{classRosterNetSummary.avgDepartureGrade}</span>
+                  </div>
+                )}
+                {classRosterNetSummary.hasDepartures && (
+                  <div className="fa-class-stat-pill fa-class-stat-pill--warn">
+                    <span className="fa-class-stat-pill-label">Talent-out</span>
+                    <span className="fa-class-stat-pill-val">−{classRosterNetSummary.lossPenalty}</span>
+                  </div>
+                )}
+                {classRosterNetSummary.unfilledReplacementPenalty > 0 && (
+                  <div className="fa-class-stat-pill fa-class-stat-pill--bad">
+                    <span className="fa-class-stat-pill-label">Unfilled replacements</span>
+                    <span className="fa-class-stat-pill-val">−{classRosterNetSummary.unfilledReplacementPenalty}</span>
+                  </div>
+                )}
+                {classRosterNetSummary.coverageGapPenalty > 0 && (
+                  <div className="fa-class-stat-pill fa-class-stat-pill--bad">
+                    <span className="fa-class-stat-pill-label">Coverage gap</span>
+                    <span className="fa-class-stat-pill-val">−{classRosterNetSummary.coverageGapPenalty}</span>
+                  </div>
+                )}
+                {classRosterNetSummary.hasSignings && classRosterNetSummary.replacementCoveragePct != null && (
+                  <div className="fa-class-stat-pill">
+                    <span className="fa-class-stat-pill-label">Signing mass vs departures</span>
+                    <span className="fa-class-stat-pill-val">{classRosterNetSummary.replacementCoveragePct}%</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <p className="fa-class-explain-narrative">
               {classRosterNetSummary.explanation}
             </p>
           </div>

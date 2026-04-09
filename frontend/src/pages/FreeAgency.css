@@ -1434,6 +1434,193 @@ html, body {
   border-bottom: 2px solid #d50000;
 }
 
+/* ── FA class grade hero (signing vs roster net) ── */
+.fa-btn--ghost {
+  background: transparent;
+  color: #c4b8ff;
+  border: 1px solid rgba(126, 106, 255, 0.55);
+}
+.fa-btn--ghost:hover:not(:disabled) {
+  background: rgba(126, 106, 255, 0.12);
+  border-color: #9b8bff;
+  color: #fff;
+}
+
+.fa-class-grades-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 12px 0 8px;
+}
+
+.fa-class-metric-card {
+  position: relative;
+  border-radius: 14px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(126, 106, 255, 0.45), rgba(40, 200, 160, 0.15), rgba(126, 106, 255, 0.25));
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fa-class-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+.fa-class-metric-card--net {
+  background: linear-gradient(135deg, rgba(61, 232, 122, 0.35), rgba(126, 106, 255, 0.25), rgba(255, 180, 80, 0.12));
+}
+.fa-class-metric-card--empty {
+  opacity: 0.92;
+}
+.fa-class-metric-card-inner {
+  background: linear-gradient(180deg, #1e1e26 0%, #18181c 100%);
+  border-radius: 13px;
+  padding: 12px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 168px;
+}
+.fa-class-metric-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  color: #9a96b0;
+  margin-bottom: 6px;
+}
+.fa-class-metric-ring {
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+.fa-class-metric-ring-arc {
+  animation: fa-ring-pop 0.7s ease-out;
+}
+@keyframes fa-ring-pop {
+  from {
+    stroke-dasharray: 0 999;
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fa-class-metric-sub {
+  font-size: 10px;
+  color: #7a7890;
+  margin-top: 6px;
+  line-height: 1.35;
+  max-width: 140px;
+}
+.fa-class-metric-hint {
+  font-size: 10px;
+  color: #8b87a8;
+  margin-top: 6px;
+  line-height: 1.35;
+  max-width: 150px;
+}
+
+.fa-class-net-hint {
+  font-size: 12px;
+  color: #9a96b0;
+  margin: 4px 0 10px;
+  line-height: 1.45;
+}
+
+/* Explain modals */
+.fa-class-explain-modal {
+  width: min(480px, 92vw);
+  background: linear-gradient(180deg, #26262e 0%, #1c1c22 100%);
+  border: 1px solid rgba(126, 106, 255, 0.35);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+.fa-class-explain-modal--wide {
+  width: min(620px, 94vw);
+}
+.fa-class-explain-body {
+  padding: 4px 0 8px;
+}
+.fa-class-explain-body--split {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 520px) {
+  .fa-class-explain-body--split {
+    grid-template-columns: 1fr;
+  }
+  .fa-class-grades-row {
+    grid-template-columns: 1fr;
+  }
+}
+.fa-class-explain-hero .fa-class-metric-card-inner {
+  min-height: 0;
+}
+.fa-class-explain-hero .fa-class-metric-ring {
+  width: 112px;
+  height: 112px;
+}
+.fa-class-explain-bullets {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: #b8b4c8;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.fa-class-explain-bullets li {
+  margin-bottom: 8px;
+}
+.fa-class-explain-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+}
+.fa-class-stat-pill {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-width: 108px;
+}
+.fa-class-stat-pill--accent {
+  border-color: rgba(126, 106, 255, 0.45);
+  background: rgba(126, 106, 255, 0.1);
+}
+.fa-class-stat-pill--warn {
+  border-color: rgba(212, 168, 67, 0.4);
+  background: rgba(212, 168, 67, 0.08);
+}
+.fa-class-stat-pill--bad {
+  border-color: rgba(224, 85, 85, 0.45);
+  background: rgba(224, 85, 85, 0.1);
+}
+.fa-class-stat-pill-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #8a8698;
+}
+.fa-class-stat-pill-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: #eee;
+  font-variant-numeric: tabular-nums;
+}
+.fa-class-explain-narrative {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  line-height: 1.55;
+  color: #b0acc4;
+}
+
 /* ── Responsive: stack on small screens ── */
 @media (max-width: 720px) {
   .fa-page { flex-direction: column; padding: 16px; height: auto; overflow: visible; }
