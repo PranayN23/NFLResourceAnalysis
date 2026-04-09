@@ -1877,6 +1877,48 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
             </div>
             {!classGradeSummary ? (
               <div>
+                <div className="fa-field" style={{ marginBottom: 10 }}>
+                  <label className="fa-label">Starting Cap for Class ($M)</label>
+                  <div className="fa-price-row">
+                    <span className="fa-dollar">$</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      className="fa-input"
+                      value={classStartCapInput}
+                      disabled={classCapLocked}
+                      onChange={(e) => setClassStartCapInput(e.target.value)}
+                    />
+                    <span className="fa-million">M</span>
+                  </div>
+                  <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+                    <button
+                      type="button"
+                      className="fa-btn"
+                      onClick={() => {
+                        const vM = Number(classStartCapInput);
+                        if (Number.isFinite(vM) && vM >= 0) {
+                          const vPct = (vM / SALARY_CAP_M) * 100;
+                          setClassStartCapPct(vPct);
+                          setClassCapLocked(true);
+                        }
+                      }}
+                      disabled={classCapLocked}
+                    >
+                      {classCapLocked ? 'Starting Cap Locked' : 'Lock Starting Cap'}
+                    </button>
+                    {classCapLocked && (
+                      <button
+                        type="button"
+                        className="fa-btn"
+                        onClick={() => setClassCapLocked(false)}
+                      >
+                        Unlock
+                      </button>
+                    )}
+                  </div>
+                </div>
                 <div className="fa-class-grades-row">
                   <ClassMetricRing
                     title="Signing class"

@@ -137,6 +137,21 @@ def _infer_games_played(row, max_g: float) -> float:
 # Seasons with at least this many dropbacks count toward "starter peak" load.
 _MIN_DB_FOR_STARTER_PEAK = 100
 
+# Last 1–3 seasons, chronological order (oldest → newest): emphasize the most recent year.
+_QB_RECENCY_W_3 = (0.10, 0.25, 0.65)
+_QB_RECENCY_W_2 = (0.28, 0.72)
+
+
+def _qb_recency_weights_n(n: int) -> List[float]:
+    if n <= 0:
+        return [1.0]
+    if n == 1:
+        return [1.0]
+    tpl = _QB_RECENCY_W_2 if n == 2 else _QB_RECENCY_W_3
+    w = list(tpl[-n:])
+    s = sum(w)
+    return [x / s for x in w]
+
 
 def _qb_ints_from_row(row) -> float:
     """Interceptions column name can vary across merged CSVs."""
@@ -315,18 +330,19 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     recent_att_17_w = 0.0
     att_pg_vals: List[float] = []
     peak_dbs_17: List[float] = []
-    rec_w = [0.20, 0.30, 0.50]
+    proj_dbs_pace_w = 0.0
     n_recent = len(recent_rows)
-    w_recent = rec_w[-n_recent:] if n_recent > 0 else [1.0]
-    w_recent = [w / sum(w_recent) for w in w_recent]
+    w_recent = _qb_recency_weights_n(n_recent)
     for (_, r), rw in zip(recent_rows.iterrows(), w_recent):
         yr = int(_safe_float(r.get("Year"), 2024))
         yr_g = _max_games_for_year(yr)
         g = _infer_games_played(r, yr_g)
-        db = max(0.0, _safe_float(r.get("dropbacks"), 0.0))
-        if db >= _MIN_DB_FOR_STARTER_PEAK:
-            peak_dbs_17.append(round((db / max(g, 0.01)) * 17.0))
-        db = max(1.0, db) if db > 0 else 1.0
+        g = max(1.0, min(yr_g, g))
+        db_raw = max(0.0, _safe_float(r.get("dropbacks"), 0.0))
+        if db_raw >= _MIN_DB_FOR_STARTER_PEAK:
+            peak_dbs_17.append(round((db_raw / max(g, 0.01)) * 17.0))
+        proj_dbs_pace_w += (db_raw / g) * 17.0 * rw
+        db = max(1.0, db_raw) if db_raw > 0 else 1.0
         c_epa   += _safe_float(r.get("Net EPA")) * rw
         c_dbs   += db * rw
         c_yards += _safe_float(r.get("yards")) * rw
@@ -362,11 +378,11 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     else:
         att_pg_med = 0.5 * (att_pg_sorted[m // 2 - 1] + att_pg_sorted[m // 2])
     att_17_median = att_pg_med * 17.0
-    # Use a typical recent level (median-like) with only light trend influence.
-    att_17_baseline = 0.72 * att_17_median + 0.28 * (recent_att_17_w + 0.15 * att_trend_17)
+    # Recency-first attempt pace; small YoY momentum (oldest→newest in window).
+    att_17_baseline = recent_att_17_w + 0.12 * att_trend_17
     att_17_baseline = max(180.0, min(680.0, att_17_baseline))
 
-    proj_dbs_linear = (c_dbs / c_games) * 17.0
+    proj_dbs_linear = max(1.0, proj_dbs_pace_w)
     peak_17_val = max(peak_dbs_17) if peak_dbs_17 else float(proj_dbs_linear)
     proj_dbs_starter_17g = round(
         qb_full_role_dropbacks_17(max(proj_dbs_linear, peak_17_val)), 1
@@ -400,8 +416,10 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         "proj_dbs_career_pace_17g": round(proj_dbs_linear, 1),
         "proj_dbs_peak_17g":        round(peak_17_val, 1),
         "proj_dbs_starter_17g":     proj_dbs_starter_17g,
-        "proj_atts_typical_17g":    round(att_17_median, 1),
+        # "Typical" here = recency-weighted 17-game attempt pace (not median of seasons).
+        "proj_atts_typical_17g":    round(recent_att_17_w, 1),
         "proj_atts_trend_17g":      round(att_17_baseline, 1),
+        "proj_atts_median_17g":     round(att_17_median, 1),
     }
     _apply_qb_volume_from_rates(out, proj_dbs_starter_17g)
     return out
@@ -409,16 +427,14 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
 
 def _compute_health_factor(history: pd.DataFrame) -> tuple:
     recent = history.sort_values("Year").tail(3).reset_index(drop=True)
-    weights = [0.20, 0.30, 0.50]
     n = len(recent)
+    w = _qb_recency_weights_n(n)
     avail_list = []
     for _, row in recent.iterrows():
         yr = int(_safe_float(row.get("Year"), 2024))
         max_g = _max_games_for_year(yr)
         games = max(1.0, min(max_g, _infer_games_played(row, max_g)))
         avail_list.append(games / max_g)
-    w = weights[-n:]
-    w = [x / sum(w) for x in w]
     avg_avail = sum(a * wt for a, wt in zip(avail_list, w))
     adj = (avg_avail - 0.75) * 10.0
     adj = max(-5.0, min(2.5, adj))
@@ -470,13 +486,14 @@ def project_stats(
         td_rate_att = float(proj_tds) / max(proj_atts, 1.0)
         int_rate_att = float(proj_ints) / max(proj_atts, 1.0)
         proj_qbr = round(min(125.0, _nfl_passer_rating(proj_cmp_pct, proj_ypa, td_rate_att, int_rate_att)), 1)
-        # Keep yards consistent with lower passer-rating outcomes.
+        # Soft caps: scale with attempt volume so full-season starters are not pinned ~2500 yds.
+        att_scale = max(0.88, min(1.12, float(proj_atts) / 485.0))
         if proj_qbr < 85.0:
-            proj_yards = min(proj_yards, 3900)
+            proj_yards = min(proj_yards, int(4100 * att_scale))
         elif proj_qbr < 90.0:
-            proj_yards = min(proj_yards, 4300)
+            proj_yards = min(proj_yards, int(4550 * att_scale))
         elif proj_qbr < 95.0:
-            proj_yards = min(proj_yards, 4700)
+            proj_yards = min(proj_yards, int(5050 * att_scale))
         projections.append({
             "year":           yr,
             "age":            age,
@@ -602,8 +619,7 @@ def predict_performance(state: QBAgentState):
     # Model grade = recent-weighted (last 3) pass grade with latest-season emphasis.
     valid_rows = _aggregate_qb_history_by_year(history).sort_values("Year")
     recent = valid_rows.tail(3).reset_index(drop=True)
-    rec_w = [0.20, 0.30, 0.50][-len(recent):]
-    rec_w = [w / sum(rec_w) for w in rec_w] if rec_w else [1.0]
+    rec_w = _qb_recency_weights_n(len(recent))
     mg_num = mg_den = 0.0
     recent_dbs = 0.0
     for (_, r), rw in zip(recent.iterrows(), rec_w):
@@ -663,8 +679,9 @@ def predict_performance(state: QBAgentState):
     if trend_atts > 0:
         sack_rate = max(0.02, min(0.18, float(last_stats.get("sack_rate_db") or 0.065)))
         base_atts = float(last_stats.get("proj_atts_17g") or 0.0)
-        trend_component = 0.75 * typical_atts + 0.25 * trend_atts
-        blended_atts = 0.62 * base_atts + 0.38 * (trend_component * vol_rel)
+        # Favor recency + trend anchor over a separate "typical" mix (typical is now recency-weighted too).
+        trend_component = 0.82 * trend_atts + 0.18 * typical_atts
+        blended_atts = 0.40 * base_atts + 0.60 * (trend_component * vol_rel)
         blended_dbs = blended_atts / max(1e-6, (1.0 - sack_rate))
         _apply_qb_volume_from_rates(last_stats, blended_dbs)
 
