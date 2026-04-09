@@ -68,7 +68,8 @@ async def team_roster(team: str = Query(...), analysis_year: int = Query(2025)):
     roster = get_team_roster(team, df_players, grade_col=S_GRADE_COL, snap_col=S_SNAP_COL, reference_year=analysis_year)
     need_score, need_label = compute_positional_need(roster, position_df=df_players, team=team,
                                                       grade_col=S_GRADE_COL, snap_col=S_SNAP_COL,
-                                                      prod_stat_cols=S_PROD_STATS, reference_year=analysis_year)
+                                                      prod_stat_cols=S_PROD_STATS, reference_year=analysis_year,
+                                                      position_key="S")
     allocated_pct, available_pct = get_team_cap(team, reference_year=analysis_year)
     return {"team": team, "roster": roster, "positional_need": need_score,
             "need_label": need_label, "allocated_cap_pct": allocated_pct, "available_cap_pct": available_pct}
@@ -108,7 +109,8 @@ async def evaluate_player(req: EvaluationRequest):
         else:
             roster_without = roster
             need_score, need_label = compute_positional_need(roster, position_df=df_players,
-                team=req.team, grade_col=S_GRADE_COL, snap_col=S_SNAP_COL, prod_stat_cols=S_PROD_STATS, reference_year=analysis_year)
+                team=req.team, grade_col=S_GRADE_COL, snap_col=S_SNAP_COL, prod_stat_cols=S_PROD_STATS, reference_year=analysis_year,
+                position_key="S")
             player_cap = 0.0
         allocated_pct, available_pct = get_team_cap(req.team, reference_year=analysis_year)
         cap_avail = req.cap_available_pct if req.cap_available_pct > 0 else available_pct

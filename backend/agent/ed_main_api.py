@@ -96,7 +96,9 @@ async def team_roster(team: str = Query(..., description="Team name"), analysis_
         raise HTTPException(status_code=503, detail="Player database not loaded.")
 
     roster = get_team_roster(team, df_players, reference_year=analysis_year)
-    need_score, need_label = compute_positional_need(roster, position_df=df_players, team=team, reference_year=analysis_year)
+    need_score, need_label = compute_positional_need(
+        roster, position_df=df_players, team=team, reference_year=analysis_year, position_key="ED",
+    )
     allocated_pct, available_pct = get_team_cap(team, reference_year=analysis_year)
 
     return {
@@ -156,7 +158,7 @@ async def evaluate_player(req: EvaluationRequest):
             roster_without = get_roster_without_player(roster, req.player_name)
             need_score, need_label = compute_positional_need(
                 roster_without, position_df=df_players, team=req.team,
-                exclude_player=req.player_name, reference_year=analysis_year,
+                exclude_player=req.player_name, reference_year=analysis_year, position_key="ED",
             )
             player_cap = next(
                 (p["cap_pct"] for p in roster if p["player"].strip().lower() == req.player_name.strip().lower()),
@@ -165,7 +167,7 @@ async def evaluate_player(req: EvaluationRequest):
         else:
             roster_without = roster
             need_score, need_label = compute_positional_need(
-                roster, position_df=df_players, team=req.team, reference_year=analysis_year,
+                roster, position_df=df_players, team=req.team, reference_year=analysis_year, position_key="ED",
             )
             player_cap = 0.0
 

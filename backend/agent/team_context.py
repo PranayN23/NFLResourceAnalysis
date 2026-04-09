@@ -168,6 +168,38 @@ _PROD_STATS_OL  = ["sacks_allowed", "hurries_allowed", "block_percent"]
 # Legacy alias
 _PROD_STATS = _PROD_STATS_DEF
 
+# QB / HB / TE: one (or ~two for TE) primary roles on the field — positional
+# strength should track the snap-weighted room, not the mean of the top-2
+# composites (which overweights a low-snap backup). Other positions use the
+# top-2 composite mean and slightly higher depth weight in the blend.
+_STARTER_DOMINANT_POSITIONS = frozenset({"QB", "HB", "TE"})
+
+
+def _compute_starter_strength_value(
+    g: pd.DataFrame,
+    position_key: str | None,
+    snap_col: str | None,
+) -> float:
+    """Per-team aggregate: snap-weighted composite (starter-dominant) or mean of top-2 composites."""
+    comps = g["_composite"]
+    if comps.empty:
+        return 50.0
+    sc = snap_col if snap_col and snap_col in g.columns else None
+    if position_key in _STARTER_DOMINANT_POSITIONS and sc:
+        snaps = pd.to_numeric(g[sc], errors="coerce").fillna(0).clip(lower=0)
+        tot = float(snaps.sum())
+        if tot < 1e-9:
+            return float(comps.max())
+        return float((comps * snaps).sum() / tot)
+    return float(comps.nlargest(min(2, len(comps))).mean())
+
+
+def _positional_need_blend_weights(position_key: str | None) -> tuple[float, float, float, float, float]:
+    """(star, starter_strength, production, depth, age); sums to 1.0."""
+    if position_key in _STARTER_DOMINANT_POSITIONS:
+        return (0.25, 0.32, 0.28, 0.08, 0.07)
+    return (0.20, 0.28, 0.24, 0.23, 0.05)
+
 
 def _player_composite(
     latest: pd.DataFrame,
@@ -224,6 +256,7 @@ def _compute_league_percentiles(
     snap_col: str = "snap_counts_defense",
     prod_stat_cols: list = None,
     reference_year: int | None = None,
+    position_key: str | None = None,
 ) -> pd.DataFrame:
     """
     Aggregate per-team metrics for the most recent year and percentile-
@@ -234,6 +267,10 @@ def _compute_league_percentiles(
     stops, hits, hurries, tackles on a per-snap basis), so a player
     who dominates statistically is properly credited even if their
     PFF grade is only "good".
+
+    *starter_strength* is position-aware: QB/HB/TE use snap-weighted
+    composite (starter drives the number); other positions use the mean
+    of the top-2 composites (typical two-starter / rotation roles).
     """
     max_year = _effective_year_from_df(position_df, reference_year, "Year")
     if max_year is None:
@@ -274,6 +311,12 @@ def _compute_league_percentiles(
 
     agg = latest.groupby("Team").agg(**agg_dict)
 
+    starter_map = {
+        team: _compute_starter_strength_value(g, position_key, _snap_col)
+        for team, g in latest.groupby("Team")
+    }
+    agg["starter_strength"] = [starter_map[t] for t in agg.index]
+
     prod_agg_stats = prod_stat_cols if prod_stat_cols else ["sacks", "total_pressures", "stops"]
     for stat_col in prod_agg_stats:
         if stat_col in latest.columns:
@@ -294,8 +337,16 @@ def _get_league_stats(
     snap_col: str = "snap_counts_defense",
     prod_stat_cols: list = None,
     reference_year: int | None = None,
+    position_key: str | None = None,
 ) -> pd.DataFrame:
-    key = (id(position_df), grade_col, snap_col, reference_year)
+    key = (
+        id(position_df),
+        grade_col,
+        snap_col,
+        tuple(prod_stat_cols) if prod_stat_cols is not None else (),
+        reference_year,
+        position_key,
+    )
     if key not in _league_cache:
         _league_cache[key] = _compute_league_percentiles(
             position_df,
@@ -303,6 +354,7 @@ def _get_league_stats(
             snap_col=snap_col,
             prod_stat_cols=prod_stat_cols,
             reference_year=reference_year,
+            position_key=position_key,
         )
     return _league_cache[key]
 
@@ -315,6 +367,7 @@ def _recompute_team_row(
     snap_col: str = "snap_counts_defense",
     prod_stat_cols: list = None,
     reference_year: int | None = None,
+    position_key: str | None = None,
 ) -> pd.Series:
     """
     Recompute a single team's raw aggregate metrics from the CSV,
@@ -341,11 +394,17 @@ def _recompute_team_row(
     team_rows["_composite"] = _player_composite(team_rows, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
 
     composites = team_rows["_composite"]
-    snaps_col = snap_col if snap_col in team_rows.columns else "snap_counts_defense"
+    snaps_col = snap_col if snap_col in team_rows.columns else (
+        "snap_counts_defense" if "snap_counts_defense" in team_rows.columns else
+        "snap_counts_offense" if "snap_counts_offense" in team_rows.columns else
+        "passing_snaps" if "passing_snaps" in team_rows.columns else
+        "total_snaps" if "total_snaps" in team_rows.columns else None
+    )
     grade_c = grade_col if grade_col in team_rows.columns else "grades_defense"
     row = {
         "best_composite":    composites.max(),
         "avg_composite_top2": composites.nlargest(2).mean(),
+        "starter_strength": _compute_starter_strength_value(team_rows, position_key, snaps_col),
         "best_grade":        team_rows[grade_c].max() if grade_c in team_rows.columns else 50.0,
         "n_quality":         int((composites >= composites.quantile(0.55)).sum()),
         "total_snaps":       team_rows[snaps_col].sum() if snaps_col in team_rows.columns else 0,
@@ -390,16 +449,21 @@ def compute_positional_need(
     snap_col: str = "snap_counts_defense",
     prod_stat_cols: list = None,
     reference_year: int | None = None,
+    position_key: str | None = None,
 ) -> Tuple[float, str]:
     """
     Score 0-100 how strong a team is at this position, ranked against
-    the rest of the league. Blends five factors:
+    the rest of the league. Blends five factors (weights depend on
+    *position_key*):
 
-    1. **Star power** (25%) — best player's composite percentile.
-    2. **Starter quality** (25%) — avg composite of top-2 players.
-    3. **Team production** (25%) — total sacks + pressures + stops.
-    4. **Depth** (15%) — count of above-median composite players.
-    5. **Age risk** (10%) — top-2 starters' age.
+    1. **Star power** — best player's composite percentile.
+    2. **Starter strength** — for QB/HB/TE, snap-weighted composite
+       (starters dominate); for other positions, mean of top-2 composites.
+    3. **Team production** — league-relative totals / rates.
+    4. **Depth** — count of above-threshold composite players (weighted
+       higher for typical two-deep positions).
+    5. **Age risk** — for QB/HB/TE, snap-weighted roster age; else top-2
+       by grade.
 
     When *exclude_player* is set (re-signing), the team's stats are
     recomputed without that player and re-ranked vs. the league.
@@ -417,6 +481,7 @@ def compute_positional_need(
             snap_col=snap_col,
             prod_stat_cols=prod_stat_cols,
             reference_year=reference_year,
+            position_key=position_key,
         )
         if team in league.index:
             if exclude_player:
@@ -428,6 +493,7 @@ def compute_positional_need(
                     snap_col=snap_col,
                     prod_stat_cols=prod_stat_cols,
                     reference_year=reference_year,
+                    position_key=position_key,
                 )
                 if team_row is None:
                     return 0.0, "Weak"
@@ -437,18 +503,30 @@ def compute_positional_need(
                 pctiles = {c: row[c] for c in row.index if c.endswith("_pctile")}
 
             star_pctile = pctiles.get("best_composite_pctile", 0.5)
-            starter_pctile = pctiles.get("avg_composite_top2_pctile", 0.5)
+            starter_pctile = pctiles.get(
+                "starter_strength_pctile",
+                pctiles.get("avg_composite_top2_pctile", 0.5),
+            )
             depth_pctile = pctiles.get("n_quality_pctile", 0.5)
 
             prod_cols = [c for c in pctiles if c.startswith("total_") and c.endswith("_pctile")
                          and c != "total_snaps_pctile"]
             production_pctile = np.mean([pctiles[c] for c in prod_cols]) if prod_cols else 0.5
 
-            qualified = [p for p in roster if p["snaps"] >= 40]
-            top_2 = sorted(qualified, key=lambda r: r["grade"], reverse=True)[:2]
-            if not top_2:
-                top_2 = sorted(roster, key=lambda r: r["grade"], reverse=True)[:2]
-            avg_age_top2 = np.mean([p["age"] for p in top_2 if p["age"] > 0]) if top_2 else 28
+            if position_key in _STARTER_DOMINANT_POSITIONS:
+                age_snap = [(p["age"], max(0, int(p["snaps"]))) for p in roster if p.get("age", 0) > 0 and p.get("snaps", 0) > 0]
+                if age_snap:
+                    ages_a, wts = zip(*age_snap)
+                    sw = sum(wts)
+                    avg_age_top2 = float(np.average(ages_a, weights=wts)) if sw > 0 else 28
+                else:
+                    avg_age_top2 = 28
+            else:
+                qualified = [p for p in roster if p["snaps"] >= 40]
+                top_2 = sorted(qualified, key=lambda r: r["grade"], reverse=True)[:2]
+                if not top_2:
+                    top_2 = sorted(roster, key=lambda r: r["grade"], reverse=True)[:2]
+                avg_age_top2 = np.mean([p["age"] for p in top_2 if p["age"] > 0]) if top_2 else 28
 
             if avg_age_top2 >= 32:
                 age_factor = 0.15
@@ -459,12 +537,13 @@ def compute_positional_need(
             else:
                 age_factor = 0.90
 
+            w_star, w_starter, w_prod, w_depth, w_age = _positional_need_blend_weights(position_key)
             composite = (
-                0.25 * star_pctile
-                + 0.25 * starter_pctile
-                + 0.25 * production_pctile
-                + 0.15 * depth_pctile
-                + 0.10 * age_factor
+                w_star * star_pctile
+                + w_starter * starter_pctile
+                + w_prod * production_pctile
+                + w_depth * depth_pctile
+                + w_age * age_factor
             )
 
             strength = round(max(0, min(100, composite * 100)), 1)
