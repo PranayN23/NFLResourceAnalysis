@@ -256,6 +256,12 @@ function signingGradeFromData(fair_aav, cap_burden, teamCtx) {
  * When departures are modeled, FA signings matter more — especially at positions
  * losing weighted snap/cap mass. Returns additive points (capped) for class rollups.
  */
+/** Position weights for FA class / roster net / departure-need bump (keep in sync everywhere). */
+const FA_CLASS_POS_IMPORTANCE = {
+  QB: 1.45, ED: 1.25, WR: 1.18, CB: 1.15, T: 1.12, DI: 1.08,
+  C: 1.03, G: 1.02, LB: 1.0, S: 0.98, TE: 0.95, HB: 0.9,
+};
+
 function departureImportanceBoostForSigning(positionKey, classDepartures, departuresOn, POS_IMPORTANCE) {
   if (!departuresOn || !classDepartures?.length) {
     return { boost: 0, directShare: 0, stress: 0 };
@@ -278,6 +284,40 @@ function departureImportanceBoostForSigning(positionKey, classDepartures, depart
   const churnPts = 1.1 * stress;
   const boost = Math.min(10, samePosPts + churnPts);
   return { boost, directShare, stress };
+}
+
+/**
+ * Match GM feed card to class builder: same departure-need bump when this eval is in the current class.
+ */
+function signingGradeDisplayForChat(structured, departuresOn, classDepartures, classSignings) {
+  const base = Number(structured?.signing_grade);
+  if (!Number.isFinite(base)) {
+    return { display: structured?.signing_grade, base: null, boost: 0 };
+  }
+  const meta = structured?.meta;
+  if (!meta?.team || !meta?.playerName || !meta?.positionKey) {
+    return { display: Math.round(base), base: null, boost: 0 };
+  }
+  const yr = Number(meta.analysisYear || 2025);
+  const key = `${meta.playerName}::${meta.positionKey}::${meta.team}::${yr}`;
+  const inClass = classSignings.some((s) => s.key === key);
+  if (!inClass || !departuresOn) {
+    return { display: Math.round(base), base: null, boost: 0 };
+  }
+  const { boost } = departureImportanceBoostForSigning(
+    meta.positionKey,
+    classDepartures,
+    departuresOn,
+    FA_CLASS_POS_IMPORTANCE,
+  );
+  if (boost <= 0) {
+    return { display: Math.round(base), base: null, boost: 0 };
+  }
+  return {
+    display: Math.round(Math.min(100, base + boost)),
+    base,
+    boost,
+  };
 }
 
 function gradeColor(g) {
@@ -305,10 +345,14 @@ function gradeLetter(g) {
   return 'F';
 }
 
-function SigningGrade({ grade }) {
-  const color = gradeColor(grade);
-  const letter = gradeLetter(grade);
-  const pct = grade;
+function SigningGrade({ grade, baseGrade, departureBoost }) {
+  const g = Number(grade);
+  const safeG = Number.isFinite(g) ? Math.round(g) : grade;
+  const color = gradeColor(safeG);
+  const letter = gradeLetter(safeG);
+  const pct = Number.isFinite(g) ? Math.max(0, Math.min(100, g)) : 0;
+  const showSplit =
+    Number(departureBoost) > 0 && baseGrade != null && Number.isFinite(Number(baseGrade));
   return (
     <div className="fa-signing-grade">
       <svg className="fa-grade-ring" viewBox="0 0 80 80">
@@ -317,10 +361,15 @@ function SigningGrade({ grade }) {
           strokeDasharray={`${2 * Math.PI * 34 * pct / 100} ${2 * Math.PI * 34 * (1 - pct / 100)}`}
           strokeDashoffset={2 * Math.PI * 34 * 0.25}
           strokeLinecap="round" />
-        <text x="40" y="37" textAnchor="middle" fill={color} fontSize="16" fontWeight="bold">{grade}</text>
+        <text x="40" y="37" textAnchor="middle" fill={color} fontSize="16" fontWeight="bold">{safeG}</text>
         <text x="40" y="52" textAnchor="middle" fill={color} fontSize="10">{letter}</text>
       </svg>
       <p className="fa-grade-label">Signing Grade</p>
+      {showSplit && (
+        <p className="fa-hint" style={{ textAlign: 'center', marginTop: 6, maxWidth: 200, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.35 }}>
+          Class view: base {Math.round(Number(baseGrade))} +{Number(departureBoost).toFixed(1)} departure need
+        </p>
+      )}
     </div>
   );
 }
@@ -1007,14 +1056,10 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   }, [selectedPlayer, resolvedPositionKey]);
   const classGradeSummary = useMemo(() => {
     if (!classSignings.length) return null;
-    const POS_IMPORTANCE = {
-      QB: 1.45, ED: 1.25, WR: 1.18, CB: 1.15, T: 1.12, DI: 1.08,
-      C: 1.03, G: 1.02, LB: 1.0, S: 0.98, TE: 0.95, HB: 0.9,
-    };
     let num = 0;
     let den = 0;
     const rows = classSignings.map((s) => {
-      const posW = POS_IMPORTANCE[s.positionKey] || 1.0;
+      const posW = FA_CLASS_POS_IMPORTANCE[s.positionKey] || 1.0;
       const profileW = Math.max(0.8, Math.min(1.8, 0.8 + (Number(s.ask) || 0) / 30));
       const w = posW * profileW;
       const baseG = Number(s.signingGrade) || 0;
@@ -1022,7 +1067,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         s.positionKey,
         classDepartures,
         departuresOn,
-        POS_IMPORTANCE,
+        FA_CLASS_POS_IMPORTANCE,
       );
       const adjG = Math.round(Math.min(100, baseG + boost));
       num += adjG * w;
@@ -1042,10 +1087,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
 
   /** Signings-only grade is in classGradeSummary. Net roster score penalizes losing higher-grade / higher-cap departures (weighted by position). */
   const classRosterNetSummary = useMemo(() => {
-    const POS_IMPORTANCE = {
-      QB: 1.45, ED: 1.25, WR: 1.18, CB: 1.15, T: 1.12, DI: 1.08,
-      C: 1.03, G: 1.02, LB: 1.0, S: 0.98, TE: 0.95, HB: 0.9,
-    };
+    const POS_IMPORTANCE = FA_CLASS_POS_IMPORTANCE;
     const hasSignings = classSignings.length > 0;
     const hasDepartures = departuresOn && classDepartures.length > 0;
     if (!hasSignings && !hasDepartures) return null;
@@ -1763,6 +1805,9 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
           {messages.map((msg, i) => {
             const msgPosKey = msg.structured?.meta?.positionKey;
             const msgCfg = (msgPosKey && POSITION_FREE_AGENCY[msgPosKey]) ? POSITION_FREE_AGENCY[msgPosKey] : cfg;
+            const chatSigningGrade = msg.structured
+              ? signingGradeDisplayForChat(msg.structured, departuresOn, classDepartures, classSignings)
+              : { display: undefined, base: null, boost: 0 };
             return (
             <div key={i} ref={(el) => { messageRefs.current[i] = el; }} className={`fa-msg fa-msg--${msg.role}`}>
               <div className="fa-msg-label">{msg.role === 'user' ? 'You' : 'GM Agent'}</div>
@@ -1795,7 +1840,11 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                     </button>
                   )}
 
-                  <SigningGrade grade={msg.structured.signing_grade} />
+                  <SigningGrade
+                    grade={chatSigningGrade.display ?? msg.structured.signing_grade}
+                    baseGrade={chatSigningGrade.base}
+                    departureBoost={chatSigningGrade.boost}
+                  />
 
                   {msg.structured.tier_description && (
                     <div className="fa-tier-desc">{msg.structured.tier_description}</div>
