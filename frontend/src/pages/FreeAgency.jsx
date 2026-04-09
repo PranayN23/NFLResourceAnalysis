@@ -740,7 +740,14 @@ function PositionEvaluator({ positionKey, onBack }) {
 
     fetch(`${apiBase}/teams?analysis_year=${encodeURIComponent(analysisYear)}`)
       .then((r) => r.json())
-      .then((data) => setTeams(data.teams || []))
+      .then((data) => {
+        const nextTeams = data.teams || [];
+        setTeams(nextTeams);
+        setSelectedTeam((prev) => {
+          if (!prev) return '';
+          return nextTeams.includes(prev) ? prev : '';
+        });
+      })
       .catch(() => {});
   }, [apiBase, cfg.playersPath, cfg.port, positionKey, analysisYear]);
 
@@ -870,10 +877,6 @@ function PositionEvaluator({ positionKey, onBack }) {
             onChange={(e) => {
               const y = Number(e.target.value);
               setAnalysisYear(Number.isFinite(y) ? y : latestAnalysisYear);
-              setSelectedTeam('');
-              setTeamRoster(null);
-              setCapOverride('');
-              setCapOverrideDirty(false);
             }}
           >
             {analysisYearOptions.map((y) => (

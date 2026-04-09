@@ -542,15 +542,27 @@ def get_team_cap(team: str, reference_year: int | None = None) -> Tuple[float, f
     if cap_df.empty:
         return 85.0, 15.0
 
-    max_year = _effective_year_from_df(cap_df, reference_year, "year")
-    if max_year is None:
+    effective_year = _effective_year_from_df(cap_df, reference_year, "year")
+    if effective_year is None:
         return 85.0, 15.0
-    team_rows = cap_df[(cap_df["Team"] == team) & (cap_df["year"] == max_year)]
+    requested_year = int(reference_year) if reference_year is not None else effective_year
+    team_rows = cap_df[(cap_df["Team"] == team) & (cap_df["year"] == effective_year)]
 
     if team_rows.empty:
         return 85.0, 15.0
 
-    allocated = team_rows["Cap_Space"].sum()
+    allocated = float(team_rows["Cap_Space"].sum())
+
+    # If requesting a future year beyond available cap snapshots, project cap burden
+    # by holding implied dollars constant and growing league cap (~6.5%/yr).
+    if requested_year > effective_year:
+        years_ahead = requested_year - effective_year
+        cap_then = BASE_CAP_DOLLARS * ((1.0 + CAP_GROWTH_RATE) ** (effective_year - BASE_CAP_YEAR))
+        cap_req = BASE_CAP_DOLLARS * ((1.0 + CAP_GROWTH_RATE) ** (requested_year - BASE_CAP_YEAR))
+        if cap_req > 0:
+            implied_dollars = (allocated / 100.0) * cap_then
+            allocated = (implied_dollars / cap_req) * 100.0
+
     allocated = min(allocated, 100.0)
     available = round(100.0 - allocated, 1)
     return round(allocated, 1), max(0.0, available)
