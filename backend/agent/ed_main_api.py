@@ -58,7 +58,10 @@ async def get_ed_players():
     if df_players.empty:
         raise HTTPException(status_code=503, detail="Player database not loaded.")
     names = sorted(df_players["player"].dropna().unique().tolist())
-    return {"players": names}
+    years = pd.to_numeric(df_players.get("Year"), errors="coerce").dropna() if "Year" in df_players.columns else pd.Series(dtype=float)
+    min_year = int(years.min()) if not years.empty else 2025
+    max_data_year = int(years.max()) if not years.empty else 2025
+    return {"players": names, "analysis_year_min": min_year, "analysis_year_max": 2025, "max_data_year": max_data_year}
 
 
 @app.get("/teams")
@@ -131,13 +134,13 @@ async def evaluate_player(req: EvaluationRequest):
 
     if req.team:
         roster = get_team_roster(req.team, df_players, reference_year=analysis_year)
-        re_signing = is_player_on_team(req.player_name, req.team, df_players)
+        re_signing = is_player_on_team(req.player_name, req.team, df_players, reference_year=analysis_year)
 
         if re_signing:
             roster_without = get_roster_without_player(roster, req.player_name)
             need_score, need_label = compute_positional_need(
                 roster_without, position_df=df_players, team=req.team,
-                exclude_player=req.player_name,
+                exclude_player=req.player_name, reference_year=analysis_year,
             )
             player_cap = next(
                 (p["cap_pct"] for p in roster if p["player"].strip().lower() == req.player_name.strip().lower()),
@@ -146,7 +149,7 @@ async def evaluate_player(req: EvaluationRequest):
         else:
             roster_without = roster
             need_score, need_label = compute_positional_need(
-                roster, position_df=df_players, team=req.team,
+                roster, position_df=df_players, team=req.team, reference_year=analysis_year,
             )
             player_cap = 0.0
 
@@ -182,7 +185,6 @@ async def evaluate_player(req: EvaluationRequest):
         "salary_ask":     req.salary_ask,
         "contract_years": req.contract_years,
             "analysis_year": analysis_year,
-        "analysis_year": analysis_year,
         "player_history": player_data,
         "predicted_tier":    "",
         "confidence":        {},

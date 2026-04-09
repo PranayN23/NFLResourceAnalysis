@@ -36,7 +36,10 @@ if os.path.exists(QB_CSV_PATH):
 async def get_qb_players():
     if df_players.empty:
         raise HTTPException(status_code=503, detail="Player database not loaded.")
-    return {"players": sorted(df_players["player"].dropna().unique().tolist())}
+    years = pd.to_numeric(df_players.get("Year"), errors="coerce").dropna() if "Year" in df_players.columns else pd.Series(dtype=float)
+    min_year = int(years.min()) if not years.empty else 2025
+    max_data_year = int(years.max()) if not years.empty else 2025
+    return {"players": sorted(df_players["player"].dropna().unique().tolist()), "analysis_year_min": min_year, "analysis_year_max": 2025, "max_data_year": max_data_year}
 
 
 @app.get("/teams")
@@ -84,7 +87,7 @@ async def evaluate_player(req: EvaluationRequest):
 
     if req.team:
         roster = get_team_roster(req.team, df_players, grade_col=QB_GRADE_COL, snap_col=QB_SNAP_COL, reference_year=analysis_year)
-        re_signing = is_player_on_team(req.player_name, req.team, df_players)
+        re_signing = is_player_on_team(req.player_name, req.team, df_players, reference_year=analysis_year)
 
         if re_signing:
             roster_without = get_roster_without_player(roster, req.player_name)
@@ -120,7 +123,7 @@ async def evaluate_player(req: EvaluationRequest):
     initial_state = {
         "player_name": req.player_name, "salary_ask": req.salary_ask,
         "contract_years": req.contract_years,
-            "analysis_year": analysis_year, "analysis_year": analysis_year, "player_history": player_data,
+            "analysis_year": analysis_year, "player_history": player_data,
         "predicted_tier": "", "confidence": {}, "current_age": 28,
         "last_season_stats": {}, "career_stats": [], "stats_score": 0.0,
         "composite_grade": 0.0, "valuation": 0.0, "effective_cap_burden": 0.0,

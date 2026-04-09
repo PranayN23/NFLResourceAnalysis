@@ -675,6 +675,7 @@ function PositionEvaluator({ positionKey, onBack }) {
   const cfg = POSITION_FREE_AGENCY[positionKey];
   const apiBase = `http://127.0.0.1:${cfg.port}`;
   const contractMax = 7;
+  const latestAnalysisYear = 2025;
 
   const [players, setPlayers] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState('');
@@ -693,6 +694,8 @@ function PositionEvaluator({ positionKey, onBack }) {
   const [capOverride, setCapOverride] = useState('');
   const [capOverrideDirty, setCapOverrideDirty] = useState(false);
   const [fetchingTeam, setFetchingTeam] = useState(false);
+  const [analysisYear, setAnalysisYear] = useState(latestAnalysisYear);
+  const [analysisYearMin, setAnalysisYearMin] = useState(2010);
 
   const chatEndRef = useRef(null);
 
@@ -711,6 +714,8 @@ function PositionEvaluator({ positionKey, onBack }) {
     setTeamRoster(null);
     setCapOverride('');
     setCapOverrideDirty(false);
+    setAnalysisYear(latestAnalysisYear);
+    setAnalysisYearMin(2010);
     setStatsOpen({});
   }, [positionKey]);
 
@@ -721,22 +726,24 @@ function PositionEvaluator({ positionKey, onBack }) {
       .then((data) => {
         setPlayers(data.players || []);
         setSelectedPlayer(data.players?.[0] || '');
+        const minYr = Number(data.analysis_year_min);
+        setAnalysisYearMin(Number.isFinite(minYr) ? minYr : 2010);
       })
       .catch(() =>
         setError(`Could not load player list. Start the ${positionKey} API (port ${cfg.port}): uvicorn backend.agent…`)
       )
       .finally(() => setFetchingPlayers(false));
 
-    fetch(`${apiBase}/teams`)
+    fetch(`${apiBase}/teams?analysis_year=${encodeURIComponent(analysisYear)}`)
       .then((r) => r.json())
       .then((data) => setTeams(data.teams || []))
       .catch(() => {});
-  }, [apiBase, cfg.playersPath, cfg.port, positionKey]);
+  }, [apiBase, cfg.playersPath, cfg.port, positionKey, analysisYear]);
 
   useEffect(() => {
     if (!selectedTeam || !teamMode) return;
     setFetchingTeam(true);
-    fetch(`${apiBase}/team-roster?team=${encodeURIComponent(selectedTeam)}`)
+    fetch(`${apiBase}/team-roster?team=${encodeURIComponent(selectedTeam)}&analysis_year=${encodeURIComponent(analysisYear)}`)
       .then((r) => r.json())
       .then((data) => {
         setTeamRoster(data);
@@ -746,7 +753,7 @@ function PositionEvaluator({ positionKey, onBack }) {
       })
       .catch(() => setTeamRoster(null))
       .finally(() => setFetchingTeam(false));
-  }, [selectedTeam, teamMode, apiBase, capOverrideDirty]);
+  }, [selectedTeam, teamMode, apiBase, capOverrideDirty, analysisYear]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -776,6 +783,7 @@ function PositionEvaluator({ positionKey, onBack }) {
         player_name: selectedPlayer,
         salary_ask: ask,
         contract_years: contractYears,
+        analysis_year: analysisYear,
       };
       if (teamMode && selectedTeam) {
         body.team = selectedTeam;
@@ -817,6 +825,12 @@ function PositionEvaluator({ positionKey, onBack }) {
   };
 
   const ticks = useMemo(() => Array.from({ length: contractMax }, (_, i) => i + 1), [contractMax]);
+  const analysisYearOptions = useMemo(() => {
+    const minY = Math.max(1900, Math.min(latestAnalysisYear, Number(analysisYearMin) || latestAnalysisYear));
+    const out = [];
+    for (let y = latestAnalysisYear; y >= minY; y -= 1) out.push(y);
+    return out;
+  }, [analysisYearMin]);
   const handleTeamChange = useCallback((team) => {
     setSelectedTeam(team);
     setCapOverrideDirty(false);
@@ -842,6 +856,26 @@ function PositionEvaluator({ positionKey, onBack }) {
             <span className="fa-toggle-slider" />
             <span className="fa-toggle-text">Team Simulation Mode</span>
           </label>
+        </div>
+
+        <div className="fa-field">
+          <label className="fa-label">Analysis Year</label>
+          <select
+            className="fa-select"
+            value={analysisYear}
+            onChange={(e) => {
+              const y = Number(e.target.value);
+              setAnalysisYear(Number.isFinite(y) ? y : latestAnalysisYear);
+              setSelectedTeam('');
+              setTeamRoster(null);
+              setCapOverride('');
+              setCapOverrideDirty(false);
+            }}
+          >
+            {analysisYearOptions.map((y) => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
         </div>
 
         {teamMode && (

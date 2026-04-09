@@ -130,9 +130,14 @@ def get_team_roster(
     return roster
 
 
-def is_player_on_team(player_name: str, team: str, position_df: pd.DataFrame) -> bool:
+def is_player_on_team(
+    player_name: str,
+    team: str,
+    position_df: pd.DataFrame,
+    reference_year: int | None = None,
+) -> bool:
     """Check if a player is currently on the team's roster."""
-    max_year = _effective_year_from_df(position_df, None, "Year")
+    max_year = _effective_year_from_df(position_df, reference_year, "Year")
     if max_year is None:
         return False
     team_df = position_df[
