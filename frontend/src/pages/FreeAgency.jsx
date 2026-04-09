@@ -7,6 +7,7 @@ import {
   NOTE_STD,
   fairAavTierBandsForAllPositions,
   gradeToMarketAav,
+  leagueCapMillions,
 } from '../config/freeAgencyPositionConfig';
 
 const UNIFIED_WELCOME =
@@ -439,13 +440,23 @@ function NeedBadge({ label, score }) {
 }
 
 /* ─── Roster Preview ─── */
-const SALARY_CAP_M = 255.4;
-function pctToDollars(pct) { return (pct / 100 * SALARY_CAP_M).toFixed(1); }
-function pctToDollarsNum(pct) { return Number(((pct / 100) * SALARY_CAP_M).toFixed(1)); }
-function capDisplay(pct) { return `${pct.toFixed(1)}% ($${pctToDollars(pct)}M)`; }
+function pctToDollars(pct, capM) {
+  const c = Number(capM);
+  if (!Number.isFinite(c) || c <= 0) return '0.0';
+  return ((pct / 100) * c).toFixed(1);
+}
+function pctToDollarsNum(pct, capM) {
+  const c = Number(capM);
+  if (!Number.isFinite(c) || c <= 0) return 0;
+  return Number(((pct / 100) * c).toFixed(1));
+}
+function capDisplay(pct, capM) {
+  return `${pct.toFixed(1)}% ($${pctToDollars(pct, capM)}M)`;
+}
 
-function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePct, positionLabel }) {
+function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePct, positionLabel, leagueCapM }) {
   const top = roster.slice(0, 5);
+  const capM = Number(leagueCapM) > 0 ? Number(leagueCapM) : leagueCapMillions(2025);
   return (
     <div className="fa-roster-card">
       <div className="fa-roster-header">
@@ -458,11 +469,11 @@ function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePc
         <div className="fa-cap-bar">
           <div className="fa-cap-fill" style={{ width: `${Math.min(allocatedPct, 100)}%` }} />
         </div>
-        <span className="fa-cap-text">{allocatedPct.toFixed(1)}% (${pctToDollars(allocatedPct)}M)</span>
+        <span className="fa-cap-text">{allocatedPct.toFixed(1)}% (${pctToDollars(allocatedPct, capM)}M)</span>
       </div>
       <div className="fa-cap-bar-row">
         <span className="fa-cap-label">Available</span>
-        <span className="fa-cap-text fa-cap-avail">{availablePct.toFixed(1)}% (${pctToDollars(availablePct)}M)</span>
+        <span className="fa-cap-text fa-cap-avail">{availablePct.toFixed(1)}% (${pctToDollars(availablePct, capM)}M)</span>
       </div>
       {top.length > 0 && (
         <table className="fa-roster-tbl">
@@ -481,7 +492,7 @@ function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePc
                   </div>
                 </td>
                 <td>{p.snaps}</td>
-                <td>{p.cap_pct}% (${pctToDollars(p.cap_pct)}M)</td>
+                <td>{p.cap_pct}% (${pctToDollars(p.cap_pct, capM)}M)</td>
               </tr>
             ))}
           </tbody>
@@ -492,11 +503,18 @@ function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePc
 }
 
 /* ─── Team Fit Section (in result card) ─── */
-function TeamFitSection({ teamCtx, signingPcts, positionLabel }) {
+function TeamFitSection({ teamCtx, signingPcts, positionLabel, analysisYear }) {
   if (!teamCtx) return null;
   const yr1 = signingPcts?.[0] || 0;
   const yrLast = signingPcts?.[signingPcts.length - 1] || yr1;
   const capAfter = Math.max(0, (teamCtx.available_cap_pct || 0) - yr1);
+  const ay = Number(analysisYear) || 2025;
+  const refCapM = Number(teamCtx.league_cap_millions) > 0
+    ? Number(teamCtx.league_cap_millions)
+    : leagueCapMillions(ay);
+  const y0 = Number(teamCtx.salary_cap_year) || ay;
+  const capYr1 = leagueCapMillions(y0);
+  const capYrLast = signingPcts?.length > 1 ? leagueCapMillions(y0 + signingPcts.length - 1) : capYr1;
   return (
     <div className="fa-team-fit-section">
       <div className="fa-stat-section-hdr">Team Fit — {positionLabel}</div>
@@ -510,7 +528,7 @@ function TeamFitSection({ teamCtx, signingPcts, positionLabel }) {
       {teamCtx.is_re_signing && (
         <div className="fa-re-sign-note">
           Player is already on this roster. Need is calculated without them (what if they leave?),
-          and their current cap hit ({teamCtx.freed_cap_pct?.toFixed(1)}% / ${pctToDollars(teamCtx.freed_cap_pct || 0)}M) is freed up.
+          and their current cap hit ({teamCtx.freed_cap_pct?.toFixed(1)}% / ${pctToDollars(teamCtx.freed_cap_pct || 0, refCapM)}M) is freed up.
         </div>
       )}
       <div className="fa-stat-row">
@@ -521,21 +539,21 @@ function TeamFitSection({ teamCtx, signingPcts, positionLabel }) {
       </div>
       <div className="fa-stat-row">
         <span className="fa-stat-label">Available Cap{teamCtx.is_re_signing ? ' (after freeing)' : ''}</span>
-        <span className="fa-stat-value">{capDisplay(teamCtx.available_cap_pct || 0)}</span>
+        <span className="fa-stat-value">{capDisplay(teamCtx.available_cap_pct || 0, refCapM)}</span>
       </div>
       <div className="fa-stat-row">
         <span className="fa-stat-label">Yr 1 Cap Hit</span>
-        <span className="fa-stat-value">{capDisplay(yr1)}</span>
+        <span className="fa-stat-value">{capDisplay(yr1, capYr1)}</span>
       </div>
       {signingPcts?.length > 1 && (
         <div className="fa-stat-row">
           <span className="fa-stat-label">Yr {signingPcts.length} Cap Hit</span>
-          <span className="fa-stat-value">{yrLast.toFixed(1)}% (${pctToDollars(yrLast)}M) — shrinks with cap growth</span>
+          <span className="fa-stat-value">{yrLast.toFixed(1)}% (${pctToDollars(yrLast, capYrLast)}M) — lower % as cap rises</span>
         </div>
       )}
       <div className="fa-stat-row">
         <span className="fa-stat-label">Cap After Signing</span>
-        <span className="fa-stat-value">{capDisplay(capAfter)}</span>
+        <span className="fa-stat-value">{capDisplay(capAfter, refCapM)}</span>
       </div>
       {teamCtx.fit_summary && (
         <div className="fa-stat-row">
@@ -817,7 +835,8 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   const apiBase = `http://127.0.0.1:${cfg.port}`;
   const directoryApiBase = `http://127.0.0.1:${POSITION_FREE_AGENCY[FA_POSITION_ORDER[0]].port}`;
   const contractMax = 7;
-  const latestAnalysisYear = 2025;
+  const analysisYearMax = 2025;
+  const defaultAnalysisYear = 2025;
 
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [salaryAsk, setSalaryAsk] = useState('');
@@ -856,8 +875,14 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   const [classQuickLoading, setClassQuickLoading] = useState(false);
   const [showSigningClassDialog, setShowSigningClassDialog] = useState(false);
   const [showRosterNetDialog, setShowRosterNetDialog] = useState(false);
-  const [analysisYear, setAnalysisYear] = useState(latestAnalysisYear);
+  const [analysisYear, setAnalysisYear] = useState(defaultAnalysisYear);
   const [analysisYearMin, setAnalysisYearMin] = useState(2010);
+
+  const leagueCapForUi = useMemo(() => {
+    const v = Number(teamRoster?.league_cap_millions);
+    if (Number.isFinite(v) && v > 0) return v;
+    return leagueCapMillions(Number(analysisYear) || 2025);
+  }, [teamRoster?.league_cap_millions, analysisYear]);
 
   const chatEndRef = useRef(null);
   const messageRefs = useRef({});
@@ -921,7 +946,10 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       .then((data) => {
         setTeamRoster(data);
         if (!capOverrideDirty) {
-          setCapOverride(pctToDollars(data.available_cap_pct || 0));
+          const capM = Number(data.league_cap_millions) > 0
+            ? Number(data.league_cap_millions)
+            : leagueCapMillions(analysisYear);
+          setCapOverride(pctToDollars(data.available_cap_pct || 0, capM));
         }
       })
       .catch(() => setTeamRoster(null))
@@ -1000,7 +1028,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         body.team = selectedTeam;
         const capValM = parseFloat(capOverride);
         if (!isNaN(capValM) && capValM > 0) {
-          body.cap_available_pct = (capValM / SALARY_CAP_M) * 100;
+          body.cap_available_pct = (capValM / leagueCapForUi) * 100;
         }
       }
 
@@ -1037,11 +1065,11 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
 
   const ticks = useMemo(() => Array.from({ length: contractMax }, (_, i) => i + 1), [contractMax]);
   const analysisYearOptions = useMemo(() => {
-    const minY = Math.max(1900, Math.min(latestAnalysisYear, Number(analysisYearMin) || latestAnalysisYear));
+    const minY = Math.max(1900, Math.min(analysisYearMax, Number(analysisYearMin) || analysisYearMax));
     const out = [];
-    for (let y = latestAnalysisYear; y >= minY; y -= 1) out.push(y);
+    for (let y = analysisYearMax; y >= minY; y -= 1) out.push(y);
     return out;
-  }, [analysisYearMin]);
+  }, [analysisYearMin, analysisYearMax]);
   const sortedTeamRankings = useMemo(
     () => [...teamRankings].sort((a, b) => Number(a.rank) - Number(b.rank)),
     [teamRankings]
@@ -1499,7 +1527,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       };
       const capValM = parseFloat(capOverride);
       if (!isNaN(capValM) && capValM > 0) {
-        body.cap_available_pct = (capValM / SALARY_CAP_M) * 100;
+        body.cap_available_pct = (capValM / leagueCapForUi) * 100;
       }
       const resp = await fetch(`http://127.0.0.1:${posCfg.port}/evaluate`, {
         method: 'POST',
@@ -1531,7 +1559,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     }
   }, [
     classSearchPlayer, classQuickAsk, classQuickYears, playerDirectory,
-    selectedTeam, analysisYear, capOverride, handleAddToClass,
+    selectedTeam, analysisYear, capOverride, handleAddToClass, leagueCapForUi,
   ]);
 
   useEffect(() => {
@@ -1553,7 +1581,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       const startPct = Number(data.classStartCapPct);
       if (Number.isFinite(startPct)) {
         setClassStartCapPct(startPct);
-        setClassStartCapInput(pctToDollars(startPct));
+        setClassStartCapInput(pctToDollars(startPct, leagueCapMillions(analysisYear)));
       } else {
         setClassStartCapPct(null);
         setClassStartCapInput('');
@@ -1568,7 +1596,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       setClassCapLocked(false);
       setDeparturesOn(false);
     }
-  }, [classStorageKey]);
+  }, [classStorageKey, analysisYear]);
 
   useEffect(() => {
     if (!classStorageKey) return;
@@ -1612,7 +1640,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
             value={analysisYear}
             onChange={(e) => {
               const y = Number(e.target.value);
-              setAnalysisYear(Number.isFinite(y) ? y : latestAnalysisYear);
+              setAnalysisYear(Number.isFinite(y) ? y : defaultAnalysisYear);
             }}
           >
             {analysisYearOptions.map((y) => (
@@ -1657,10 +1685,10 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                     if (!classBuilderOn) setClassBuilderOn(true);
                     if (classStartCapPct == null) {
                       const capPct = !isNaN(parseFloat(capOverride)) && parseFloat(capOverride) >= 0
-                        ? (parseFloat(capOverride) / SALARY_CAP_M) * 100
+                        ? (parseFloat(capOverride) / leagueCapForUi) * 100
                         : Number(teamRoster?.available_cap_pct || 0);
                       setClassStartCapPct(capPct);
-                      setClassStartCapInput(pctToDollars(capPct || 0));
+                      setClassStartCapInput(pctToDollars(capPct || 0, leagueCapForUi));
                     }
                     setShowClassDialog(true);
                   }}
@@ -1686,10 +1714,11 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                   allocatedPct={teamRoster.allocated_cap_pct}
                   availablePct={
                     !isNaN(parseFloat(capOverride)) && parseFloat(capOverride) >= 0
-                      ? (parseFloat(capOverride) / SALARY_CAP_M) * 100
+                      ? (parseFloat(capOverride) / leagueCapForUi) * 100
                       : teamRoster.available_cap_pct
                   }
                   positionLabel={cfg.positionLabel}
+                  leagueCapM={leagueCapForUi}
                 />
                 <div className="fa-field">
                   <label className="fa-label">Available Cap ($M, editable)</label>
@@ -1899,6 +1928,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                       teamCtx={msg.structured.team_context}
                       signingPcts={msg.structured.team_context.signing_cap_pcts}
                       positionLabel={msgCfg.positionLabel}
+                      analysisYear={msg.structured.meta?.analysisYear ?? analysisYear}
                     />
                   )}
 
@@ -2014,7 +2044,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                       onClick={() => {
                         const vM = Number(classStartCapInput);
                         if (Number.isFinite(vM) && vM >= 0) {
-                          const vPct = (vM / SALARY_CAP_M) * 100;
+                          const vPct = (vM / leagueCapForUi) * 100;
                           setClassStartCapPct(vPct);
                           setClassCapLocked(true);
                         }
@@ -2086,7 +2116,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                           <div key={d.key} className="fa-ranking-card">
                             <div className="fa-ranking-row">
                               <span className="fa-ranking-pos">{d.playerName}</span>
-                              <span className="fa-ranking-badge top">+${pctToDollarsNum(Number(d.freedCapPct || 0)).toFixed(1)}M</span>
+                              <span className="fa-ranking-badge top">+${pctToDollarsNum(Number(d.freedCapPct || 0), leagueCapForUi).toFixed(1)}M</span>
                             </div>
                             <button type="button" className="fa-summary-link-btn" onClick={() => handleRemoveDeparture(d.key)}>
                               Remove departure
@@ -2178,7 +2208,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                       onClick={() => {
                         const vM = Number(classStartCapInput);
                         if (Number.isFinite(vM) && vM >= 0) {
-                          const vPct = (vM / SALARY_CAP_M) * 100;
+                          const vPct = (vM / leagueCapForUi) * 100;
                           setClassStartCapPct(vPct);
                           setClassCapLocked(true);
                         }
@@ -2241,16 +2271,16 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                   </p>
                 )}
                 <p className="fa-msg-text">
-                  Cap Used (Yr 1): <strong>${pctToDollars(classUsedCapPct)}M</strong>
+                  Cap Used (Yr 1): <strong>${pctToDollars(classUsedCapPct, leagueCapForUi)}M</strong>
                   {departuresOn && (
                     <>
-                      {' '}· Cap Freed: <strong style={{ color: '#3de87a' }}>${pctToDollars(classFreedCapPct)}M</strong>
-                      {' '}· Net Used: <strong>${pctToDollars(classNetCapPct)}M</strong>
+                      {' '}· Cap Freed: <strong style={{ color: '#3de87a' }}>${pctToDollars(classFreedCapPct, leagueCapForUi)}M</strong>
+                      {' '}· Net Used: <strong>${pctToDollars(classNetCapPct, leagueCapForUi)}M</strong>
                     </>
                   )}
                   {' '}· Remaining:{' '}
                   <strong style={{ color: classRemainingCapPct != null && classRemainingCapPct < 0 ? '#e05555' : '#3de87a' }}>
-                    {classRemainingCapPct == null ? 'N/A' : `$${pctToDollars(classRemainingCapPct)}M`}
+                    {classRemainingCapPct == null ? 'N/A' : `$${pctToDollars(classRemainingCapPct, leagueCapForUi)}M`}
                   </strong>
                 </p>
                 <label className="fa-toggle-label" style={{ marginBottom: 8 }}>
@@ -2278,7 +2308,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                           <div key={d.key} className="fa-ranking-card">
                             <div className="fa-ranking-row">
                               <span className="fa-ranking-pos">{d.playerName}</span>
-                              <span className="fa-ranking-badge top">+${pctToDollarsNum(Number(d.freedCapPct || 0)).toFixed(1)}M</span>
+                              <span className="fa-ranking-badge top">+${pctToDollarsNum(Number(d.freedCapPct || 0), leagueCapForUi).toFixed(1)}M</span>
                             </div>
                             <button type="button" className="fa-summary-link-btn" onClick={() => handleRemoveDeparture(d.key)}>
                               Remove departure
@@ -2357,7 +2387,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                         </span>
                       </div>
                       <div className="fa-hint">
-                        ${r.ask}M x {r.years}y · Yr1 cap ${pctToDollarsNum(Number(r.yr1CapPct || 0)).toFixed(1)}M · weight {r.weight.toFixed(2)}
+                        ${r.ask}M x {r.years}y · Yr1 cap ${pctToDollarsNum(Number(r.yr1CapPct || 0), leagueCapForUi).toFixed(1)}M · weight {r.weight.toFixed(2)}
                         {Number(r.departureBoost) > 0 && (
                           <span>
                             {' '}

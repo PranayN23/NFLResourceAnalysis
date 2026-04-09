@@ -19,7 +19,15 @@ from backend.agent.scheme_personnel import (
 
 CAP_GROWTH_RATE = 0.065
 BASE_CAP_YEAR = 2024
-BASE_CAP_DOLLARS = 255.4  # 2024 NFL salary cap in $M
+# Keep in sync with frontend `leagueCapMillions` (freeAgencyPositionConfig.js).
+_LEAGUE_CAP_BY_YEAR: dict[int, float] = {
+    2021: 182.5,
+    2022: 208.2,
+    2023: 224.8,
+    2024: 255.4,
+    2025: 279.2,
+    2026: 301.2,
+}
 
 _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CAP_DATA_PATH = os.path.join(_BASE, "ML", "cap_data.csv")
@@ -34,6 +42,23 @@ def _load_cap_data() -> pd.DataFrame:
         if "year" in _cap_df.columns:
             _cap_df["year"] = _cap_df["year"].astype(int)
     return _cap_df
+
+
+def league_cap_millions(year: int) -> float:
+    """
+    NFL league-year salary cap in $M (not adjusted for in-season moves).
+    Uses published figures where available; otherwise projects from nearest
+    season at CAP_GROWTH_RATE. Add new years to _LEAGUE_CAP_BY_YEAR when the
+    league announces them.
+    """
+    y = int(year)
+    if y in _LEAGUE_CAP_BY_YEAR:
+        return float(_LEAGUE_CAP_BY_YEAR[y])
+    hi = max(_LEAGUE_CAP_BY_YEAR)
+    lo = min(_LEAGUE_CAP_BY_YEAR)
+    if y > hi:
+        return round(float(_LEAGUE_CAP_BY_YEAR[hi]) * ((1.0 + CAP_GROWTH_RATE) ** (y - hi)), 2)
+    return round(float(_LEAGUE_CAP_BY_YEAR[lo]) / ((1.0 + CAP_GROWTH_RATE) ** (lo - y)), 2)
 
 
 def _safe_float(val, default=0.0) -> float:
@@ -651,9 +676,8 @@ def get_team_cap(team: str, reference_year: int | None = None) -> Tuple[float, f
     # If requesting a future year beyond available cap snapshots, project cap burden
     # by holding implied dollars constant and growing league cap (~6.5%/yr).
     if requested_year > effective_year:
-        years_ahead = requested_year - effective_year
-        cap_then = BASE_CAP_DOLLARS * ((1.0 + CAP_GROWTH_RATE) ** (effective_year - BASE_CAP_YEAR))
-        cap_req = BASE_CAP_DOLLARS * ((1.0 + CAP_GROWTH_RATE) ** (requested_year - BASE_CAP_YEAR))
+        cap_then = league_cap_millions(effective_year)
+        cap_req = league_cap_millions(requested_year)
         if cap_req > 0:
             implied_dollars = (allocated / 100.0) * cap_then
             allocated = (implied_dollars / cap_req) * 100.0
@@ -792,16 +816,21 @@ def decision_fair_aav_with_replacement(
     return adj, note
 
 
-def aav_to_cap_pcts(aav_dollars: float, contract_years: int) -> List[float]:
+def aav_to_cap_pcts(
+    aav_dollars: float,
+    contract_years: int,
+    first_league_year: int | None = None,
+) -> List[float]:
     """
     Convert a fixed $M AAV to year-by-year cap percentages.
-    Cap grows at CAP_GROWTH_RATE per year, so a fixed dollar amount
-    shrinks as a fraction of the cap over time.
+    Each contract year t uses the NFL salary cap for league season (first_league_year + t).
+    If first_league_year is omitted, defaults to BASE_CAP_YEAR (legacy behavior anchor).
     """
+    y0 = int(first_league_year) if first_league_year is not None else BASE_CAP_YEAR
     pcts = []
-    for yr in range(contract_years):
-        future_cap = BASE_CAP_DOLLARS * ((1.0 + CAP_GROWTH_RATE) ** yr)
-        pcts.append(round(aav_dollars / future_cap * 100, 2))
+    for t in range(contract_years):
+        cap_y = league_cap_millions(y0 + t)
+        pcts.append(round(aav_dollars / max(cap_y, 1e-6) * 100, 2))
     return pcts
 
 

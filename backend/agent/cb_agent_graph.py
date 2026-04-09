@@ -329,7 +329,13 @@ def evaluate_value(state: CBAgentState):
 
 def assess_team_fit(state: CBAgentState):
     if not state.get("team_name"): return {}
-    return {"signing_cap_pcts": aav_to_cap_pcts(state["salary_ask"], state["contract_years"])}
+    return {
+        "signing_cap_pcts": aav_to_cap_pcts(
+            state["salary_ask"],
+            state["contract_years"],
+            int(state.get("analysis_year") or 2025),
+        )
+    }
 
 
 def make_decision(state: CBAgentState):

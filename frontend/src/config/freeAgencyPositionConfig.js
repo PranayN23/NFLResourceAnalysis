@@ -11,6 +11,35 @@
 export const NOTE_STD =
   'Calibrated to 2026 OTC-style contracts. Age curve from position season data where applicable. Future years discounted at 8%/yr.';
 
+/** Keep in sync with `backend/agent/team_context.py` (`_LEAGUE_CAP_BY_YEAR`, `CAP_GROWTH_RATE`). */
+export const FA_LEAGUE_CAP_GROWTH_RATE = 0.065;
+const FA_LEAGUE_CAP_BY_YEAR = {
+  2021: 182.5,
+  2022: 208.2,
+  2023: 224.8,
+  2024: 255.4,
+  2025: 279.2,
+  2026: 301.2,
+};
+
+/**
+ * NFL salary cap in $M for a league year (published where known; else projected from nearest year).
+ */
+export function leagueCapMillions(year) {
+  const y = Math.floor(Number(year));
+  if (!Number.isFinite(y)) return FA_LEAGUE_CAP_BY_YEAR[2024];
+  if (Object.prototype.hasOwnProperty.call(FA_LEAGUE_CAP_BY_YEAR, y)) {
+    return FA_LEAGUE_CAP_BY_YEAR[y];
+  }
+  const keys = Object.keys(FA_LEAGUE_CAP_BY_YEAR).map(Number);
+  const hi = Math.max(...keys);
+  const lo = Math.min(...keys);
+  if (y > hi) {
+    return Math.round(FA_LEAGUE_CAP_BY_YEAR[hi] * (1 + FA_LEAGUE_CAP_GROWTH_RATE) ** (y - hi) * 100) / 100;
+  }
+  return Math.round((FA_LEAGUE_CAP_BY_YEAR[lo] / (1 + FA_LEAGUE_CAP_GROWTH_RATE) ** (lo - y)) * 100) / 100;
+}
+
 /** Keep legend ranges exactly aligned with backend valuation curve. */
 export const FA_LEGEND_AAV_DISPLAY_FACTOR = 1.0;
 

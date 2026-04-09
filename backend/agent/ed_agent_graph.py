@@ -556,7 +556,11 @@ def assess_team_fit(state: EDAgentState):
     if not team:
         return {}
 
-    cap_pcts = aav_to_cap_pcts(state["salary_ask"], state["contract_years"])
+    cap_pcts = aav_to_cap_pcts(
+        state["salary_ask"],
+        state["contract_years"],
+        int(state.get("analysis_year") or 2025),
+    )
     return {"signing_cap_pcts": cap_pcts}
 
 

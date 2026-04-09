@@ -23,8 +23,8 @@ from backend.agent.api_year_utils import clamp_analysis_year, history_as_of_year
 from backend.agent.team_summary import build_team_year_summary, build_team_position_rankings, build_player_directory
 from backend.agent.team_context import (
     get_team_roster, compute_positional_need, get_team_cap,
-    get_all_teams, aav_to_cap_pcts, is_player_on_team,
-    get_roster_without_player,
+    get_all_teams, aav_to_cap_pcts, league_cap_millions,
+    is_player_on_team, get_roster_without_player,
 )
 import pandas as pd
 import uvicorn
@@ -100,6 +100,7 @@ async def team_roster(team: str = Query(..., description="Team name"), analysis_
         roster, position_df=df_players, team=team, reference_year=analysis_year, position_key="ED",
     )
     allocated_pct, available_pct = get_team_cap(team, reference_year=analysis_year)
+    ay = int(analysis_year)
 
     return {
         "team": team,
@@ -108,6 +109,8 @@ async def team_roster(team: str = Query(..., description="Team name"), analysis_
         "need_label": need_label,
         "allocated_cap_pct": allocated_pct,
         "available_cap_pct": available_pct,
+        "league_cap_millions": round(league_cap_millions(ay), 2),
+        "salary_cap_year": ay,
     }
 
 
@@ -175,7 +178,7 @@ async def evaluate_player(req: EvaluationRequest):
         cap_avail = req.cap_available_pct if req.cap_available_pct > 0 else available_pct
         if re_signing:
             cap_avail = cap_avail + player_cap
-        signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years)
+        signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years, analysis_year)
 
         team_state_fields = {
             "team_name": req.team,
@@ -196,6 +199,8 @@ async def evaluate_player(req: EvaluationRequest):
             "current_roster": roster_without if re_signing else roster,
             "is_re_signing": re_signing,
             "freed_cap_pct": player_cap,
+            "league_cap_millions": round(league_cap_millions(analysis_year), 2),
+            "salary_cap_year": int(analysis_year),
         }
 
     initial_state = {

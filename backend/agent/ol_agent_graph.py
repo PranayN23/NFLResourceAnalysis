@@ -386,7 +386,13 @@ def evaluate_value(state: OLAgentState):
 
 def assess_team_fit(state: OLAgentState):
     if not state.get("team_name"): return {}
-    return {"signing_cap_pcts": aav_to_cap_pcts(state["salary_ask"], state["contract_years"])}
+    return {
+        "signing_cap_pcts": aav_to_cap_pcts(
+            state["salary_ask"],
+            state["contract_years"],
+            int(state.get("analysis_year") or 2025),
+        )
+    }
 
 
 _POS_LABEL = {"T": "offensive tackle", "G": "guard", "C": "center"}

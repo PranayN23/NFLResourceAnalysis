@@ -13,7 +13,8 @@ from backend.agent.team_summary import build_team_year_summary, build_team_posit
 from backend.agent.scheme_personnel import compact_scheme_personnel_for_api
 from backend.agent.team_context import (
     get_team_roster, compute_positional_need, get_team_cap,
-    get_all_teams, aav_to_cap_pcts, is_player_on_team, get_roster_without_player,
+    get_all_teams, aav_to_cap_pcts, league_cap_millions,
+    is_player_on_team, get_roster_without_player,
 )
 
 app = FastAPI(title="NFL WR GM Agent API")
@@ -72,6 +73,7 @@ async def team_roster(team: str = Query(...), analysis_year: int = Query(2025)):
                                                       prod_stat_cols=WR_PROD_STATS, reference_year=analysis_year,
                                                       position_key="WR")
     allocated_pct, available_pct = get_team_cap(team, reference_year=analysis_year)
+    ay = int(analysis_year)
     return {
         "team": team,
         "roster": roster,
@@ -80,6 +82,8 @@ async def team_roster(team: str = Query(...), analysis_year: int = Query(2025)):
         "allocated_cap_pct": allocated_pct,
         "available_cap_pct": available_pct,
         "scheme_personnel": compact_scheme_personnel_for_api(team, reference_year=analysis_year),
+        "league_cap_millions": round(league_cap_millions(ay), 2),
+        "salary_cap_year": ay,
     }
 
 
@@ -124,7 +128,7 @@ async def evaluate_player(req: EvaluationRequest):
         allocated_pct, available_pct = get_team_cap(req.team, reference_year=analysis_year)
         cap_avail = req.cap_available_pct if req.cap_available_pct > 0 else available_pct
         if re_signing: cap_avail += player_cap
-        signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years)
+        signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years, analysis_year)
         team_state_fields = {
             "team_name": req.team, "team_cap_available_pct": cap_avail,
             "positional_need": need_score, "need_label": need_label,
@@ -136,6 +140,8 @@ async def evaluate_player(req: EvaluationRequest):
             "signing_cap_pcts": signing_pcts, "positional_need": need_score, "need_label": need_label,
             "current_roster": roster_without if re_signing else roster,
             "is_re_signing": re_signing, "freed_cap_pct": player_cap,
+            "league_cap_millions": round(league_cap_millions(analysis_year), 2),
+            "salary_cap_year": int(analysis_year),
         }
 
     initial_state = {
