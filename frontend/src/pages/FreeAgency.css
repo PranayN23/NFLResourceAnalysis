@@ -454,6 +454,51 @@ html, body {
   line-height: 1.5;
 }
 
+.fa-legend-table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  margin: 2px 0 6px;
+}
+
+.fa-legend-mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  color: #c8c8c8;
+}
+
+.fa-legend-mini-table th,
+.fa-legend-mini-table td {
+  padding: 4px 5px;
+  border-bottom: 1px solid #333;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.fa-legend-mini-table th:first-child,
+.fa-legend-mini-table td:first-child {
+  text-align: left;
+}
+
+.fa-legend-mini-table thead th {
+  font-weight: 700;
+  color: #999;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.fa-legend-th-elite { color: #3de87a !important; }
+.fa-legend-th-good { color: #9b7aff !important; }
+.fa-legend-th-starter { color: #d4a843 !important; }
+.fa-legend-th-rot { color: #e05555 !important; }
+
+.fa-legend-pos {
+  font-weight: 700;
+  color: #e5e5e5;
+}
+
 /* ── Decision Tier Legend ── */
 .fa-tier-legend {
   background: #222;

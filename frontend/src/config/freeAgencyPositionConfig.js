@@ -8,7 +8,7 @@
  * `_grade_to_tier`: Elite ≥80, Good ≥74, Starter ≥62, else Rotation/backup.
  */
 
-const NOTE_STD =
+export const NOTE_STD =
   'Calibrated to 2026 OTC-style contracts. Age curve from position season data where applicable. Future years discounted at 8%/yr.';
 
 /** Keep legend ranges exactly aligned with backend valuation curve. */
@@ -118,6 +118,35 @@ export const FA_POSITION_ORDER = [
   'CB',
   'S',
 ];
+
+/**
+ * Fair AAV ($M) tier bands for every position — same interpolation as `buildMarketTierLegend`
+ * (grades 62 / 74 / 80 / 100; Elite / Good / Starter / Rotation).
+ */
+export function fairAavTierBandsForAllPositions() {
+  const fmtM = (v) => {
+    const r = Math.round(v * 100) / 100;
+    if (Number.isInteger(r)) return String(r);
+    const s = r.toFixed(2);
+    if (s.endsWith('0')) return r.toFixed(1).replace(/\.0$/, '');
+    return s;
+  };
+  return FA_POSITION_ORDER.map((pk) => {
+    const va = FA_VALUE_ANCHORS[pk];
+    if (!va) {
+      return { pos: pk, elite: '—', good: '—', starter: '—', rotation: '—' };
+    }
+    const m = (g) =>
+      Math.round(gradeToMarketAav(g, va) * FA_LEGEND_AAV_DISPLAY_FACTOR * 100) / 100;
+    return {
+      pos: pk,
+      elite: `$${fmtM(m(80))}–${fmtM(m(100))}M`,
+      good: `$${fmtM(m(74))}–${fmtM(m(80))}M`,
+      starter: `$${fmtM(m(62))}–${fmtM(m(74))}M`,
+      rotation: `<$${fmtM(m(62))}M`,
+    };
+  });
+}
 
 export const POSITION_FREE_AGENCY = {
   QB: {

@@ -1,11 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, useId } from 'react';
 import './FreeAgency.css';
 import {
   POSITION_FREE_AGENCY,
-  FA_PICKER_POSITIONS,
+  FA_POSITION_ORDER,
   FA_VALUE_ANCHORS,
+  NOTE_STD,
+  fairAavTierBandsForAllPositions,
   gradeToMarketAav,
 } from '../config/freeAgencyPositionConfig';
+
+const UNIFIED_WELCOME =
+  'Welcome to the Free Agency Assistant. Search any player (all positions), set contract AAV and length, then Analyze. Position is detected from your player pick and shown on each result.';
 
 const FA_FMT = {
   pct: (v) => `${Number(v).toFixed(1)}%`,
@@ -84,8 +89,6 @@ function SearchableSelect({ options, value, onChange, placeholder = 'Search…' 
     </div>
   );
 }
-
-const POSITIONS = FA_PICKER_POSITIONS;
 
 /* ─── Decision Tier Legend (shared) ─── */
 const TIER_LADDER_BASE = [
@@ -294,6 +297,55 @@ function SigningGrade({ grade }) {
   );
 }
 
+/** Compact ring for FA class summary: deals-only vs roster net (supports empty signing class). */
+function ClassMetricRing({ title, grade, letter, subtitle, emptyHint, variant = 'signing' }) {
+  const gid = useId().replace(/:/g, '');
+  const empty = grade == null || Number.isNaN(Number(grade));
+  const g = empty ? 0 : Math.round(Number(grade));
+  const pct = empty ? 0 : Math.max(0, Math.min(100, g));
+  const color = empty ? '#5c5c5c' : gradeColor(g);
+  const R = 34;
+  const arc = 2 * Math.PI * R * pct / 100;
+  const rest = 2 * Math.PI * R * (1 - pct / 100);
+  const gradId = `fa-ring-grad-${variant}-${gid}`;
+  return (
+    <div className={`fa-class-metric-card fa-class-metric-card--${variant}${empty ? ' fa-class-metric-card--empty' : ''}`}>
+      <div className="fa-class-metric-card-inner">
+        <span className="fa-class-metric-title">{title}</span>
+        <svg className="fa-class-metric-ring" viewBox="0 0 80 80" aria-hidden>
+          <defs>
+            <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={empty ? '#444' : color} stopOpacity="1" />
+              <stop offset="100%" stopColor={empty ? '#333' : color} stopOpacity="0.75" />
+            </linearGradient>
+          </defs>
+          <circle cx="40" cy="40" r={R} fill="none" stroke="#1a1a1f" strokeWidth="6" />
+          <circle
+            cx="40"
+            cy="40"
+            r={R}
+            fill="none"
+            stroke={empty ? '#3a3a42' : `url(#${gradId})`}
+            strokeWidth="6"
+            strokeDasharray={empty ? `${2 * Math.PI * R * 0.08} ${2 * Math.PI * R * 0.92}` : `${arc} ${rest}`}
+            strokeDashoffset={2 * Math.PI * R * 0.25}
+            strokeLinecap="round"
+            className={empty ? '' : 'fa-class-metric-ring-arc'}
+          />
+          <text x="40" y="38" textAnchor="middle" fill={empty ? '#777' : color} fontSize="17" fontWeight="bold">
+            {empty ? '—' : g}
+          </text>
+          <text x="40" y="52" textAnchor="middle" fill={empty ? '#666' : color} fontSize="11">
+            {empty ? '—' : letter}
+          </text>
+        </svg>
+        {subtitle && <span className="fa-class-metric-sub">{subtitle}</span>}
+        {empty && emptyHint && <span className="fa-class-metric-hint">{emptyHint}</span>}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Need Badge ─── */
 function NeedBadge({ label, score }) {
   const color = label === 'Weak' ? '#e05555'
@@ -411,31 +463,6 @@ function TeamFitSection({ teamCtx, signingPcts, positionLabel }) {
           <span className="fa-stat-value fa-fit-note">{teamCtx.fit_summary}</span>
         </div>
       )}
-    </div>
-  );
-}
-
-/* ─── Position Picker ─── */
-function PositionPicker({ onSelect }) {
-  return (
-    <div className="fa-picker-page">
-      <div className="fa-picker-card">
-        <h1 className="fa-picker-title">Free Agency Evaluator</h1>
-        <p className="fa-picker-sub">Select a position to evaluate free agents</p>
-        <div className="fa-picker-grid">
-          {POSITIONS.map((pos) => (
-            <button
-              key={pos.label}
-              type="button"
-              className="fa-pos-btn fa-pos-btn--active"
-              onClick={() => onSelect(pos.label)}
-            >
-              <span className="fa-pos-abbr">{pos.label}</span>
-              <span className="fa-pos-name">{pos.name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
@@ -704,19 +731,20 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
   };
 }
 
-function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick, clearPendingPick }) {
-  const cfg = POSITION_FREE_AGENCY[positionKey];
+function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
+  const [resolvedPositionKey, setResolvedPositionKey] = useState(positionKey);
+  const cfg = POSITION_FREE_AGENCY[resolvedPositionKey];
   const apiBase = `http://127.0.0.1:${cfg.port}`;
+  const directoryApiBase = `http://127.0.0.1:${POSITION_FREE_AGENCY[FA_POSITION_ORDER[0]].port}`;
   const contractMax = 7;
   const latestAnalysisYear = 2025;
 
-  const [players, setPlayers] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [salaryAsk, setSalaryAsk] = useState('');
   const [contractYears, setContractYears] = useState(1);
   const [loading, setLoading] = useState(false);
   const [fetchingPlayers, setFetchingPlayers] = useState(true);
-  const [messages, setMessages] = useState([{ role: 'assistant', content: cfg.welcome }]);
+  const [messages, setMessages] = useState([{ role: 'assistant', content: UNIFIED_WELCOME }]);
   const [error, setError] = useState('');
   const [statsOpen, setStatsOpen] = useState({});
 
@@ -746,7 +774,8 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
   const [classQuickAsk, setClassQuickAsk] = useState('');
   const [classQuickYears, setClassQuickYears] = useState(3);
   const [classQuickLoading, setClassQuickLoading] = useState(false);
-  const [showFinalClassGradeDialog, setShowFinalClassGradeDialog] = useState(false);
+  const [showSigningClassDialog, setShowSigningClassDialog] = useState(false);
+  const [showRosterNetDialog, setShowRosterNetDialog] = useState(false);
   const [analysisYear, setAnalysisYear] = useState(latestAnalysisYear);
   const [analysisYearMin, setAnalysisYearMin] = useState(2010);
 
@@ -758,41 +787,33 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
   }, []);
 
   useEffect(() => {
-    const c = POSITION_FREE_AGENCY[positionKey];
-    if (!messages.length) setMessages([{ role: 'assistant', content: c.welcome }]);
-    setPlayers([]);
-    setSelectedPlayer('');
-    setError('');
-    setStatsOpen({});
+    setResolvedPositionKey(positionKey);
   }, [positionKey]);
+
+  const directoryCfg = POSITION_FREE_AGENCY[FA_POSITION_ORDER[0]];
 
   useEffect(() => {
     setFetchingPlayers(true);
-    fetch(`${apiBase}${cfg.playersPath}`)
+    setError('');
+    fetch(`${directoryApiBase}${directoryCfg.playersPath}`)
       .then((r) => r.json())
       .then((data) => {
-        const nextPlayers = data.players || [];
-        setPlayers(nextPlayers);
-        setSelectedPlayer((prev) => {
-          if (prev && nextPlayers.includes(prev)) return prev;
-          return nextPlayers[0] || '';
-        });
         const minYr = Number(data.analysis_year_min);
         setAnalysisYearMin(Number.isFinite(minYr) ? minYr : 2010);
       })
       .catch(() =>
-        setError(`Could not load player list. Start the ${positionKey} API (port ${cfg.port}): uvicorn backend.agent…`)
+        setError(`Could not load player list. Start the ${directoryCfg.chatTitle} API (port ${directoryCfg.port}): uvicorn backend.agent…`)
       )
       .finally(() => setFetchingPlayers(false));
 
-    fetch(`${apiBase}/player-directory?analysis_year=${encodeURIComponent(analysisYear)}`)
+    fetch(`${directoryApiBase}/player-directory?analysis_year=${encodeURIComponent(analysisYear)}`)
       .then((r) => r.json())
       .then((data) => {
         setPlayerDirectory(data.players || []);
       })
       .catch(() => setPlayerDirectory([]));
 
-    fetch(`${apiBase}/teams?analysis_year=${encodeURIComponent(analysisYear)}`)
+    fetch(`${directoryApiBase}/teams?analysis_year=${encodeURIComponent(analysisYear)}`)
       .then((r) => r.json())
       .then((data) => {
         const nextTeams = data.teams || [];
@@ -803,13 +824,14 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
         });
       })
       .catch(() => {});
-  }, [apiBase, cfg.playersPath, cfg.port, positionKey, analysisYear]);
+  }, [directoryApiBase, directoryCfg.playersPath, directoryCfg.port, directoryCfg.chatTitle, analysisYear]);
 
   useEffect(() => {
-    if (!pendingPick || pendingPick.positionKey !== positionKey) return;
+    if (!pendingPick) return;
     if (pendingPick.playerName) setSelectedPlayer(pendingPick.playerName);
+    if (pendingPick.positionKey) setResolvedPositionKey(pendingPick.positionKey);
     if (clearPendingPick) clearPendingPick();
-  }, [pendingPick, positionKey, clearPendingPick]);
+  }, [pendingPick, clearPendingPick]);
 
   useEffect(() => {
     if (!selectedTeam || !teamMode) return;
@@ -832,7 +854,8 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
       return;
     }
     const host = window.location.hostname || 'localhost';
-    const reqs = Object.entries(POSITION_FREE_AGENCY).map(([, pcfg]) =>
+    const posEntries = Object.entries(POSITION_FREE_AGENCY);
+    const reqs = posEntries.map(([, pcfg]) =>
       fetch(`http://${host}:${pcfg.port}/team-roster?team=${encodeURIComponent(selectedTeam)}&analysis_year=${encodeURIComponent(analysisYear)}`)
         .then((r) => (r.ok ? r.json() : null))
         .catch(() => null)
@@ -840,16 +863,19 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     Promise.all(reqs)
       .then((all) => {
         const merged = new Map();
-        all.forEach((res) => {
+        all.forEach((res, idx) => {
+          const positionKey = posEntries[idx][0];
           const roster = Array.isArray(res?.roster) ? res.roster : [];
           roster.forEach((p) => {
             const name = String(p?.player || '').trim();
             if (!name) return;
             const key = name.toLowerCase();
             const capPct = Number(p?.cap_pct || 0);
+            const grade = Number(p?.grade || 0);
+            const snaps = Number(p?.snaps || 0);
             const prev = merged.get(key);
             if (!prev || capPct > Number(prev.cap_pct || 0)) {
-              merged.set(key, { player: name, cap_pct: capPct });
+              merged.set(key, { player: name, cap_pct: capPct, grade, snaps, position_key: positionKey });
             }
           });
         });
@@ -878,7 +904,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
       ...prev,
       {
         role: 'user',
-        content: `Evaluate ${selectedPlayer} — $${ask}M/yr × ${contractYears} yr contract${teamLabel}.`,
+        content: `Evaluate ${selectedPlayer} (${resolvedPositionKey}) — $${ask}M/yr × ${contractYears} yr contract${teamLabel}.`,
       },
     ]);
     setLoading(true);
@@ -919,7 +945,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
         {
           role: 'assistant',
           content: null,
-          structured: buildStructuredFreeAgent(result, ask, contractYears, positionKey),
+          structured: buildStructuredFreeAgent(result, ask, contractYears, resolvedPositionKey),
         },
       ]);
     } catch (e) {
@@ -940,6 +966,17 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     () => [...teamRankings].sort((a, b) => Number(a.rank) - Number(b.rank)),
     [teamRankings]
   );
+  const allPositionsTierBands = useMemo(() => fairAavTierBandsForAllPositions(), []);
+  const playerPickOptions = useMemo(
+    () => [...new Set(
+      playerDirectory.map((p) => `${p.player} (${p.position_key})`)
+    )].sort((a, b) => a.localeCompare(b)),
+    [playerDirectory]
+  );
+  const selectedPlayerPickValue = useMemo(() => {
+    if (!selectedPlayer || !resolvedPositionKey) return selectedPlayer || '';
+    return `${selectedPlayer} (${resolvedPositionKey})`;
+  }, [selectedPlayer, resolvedPositionKey]);
   const classGradeSummary = useMemo(() => {
     if (!classSignings.length) return null;
     const POS_IMPORTANCE = {
@@ -960,6 +997,117 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     const grade = den > 0 ? Math.round(num / den) : 0;
     return { grade, letter: gradeLetter(grade), rows };
   }, [classSignings]);
+
+  /** Signings-only grade is in classGradeSummary. Net roster score penalizes losing higher-grade / higher-cap departures (weighted by position). */
+  const classRosterNetSummary = useMemo(() => {
+    const POS_IMPORTANCE = {
+      QB: 1.45, ED: 1.25, WR: 1.18, CB: 1.15, T: 1.12, DI: 1.08,
+      C: 1.03, G: 1.02, LB: 1.0, S: 0.98, TE: 0.95, HB: 0.9,
+    };
+    const hasSignings = classSignings.length > 0;
+    const hasDepartures = departuresOn && classDepartures.length > 0;
+    if (!hasSignings && !hasDepartures) return null;
+    if (!hasDepartures && hasSignings) {
+      if (!classGradeSummary) return null;
+      const sg = classGradeSummary.grade;
+      return {
+        grade: sg,
+        letter: gradeLetter(sg),
+        hasSignings: true,
+        signingGrade: sg,
+        hasDepartures: false,
+        avgDepartureGrade: null,
+        lossPenalty: 0,
+        unfilledReplacementPenalty: 0,
+        coverageGapPenalty: 0,
+        signingEmphasis: 1,
+        adjustedSigningBaseline: sg,
+        replacementCoveragePct: null,
+        explanation:
+          'Roster net equals signing class until you model departures. Turn on “Account for Departures” and add players to estimate talent (and cap) walking out the door.',
+      };
+    }
+
+    let lossNum = 0;
+    let lossDen = 0;
+    classDepartures.forEach((d) => {
+      const g = Number(d.grade) || 60;
+      const posW = POS_IMPORTANCE[d.positionKey] || 1;
+      const capW = Math.max(0.5, Math.min(1.8, 0.5 + Number(d.freedCapPct || 0) / 25));
+      const w = posW * capW;
+      lossNum += g * w;
+      lossDen += w;
+    });
+    const avgDep = lossDen > 0 ? lossNum / lossDen : 0;
+    const lossPenalty = Math.max(0, (avgDep - 58) * 0.55);
+    const stressFromPenalty = Math.min(1, lossPenalty / 24);
+    const stressFromCount = Math.min(1, classDepartures.length / 7);
+    const departureStress = Math.min(1, 0.55 * stressFromPenalty + 0.45 * stressFromCount);
+
+    let signingGrade = 0;
+    let sigW = 0;
+    if (hasSignings && classGradeSummary) {
+      signingGrade = classGradeSummary.grade;
+      sigW = classGradeSummary.rows.reduce((acc, r) => acc + (Number(r.weight) || 0), 0);
+    }
+    const signingEmphasis = hasSignings ? 1 + 0.12 * departureStress : 1;
+    const adjustedSigningBaseline = hasSignings ? Math.min(100, signingGrade * signingEmphasis) : 0;
+
+    const replacementCoveragePct =
+      lossDen > 0 ? Math.round(Math.min(150, (sigW / lossDen) * 100)) : 100;
+
+    let unfilledReplacementPenalty = 0;
+    let coverageGapPenalty = 0;
+    if (hasDepartures && !hasSignings) {
+      unfilledReplacementPenalty = 14 + 0.5 * lossPenalty + 2.5 * Math.min(classDepartures.length, 12);
+    } else if (hasDepartures && hasSignings && lossDen > 0) {
+      const cov = Math.min(1.25, sigW / lossDen);
+      const shortfall = Math.max(0, 1 - cov);
+      coverageGapPenalty = Math.min(26, shortfall * 28 * (0.55 + 0.45 * departureStress));
+    }
+
+    let net =
+      adjustedSigningBaseline -
+      lossPenalty -
+      unfilledReplacementPenalty -
+      coverageGapPenalty;
+    net = Math.round(Math.max(0, Math.min(100, net)));
+
+    const round1 = (x) => Math.round(x * 10) / 10;
+    const parts = [];
+    if (hasSignings) {
+      parts.push(
+        `Signing class ${signingGrade}/100 is scaled to ~${round1(adjustedSigningBaseline)} (×${Math.round(signingEmphasis * 1000) / 1000}) under departure stress.`
+      );
+    } else {
+      parts.push('No free-agent signings in this class — net is driven by talent walking out and unfilled roster holes.');
+    }
+    parts.push(`Weighted departures average ~${Math.round(avgDep)} grade; talent-out penalty: −${round1(lossPenalty)}.`);
+    if (unfilledReplacementPenalty > 0) {
+      parts.push(`Unfilled replacement penalty: −${round1(unfilledReplacementPenalty)} (no signings to offset losses).`);
+    }
+    if (coverageGapPenalty > 0) {
+      parts.push(
+        `Replacement coverage ~${Math.min(100, replacementCoveragePct)}% of weighted departure mass; coverage gap: −${round1(coverageGapPenalty)}.`
+      );
+    }
+
+    return {
+      grade: net,
+      letter: gradeLetter(net),
+      hasSignings,
+      signingGrade: hasSignings ? signingGrade : null,
+      hasDepartures: true,
+      avgDepartureGrade: Math.round(avgDep),
+      lossPenalty: round1(lossPenalty),
+      unfilledReplacementPenalty: round1(unfilledReplacementPenalty),
+      coverageGapPenalty: round1(coverageGapPenalty),
+      signingEmphasis: hasSignings ? Math.round(signingEmphasis * 1000) / 1000 : null,
+      adjustedSigningBaseline: hasSignings ? round1(adjustedSigningBaseline) : null,
+      replacementCoveragePct: lossDen > 0 ? Math.min(100, replacementCoveragePct) : null,
+      explanation: parts.join(' '),
+    };
+  }, [classSignings, classDepartures, departuresOn, classGradeSummary]);
   const classUsedCapPct = useMemo(
     () => classSignings.reduce((acc, s) => acc + Number(s.yr1CapPct || 0), 0),
     [classSignings]
@@ -1112,18 +1260,22 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
           key,
           playerName: selectedDeparturePlayer,
           freedCapPct: Number(found.cap_pct || 0),
+          grade: Number(found.grade || 0),
+          snaps: Number(found.snaps || 0),
+          positionKey: found.position_key || resolvedPositionKey,
         },
       ];
     });
     setSelectedDeparturePlayer('');
-  }, [departuresOn, selectedDeparturePlayer, fullTeamRosterForDepartures, analysisYear]);
+  }, [departuresOn, selectedDeparturePlayer, fullTeamRosterForDepartures, analysisYear, resolvedPositionKey]);
   const handleRemoveDeparture = useCallback((key) => {
     setClassDepartures((prev) => prev.filter((d) => d.key !== key));
   }, []);
   const handleOpenClassSigningEvaluation = useCallback(async (row) => {
     if (!row) return;
     setShowClassDialog(false);
-    onSwitchPosition(row.positionKey, row.playerName);
+    setResolvedPositionKey(row.positionKey);
+    setSelectedPlayer(row.playerName);
     const existingIdx = messages.findIndex((m) => {
       const meta = m?.structured?.meta;
       if (!meta) return false;
@@ -1178,7 +1330,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     } catch (e) {
       setError(e.message || `Could not load full evaluation for ${row.playerName}.`);
     }
-  }, [onSwitchPosition, messages]);
+  }, [messages]);
   const classSearchOptions = useMemo(
     () => playerDirectory.map((p) => p.player),
     [playerDirectory]
@@ -1195,9 +1347,10 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     if (!classSearchPlayer) return;
     const hit = playerDirectory.find((p) => p.player === classSearchPlayer);
     if (!hit) return;
-    onSwitchPosition(hit.position_key, hit.player);
+    setResolvedPositionKey(hit.position_key);
+    setSelectedPlayer(hit.player);
     setShowClassDialog(false);
-  }, [classSearchPlayer, playerDirectory, onSwitchPosition]);
+  }, [classSearchPlayer, playerDirectory]);
   const handleQuickEvaluateAndAdd = useCallback(async () => {
     if (!classSearchPlayer) {
       setError('Pick a player first.');
@@ -1329,22 +1482,12 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
 
   return (
     <div className="fa-evaluator-wrap">
-      <div className="fa-top-pos-bar">
-        {POSITIONS.map((pos) => (
-          <button
-            key={pos.label}
-            type="button"
-            className={`fa-top-pos-btn ${pos.label === positionKey ? 'active' : ''}`}
-            onClick={() => onSwitchPosition(pos.label)}
-          >
-            {pos.label}
-          </button>
-        ))}
-      </div>
     <div className="fa-page">
       <div className="fa-panel">
-        <button type="button" className="fa-back-btn" onClick={onBack}>← Change Position</button>
-        <h2 className="fa-panel-title">{cfg.panelTitle}</h2>
+        <h2 className="fa-panel-title">Free Agency Assistant</h2>
+        <p className="fa-hint" style={{ marginTop: 4 }}>
+          Pick any player below — your selection sets position, model, and stat columns for each run.
+        </p>
 
         <div className="fa-team-toggle">
           <label className="fa-toggle-label">
@@ -1457,16 +1600,25 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
         )}
 
         <div className="fa-field">
-          <label className="fa-label">Player</label>
+          <label className="fa-label">Player (all positions)</label>
           {fetchingPlayers ? (
-            <p className="fa-hint">Loading players…</p>
+            <p className="fa-hint">Loading player directory…</p>
           ) : (
             <SearchableSelect
-              options={players}
-              value={selectedPlayer}
-              onChange={setSelectedPlayer}
+              options={playerPickOptions}
+              value={selectedPlayerPickValue}
+              onChange={(val) => {
+                const hit = playerDirectory.find((p) => `${p.player} (${p.position_key})` === val);
+                if (hit) {
+                  setSelectedPlayer(hit.player);
+                  setResolvedPositionKey(hit.position_key);
+                }
+              }}
               placeholder="Search players…"
             />
+          )}
+          {!!selectedPlayer && (
+            <p className="fa-hint">Evaluating as: <strong>{resolvedPositionKey}</strong> ({cfg.positionLabel})</p>
           )}
         </div>
 
@@ -1524,14 +1676,36 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
         </button>
 
         <div className="fa-legend">
-          <p className="fa-legend-title">{cfg.legend.title}</p>
-          {cfg.legend.tiers.map((t) => (
-            <div key={t.cls} className="fa-legend-row">
-              <span className={`tier-badge ${t.cls}`}>{t.label}</span>
-              <span>{t.range}</span>
-            </div>
-          ))}
-          <p className="fa-legend-note" dangerouslySetInnerHTML={{ __html: cfg.legend.note }} />
+          <p className="fa-legend-title">2026 fair AAV by tier (all positions)</p>
+          <div className="fa-legend-table-wrap">
+            <table className="fa-legend-mini-table">
+              <thead>
+                <tr>
+                  <th scope="col">Pos</th>
+                  <th scope="col" className="fa-legend-th-elite">Elite</th>
+                  <th scope="col" className="fa-legend-th-good">Good</th>
+                  <th scope="col" className="fa-legend-th-starter">Starter</th>
+                  <th scope="col" className="fa-legend-th-rot">Rot / Bkup</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allPositionsTierBands.map((row) => (
+                  <tr key={row.pos}>
+                    <td className="fa-legend-pos">{row.pos}</td>
+                    <td>{row.elite}</td>
+                    <td>{row.good}</td>
+                    <td>{row.starter}</td>
+                    <td>{row.rotation}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="fa-legend-note">
+            Grade cutoffs match the backend: Elite ≥80, Good ≥74, Starter ≥62; rotation/backup below 62.
+            Dollar ranges use each position’s grade→AAV curve (same as the valuation engine).{' '}
+            {NOTE_STD}
+          </p>
         </div>
 
         <DecisionTierLegend teamMode={teamMode} />
@@ -1539,11 +1713,14 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
 
       <div className="fa-chat">
         <div className="fa-chat-header">
-          GM Decision Feed — {cfg.chatTitle}
+          GM Decision Feed
           {teamMode && selectedTeam && <span className="fa-chat-team-tag">{selectedTeam}</span>}
         </div>
         <div className="fa-chat-body">
-          {messages.map((msg, i) => (
+          {messages.map((msg, i) => {
+            const msgPosKey = msg.structured?.meta?.positionKey;
+            const msgCfg = (msgPosKey && POSITION_FREE_AGENCY[msgPosKey]) ? POSITION_FREE_AGENCY[msgPosKey] : cfg;
+            return (
             <div key={i} ref={(el) => { messageRefs.current[i] = el; }} className={`fa-msg fa-msg--${msg.role}`}>
               <div className="fa-msg-label">{msg.role === 'user' ? 'You' : 'GM Agent'}</div>
 
@@ -1606,7 +1783,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                     <TeamFitSection
                       teamCtx={msg.structured.team_context}
                       signingPcts={msg.structured.team_context.signing_cap_pcts}
-                      positionLabel={cfg.positionLabel}
+                      positionLabel={msgCfg.positionLabel}
                     />
                   )}
 
@@ -1622,8 +1799,8 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                     <PositionStatsPanel
                       careerStats={msg.structured.career_stats}
                       projectedStats={msg.structured.projected_stats}
-                      statRows={cfg.statRows}
-                      note={cfg.statsNote}
+                      statRows={msgCfg.statRows}
+                      note={msgCfg.statsNote}
                     />
                   )}
 
@@ -1638,7 +1815,8 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                 </div>
               )}
             </div>
-          ))}
+            );
+          })}
 
           {loading && (
             <div className="fa-msg fa-msg--assistant">
@@ -1699,7 +1877,69 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
             </div>
             {!classGradeSummary ? (
               <div>
-                <p className="fa-hint">No signings added yet.</p>
+                <div className="fa-class-grades-row">
+                  <ClassMetricRing
+                    title="Signing class"
+                    subtitle="Incoming deals only"
+                    grade={null}
+                    letter={null}
+                    emptyHint="Evaluate + add players"
+                    variant="signing"
+                  />
+                  <ClassMetricRing
+                    title="Roster net"
+                    subtitle={
+                      classRosterNetSummary?.hasDepartures
+                        ? (classRosterNetSummary.hasSignings
+                          ? `Coverage ${classRosterNetSummary.replacementCoveragePct ?? 0}% vs losses`
+                          : 'Departures with no FA class')
+                        : 'Signings vs departures'
+                    }
+                    grade={classRosterNetSummary?.grade ?? null}
+                    letter={classRosterNetSummary?.letter ?? null}
+                    emptyHint={!classRosterNetSummary ? 'Turn on departures or add signings' : undefined}
+                    variant="net"
+                  />
+                </div>
+                <p className="fa-hint" style={{ marginTop: 10 }}>
+                  No signings in this class yet — you can still model <strong>departures</strong> below; roster net will show the cost of talent leaving without replacements.
+                </p>
+                <label className="fa-toggle-label" style={{ marginBottom: 8, marginTop: 12 }}>
+                  <input type="checkbox" checked={departuresOn} onChange={(e) => setDeparturesOn(e.target.checked)} />
+                  <span className="fa-toggle-slider" />
+                  <span className="fa-toggle-text">Account for Departures</span>
+                </label>
+                {departuresOn && (
+                  <div style={{ marginBottom: 12 }}>
+                    <div className="fa-field">
+                      <label className="fa-label">Add Departure (search roster)</label>
+                      <SearchableSelect
+                        options={rosterDepartureOptions}
+                        value={selectedDeparturePlayer}
+                        onChange={setSelectedDeparturePlayer}
+                        placeholder="Search roster players..."
+                      />
+                    </div>
+                    <button type="button" className="fa-btn" onClick={handleAddDeparture} disabled={!selectedDeparturePlayer}>
+                      Add Departure
+                    </button>
+                    {!!classDepartures.length && (
+                      <div className="fa-rankings-grid" style={{ marginTop: 8 }}>
+                        {classDepartures.map((d) => (
+                          <div key={d.key} className="fa-ranking-card">
+                            <div className="fa-ranking-row">
+                              <span className="fa-ranking-pos">{d.playerName}</span>
+                              <span className="fa-ranking-badge top">+${pctToDollarsNum(Number(d.freedCapPct || 0)).toFixed(1)}M</span>
+                            </div>
+                            <button type="button" className="fa-summary-link-btn" onClick={() => handleRemoveDeparture(d.key)}>
+                              Remove departure
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="fa-field" style={{ marginTop: 8 }}>
                   <label className="fa-label">Find player by name (all positions)</label>
                   <SearchableSelect
@@ -1735,7 +1975,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                     ))}
                   </select>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   <button
                     type="button"
                     className="fa-btn"
@@ -1746,6 +1986,14 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                   </button>
                   <button type="button" className="fa-btn" onClick={handleGoToClassPlayer} disabled={!classSearchPlayer}>
                     Go to Player Page
+                  </button>
+                  <button
+                    type="button"
+                    className="fa-btn fa-btn--ghost"
+                    onClick={() => setShowRosterNetDialog(true)}
+                    disabled={!classRosterNetSummary}
+                  >
+                    Explain roster net
                   </button>
                 </div>
               </div>
@@ -1793,9 +2041,42 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                     )}
                   </div>
                 </div>
-                <p className="fa-msg-text">
-                  Class Grade: <strong>{classGradeSummary.grade} ({classGradeSummary.letter})</strong>
-                </p>
+                <div className="fa-class-grades-row">
+                  <ClassMetricRing
+                    title="Signing class"
+                    subtitle="Incoming deals only"
+                    grade={classGradeSummary.grade}
+                    letter={classGradeSummary.letter}
+                    variant="signing"
+                  />
+                  <ClassMetricRing
+                    title="Roster net"
+                    subtitle={
+                      !classRosterNetSummary?.hasDepartures
+                        ? 'Matches signing until departures are on'
+                        : classRosterNetSummary.hasSignings
+                          ? `Coverage ${classRosterNetSummary.replacementCoveragePct ?? 0}% vs losses · need ×${classRosterNetSummary.signingEmphasis ?? 1}`
+                          : 'Departures with no FA class in this builder'
+                    }
+                    grade={classRosterNetSummary?.grade ?? null}
+                    letter={classRosterNetSummary?.letter ?? null}
+                    emptyHint={!classRosterNetSummary ? 'Add signings or departures' : undefined}
+                    variant="net"
+                  />
+                </div>
+                {classRosterNetSummary && (
+                  <p className="fa-class-net-hint">
+                    {!classRosterNetSummary.hasDepartures && (
+                      <span>Add departures to separate roster net from signing-only.</span>
+                    )}
+                    {classRosterNetSummary.hasDepartures && classRosterNetSummary.hasSignings && classRosterNetSummary.signingEmphasis != null && (
+                      <span>Under stress, signing quality is scaled up to ×{classRosterNetSummary.signingEmphasis} before applying losses.</span>
+                    )}
+                    {classRosterNetSummary.hasDepartures && !classRosterNetSummary.hasSignings && (
+                      <span>Roster net reflects departures with <strong>no</strong> free-agent signings here — unfilled replacement penalty applies.</span>
+                    )}
+                  </p>
+                )}
                 <p className="fa-msg-text">
                   Cap Used (Yr 1): <strong>${pctToDollars(classUsedCapPct)}M</strong>
                   {departuresOn && (
@@ -1915,14 +2196,22 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                     </button>
                   ))}
                 </div>
-                <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+                <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   <button
                     type="button"
                     className="fa-btn"
-                    onClick={() => setShowFinalClassGradeDialog(true)}
+                    onClick={() => setShowSigningClassDialog(true)}
                     disabled={!classGradeSummary?.rows?.length}
                   >
-                    Final Grade
+                    Explain signing class
+                  </button>
+                  <button
+                    type="button"
+                    className="fa-btn fa-btn--ghost"
+                    onClick={() => setShowRosterNetDialog(true)}
+                    disabled={!classRosterNetSummary}
+                  >
+                    Explain roster net impact
                   </button>
                   <button type="button" className="fa-btn" onClick={handleClearClass}>Clear Class</button>
                 </div>
@@ -1931,21 +2220,45 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
           </div>
         </div>
       )}
-      {showFinalClassGradeDialog && classGradeSummary && (
-        <div className="fa-rankings-overlay" onClick={() => setShowFinalClassGradeDialog(false)}>
+      {showSigningClassDialog && classGradeSummary && (
+        <div className="fa-rankings-overlay" onClick={() => setShowSigningClassDialog(false)}>
           <div className="fa-rankings-dialog" onClick={(e) => e.stopPropagation()}>
             <div className="fa-rankings-header">
-              <h3>{selectedTeam} {analysisYear} Free Agency Class</h3>
-              <button type="button" className="fa-back-btn" onClick={() => setShowFinalClassGradeDialog(false)}>Close</button>
+              <h3>Signing class — {selectedTeam} ({analysisYear})</h3>
+              <button type="button" className="fa-back-btn" onClick={() => setShowSigningClassDialog(false)}>Close</button>
             </div>
             <p className="fa-msg-text">
-              Final Score: <strong>{classGradeSummary.grade}/100</strong>
+              Score: <strong>{classGradeSummary.grade}/100</strong> ({classGradeSummary.letter})
             </p>
-            <p className="fa-msg-text" style={{ marginTop: 4 }}>
-              Letter Grade: <strong>{classGradeSummary.letter}</strong>
+            <p className="fa-hint" style={{ marginTop: 10 }}>
+              This measures only how good the <strong>incoming contracts</strong> are (signing grades), weighted by position importance and deal size.
+              It does <strong>not</strong> change when you add departures — use “Roster net impact” for that.
             </p>
-            <p className="fa-hint" style={{ marginTop: 8 }}>
-              Weighted by player impact: premium positions and bigger contracts count more.
+          </div>
+        </div>
+      )}
+      {showRosterNetDialog && classRosterNetSummary && (
+        <div className="fa-rankings-overlay" onClick={() => setShowRosterNetDialog(false)}>
+          <div className="fa-rankings-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="fa-rankings-header">
+              <h3>Roster net impact — {selectedTeam} ({analysisYear})</h3>
+              <button type="button" className="fa-back-btn" onClick={() => setShowRosterNetDialog(false)}>Close</button>
+            </div>
+            <p className="fa-msg-text">
+              Net score: <strong>{classRosterNetSummary.grade}/100</strong> ({classRosterNetSummary.letter})
+            </p>
+            <p className="fa-msg-text" style={{ marginTop: 8 }}>
+              Signing class baseline: <strong>{classRosterNetSummary.signingGrade}/100</strong>
+              {classRosterNetSummary.hasDepartures && (
+                <>
+                  {' '}· Adjusted for need (×<strong>{classRosterNetSummary.signingEmphasis}</strong>): <strong>{classRosterNetSummary.adjustedSigningBaseline}/100</strong>
+                  {' '}· Avg departure grade (weighted): ~<strong>{classRosterNetSummary.avgDepartureGrade}</strong>
+                  {' '}· Talent-out penalty: <strong>−{classRosterNetSummary.lossPenalty}</strong> pts
+                </>
+              )}
+            </p>
+            <p className="fa-hint" style={{ marginTop: 10 }}>
+              {classRosterNetSummary.explanation}
             </p>
           </div>
         </div>
@@ -1957,27 +2270,11 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
 
 /* ─── Root ─── */
 function FreeAgency() {
-  const [selectedPosition, setSelectedPosition] = useState(null);
-  const [pendingPick, setPendingPick] = useState(null);
-
-  const handleSwitchPosition = useCallback((positionKey, playerName = '') => {
-    setSelectedPosition(positionKey);
-    if (playerName) {
-      setPendingPick({ positionKey, playerName });
-    }
-  }, []);
-
-  if (!selectedPosition) {
-    return <PositionPicker onSelect={(k) => handleSwitchPosition(k)} />;
-  }
-
   return (
     <PositionEvaluator
-      positionKey={selectedPosition}
-      onBack={() => setSelectedPosition(null)}
-      onSwitchPosition={handleSwitchPosition}
-      pendingPick={pendingPick}
-      clearPendingPick={() => setPendingPick(null)}
+      positionKey={FA_POSITION_ORDER[0]}
+      pendingPick={null}
+      clearPendingPick={() => {}}
     />
   );
 }
