@@ -884,11 +884,15 @@ def assess_team_fit(
             f"Base value verdict: {base_decision}. Team-context verdict: Exceeds Cap. "
             f"Signing requires {yr1_cap_pct:.1f}% of cap but only {available_cap_pct:.1f}% is available."
         )
+        cap_gap = yr1_cap_pct - available_cap_pct
         team_reason = _build_team_reasoning(
             player_name, roster, need_label, need_score,
             yr1_cap_pct, signing_cap_pcts, available_cap_pct,
-            f"Base value verdict: {base_decision}. Team-context verdict: Exceeds Cap. "
-            "This can still be a fair player price, but it does not fit current cap room."
+            (
+                f"Valuation bucket is still {base_decision}, but Year 1 asks for {yr1_cap_pct:.1f}% of cap "
+                f"with {available_cap_pct:.1f}% free — roughly {cap_gap:.1f}% short. "
+                f"That only works if the hit is deferred, trimmed, or the room picture changes."
+            ),
         )
         return "Exceeds Cap", fit_summary, team_reason
 
@@ -924,12 +928,14 @@ def assess_team_fit(
         if adjusted in _cap_downgrades:
             adjusted = _cap_downgrades[adjusted]
 
+    who = (player_name or "").strip() or "This player"
     if adjusted == base_decision:
-        combined_note = f"Base value verdict: {base_decision}. Team-context verdict: {adjusted}. {note}".strip()
+        combined_note = f"Contract tier and team read both land on {adjusted}. {note}".strip()
     else:
         combined_note = (
-            f"Base value verdict: {base_decision}. Team-context verdict: {adjusted}. "
-            f"This can be a fair player price, but roster/cap context changes the recommendation. {note}"
+            f"{who} charts as a {base_decision} on the contract alone; "
+            f"layer in a {need_label} positional room ({need_score:.0f}/100 need score) "
+            f"plus this cap share and the tag moves to {adjusted}. {note}"
         ).strip()
 
     fit_summary = combined_note
