@@ -681,7 +681,7 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
   };
 }
 
-function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
+function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick, clearPendingPick }) {
   const cfg = POSITION_FREE_AGENCY[positionKey];
   const apiBase = `http://127.0.0.1:${cfg.port}`;
   const contractMax = 7;
@@ -714,6 +714,14 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
   const [classStartCapPct, setClassStartCapPct] = useState(null);
   const [classStartCapInput, setClassStartCapInput] = useState('');
   const [classCapLocked, setClassCapLocked] = useState(false);
+  const [departuresOn, setDeparturesOn] = useState(false);
+  const [classDepartures, setClassDepartures] = useState([]);
+  const [selectedDeparturePlayer, setSelectedDeparturePlayer] = useState('');
+  const [playerDirectory, setPlayerDirectory] = useState([]);
+  const [classSearchPlayer, setClassSearchPlayer] = useState('');
+  const [classQuickAsk, setClassQuickAsk] = useState('');
+  const [classQuickYears, setClassQuickYears] = useState(3);
+  const [classQuickLoading, setClassQuickLoading] = useState(false);
   const [analysisYear, setAnalysisYear] = useState(latestAnalysisYear);
   const [analysisYearMin, setAnalysisYearMin] = useState(2010);
 
@@ -725,25 +733,10 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
 
   useEffect(() => {
     const c = POSITION_FREE_AGENCY[positionKey];
-    setMessages([{ role: 'assistant', content: c.welcome }]);
+    if (!messages.length) setMessages([{ role: 'assistant', content: c.welcome }]);
     setPlayers([]);
     setSelectedPlayer('');
     setError('');
-    setTeamMode(false);
-    setSelectedTeam('');
-    setTeamRoster(null);
-    setCapOverride('');
-    setCapOverrideDirty(false);
-    setShowRankingsDialog(false);
-    setTeamRankings([]);
-    setClassBuilderOn(false);
-    setClassSignings([]);
-    setShowClassDialog(false);
-    setClassStartCapPct(null);
-    setClassStartCapInput('');
-    setClassCapLocked(false);
-    setAnalysisYear(latestAnalysisYear);
-    setAnalysisYearMin(2010);
     setStatsOpen({});
   }, [positionKey]);
 
@@ -766,6 +759,13 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
       )
       .finally(() => setFetchingPlayers(false));
 
+    fetch(`${apiBase}/player-directory?analysis_year=${encodeURIComponent(analysisYear)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setPlayerDirectory(data.players || []);
+      })
+      .catch(() => setPlayerDirectory([]));
+
     fetch(`${apiBase}/teams?analysis_year=${encodeURIComponent(analysisYear)}`)
       .then((r) => r.json())
       .then((data) => {
@@ -778,6 +778,12 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
       })
       .catch(() => {});
   }, [apiBase, cfg.playersPath, cfg.port, positionKey, analysisYear]);
+
+  useEffect(() => {
+    if (!pendingPick || pendingPick.positionKey !== positionKey) return;
+    if (pendingPick.playerName) setSelectedPlayer(pendingPick.playerName);
+    if (clearPendingPick) clearPendingPick();
+  }, [pendingPick, positionKey, clearPendingPick]);
 
   useEffect(() => {
     if (!selectedTeam || !teamMode) return;
@@ -898,10 +904,22 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
     () => classSignings.reduce((acc, s) => acc + Number(s.yr1CapPct || 0), 0),
     [classSignings]
   );
+  const classFreedCapPct = useMemo(
+    () => (departuresOn ? classDepartures.reduce((acc, d) => acc + Number(d.freedCapPct || 0), 0) : 0),
+    [classDepartures, departuresOn]
+  );
+  const classNetCapPct = useMemo(
+    () => classUsedCapPct - classFreedCapPct,
+    [classUsedCapPct, classFreedCapPct]
+  );
   const classRemainingCapPct = useMemo(() => {
     if (classStartCapPct == null) return null;
-    return Number(classStartCapPct) - classUsedCapPct;
-  }, [classStartCapPct, classUsedCapPct]);
+    return Number(classStartCapPct) - classNetCapPct;
+  }, [classStartCapPct, classNetCapPct]);
+  const rosterDepartureOptions = useMemo(
+    () => (teamRoster?.roster || []).map((p) => p.player).filter(Boolean),
+    [teamRoster]
+  );
   const handleTeamChange = useCallback((team) => {
     setSelectedTeam(team);
     setCapOverrideDirty(false);
@@ -1008,7 +1026,117 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
     setClassStartCapPct(null);
     setClassStartCapInput('');
     setClassCapLocked(false);
+    setClassDepartures([]);
+    setSelectedDeparturePlayer('');
+    setDeparturesOn(false);
   }, []);
+  const handleAddDeparture = useCallback(() => {
+    if (!departuresOn || !selectedDeparturePlayer) return;
+    const roster = teamRoster?.roster || [];
+    const found = roster.find((p) => p.player === selectedDeparturePlayer);
+    if (!found) return;
+    const key = `${selectedDeparturePlayer}::${analysisYear}`;
+    setClassDepartures((prev) => {
+      if (prev.some((d) => d.key === key)) return prev;
+      return [
+        ...prev,
+        {
+          key,
+          playerName: selectedDeparturePlayer,
+          freedCapPct: Number(found.cap_pct || 0),
+        },
+      ];
+    });
+    setSelectedDeparturePlayer('');
+  }, [departuresOn, selectedDeparturePlayer, teamRoster, analysisYear]);
+  const handleRemoveDeparture = useCallback((key) => {
+    setClassDepartures((prev) => prev.filter((d) => d.key !== key));
+  }, []);
+  const classSearchOptions = useMemo(
+    () => playerDirectory.map((p) => p.player),
+    [playerDirectory]
+  );
+  const handleGoToClassPlayer = useCallback(() => {
+    if (!classSearchPlayer) return;
+    const hit = playerDirectory.find((p) => p.player === classSearchPlayer);
+    if (!hit) return;
+    onSwitchPosition(hit.position_key, hit.player);
+    setShowClassDialog(false);
+  }, [classSearchPlayer, playerDirectory, onSwitchPosition]);
+  const handleQuickEvaluateAndAdd = useCallback(async () => {
+    if (!classSearchPlayer) {
+      setError('Pick a player first.');
+      return;
+    }
+    const ask = Number(classQuickAsk);
+    if (!Number.isFinite(ask) || ask <= 0) {
+      setError('Enter a valid class contract AAV.');
+      return;
+    }
+    const years = Number(classQuickYears);
+    if (!Number.isFinite(years) || years < 1 || years > 7) {
+      setError('Contract years must be 1-7.');
+      return;
+    }
+    const hit = playerDirectory.find((p) => p.player === classSearchPlayer);
+    if (!hit) {
+      setError('Could not resolve selected player position.');
+      return;
+    }
+    if (!selectedTeam) {
+      setError('Select a team before adding to free agency class.');
+      return;
+    }
+    const posCfg = POSITION_FREE_AGENCY[hit.position_key];
+    if (!posCfg) {
+      setError('Unsupported player position for evaluation.');
+      return;
+    }
+    setClassQuickLoading(true);
+    try {
+      const body = {
+        player_name: classSearchPlayer,
+        salary_ask: ask,
+        contract_years: years,
+        analysis_year: analysisYear,
+        team: selectedTeam,
+      };
+      const capValM = parseFloat(capOverride);
+      if (!isNaN(capValM) && capValM > 0) {
+        body.cap_available_pct = (capValM / SALARY_CAP_M) * 100;
+      }
+      const resp = await fetch(`http://127.0.0.1:${posCfg.port}/evaluate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!resp.ok) {
+        let detail = 'Class quick evaluation failed.';
+        try {
+          const err = await resp.json();
+          detail = err.detail || detail;
+        } catch { /* ignore */ }
+        throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+      }
+      const result = await resp.json();
+      const structured = buildStructuredFreeAgent(result, ask, years, hit.position_key);
+      handleAddToClass(structured);
+      setMessages((prev) => [
+        ...prev,
+        { role: 'user', content: `Evaluate ${classSearchPlayer} — $${ask}M/yr × ${years} yr contract as ${selectedTeam}.` },
+        { role: 'assistant', content: null, structured },
+      ]);
+      setClassSearchPlayer('');
+      setClassQuickAsk('');
+    } catch (e) {
+      setError(e.message || 'Class quick evaluation failed.');
+    } finally {
+      setClassQuickLoading(false);
+    }
+  }, [
+    classSearchPlayer, classQuickAsk, classQuickYears, playerDirectory,
+    selectedTeam, analysisYear, capOverride, handleAddToClass,
+  ]);
 
   return (
     <div className="fa-evaluator-wrap">
@@ -1381,7 +1509,21 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
               <button type="button" className="fa-back-btn" onClick={() => setShowClassDialog(false)}>Close</button>
             </div>
             {!classGradeSummary ? (
-              <p className="fa-hint">No signings added yet.</p>
+              <div>
+                <p className="fa-hint">No signings added yet.</p>
+                <div className="fa-field" style={{ marginTop: 8 }}>
+                  <label className="fa-label">Find player by name (all positions)</label>
+                  <SearchableSelect
+                    options={classSearchOptions}
+                    value={classSearchPlayer}
+                    onChange={setClassSearchPlayer}
+                    placeholder="Search players..."
+                  />
+                </div>
+                <button type="button" className="fa-btn" onClick={handleGoToClassPlayer} disabled={!classSearchPlayer}>
+                  Go to Player Evaluation
+                </button>
+              </div>
             ) : (
               <div>
                 <div className="fa-field" style={{ marginBottom: 10 }}>
@@ -1429,11 +1571,65 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
                 </p>
                 <p className="fa-msg-text">
                   Cap Used (Yr 1): <strong>{classUsedCapPct.toFixed(1)}%</strong>
+                  {departuresOn && (
+                    <>
+                      {' '}· Cap Freed: <strong style={{ color: '#3de87a' }}>{classFreedCapPct.toFixed(1)}%</strong>
+                      {' '}· Net Used: <strong>{classNetCapPct.toFixed(1)}%</strong>
+                    </>
+                  )}
                   {' '}· Remaining:{' '}
                   <strong style={{ color: classRemainingCapPct != null && classRemainingCapPct < 0 ? '#e05555' : '#3de87a' }}>
                     {classRemainingCapPct == null ? 'N/A' : `${classRemainingCapPct.toFixed(1)}%`}
                   </strong>
                 </p>
+                <label className="fa-toggle-label" style={{ marginBottom: 8 }}>
+                  <input type="checkbox" checked={departuresOn} onChange={(e) => setDeparturesOn(e.target.checked)} />
+                  <span className="fa-toggle-slider" />
+                  <span className="fa-toggle-text">Account for Departures</span>
+                </label>
+                {departuresOn && (
+                  <div style={{ marginBottom: 10 }}>
+                    <div className="fa-field">
+                      <label className="fa-label">Add Departure (search roster)</label>
+                      <SearchableSelect
+                        options={rosterDepartureOptions}
+                        value={selectedDeparturePlayer}
+                        onChange={setSelectedDeparturePlayer}
+                        placeholder="Search roster players..."
+                      />
+                    </div>
+                    <button type="button" className="fa-btn" onClick={handleAddDeparture} disabled={!selectedDeparturePlayer}>
+                      Add Departure
+                    </button>
+                    {!!classDepartures.length && (
+                      <div className="fa-rankings-grid" style={{ marginTop: 8 }}>
+                        {classDepartures.map((d) => (
+                          <div key={d.key} className="fa-ranking-card">
+                            <div className="fa-ranking-row">
+                              <span className="fa-ranking-pos">{d.playerName}</span>
+                              <span className="fa-ranking-badge top">+{Number(d.freedCapPct).toFixed(1)}%</span>
+                            </div>
+                            <button type="button" className="fa-summary-link-btn" onClick={() => handleRemoveDeparture(d.key)}>
+                              Remove departure
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className="fa-field" style={{ marginBottom: 10 }}>
+                  <label className="fa-label">Find player by name (all positions)</label>
+                  <SearchableSelect
+                    options={classSearchOptions}
+                    value={classSearchPlayer}
+                    onChange={setClassSearchPlayer}
+                    placeholder="Search players..."
+                  />
+                </div>
+                <button type="button" className="fa-btn" onClick={handleGoToClassPlayer} disabled={!classSearchPlayer}>
+                  Go to Player Evaluation
+                </button>
                 <div className="fa-rankings-grid">
                   {classGradeSummary.rows.map((r) => (
                     <div key={r.key} className="fa-ranking-card">
@@ -1463,16 +1659,26 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition }) {
 /* ─── Root ─── */
 function FreeAgency() {
   const [selectedPosition, setSelectedPosition] = useState(null);
+  const [pendingPick, setPendingPick] = useState(null);
+
+  const handleSwitchPosition = useCallback((positionKey, playerName = '') => {
+    setSelectedPosition(positionKey);
+    if (playerName) {
+      setPendingPick({ positionKey, playerName });
+    }
+  }, []);
 
   if (!selectedPosition) {
-    return <PositionPicker onSelect={setSelectedPosition} />;
+    return <PositionPicker onSelect={(k) => handleSwitchPosition(k)} />;
   }
 
   return (
     <PositionEvaluator
       positionKey={selectedPosition}
       onBack={() => setSelectedPosition(null)}
-      onSwitchPosition={setSelectedPosition}
+      onSwitchPosition={handleSwitchPosition}
+      pendingPick={pendingPick}
+      clearPendingPick={() => setPendingPick(null)}
     />
   );
 }

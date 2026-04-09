@@ -260,3 +260,46 @@ def build_team_position_rankings(team: str, analysis_year: int) -> dict[str, Any
         "season_year_used": season_year_used,
         "rankings": rows,
     }
+
+
+def build_player_directory(analysis_year: int) -> dict[str, Any]:
+    """
+    Build cross-position player directory using primary position inferred by
+    highest snap volume through analysis_year.
+    """
+    year = clamp_analysis_year(analysis_year)
+    by_player: dict[str, dict[str, Any]] = {}
+    for key, cfg in POS_CFG.items():
+        df = _load_csv(cfg["path"])
+        if df.empty or "player" not in df.columns:
+            continue
+        if "Year" in df.columns:
+            ys = pd.to_numeric(df["Year"], errors="coerce")
+            df = df[ys <= year].copy()
+        if df.empty:
+            continue
+        snap_col = cfg["snaps"] if cfg["snaps"] in df.columns else (
+            "snap_counts_offense" if "snap_counts_offense" in df.columns else
+            "snap_counts_defense" if "snap_counts_defense" in df.columns else
+            "passing_snaps" if "passing_snaps" in df.columns else
+            "total_snaps" if "total_snaps" in df.columns else None
+        )
+        if snap_col is None:
+            df["_snap_fallback"] = 1.0
+            snap_col = "_snap_fallback"
+        df[snap_col] = pd.to_numeric(df[snap_col], errors="coerce").fillna(0.0)
+        snap_by_player = df.groupby("player")[snap_col].sum()
+        for name, snaps in snap_by_player.items():
+            nm = str(name).strip()
+            if not nm:
+                continue
+            prev = by_player.get(nm)
+            if prev is None or float(snaps) > float(prev.get("snaps", 0.0)):
+                by_player[nm] = {
+                    "player": nm,
+                    "position_key": key,
+                    "position_label": cfg["label"],
+                    "snaps": float(snaps),
+                }
+    players = sorted(by_player.values(), key=lambda x: x["player"])
+    return {"analysis_year": year, "players": players}
