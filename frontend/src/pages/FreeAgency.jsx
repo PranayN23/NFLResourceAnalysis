@@ -258,9 +258,12 @@ function signingGradeFromData(fair_aav, cap_burden, teamCtx) {
  */
 /** Position weights for FA class / roster net / departure-need bump (keep in sync everywhere). */
 const FA_CLASS_POS_IMPORTANCE = {
-  QB: 1.45, ED: 1.25, WR: 1.18, CB: 1.15, T: 1.12, DI: 1.08,
-  C: 1.03, G: 1.02, LB: 1.0, S: 0.98, TE: 0.95, HB: 0.9,
+  QB: 1.45, ED: 1.25, T: 1.28, WR: 1.18, CB: 1.15, C: 1.24, G: 1.22, DI: 1.08,
+  LB: 1.0, S: 0.98, TE: 0.95, HB: 0.9,
 };
+
+/** Departures at these keys count toward extra “OL continuity” roster-net penalty. */
+const FA_OL_DEPARTURE_KEYS = new Set(['T', 'G', 'C']);
 
 function departureImportanceBoostForSigning(positionKey, classDepartures, departuresOn, POS_IMPORTANCE) {
   if (!departuresOn || !classDepartures?.length) {
@@ -1102,6 +1105,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         hasDepartures: false,
         avgDepartureGrade: null,
         lossPenalty: 0,
+        talentOutTotal: 0,
         unfilledReplacementPenalty: 0,
         coverageGapPenalty: 0,
         signingEmphasis: 1,
@@ -1124,7 +1128,22 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     });
     const avgDep = lossDen > 0 ? lossNum / lossDen : 0;
     const lossPenalty = Math.max(0, (avgDep - 58) * 0.55);
-    const stressFromPenalty = Math.min(1, lossPenalty / 24);
+
+    const olDepartures = classDepartures.filter((d) => FA_OL_DEPARTURE_KEYS.has(d.positionKey));
+    let olContinuityPenalty = 0;
+    if (olDepartures.length > 0) {
+      const nOl = olDepartures.length;
+      const avgOlGrade =
+        olDepartures.reduce((acc, d) => acc + (Number(d.grade) || 60), 0) / nOl;
+      // One starter OL loss is costly; two+ without replacement destroys chemistry and protection.
+      olContinuityPenalty = Math.min(
+        18,
+        3.4 * nOl + 2.6 * Math.max(0, nOl - 1) + Math.max(0, avgOlGrade - 58) * 0.16 * nOl,
+      );
+    }
+    const totalTalentOutPenalty = lossPenalty + olContinuityPenalty;
+
+    const stressFromPenalty = Math.min(1, totalTalentOutPenalty / 26);
     const stressFromCount = Math.min(1, classDepartures.length / 7);
     const departureStress = Math.min(1, 0.55 * stressFromPenalty + 0.45 * stressFromCount);
 
@@ -1144,7 +1163,8 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     let unfilledReplacementPenalty = 0;
     let coverageGapPenalty = 0;
     if (hasDepartures && !hasSignings) {
-      unfilledReplacementPenalty = 14 + 0.5 * lossPenalty + 2.5 * Math.min(classDepartures.length, 12);
+      unfilledReplacementPenalty =
+        14 + 0.5 * totalTalentOutPenalty + 2.5 * Math.min(classDepartures.length, 12);
     } else if (hasDepartures && hasSignings && lossDen > 0) {
       const cov = Math.min(1.25, sigW / lossDen);
       const shortfall = Math.max(0, 1 - cov);
@@ -1153,7 +1173,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
 
     let net =
       adjustedSigningBaseline -
-      lossPenalty -
+      totalTalentOutPenalty -
       unfilledReplacementPenalty -
       coverageGapPenalty;
     net = Math.round(Math.max(0, Math.min(100, net)));
@@ -1167,7 +1187,9 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     } else {
       parts.push('No free-agent signings in this class — net is driven by talent walking out and unfilled roster holes.');
     }
-    parts.push(`Weighted departures average ~${Math.round(avgDep)} grade; talent-out penalty: −${round1(lossPenalty)}.`);
+    parts.push(
+      `Weighted departures average ~${Math.round(avgDep)} grade; talent-out penalty: −${round1(totalTalentOutPenalty)}.`,
+    );
     if (unfilledReplacementPenalty > 0) {
       parts.push(`Unfilled replacement penalty: −${round1(unfilledReplacementPenalty)} (no signings to offset losses).`);
     }
@@ -1185,6 +1207,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       hasDepartures: true,
       avgDepartureGrade: Math.round(avgDep),
       lossPenalty: round1(lossPenalty),
+      talentOutTotal: round1(totalTalentOutPenalty),
       unfilledReplacementPenalty: round1(unfilledReplacementPenalty),
       coverageGapPenalty: round1(coverageGapPenalty),
       signingEmphasis: hasSignings ? Math.round(signingEmphasis * 1000) / 1000 : null,
@@ -2442,7 +2465,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                 {classRosterNetSummary.hasDepartures && (
                   <div className="fa-class-stat-pill fa-class-stat-pill--warn">
                     <span className="fa-class-stat-pill-label">Talent-out</span>
-                    <span className="fa-class-stat-pill-val">−{classRosterNetSummary.lossPenalty}</span>
+                    <span className="fa-class-stat-pill-val">−{classRosterNetSummary.talentOutTotal ?? classRosterNetSummary.lossPenalty}</span>
                   </div>
                 )}
                 {classRosterNetSummary.unfilledReplacementPenalty > 0 && (

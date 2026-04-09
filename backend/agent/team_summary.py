@@ -21,10 +21,9 @@ TEAM_TO_ABBR = {
     "Seahawks": "SEA", "Buccaneers": "TB", "Titans": "TEN", "Commanders": "WAS",
 }
 
-# Known corrections where source rankings file has non-official win totals.
-RECORD_OVERRIDES = {
-    ("DET", 2023): "12-5",
-}
+# Optional: map (abbr, season) -> full phrase if a row must be hand-corrected.
+# Default behavior uses `Wins` from nflpowerrankings.csv as total wins (RS + postseason).
+RECORD_OVERRIDES: dict[tuple[str, int], str] = {}
 
 POS_CFG = {
     "QB": {"label": "Quarterback", "path": os.path.join(_ML, "QB.csv"), "grade": "grades_pass", "snaps": "passing_snaps"},
@@ -57,22 +56,36 @@ def _load_power_rankings() -> pd.DataFrame:
     return pd.read_csv(p)
 
 
-def _team_record(team: str, year: int) -> str:
+def _team_season_wins_phrase(team: str, year: int) -> str:
+    """
+    Human-readable season win line for team summaries.
+
+    In `nflpowerrankings.csv`, the `Wins` column is treated as **total team wins
+    for that league year — regular season plus postseason** (not regular-season
+    wins only). We describe it that way instead of inventing a W-L record, which
+    was wrong when wins could exceed the 16/17-game regular-season schedule.
+    """
     pr = _load_power_rankings()
     if pr.empty:
-        return "record unavailable"
+        return "had no win-total data available in our rankings file"
     abbr = TEAM_TO_ABBR.get(team, "")
     if not abbr:
-        return "record unavailable"
+        return "had no win-total data available in our rankings file"
     if (abbr, year) in RECORD_OVERRIDES:
         return RECORD_OVERRIDES[(abbr, year)]
     sub = pr[(pr["Team"] == abbr) & (pd.to_numeric(pr["Season"], errors="coerce") == year)]
     if sub.empty:
-        return "record unavailable"
-    wins = int(round(float(sub.iloc[0].get("Wins", 0))))
-    games = 17 if year >= 2021 else 16
-    losses = max(0, games - wins)
-    return f"{wins}-{losses}"
+        return "had no win-total data available in our rankings file"
+    raw = sub.iloc[0].get("Wins", float("nan"))
+    try:
+        wins = int(round(float(raw)))
+    except (TypeError, ValueError):
+        wins = -1
+    if wins < 0 or wins > 24:
+        return "had no reliable win total in our rankings file"
+    if wins == 0:
+        return "did not record a win in our rankings data for that season"
+    return f"won {wins} games, including the postseason"
 
 
 def _position_strength(team: str, year: int, cfg: dict[str, Any]) -> dict[str, Any] | None:
@@ -205,7 +218,7 @@ def build_team_year_summary(team: str, analysis_year: int) -> dict[str, Any]:
     # Keep team result timeline aligned with player timeline.
     # Example: analysis_year=2025 with latest player season=2024 should use 2024 record.
     season_year_used = max(int(r.get("year_used", year)) for r in pos_rows) if pos_rows else year
-    record = _team_record(team, season_year_used)
+    record = _team_season_wins_phrase(team, season_year_used)
     def _fmt_group(r: dict[str, Any]) -> str:
         names = [p.get("player", "Unknown") for p in (r.get("players") or [])[:2]]
         if not names:
@@ -218,14 +231,14 @@ def build_team_year_summary(team: str, analysis_year: int) -> dict[str, Any]:
         summary = (
             f"Heading into {year} free agency, this past season ({season_context_year}) "
             f"falls back to {season_year_used} in the available data. "
-            f"The {team} finished {record}. "
+            f"The {team} {record}. "
             f"Their strongest position groups were {strengths_txt}. "
             f"Their weakest spots were {weaknesses_txt}."
         )
     else:
         summary = (
             f"Heading into {year} free agency, this past season ({season_context_year}) "
-            f"the {team} finished {record}. "
+            f"the {team} {record}. "
             f"Their strongest position groups were {strengths_txt}. "
             f"Their weakest spots were {weaknesses_txt}."
         )
