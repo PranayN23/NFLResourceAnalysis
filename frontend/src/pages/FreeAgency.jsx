@@ -252,6 +252,34 @@ function signingGradeFromData(fair_aav, cap_burden, teamCtx) {
   return Math.round(Math.max(0, Math.min(100, base)));
 }
 
+/**
+ * When departures are modeled, FA signings matter more — especially at positions
+ * losing weighted snap/cap mass. Returns additive points (capped) for class rollups.
+ */
+function departureImportanceBoostForSigning(positionKey, classDepartures, departuresOn, POS_IMPORTANCE) {
+  if (!departuresOn || !classDepartures?.length) {
+    return { boost: 0, directShare: 0, stress: 0 };
+  }
+  let wAt = 0;
+  let wTot = 0;
+  for (const d of classDepartures) {
+    const posW = POS_IMPORTANCE[d.positionKey] || 1;
+    const capW = Math.max(0.5, Math.min(1.8, 0.5 + Number(d.freedCapPct || 0) / 25));
+    const w = posW * capW;
+    wTot += w;
+    if (d.positionKey === positionKey) wAt += w;
+  }
+  const stress = Math.min(
+    1,
+    0.55 * Math.min(1, wTot / 5.5) + 0.45 * Math.min(1, classDepartures.length / 7),
+  );
+  const directShare = wTot > 0 ? wAt / wTot : 0;
+  const samePosPts = directShare > 0 ? (2.2 + 7.5 * directShare) * stress : 0;
+  const churnPts = 1.1 * stress;
+  const boost = Math.min(10, samePosPts + churnPts);
+  return { boost, directShare, stress };
+}
+
 function gradeColor(g) {
   if (g >= 80) return '#3de87a';
   if (g >= 68) return '#5dbb6e';
@@ -989,14 +1017,28 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       const posW = POS_IMPORTANCE[s.positionKey] || 1.0;
       const profileW = Math.max(0.8, Math.min(1.8, 0.8 + (Number(s.ask) || 0) / 30));
       const w = posW * profileW;
-      const g = Number(s.signingGrade) || 0;
-      num += g * w;
+      const baseG = Number(s.signingGrade) || 0;
+      const { boost } = departureImportanceBoostForSigning(
+        s.positionKey,
+        classDepartures,
+        departuresOn,
+        POS_IMPORTANCE,
+      );
+      const adjG = Math.round(Math.min(100, baseG + boost));
+      num += adjG * w;
       den += w;
-      return { ...s, weight: w, weightedScore: g * w };
+      return {
+        ...s,
+        weight: w,
+        weightedScore: adjG * w,
+        baseSigningGrade: baseG,
+        departureBoost: boost,
+        adjustedSigningGrade: adjG,
+      };
     });
     const grade = den > 0 ? Math.round(num / den) : 0;
     return { grade, letter: gradeLetter(grade), rows };
-  }, [classSignings]);
+  }, [classSignings, classDepartures, departuresOn]);
 
   /** Signings-only grade is in classGradeSummary. Net roster score penalizes losing higher-grade / higher-cap departures (weighted by position). */
   const classRosterNetSummary = useMemo(() => {
@@ -1050,7 +1092,8 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       signingGrade = classGradeSummary.grade;
       sigW = classGradeSummary.rows.reduce((acc, r) => acc + (Number(r.weight) || 0), 0);
     }
-    const signingEmphasis = hasSignings ? 1 + 0.12 * departureStress : 1;
+    // Class grade already includes departure-need bumps; keep a light stress multiplier only.
+    const signingEmphasis = hasSignings ? 1 + 0.05 * departureStress : 1;
     const adjustedSigningBaseline = hasSignings ? Math.min(100, signingGrade * signingEmphasis) : 0;
 
     const replacementCoveragePct =
@@ -1077,7 +1120,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     const parts = [];
     if (hasSignings) {
       parts.push(
-        `Signing class ${signingGrade}/100 is scaled to ~${round1(adjustedSigningBaseline)} (×${Math.round(signingEmphasis * 1000) / 1000}) under departure stress.`
+        `Signing class ~${signingGrade}/100 (contract value plus departure-need bump on each signing); under roster stress ×${Math.round(signingEmphasis * 1000) / 1000} → ~${round1(adjustedSigningBaseline)} before loss and coverage penalties.`
       );
     } else {
       parts.push('No free-agent signings in this class — net is driven by talent walking out and unfilled roster holes.');
@@ -2086,7 +2129,11 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                 <div className="fa-class-grades-row">
                   <ClassMetricRing
                     title="Signing class"
-                    subtitle="Incoming deals only"
+                    subtitle={
+                      departuresOn && classDepartures.length > 0
+                        ? 'Incoming + modeled departure need'
+                        : 'Incoming deals only'
+                    }
                     grade={classGradeSummary.grade}
                     letter={classGradeSummary.letter}
                     variant="signing"
@@ -2112,7 +2159,9 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                       <span>Add departures to separate roster net from signing-only.</span>
                     )}
                     {classRosterNetSummary.hasDepartures && classRosterNetSummary.hasSignings && classRosterNetSummary.signingEmphasis != null && (
-                      <span>Under stress, signing quality is scaled up to ×{classRosterNetSummary.signingEmphasis} before applying losses.</span>
+                      <span>
+                        Signing grades already include a <strong>departure-need</strong> bump; roster net applies a small extra uplift (×{classRosterNetSummary.signingEmphasis}) before loss and coverage penalties.
+                      </span>
                     )}
                     {classRosterNetSummary.hasDepartures && !classRosterNetSummary.hasSignings && (
                       <span>Roster net reflects departures with <strong>no</strong> free-agent signings here — unfilled replacement penalty applies.</span>
@@ -2228,12 +2277,21 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                     >
                       <div className="fa-ranking-row">
                         <span className="fa-ranking-pos">{r.positionKey} — {r.playerName}</span>
-                        <span className="fa-ranking-badge" style={classGradeBadgeStyle(r.signingGrade)}>
-                          {Math.round(r.signingGrade)}
+                        <span
+                          className="fa-ranking-badge"
+                          style={classGradeBadgeStyle(r.adjustedSigningGrade ?? r.signingGrade)}
+                        >
+                          {Math.round(r.adjustedSigningGrade ?? r.signingGrade)}
                         </span>
                       </div>
                       <div className="fa-hint">
                         ${r.ask}M x {r.years}y · Yr1 cap ${pctToDollarsNum(Number(r.yr1CapPct || 0)).toFixed(1)}M · weight {r.weight.toFixed(2)}
+                        {Number(r.departureBoost) > 0 && (
+                          <span>
+                            {' '}
+                            · base {Math.round(r.baseSigningGrade ?? r.signingGrade)} +{Number(r.departureBoost).toFixed(1)} dep need
+                          </span>
+                        )}
                       </div>
                     </button>
                   ))}
@@ -2281,8 +2339,10 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
               </div>
               <ul className="fa-class-explain-bullets">
                 <li>Each signing’s grade is weighted by <strong>position importance</strong> and <strong>contract size</strong> (AAV).</li>
-                <li>This score is <strong>only incoming deals</strong> — it does not move when you add departures.</li>
-                <li>Use <strong>Roster net impact</strong> to combine signings with modeled departures.</li>
+                <li>
+                  With <strong>Account for Departures</strong> on, each signing gets an extra bump when it addresses the same position (and a smaller bump from general roster churn) so the class score reflects <strong>replacement value</strong>.
+                </li>
+                <li>Use <strong>Roster net impact</strong> for the full picture: boosted signing quality minus talent walking out and coverage gaps.</li>
               </ul>
             </div>
           </div>
