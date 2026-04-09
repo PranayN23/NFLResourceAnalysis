@@ -724,8 +724,12 @@ function PositionEvaluator({ positionKey, onBack }) {
     fetch(`${apiBase}${cfg.playersPath}`)
       .then((r) => r.json())
       .then((data) => {
-        setPlayers(data.players || []);
-        setSelectedPlayer(data.players?.[0] || '');
+        const nextPlayers = data.players || [];
+        setPlayers(nextPlayers);
+        setSelectedPlayer((prev) => {
+          if (prev && nextPlayers.includes(prev)) return prev;
+          return nextPlayers[0] || '';
+        });
         const minYr = Number(data.analysis_year_min);
         setAnalysisYearMin(Number.isFinite(minYr) ? minYr : 2010);
       })
