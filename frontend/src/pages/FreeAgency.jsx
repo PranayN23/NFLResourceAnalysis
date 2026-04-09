@@ -1164,8 +1164,9 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
   const classGradeBadgeClass = useCallback((g) => {
     const n = Number(g);
     if (!Number.isFinite(n)) return 'mid';
-    if (n >= 80) return 'top';
-    if (n >= 60) return 'mid';
+    // Match SigningGrade color thresholds to avoid UI mismatch confusion.
+    if (n >= 68) return 'top';
+    if (n >= 55) return 'mid';
     return 'low';
   }, []);
   const handleGoToClassPlayer = useCallback(() => {
