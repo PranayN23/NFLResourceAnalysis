@@ -287,6 +287,7 @@ function NeedBadge({ label, score }) {
 /* ─── Roster Preview ─── */
 const SALARY_CAP_M = 255.4;
 function pctToDollars(pct) { return (pct / 100 * SALARY_CAP_M).toFixed(1); }
+function pctToDollarsNum(pct) { return Number(((pct / 100) * SALARY_CAP_M).toFixed(1)); }
 function capDisplay(pct) { return `${pct.toFixed(1)}% ($${pctToDollars(pct)}M)`; }
 
 function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePct, positionLabel }) {
@@ -716,16 +717,19 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
   const [classCapLocked, setClassCapLocked] = useState(false);
   const [departuresOn, setDeparturesOn] = useState(false);
   const [classDepartures, setClassDepartures] = useState([]);
+  const [fullTeamRosterForDepartures, setFullTeamRosterForDepartures] = useState([]);
   const [selectedDeparturePlayer, setSelectedDeparturePlayer] = useState('');
   const [playerDirectory, setPlayerDirectory] = useState([]);
   const [classSearchPlayer, setClassSearchPlayer] = useState('');
   const [classQuickAsk, setClassQuickAsk] = useState('');
   const [classQuickYears, setClassQuickYears] = useState(3);
   const [classQuickLoading, setClassQuickLoading] = useState(false);
+  const [showFinalClassGradeDialog, setShowFinalClassGradeDialog] = useState(false);
   const [analysisYear, setAnalysisYear] = useState(latestAnalysisYear);
   const [analysisYearMin, setAnalysisYearMin] = useState(2010);
 
   const chatEndRef = useRef(null);
+  const messageRefs = useRef({});
 
   const toggleStats = useCallback((i) => {
     setStatsOpen((prev) => ({ ...prev, [i]: !prev[i] }));
@@ -799,6 +803,40 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
       .catch(() => setTeamRoster(null))
       .finally(() => setFetchingTeam(false));
   }, [selectedTeam, teamMode, apiBase, capOverrideDirty, analysisYear]);
+
+  useEffect(() => {
+    if (!selectedTeam || !teamMode) {
+      setFullTeamRosterForDepartures([]);
+      return;
+    }
+    const host = window.location.hostname || 'localhost';
+    const reqs = Object.entries(POSITION_FREE_AGENCY).map(([, pcfg]) =>
+      fetch(`http://${host}:${pcfg.port}/team-roster?team=${encodeURIComponent(selectedTeam)}&analysis_year=${encodeURIComponent(analysisYear)}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null)
+    );
+    Promise.all(reqs)
+      .then((all) => {
+        const merged = new Map();
+        all.forEach((res) => {
+          const roster = Array.isArray(res?.roster) ? res.roster : [];
+          roster.forEach((p) => {
+            const name = String(p?.player || '').trim();
+            if (!name) return;
+            const key = name.toLowerCase();
+            const capPct = Number(p?.cap_pct || 0);
+            const prev = merged.get(key);
+            if (!prev || capPct > Number(prev.cap_pct || 0)) {
+              merged.set(key, { player: name, cap_pct: capPct });
+            }
+          });
+        });
+        setFullTeamRosterForDepartures(
+          Array.from(merged.values()).sort((a, b) => a.player.localeCompare(b.player))
+        );
+      })
+      .catch(() => setFullTeamRosterForDepartures([]));
+  }, [selectedTeam, teamMode, analysisYear]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -917,9 +955,13 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     return Number(classStartCapPct) - classNetCapPct;
   }, [classStartCapPct, classNetCapPct]);
   const rosterDepartureOptions = useMemo(
-    () => (teamRoster?.roster || []).map((p) => p.player).filter(Boolean),
-    [teamRoster]
+    () => fullTeamRosterForDepartures.map((p) => p.player).filter(Boolean),
+    [fullTeamRosterForDepartures]
   );
+  const classStorageKey = useMemo(() => {
+    if (!selectedTeam || !analysisYear) return null;
+    return `faClass::${selectedTeam}::${analysisYear}`;
+  }, [selectedTeam, analysisYear]);
   const handleTeamChange = useCallback((team) => {
     setSelectedTeam(team);
     setCapOverrideDirty(false);
@@ -1015,6 +1057,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
           years: m.years,
           signingGrade: structured.signing_grade,
           decision: structured.decision,
+          fullEvaluation: structured,
           yr1CapPct: Number(structured?.team_context?.signing_cap_pcts?.[0] || 0),
         },
       ];
@@ -1029,10 +1072,13 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     setClassDepartures([]);
     setSelectedDeparturePlayer('');
     setDeparturesOn(false);
-  }, []);
+    if (classStorageKey) {
+      try { localStorage.removeItem(classStorageKey); } catch { /* ignore */ }
+    }
+  }, [classStorageKey]);
   const handleAddDeparture = useCallback(() => {
     if (!departuresOn || !selectedDeparturePlayer) return;
-    const roster = teamRoster?.roster || [];
+    const roster = fullTeamRosterForDepartures || [];
     const found = roster.find((p) => p.player === selectedDeparturePlayer);
     if (!found) return;
     const key = `${selectedDeparturePlayer}::${analysisYear}`;
@@ -1048,14 +1094,80 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
       ];
     });
     setSelectedDeparturePlayer('');
-  }, [departuresOn, selectedDeparturePlayer, teamRoster, analysisYear]);
+  }, [departuresOn, selectedDeparturePlayer, fullTeamRosterForDepartures, analysisYear]);
   const handleRemoveDeparture = useCallback((key) => {
     setClassDepartures((prev) => prev.filter((d) => d.key !== key));
   }, []);
+  const handleOpenClassSigningEvaluation = useCallback(async (row) => {
+    if (!row) return;
+    setShowClassDialog(false);
+    onSwitchPosition(row.positionKey, row.playerName);
+    const existingIdx = messages.findIndex((m) => {
+      const meta = m?.structured?.meta;
+      if (!meta) return false;
+      return (
+        String(meta.playerName || '').toLowerCase() === String(row.playerName || '').toLowerCase() &&
+        String(meta.positionKey || '') === String(row.positionKey || '') &&
+        String(meta.team || '') === String(row.team || '') &&
+        Number(meta.analysisYear || 0) === Number(row.analysisYear || 0)
+      );
+    });
+    if (existingIdx >= 0) {
+      setTimeout(() => {
+        const el = messageRefs.current[existingIdx];
+        if (el?.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 120);
+      return;
+    }
+    if (row.fullEvaluation) {
+      setMessages((prev) => [
+        ...prev,
+        { role: 'user', content: `Evaluate ${row.playerName} — $${row.ask}M/yr × ${row.years} yr contract as ${row.team}.` },
+        { role: 'assistant', content: null, structured: row.fullEvaluation },
+      ]);
+      return;
+    }
+    try {
+      const cfgForPos = POSITION_FREE_AGENCY[row.positionKey];
+      if (!cfgForPos) throw new Error('No API config for that position.');
+      const host = window.location.hostname || 'localhost';
+      const url = `http://${host}:${cfgForPos.port}/evaluate`;
+      const body = {
+        player_name: row.playerName,
+        salary_ask: Number(row.ask),
+        contract_years: Number(row.years),
+        analysis_year: Number(row.analysisYear),
+        team: row.team,
+      };
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!resp.ok) throw new Error(`Failed to evaluate ${row.playerName}.`);
+      const result = await resp.json();
+      const structured = buildStructuredFreeAgent(result, Number(row.ask), Number(row.years), row.positionKey);
+      setClassSignings((prev) => prev.map((x) => (x.key === row.key ? { ...x, fullEvaluation: structured } : x)));
+      setMessages((prev) => [
+        ...prev,
+        { role: 'user', content: `Evaluate ${row.playerName} — $${row.ask}M/yr × ${row.years} yr contract as ${row.team}.` },
+        { role: 'assistant', content: null, structured },
+      ]);
+    } catch (e) {
+      setError(e.message || `Could not load full evaluation for ${row.playerName}.`);
+    }
+  }, [onSwitchPosition, messages]);
   const classSearchOptions = useMemo(
     () => playerDirectory.map((p) => p.player),
     [playerDirectory]
   );
+  const classGradeBadgeClass = useCallback((g) => {
+    const n = Number(g);
+    if (!Number.isFinite(n)) return 'mid';
+    if (n >= 80) return 'top';
+    if (n >= 60) return 'mid';
+    return 'low';
+  }, []);
   const handleGoToClassPlayer = useCallback(() => {
     if (!classSearchPlayer) return;
     const hit = playerDirectory.find((p) => p.player === classSearchPlayer);
@@ -1137,6 +1249,60 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
     classSearchPlayer, classQuickAsk, classQuickYears, playerDirectory,
     selectedTeam, analysisYear, capOverride, handleAddToClass,
   ]);
+
+  useEffect(() => {
+    if (!classStorageKey) return;
+    try {
+      const raw = localStorage.getItem(classStorageKey);
+      if (!raw) {
+        setClassSignings([]);
+        setClassDepartures([]);
+        setClassStartCapPct(null);
+        setClassStartCapInput('');
+        setClassCapLocked(false);
+        setDeparturesOn(false);
+        return;
+      }
+      const data = JSON.parse(raw);
+      setClassSignings(Array.isArray(data.classSignings) ? data.classSignings : []);
+      setClassDepartures(Array.isArray(data.classDepartures) ? data.classDepartures : []);
+      const startPct = Number(data.classStartCapPct);
+      if (Number.isFinite(startPct)) {
+        setClassStartCapPct(startPct);
+        setClassStartCapInput(pctToDollars(startPct));
+      } else {
+        setClassStartCapPct(null);
+        setClassStartCapInput('');
+      }
+      setClassCapLocked(Boolean(data.classCapLocked));
+      setDeparturesOn(Boolean(data.departuresOn));
+    } catch {
+      setClassSignings([]);
+      setClassDepartures([]);
+      setClassStartCapPct(null);
+      setClassStartCapInput('');
+      setClassCapLocked(false);
+      setDeparturesOn(false);
+    }
+  }, [classStorageKey]);
+
+  useEffect(() => {
+    if (!classStorageKey) return;
+    try {
+      localStorage.setItem(
+        classStorageKey,
+        JSON.stringify({
+          classSignings,
+          classDepartures,
+          classStartCapPct,
+          classCapLocked,
+          departuresOn,
+        })
+      );
+    } catch {
+      // ignore storage errors
+    }
+  }, [classStorageKey, classSignings, classDepartures, classStartCapPct, classCapLocked, departuresOn]);
 
   return (
     <div className="fa-evaluator-wrap">
@@ -1220,7 +1386,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                         ? (parseFloat(capOverride) / SALARY_CAP_M) * 100
                         : Number(teamRoster?.available_cap_pct || 0);
                       setClassStartCapPct(capPct);
-                      setClassStartCapInput((capPct || 0).toFixed(1));
+                      setClassStartCapInput(pctToDollars(capPct || 0));
                     }
                     setShowClassDialog(true);
                   }}
@@ -1355,7 +1521,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
         </div>
         <div className="fa-chat-body">
           {messages.map((msg, i) => (
-            <div key={i} className={`fa-msg fa-msg--${msg.role}`}>
+            <div key={i} ref={(el) => { messageRefs.current[i] = el; }} className={`fa-msg fa-msg--${msg.role}`}>
               <div className="fa-msg-label">{msg.role === 'user' ? 'You' : 'GM Agent'}</div>
 
               {msg.content != null ? (
@@ -1520,15 +1686,52 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                     placeholder="Search players..."
                   />
                 </div>
-                <button type="button" className="fa-btn" onClick={handleGoToClassPlayer} disabled={!classSearchPlayer}>
-                  Go to Player Evaluation
-                </button>
+                <div className="fa-field" style={{ marginBottom: 8 }}>
+                  <label className="fa-label">Class Contract AAV ($M)</label>
+                  <div className="fa-price-row">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      className="fa-input"
+                      value={classQuickAsk}
+                      onChange={(e) => setClassQuickAsk(e.target.value)}
+                    />
+                    <span className="fa-million">M</span>
+                  </div>
+                </div>
+                <div className="fa-field" style={{ marginBottom: 10 }}>
+                  <label className="fa-label">Contract Years</label>
+                  <select
+                    className="fa-select"
+                    value={classQuickYears}
+                    onChange={(e) => setClassQuickYears(Number(e.target.value))}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7].map((y) => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    type="button"
+                    className="fa-btn"
+                    onClick={handleQuickEvaluateAndAdd}
+                    disabled={classQuickLoading || !classSearchPlayer}
+                  >
+                    {classQuickLoading ? 'Evaluating…' : 'Evaluate + Add to Class'}
+                  </button>
+                  <button type="button" className="fa-btn" onClick={handleGoToClassPlayer} disabled={!classSearchPlayer}>
+                    Go to Player Page
+                  </button>
+                </div>
               </div>
             ) : (
               <div>
                 <div className="fa-field" style={{ marginBottom: 10 }}>
-                  <label className="fa-label">Starting Cap for Class (%)</label>
+                  <label className="fa-label">Starting Cap for Class ($M)</label>
                   <div className="fa-price-row">
+                    <span className="fa-dollar">$</span>
                     <input
                       type="number"
                       min="0"
@@ -1538,16 +1741,17 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                       disabled={classCapLocked}
                       onChange={(e) => setClassStartCapInput(e.target.value)}
                     />
-                    <span className="fa-million">%</span>
+                    <span className="fa-million">M</span>
                   </div>
                   <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
                     <button
                       type="button"
                       className="fa-btn"
                       onClick={() => {
-                        const v = Number(classStartCapInput);
-                        if (Number.isFinite(v) && v >= 0) {
-                          setClassStartCapPct(v);
+                        const vM = Number(classStartCapInput);
+                        if (Number.isFinite(vM) && vM >= 0) {
+                          const vPct = (vM / SALARY_CAP_M) * 100;
+                          setClassStartCapPct(vPct);
                           setClassCapLocked(true);
                         }
                       }}
@@ -1570,16 +1774,16 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                   Class Grade: <strong>{classGradeSummary.grade} ({classGradeSummary.letter})</strong>
                 </p>
                 <p className="fa-msg-text">
-                  Cap Used (Yr 1): <strong>{classUsedCapPct.toFixed(1)}%</strong>
+                  Cap Used (Yr 1): <strong>${pctToDollars(classUsedCapPct)}M</strong>
                   {departuresOn && (
                     <>
-                      {' '}· Cap Freed: <strong style={{ color: '#3de87a' }}>{classFreedCapPct.toFixed(1)}%</strong>
-                      {' '}· Net Used: <strong>{classNetCapPct.toFixed(1)}%</strong>
+                      {' '}· Cap Freed: <strong style={{ color: '#3de87a' }}>${pctToDollars(classFreedCapPct)}M</strong>
+                      {' '}· Net Used: <strong>${pctToDollars(classNetCapPct)}M</strong>
                     </>
                   )}
                   {' '}· Remaining:{' '}
                   <strong style={{ color: classRemainingCapPct != null && classRemainingCapPct < 0 ? '#e05555' : '#3de87a' }}>
-                    {classRemainingCapPct == null ? 'N/A' : `${classRemainingCapPct.toFixed(1)}%`}
+                    {classRemainingCapPct == null ? 'N/A' : `$${pctToDollars(classRemainingCapPct)}M`}
                   </strong>
                 </p>
                 <label className="fa-toggle-label" style={{ marginBottom: 8 }}>
@@ -1607,7 +1811,7 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                           <div key={d.key} className="fa-ranking-card">
                             <div className="fa-ranking-row">
                               <span className="fa-ranking-pos">{d.playerName}</span>
-                              <span className="fa-ranking-badge top">+{Number(d.freedCapPct).toFixed(1)}%</span>
+                              <span className="fa-ranking-badge top">+${pctToDollarsNum(Number(d.freedCapPct || 0)).toFixed(1)}M</span>
                             </div>
                             <button type="button" className="fa-summary-link-btn" onClick={() => handleRemoveDeparture(d.key)}>
                               Remove departure
@@ -1627,27 +1831,99 @@ function PositionEvaluator({ positionKey, onBack, onSwitchPosition, pendingPick,
                     placeholder="Search players..."
                   />
                 </div>
-                <button type="button" className="fa-btn" onClick={handleGoToClassPlayer} disabled={!classSearchPlayer}>
-                  Go to Player Evaluation
-                </button>
+                <div className="fa-field" style={{ marginBottom: 8 }}>
+                  <label className="fa-label">Class Contract AAV ($M)</label>
+                  <div className="fa-price-row">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      className="fa-input"
+                      value={classQuickAsk}
+                      onChange={(e) => setClassQuickAsk(e.target.value)}
+                    />
+                    <span className="fa-million">M</span>
+                  </div>
+                </div>
+                <div className="fa-field" style={{ marginBottom: 10 }}>
+                  <label className="fa-label">Contract Years</label>
+                  <select
+                    className="fa-select"
+                    value={classQuickYears}
+                    onChange={(e) => setClassQuickYears(Number(e.target.value))}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7].map((y) => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+                  <button
+                    type="button"
+                    className="fa-btn"
+                    onClick={handleQuickEvaluateAndAdd}
+                    disabled={classQuickLoading || !classSearchPlayer}
+                  >
+                    {classQuickLoading ? 'Evaluating…' : 'Evaluate + Add to Class'}
+                  </button>
+                  <button type="button" className="fa-btn" onClick={handleGoToClassPlayer} disabled={!classSearchPlayer}>
+                    Go to Player Page
+                  </button>
+                </div>
                 <div className="fa-rankings-grid">
                   {classGradeSummary.rows.map((r) => (
-                    <div key={r.key} className="fa-ranking-card">
+                    <button
+                      key={r.key}
+                      type="button"
+                      className="fa-ranking-card"
+                      style={{ textAlign: 'left', cursor: 'pointer' }}
+                      onClick={() => handleOpenClassSigningEvaluation(r)}
+                      title="Open full evaluation"
+                    >
                       <div className="fa-ranking-row">
                         <span className="fa-ranking-pos">{r.positionKey} — {r.playerName}</span>
-                        <span className="fa-ranking-badge mid">{Math.round(r.signingGrade)}</span>
+                        <span className={`fa-ranking-badge ${classGradeBadgeClass(r.signingGrade)}`}>
+                          {Math.round(r.signingGrade)}
+                        </span>
                       </div>
                       <div className="fa-hint">
-                        ${r.ask}M x {r.years}y · Yr1 cap {Number(r.yr1CapPct || 0).toFixed(1)}% · weight {r.weight.toFixed(2)}
+                        ${r.ask}M x {r.years}y · Yr1 cap ${pctToDollarsNum(Number(r.yr1CapPct || 0)).toFixed(1)}M · weight {r.weight.toFixed(2)}
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
-                <div style={{ marginTop: 10 }}>
+                <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+                  <button
+                    type="button"
+                    className="fa-btn"
+                    onClick={() => setShowFinalClassGradeDialog(true)}
+                    disabled={!classGradeSummary?.rows?.length}
+                  >
+                    Final Grade
+                  </button>
                   <button type="button" className="fa-btn" onClick={handleClearClass}>Clear Class</button>
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {showFinalClassGradeDialog && classGradeSummary && (
+        <div className="fa-rankings-overlay" onClick={() => setShowFinalClassGradeDialog(false)}>
+          <div className="fa-rankings-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="fa-rankings-header">
+              <h3>{selectedTeam} {analysisYear} Free Agency Class</h3>
+              <button type="button" className="fa-back-btn" onClick={() => setShowFinalClassGradeDialog(false)}>Close</button>
+            </div>
+            <p className="fa-msg-text">
+              Final Score: <strong>{classGradeSummary.grade}/100</strong>
+            </p>
+            <p className="fa-msg-text" style={{ marginTop: 4 }}>
+              Letter Grade: <strong>{classGradeSummary.letter}</strong>
+            </p>
+            <p className="fa-hint" style={{ marginTop: 8 }}>
+              Weighted by player impact: premium positions and bigger contracts count more.
+            </p>
           </div>
         </div>
       )}

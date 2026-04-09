@@ -23,7 +23,7 @@ from backend.agent.grade_projection import (
     player_recent_grade_yoy,
     apply_yearly_grade_step,
 )
-from backend.agent.stat_projection_utils import pass_block_snap_load_17, inactivity_retirement_penalty, apply_inactivity_to_projection_list, apply_projection_plausibility_caps
+from backend.agent.stat_projection_utils import pass_block_snap_load_17, inactivity_retirement_penalty, apply_inactivity_to_projection_list, apply_projection_plausibility_caps, snap_value_reliability_factor
 import pandas as pd
 import numpy as np
 import os, datetime
@@ -279,6 +279,7 @@ def compute_contract_value(
     weighted_fair_num = weighted_burden_num = weight_den = 0.0
     grade = float(composite_gr)
     player_yoy = player_recent_grade_yoy(history, grade_col)
+    snap_rel, _ = snap_value_reliability_factor(history)
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
@@ -290,7 +291,7 @@ def compute_contract_value(
             )
         cap_factor = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
         time_discount = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
-        base_value = grade_to_market_value(grade, position)
+        base_value = grade_to_market_value(grade, position) * snap_rel
         nominal_value = base_value * cap_factor
         cap_adj_ask = salary_ask / cap_factor
         front_weight = 1.0 / float(yr)

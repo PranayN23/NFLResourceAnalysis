@@ -4,6 +4,7 @@ or make turnover stats meaningless. Used by position agent_graph modules.
 """
 from __future__ import annotations
 import datetime
+import pandas as pd
 
 
 def qb_stabilized_int_rate_per_db(
@@ -243,6 +244,77 @@ def inactivity_projection_scale(inactivity_penalty: float) -> float:
     """
     p = float(inactivity_penalty)
     return max(0.20, min(1.00, 1.0 + p / 25.0))
+
+
+def snap_value_reliability_factor(
+    history,
+    floor: float = 0.55,
+) -> tuple[float, dict]:
+    """
+    Convert recent snap volume into a valuation reliability scalar.
+    Lower-volume players receive discounted fair-value estimates so "small sample + cheap ask"
+    does not look like elite value by default.
+    """
+    if history is None or len(history) == 0:
+        return floor, {"source_col": None, "recent_weighted": 0.0, "peak": 0.0}
+
+    df = history.copy()
+    snap_candidates = [
+        "dropbacks",
+        "passing_snaps",
+        "pass_block_snaps",
+        "snap_counts_offense",
+        "snap_counts_defense",
+        "total_snaps",
+        "routes",
+        "targets",
+        "attempts",
+    ]
+    snap_col = next((c for c in snap_candidates if c in df.columns), None)
+    if snap_col is None:
+        return 1.0, {"source_col": None, "recent_weighted": 0.0, "peak": 0.0}
+
+    df[snap_col] = pd.to_numeric(df[snap_col], errors="coerce").fillna(0.0)
+    if "Year" in df.columns:
+        ys = pd.to_numeric(df["Year"], errors="coerce")
+        df = df.assign(_year=ys).dropna(subset=["_year"])
+        yearly = df.groupby(df["_year"].astype(int))[snap_col].sum().sort_index()
+        snaps = yearly.tolist()
+    else:
+        snaps = df[snap_col].tolist()
+
+    if not snaps:
+        return floor, {"source_col": snap_col, "recent_weighted": 0.0, "peak": 0.0}
+
+    recent = snaps[-3:]
+    w = [0.2, 0.3, 0.5][-len(recent):]
+    wsum = max(sum(w), 1e-9)
+    recent_weighted = sum(v * wt for v, wt in zip(recent, w)) / wsum
+    peak = max(snaps) if snaps else 0.0
+
+    # Approximate full-time baselines by workload type.
+    full_baseline = {
+        "dropbacks": 560.0,
+        "passing_snaps": 560.0,
+        "pass_block_snaps": 1000.0,
+        "snap_counts_offense": 700.0,
+        "snap_counts_defense": 700.0,
+        "total_snaps": 700.0,
+        "routes": 420.0,
+        "targets": 90.0,
+        "attempts": 180.0,
+    }.get(snap_col, 700.0)
+
+    abs_factor = max(0.0, min(1.0, recent_weighted / max(full_baseline, 1e-9)))
+    peak_denom = max(peak, full_baseline * 0.65, 1.0)
+    peak_factor = max(0.0, min(1.0, recent_weighted / peak_denom))
+    rel = 0.72 * abs_factor + 0.28 * peak_factor
+    factor = max(float(floor), min(1.0, rel))
+    return round(factor, 3), {
+        "source_col": snap_col,
+        "recent_weighted": round(float(recent_weighted), 2),
+        "peak": round(float(peak), 2),
+    }
 
 
 def apply_inactivity_to_projection_list(
