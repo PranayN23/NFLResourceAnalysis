@@ -44,12 +44,13 @@ ed_engine = EDModelInference(ED_TRANSFORMER, scaler_path=ED_SCALER, xgb_path=Non
 # Grade → Market Value curve (2026 OTC calibrated)
 # ─────────────────────────────────────────────
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [0.75, 2.00, 4.00, 8.50, 13.5, 19.0, 26.0, 33.0, 37.0, 42.0, 46.0, 50.0]
+_VALUE_ANCHORS = [0.75, 2.00, 4.50, 9.50, 15.0, 22.0, 40.0, 44.0, 47.0, 50.0, 53.0, 56.0]
+MARKET_CALIBRATION_FACTOR = 0.88
 
 
 def grade_to_market_value(grade: float) -> float:
     grade = max(45.0, min(100.0, float(grade)))
-    return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)), 2)
+    return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)) * MARKET_CALIBRATION_FACTOR, 2)
 
 
 # ─────────────────────────────────────────────

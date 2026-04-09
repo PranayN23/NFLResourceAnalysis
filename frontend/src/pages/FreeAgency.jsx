@@ -676,6 +676,7 @@ function PositionEvaluator({ positionKey, onBack }) {
   const [selectedTeam, setSelectedTeam] = useState('');
   const [teamRoster, setTeamRoster] = useState(null);
   const [capOverride, setCapOverride] = useState('');
+  const [capOverrideDirty, setCapOverrideDirty] = useState(false);
   const [fetchingTeam, setFetchingTeam] = useState(false);
 
   const chatEndRef = useRef(null);
@@ -693,6 +694,8 @@ function PositionEvaluator({ positionKey, onBack }) {
     setTeamMode(false);
     setSelectedTeam('');
     setTeamRoster(null);
+    setCapOverride('');
+    setCapOverrideDirty(false);
     setStatsOpen({});
   }, [positionKey]);
 
@@ -722,11 +725,13 @@ function PositionEvaluator({ positionKey, onBack }) {
       .then((r) => r.json())
       .then((data) => {
         setTeamRoster(data);
-        setCapOverride(data.available_cap_pct?.toFixed(1) || '');
+        if (!capOverrideDirty) {
+          setCapOverride(pctToDollars(data.available_cap_pct || 0));
+        }
       })
       .catch(() => setTeamRoster(null))
       .finally(() => setFetchingTeam(false));
-  }, [selectedTeam, teamMode, apiBase]);
+  }, [selectedTeam, teamMode, apiBase, capOverrideDirty]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -759,8 +764,10 @@ function PositionEvaluator({ positionKey, onBack }) {
       };
       if (teamMode && selectedTeam) {
         body.team = selectedTeam;
-        const capVal = parseFloat(capOverride);
-        if (!isNaN(capVal) && capVal > 0) body.cap_available_pct = capVal;
+        const capValM = parseFloat(capOverride);
+        if (!isNaN(capValM) && capValM > 0) {
+          body.cap_available_pct = (capValM / SALARY_CAP_M) * 100;
+        }
       }
 
       const resp = await fetch(`${apiBase}/evaluate`, {
@@ -795,6 +802,18 @@ function PositionEvaluator({ positionKey, onBack }) {
   };
 
   const ticks = useMemo(() => Array.from({ length: contractMax }, (_, i) => i + 1), [contractMax]);
+  const handleTeamChange = useCallback((team) => {
+    setSelectedTeam(team);
+    setCapOverrideDirty(false);
+  }, []);
+
+  const handleCapOverrideChange = useCallback((raw) => {
+    // Allow temporary empty/partial numeric text while editing.
+    if (raw === '' || /^(\d+(\.\d*)?)?$/.test(raw)) {
+      setCapOverride(raw);
+      setCapOverrideDirty(true);
+    }
+  }, []);
 
   return (
     <div className="fa-page">
@@ -817,7 +836,7 @@ function PositionEvaluator({ positionKey, onBack }) {
               <SearchableSelect
                 options={teams}
                 value={selectedTeam}
-                onChange={setSelectedTeam}
+                onChange={handleTeamChange}
                 placeholder="Search teams…"
               />
             </div>
@@ -831,19 +850,22 @@ function PositionEvaluator({ positionKey, onBack }) {
                   needLabel={teamRoster.need_label}
                   needScore={teamRoster.positional_need}
                   allocatedPct={teamRoster.allocated_cap_pct}
-                  availablePct={parseFloat(capOverride) || teamRoster.available_cap_pct}
+                  availablePct={
+                    !isNaN(parseFloat(capOverride)) && parseFloat(capOverride) >= 0
+                      ? (parseFloat(capOverride) / SALARY_CAP_M) * 100
+                      : teamRoster.available_cap_pct
+                  }
                   positionLabel={cfg.positionLabel}
                 />
                 <div className="fa-field">
-                  <label className="fa-label">Available Cap % (editable)</label>
+                  <label className="fa-label">Available Cap ($M, editable)</label>
                   <input
                     type="number"
                     min="0"
-                    max="100"
                     step="0.1"
-                    className="fa-input"
+                    className="fa-input fa-cap-override-input"
                     value={capOverride}
-                    onChange={(e) => setCapOverride(e.target.value)}
+                    onChange={(e) => handleCapOverrideChange(e.target.value)}
                   />
                 </div>
               </>

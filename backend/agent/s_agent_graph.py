@@ -27,12 +27,13 @@ _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 S_CSV_PATH = os.path.join(_BASE, "ML", "S.csv")
 
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [0.75, 1.50, 4.00, 8.00, 13.0, 17.0, 21.0, 26.0, 29.0, 33.0, 37.0, 42.0]
+_VALUE_ANCHORS = [0.75, 1.50, 3.50, 6.50, 9.50, 12.0, 15.0, 18.5, 21.0, 24.0, 26.0, 28.0]
+MARKET_CALIBRATION_FACTOR = 0.88
 
 
 def grade_to_market_value(grade: float) -> float:
     grade = max(45.0, min(100.0, float(grade)))
-    return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)), 2)
+    return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)) * MARKET_CALIBRATION_FACTOR, 2)
 
 
 # Stats anchors for safeties

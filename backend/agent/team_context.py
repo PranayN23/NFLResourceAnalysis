@@ -38,6 +38,20 @@ def _safe_float(val, default=0.0) -> float:
         return default
 
 
+def _coerce_numeric_inplace(df: pd.DataFrame, cols: list[str]) -> None:
+    """
+    Coerce messy numeric columns (often read as strings) into floats.
+    Handles common formatting like commas; non-parsable values become NaN.
+    """
+    for c in cols:
+        if c not in df.columns:
+            continue
+        s = df[c]
+        if s.dtype == object:
+            s = s.astype(str).str.replace(",", "", regex=False)
+        df[c] = pd.to_numeric(s, errors="coerce")
+
+
 # ─────────────────────────────────────────────
 # Roster extraction from the position CSV
 # ─────────────────────────────────────────────
@@ -161,9 +175,10 @@ def _player_composite(
                 snap_col = alt
                 break
 
-    snaps = latest[snap_col].clip(lower=1) if snap_col in latest.columns else pd.Series(1, index=latest.index)
+    available = [c for c in (prod_stat_cols or []) if c in latest.columns]
+    _coerce_numeric_inplace(latest, [c for c in [grade_col, snap_col, *available] if c])
 
-    available = [c for c in prod_stat_cols if c in latest.columns]
+    snaps = latest[snap_col].clip(lower=1) if snap_col in latest.columns else pd.Series(1, index=latest.index)
     if not available:
         return latest[grade_col] if grade_col in latest.columns else pd.Series(50.0, index=latest.index)
 
@@ -211,6 +226,13 @@ def _compute_league_percentiles(
         "grades_defense" if "grades_defense" in latest.columns else
         "grades_offense" if "grades_offense" in latest.columns else None
     )
+
+    # Robustness: some position CSVs have numeric columns as strings.
+    # If we don't coerce them, groupby max/sum can throw (e.g., 'str' vs float).
+    maybe_numeric = [c for c in [_snap_col, _grade_col] if c]
+    if prod_stat_cols:
+        maybe_numeric.extend([c for c in prod_stat_cols if c in latest.columns])
+    _coerce_numeric_inplace(latest, maybe_numeric)
 
     latest["_composite"] = _player_composite(latest, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
 

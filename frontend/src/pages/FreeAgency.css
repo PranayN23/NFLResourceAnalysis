@@ -224,6 +224,18 @@ html, body {
 .fa-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .fa-input[type=number] { -moz-appearance: textfield; }
 
+.fa-cap-override-input {
+  background: #3a3a3a;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.fa-cap-override-input:focus {
+  border-color: #7e6aff;
+}
+
 .fa-error {
   color: #ff6b6b;
   font-size: 13px;

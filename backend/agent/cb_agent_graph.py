@@ -27,12 +27,13 @@ _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CB_CSV_PATH = os.path.join(_BASE, "ML", "CB.csv")
 
 _GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [0.75, 2.00, 5.00, 10.0, 16.0, 22.0, 28.0, 34.0, 38.0, 43.0, 48.0, 53.0]
+_VALUE_ANCHORS = [0.75, 2.00, 4.50, 8.50, 13.0, 17.5, 22.5, 27.5, 30.5, 33.0, 35.0, 36.0]
+MARKET_CALIBRATION_FACTOR = 0.88
 
 
 def grade_to_market_value(grade: float) -> float:
     grade = max(45.0, min(100.0, float(grade)))
-    return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)), 2)
+    return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)) * MARKET_CALIBRATION_FACTOR, 2)
 
 
 # Stats anchors — CBs are evaluated primarily on coverage
