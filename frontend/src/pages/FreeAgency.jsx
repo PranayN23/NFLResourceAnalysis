@@ -694,6 +694,10 @@ function PositionEvaluator({ positionKey, onBack }) {
   const [capOverride, setCapOverride] = useState('');
   const [capOverrideDirty, setCapOverrideDirty] = useState(false);
   const [fetchingTeam, setFetchingTeam] = useState(false);
+  const [summarizingTeam, setSummarizingTeam] = useState(false);
+  const [showRankingsDialog, setShowRankingsDialog] = useState(false);
+  const [loadingRankings, setLoadingRankings] = useState(false);
+  const [teamRankings, setTeamRankings] = useState([]);
   const [analysisYear, setAnalysisYear] = useState(latestAnalysisYear);
   const [analysisYearMin, setAnalysisYearMin] = useState(2010);
 
@@ -714,6 +718,8 @@ function PositionEvaluator({ positionKey, onBack }) {
     setTeamRoster(null);
     setCapOverride('');
     setCapOverrideDirty(false);
+    setShowRankingsDialog(false);
+    setTeamRankings([]);
     setAnalysisYear(latestAnalysisYear);
     setAnalysisYearMin(2010);
     setStatsOpen({});
@@ -842,6 +848,10 @@ function PositionEvaluator({ positionKey, onBack }) {
     for (let y = latestAnalysisYear; y >= minY; y -= 1) out.push(y);
     return out;
   }, [analysisYearMin]);
+  const sortedTeamRankings = useMemo(
+    () => [...teamRankings].sort((a, b) => Number(a.rank) - Number(b.rank)),
+    [teamRankings]
+  );
   const handleTeamChange = useCallback((team) => {
     setSelectedTeam(team);
     setCapOverrideDirty(false);
@@ -854,6 +864,61 @@ function PositionEvaluator({ positionKey, onBack }) {
       setCapOverrideDirty(true);
     }
   }, []);
+
+  const handleTeamYearSummary = useCallback(async () => {
+    if (!selectedTeam) return;
+    setSummarizingTeam(true);
+    setError('');
+    const seasonYear = Math.max(1900, Number(analysisYear) - 1);
+    setMessages((prev) => [
+      ...prev,
+      { role: 'user', content: `Summarize the ${selectedTeam} in ${seasonYear}.` },
+    ]);
+    try {
+      const resp = await fetch(
+        `${apiBase}/team-summary?team=${encodeURIComponent(selectedTeam)}&analysis_year=${encodeURIComponent(analysisYear)}`
+      );
+      if (!resp.ok) throw new Error('Failed to fetch team-year summary.');
+      const data = await resp.json();
+      const summary = data?.summary || `No summary available for ${selectedTeam} in ${analysisYear}.`;
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: summary,
+          teamSummaryMeta: { team: selectedTeam, analysisYear },
+        },
+      ]);
+    } catch (e) {
+      setMessages((prev) => [
+        ...prev,
+        { role: 'assistant', content: `Error: ${e.message}` },
+      ]);
+    } finally {
+      setSummarizingTeam(false);
+    }
+  }, [selectedTeam, analysisYear, apiBase]);
+
+  const handleOpenRankingsDialog = useCallback(async (teamArg, yearArg) => {
+    const teamName = teamArg || selectedTeam;
+    const yearVal = Number.isFinite(Number(yearArg)) ? Number(yearArg) : analysisYear;
+    if (!teamName) return;
+    setLoadingRankings(true);
+    setShowRankingsDialog(true);
+    try {
+      const resp = await fetch(
+        `${apiBase}/team-rankings?team=${encodeURIComponent(teamName)}&analysis_year=${encodeURIComponent(yearVal)}`
+      );
+      if (!resp.ok) throw new Error('Failed to fetch team rankings.');
+      const data = await resp.json();
+      setTeamRankings(data?.rankings || []);
+    } catch (e) {
+      setTeamRankings([]);
+      setError(e.message || 'Failed to fetch team rankings.');
+    } finally {
+      setLoadingRankings(false);
+    }
+  }, [selectedTeam, analysisYear, apiBase]);
 
   return (
     <div className="fa-page">
@@ -898,6 +963,19 @@ function PositionEvaluator({ positionKey, onBack }) {
             </div>
 
             {fetchingTeam && <p className="fa-hint">Loading team data…</p>}
+
+            {!!selectedTeam && (
+              <>
+                <button
+                  type="button"
+                  className="fa-btn"
+                  onClick={handleTeamYearSummary}
+                  disabled={summarizingTeam}
+                >
+                  {summarizingTeam ? 'Running Team Evaluation…' : `Smart Team Evaluation (${analysisYear})`}
+                </button>
+              </>
+            )}
 
             {teamRoster && !fetchingTeam && (
               <>
@@ -1021,7 +1099,18 @@ function PositionEvaluator({ positionKey, onBack }) {
               <div className="fa-msg-label">{msg.role === 'user' ? 'You' : 'GM Agent'}</div>
 
               {msg.content != null ? (
-                <div className="fa-msg-text">{msg.content}</div>
+                <div>
+                  <div className="fa-msg-text">{msg.content}</div>
+                  {msg.teamSummaryMeta && (
+                    <button
+                      type="button"
+                      className="fa-summary-link-btn"
+                      onClick={() => handleOpenRankingsDialog(msg.teamSummaryMeta.team, msg.teamSummaryMeta.analysisYear)}
+                    >
+                      Click for a more detailed view
+                    </button>
+                  )}
+                </div>
               ) : (
                 <div className="fa-msg-card">
                   <div className={`fa-decision-badge ${msg.structured.highlight}`}>
@@ -1103,6 +1192,46 @@ function PositionEvaluator({ positionKey, onBack }) {
           <div ref={chatEndRef} />
         </div>
       </div>
+
+      {showRankingsDialog && (
+        <div className="fa-rankings-overlay" onClick={() => setShowRankingsDialog(false)}>
+          <div className="fa-rankings-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="fa-rankings-header">
+              <h3>{selectedTeam} Position Power Rankings ({analysisYear})</h3>
+              <button type="button" className="fa-back-btn" onClick={() => setShowRankingsDialog(false)}>Close</button>
+            </div>
+            {loadingRankings ? (
+              <p className="fa-hint">Loading rankings…</p>
+            ) : (
+              <div>
+                <div className="fa-rankings-legend">
+                  <span className="fa-rank-chip top">Top 12</span>
+                  <span className="fa-rank-chip mid">13-22</span>
+                  <span className="fa-rank-chip low">23-32</span>
+                </div>
+                <div className="fa-rankings-grid">
+                  {sortedTeamRankings.map((r) => {
+                    const rank = Number(r.rank);
+                    const cls = rank <= 12 ? 'top' : rank <= 22 ? 'mid' : 'low';
+                    const widthPct = Math.max(4, Math.min(100, ((33 - rank) / 32) * 100));
+                    return (
+                      <div key={r.position_key} className="fa-ranking-card">
+                        <div className="fa-ranking-row">
+                          <span className="fa-ranking-pos">{r.position_key}</span>
+                          <span className={`fa-ranking-badge ${cls}`}>#{rank}</span>
+                        </div>
+                        <div className="fa-ranking-bar-track">
+                          <div className={`fa-ranking-bar-fill ${cls}`} style={{ width: `${widthPct}%` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -266,6 +266,129 @@ html, body {
 .fa-btn:active:not(:disabled) { transform: scale(0.98); }
 .fa-btn:disabled { background: #444; color: #777; cursor: not-allowed; }
 
+.fa-rankings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.fa-rankings-dialog {
+  width: min(560px, 92vw);
+  max-height: 80vh;
+  overflow: auto;
+  background: #242424;
+  border: 1px solid #444;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+.fa-rankings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.fa-rankings-header h3 {
+  color: #fff;
+  font-size: 18px;
+}
+
+.fa-rankings-legend {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.fa-rank-chip {
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+}
+
+.fa-rank-chip.top { color: #3de87a; border-color: rgba(61, 232, 122, 0.4); background: rgba(61, 232, 122, 0.12); }
+.fa-rank-chip.mid { color: #d4a843; border-color: rgba(212, 168, 67, 0.4); background: rgba(212, 168, 67, 0.12); }
+.fa-rank-chip.low { color: #e05555; border-color: rgba(224, 85, 85, 0.4); background: rgba(224, 85, 85, 0.12); }
+
+.fa-rankings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.fa-ranking-card {
+  background: #1f1f1f;
+  border: 1px solid #343434;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.fa-ranking-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.fa-ranking-pos {
+  color: #e5e5e5;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.fa-ranking-badge {
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 999px;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+}
+
+.fa-ranking-badge.top { color: #3de87a; border-color: rgba(61, 232, 122, 0.45); background: rgba(61, 232, 122, 0.12); }
+.fa-ranking-badge.mid { color: #d4a843; border-color: rgba(212, 168, 67, 0.45); background: rgba(212, 168, 67, 0.12); }
+.fa-ranking-badge.low { color: #e05555; border-color: rgba(224, 85, 85, 0.45); background: rgba(224, 85, 85, 0.12); }
+
+.fa-ranking-bar-track {
+  height: 7px;
+  border-radius: 999px;
+  background: #2d2d2d;
+  overflow: hidden;
+}
+
+.fa-ranking-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.fa-ranking-bar-fill.top { background: linear-gradient(90deg, #1f9f55, #3de87a); }
+.fa-ranking-bar-fill.mid { background: linear-gradient(90deg, #9f7a1f, #d4a843); }
+.fa-ranking-bar-fill.low { background: linear-gradient(90deg, #9f2f2f, #e05555); }
+
+.fa-summary-link-btn {
+  margin-top: 8px;
+  background: none;
+  border: none;
+  color: #7e6aff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 0;
+}
+
+.fa-summary-link-btn:hover {
+  color: #a58bff;
+}
+
 /* ── Tier legend ── */
 .fa-legend {
   background: #222;
@@ -1242,4 +1365,5 @@ html, body {
   .fa-page { flex-direction: column; padding: 16px; height: auto; overflow: visible; }
   .fa-panel { flex: none; width: 100%; max-height: none; overflow-y: visible; }
   .fa-chat  { min-height: 400px; max-height: 70vh; }
+  .fa-rankings-grid { grid-template-columns: 1fr; }
 }

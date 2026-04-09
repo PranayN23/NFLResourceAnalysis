@@ -9,6 +9,7 @@ import pandas as pd, uvicorn, os
 _thread_pool = ThreadPoolExecutor(max_workers=2)
 from backend.agent.te_agent_graph import te_gm_agent, TE_CSV_PATH
 from backend.agent.api_year_utils import clamp_analysis_year, history_as_of_year
+from backend.agent.team_summary import build_team_year_summary, build_team_position_rankings
 from backend.agent.team_context import (
     get_team_roster, compute_positional_need, get_team_cap,
     get_all_teams, aav_to_cap_pcts, is_player_on_team, get_roster_without_player,
@@ -45,6 +46,16 @@ async def get_teams(analysis_year: int = Query(2025)):
     return {"teams": teams}
 
 
+
+
+@app.get("/team-summary")
+async def team_summary(team: str = Query(...), analysis_year: int = Query(2025)):
+    return build_team_year_summary(team, analysis_year)
+
+
+@app.get("/team-rankings")
+async def team_rankings(team: str = Query(...), analysis_year: int = Query(2025)):
+    return build_team_position_rankings(team, analysis_year)
 @app.get("/team-roster")
 async def team_roster(team: str = Query(...), analysis_year: int = Query(2025)):
     if df_players.empty:
