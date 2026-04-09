@@ -38,6 +38,19 @@ def _safe_float(val, default=0.0) -> float:
         return default
 
 
+def _effective_year_from_df(df: pd.DataFrame, requested_year: int | None, col: str) -> int | None:
+    """Pick the latest available year <= requested_year (or absolute latest if omitted)."""
+    if col not in df.columns:
+        return None
+    years = pd.to_numeric(df[col], errors="coerce").dropna().astype(int)
+    if years.empty:
+        return None
+    if requested_year is None:
+        return int(years.max())
+    elig = years[years <= int(requested_year)]
+    return int(elig.max()) if not elig.empty else int(years.min())
+
+
 def _coerce_numeric_inplace(df: pd.DataFrame, cols: list[str]) -> None:
     """
     Coerce messy numeric columns (often read as strings) into floats.
@@ -61,6 +74,7 @@ def get_team_roster(
     exclude_player: str = "",
     grade_col: str = "grades_defense",
     snap_col: str = "snap_counts_defense",
+    reference_year: int | None = None,
 ) -> List[dict]:
     """
     Return the team's players at this position from the most recent year
@@ -70,7 +84,9 @@ def get_team_roster(
     roster — used for re-signing scenarios where we need to see what
     the roster looks like WITHOUT the player.
     """
-    max_year = int(position_df["Year"].max())
+    max_year = _effective_year_from_df(position_df, reference_year, "Year")
+    if max_year is None:
+        return []
     team_df = position_df[
         (position_df["Team"] == team) & (position_df["Year"] == max_year)
     ].copy()
@@ -116,7 +132,9 @@ def get_team_roster(
 
 def is_player_on_team(player_name: str, team: str, position_df: pd.DataFrame) -> bool:
     """Check if a player is currently on the team's roster."""
-    max_year = int(position_df["Year"].max())
+    max_year = _effective_year_from_df(position_df, None, "Year")
+    if max_year is None:
+        return False
     team_df = position_df[
         (position_df["Team"] == team) & (position_df["Year"] == max_year)
     ]
@@ -200,6 +218,7 @@ def _compute_league_percentiles(
     grade_col: str = "grades_defense",
     snap_col: str = "snap_counts_defense",
     prod_stat_cols: list = None,
+    reference_year: int | None = None,
 ) -> pd.DataFrame:
     """
     Aggregate per-team metrics for the most recent year and percentile-
@@ -211,7 +230,9 @@ def _compute_league_percentiles(
     who dominates statistically is properly credited even if their
     PFF grade is only "good".
     """
-    max_year = int(position_df["Year"].max())
+    max_year = _effective_year_from_df(position_df, reference_year, "Year")
+    if max_year is None:
+        return pd.DataFrame()
     latest = position_df[position_df["Year"] == max_year].copy()
 
     if prod_stat_cols is None:
@@ -267,10 +288,17 @@ def _get_league_stats(
     grade_col: str = "grades_defense",
     snap_col: str = "snap_counts_defense",
     prod_stat_cols: list = None,
+    reference_year: int | None = None,
 ) -> pd.DataFrame:
-    key = (id(position_df), grade_col, snap_col)
+    key = (id(position_df), grade_col, snap_col, reference_year)
     if key not in _league_cache:
-        _league_cache[key] = _compute_league_percentiles(position_df, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
+        _league_cache[key] = _compute_league_percentiles(
+            position_df,
+            grade_col=grade_col,
+            snap_col=snap_col,
+            prod_stat_cols=prod_stat_cols,
+            reference_year=reference_year,
+        )
     return _league_cache[key]
 
 
@@ -281,6 +309,7 @@ def _recompute_team_row(
     grade_col: str = "grades_defense",
     snap_col: str = "snap_counts_defense",
     prod_stat_cols: list = None,
+    reference_year: int | None = None,
 ) -> pd.Series:
     """
     Recompute a single team's raw aggregate metrics from the CSV,
@@ -290,7 +319,9 @@ def _recompute_team_row(
     if prod_stat_cols is None:
         prod_stat_cols = _PROD_STATS_DEF
 
-    max_year = int(position_df["Year"].max())
+    max_year = _effective_year_from_df(position_df, reference_year, "Year")
+    if max_year is None:
+        return None
     team_rows = position_df[
         (position_df["Team"] == team) & (position_df["Year"] == max_year)
     ].copy()
@@ -353,6 +384,7 @@ def compute_positional_need(
     grade_col: str = "grades_defense",
     snap_col: str = "snap_counts_defense",
     prod_stat_cols: list = None,
+    reference_year: int | None = None,
 ) -> Tuple[float, str]:
     """
     Score 0-100 how strong a team is at this position, ranked against
@@ -374,10 +406,24 @@ def compute_positional_need(
         prod_stat_cols = _PROD_STATS_DEF
 
     if position_df is not None and team:
-        league = _get_league_stats(position_df, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
+        league = _get_league_stats(
+            position_df,
+            grade_col=grade_col,
+            snap_col=snap_col,
+            prod_stat_cols=prod_stat_cols,
+            reference_year=reference_year,
+        )
         if team in league.index:
             if exclude_player:
-                team_row = _recompute_team_row(position_df, team, exclude_player, grade_col=grade_col, snap_col=snap_col, prod_stat_cols=prod_stat_cols)
+                team_row = _recompute_team_row(
+                    position_df,
+                    team,
+                    exclude_player,
+                    grade_col=grade_col,
+                    snap_col=snap_col,
+                    prod_stat_cols=prod_stat_cols,
+                    reference_year=reference_year,
+                )
                 if team_row is None:
                     return 0.0, "Weak"
                 pctiles = _rank_team_against_league(league, team, team_row)
@@ -482,7 +528,7 @@ def compute_positional_need(
 # ─────────────────────────────────────────────
 # Team cap from cap_data.csv (% of cap)
 # ─────────────────────────────────────────────
-def get_team_cap(team: str) -> Tuple[float, float]:
+def get_team_cap(team: str, reference_year: int | None = None) -> Tuple[float, float]:
     """
     Sum Cap_Space percentages for the team's most recent year.
     Returns (allocated_pct, available_pct).
@@ -491,7 +537,9 @@ def get_team_cap(team: str) -> Tuple[float, float]:
     if cap_df.empty:
         return 85.0, 15.0
 
-    max_year = int(cap_df["year"].max())
+    max_year = _effective_year_from_df(cap_df, reference_year, "year")
+    if max_year is None:
+        return 85.0, 15.0
     team_rows = cap_df[(cap_df["Team"] == team) & (cap_df["year"] == max_year)]
 
     if team_rows.empty:
@@ -503,13 +551,15 @@ def get_team_cap(team: str) -> Tuple[float, float]:
     return round(allocated, 1), max(0.0, available)
 
 
-def get_all_teams(cap_df: pd.DataFrame = None) -> List[str]:
+def get_all_teams(cap_df: pd.DataFrame = None, reference_year: int | None = None) -> List[str]:
     """Return sorted list of all team names from cap_data."""
     if cap_df is None:
         cap_df = _load_cap_data()
     if cap_df.empty:
         return []
-    max_year = int(cap_df["year"].max())
+    max_year = _effective_year_from_df(cap_df, reference_year, "year")
+    if max_year is None:
+        return []
     teams = cap_df[cap_df["year"] == max_year]["Team"].dropna().unique().tolist()
     return sorted(teams)
 
@@ -661,13 +711,14 @@ def assess_team_fit(
     # Hard cap check — overrides everything
     if yr1_cap_pct > available_cap_pct:
         fit_summary = (
-            f"Signing requires {yr1_cap_pct:.1f}% of cap but only "
-            f"{available_cap_pct:.1f}% is available."
+            f"Base value verdict: {base_decision}. Team-context verdict: Exceeds Cap. "
+            f"Signing requires {yr1_cap_pct:.1f}% of cap but only {available_cap_pct:.1f}% is available."
         )
         team_reason = _build_team_reasoning(
             player_name, roster, need_label, need_score,
             yr1_cap_pct, signing_cap_pcts, available_cap_pct,
-            "This signing exceeds the team's available cap space."
+            f"Base value verdict: {base_decision}. Team-context verdict: Exceeds Cap. "
+            "This can still be a fair player price, but it does not fit current cap room."
         )
         return "Exceeds Cap", fit_summary, team_reason
 
@@ -703,12 +754,20 @@ def assess_team_fit(
         if adjusted in _cap_downgrades:
             adjusted = _cap_downgrades[adjusted]
 
-    fit_summary = note.strip()
+    if adjusted == base_decision:
+        combined_note = f"Base value verdict: {base_decision}. Team-context verdict: {adjusted}. {note}".strip()
+    else:
+        combined_note = (
+            f"Base value verdict: {base_decision}. Team-context verdict: {adjusted}. "
+            f"This can be a fair player price, but roster/cap context changes the recommendation. {note}"
+        ).strip()
+
+    fit_summary = combined_note
 
     team_reason = _build_team_reasoning(
         player_name, roster, need_label, need_score,
         yr1_cap_pct, signing_cap_pcts, available_cap_pct,
-        note,
+        combined_note,
     )
 
     return adjusted, fit_summary, team_reason

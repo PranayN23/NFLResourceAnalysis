@@ -258,6 +258,7 @@ def compute_contract_value(
 ):
     breakdown = []
     total_disc_value = total_disc_ask = total_nominal_value = 0.0
+    weighted_fair_num = weighted_burden_num = weight_den = 0.0
     grade = float(composite_gr)
     player_yoy = player_recent_grade_yoy(history, grade_col)
     for yr in range(1, contract_years + 1):
@@ -271,9 +272,13 @@ def compute_contract_value(
         disc_value    = nominal_value * time_discount
         cap_adj_ask   = salary_ask / cap_factor
         disc_ask      = cap_adj_ask * time_discount
+        front_weight  = 1.0 / float(yr)
         total_nominal_value += nominal_value
         total_disc_value    += disc_value
         total_disc_ask      += disc_ask
+        weighted_fair_num   += nominal_value * front_weight
+        weighted_burden_num += cap_adj_ask * front_weight
+        weight_den          += front_weight
         breakdown.append({
             "year": yr, "age": age,
             "projected_grade": round(grade, 1),
@@ -283,8 +288,8 @@ def compute_contract_value(
             "discounted_value":round(disc_value, 2),
             "year_surplus":    round(base_value - cap_adj_ask, 2),
         })
-    fair_aav             = round(total_disc_value / contract_years, 2)
-    effective_cap_burden = round(total_disc_ask   / contract_years, 2)
+    fair_aav             = round(weighted_fair_num / max(weight_den, 1e-6), 2)
+    effective_cap_burden = round(weighted_burden_num / max(weight_den, 1e-6), 2)
     return fair_aav, effective_cap_burden, round(total_nominal_value, 2), breakdown
 
 
@@ -302,7 +307,7 @@ class HBAgentState(TypedDict):
 def predict_performance(state: HBAgentState):
     print(f"[HB Agent] Predicting for {state['player_name']}...")
     history = state["player_history"]
-    current_year = datetime.date.today().year
+    current_year = int(state.get("analysis_year") or datetime.date.today().year)
     if "age" in history.columns and "Year" in history.columns:
         last_row = history.sort_values("Year").iloc[-1]
         current_age = int(float(last_row["age"])) + (current_year - int(float(last_row["Year"])))
@@ -383,8 +388,8 @@ def make_decision(state: HBAgentState):
         val_dec, rep_note = decision_fair_aav_with_replacement(
             val, grade_to_market_value, cg, roster, "HB",
         )
-    surplus = round(val_dec - burden, 2)
-    surplus_pct = (val_dec - burden) / max(val_dec, 0.01) * 100
+    surplus = round(val - burden, 2)
+    surplus_pct = (val - burden) / max(val, 0.01) * 100
     if surplus_pct >= 20:    decision = "Exceptional Value"; rec = "Strongly recommend signing."
     elif surplus_pct >= 5:   decision = "Good Signing";      rec = "Recommend signing."
     elif surplus_pct >= -5:  decision = "Fair Deal";         rec = "Acceptable signing."

@@ -319,7 +319,12 @@ function RosterPreview({ roster, needLabel, needScore, allocatedPct, availablePc
               <tr key={i}>
                 <td className="fa-roster-name">{p.player}</td>
                 <td>{p.age}</td>
-                <td>{p.grade}</td>
+                <td>
+                  <div className="fa-roster-grade-cell">
+                    <span>{p.grade}</span>
+                    <span className={`fa-roster-grade-bar ${rosterGradeTierClass(p.grade)}`} aria-hidden="true" />
+                  </div>
+                </td>
                 <td>{p.snaps}</td>
                 <td>{p.cap_pct}% (${pctToDollars(p.cap_pct)}M)</td>
               </tr>
@@ -561,7 +566,7 @@ const DECISION_CLASS = {
   'Exceeds Cap':                    'exceeds-cap',
 };
 
-/** Maps agent `predicted_tier` to sidebar legend `.tier-badge.*` classes (Elite → purple, etc.) */
+/** Maps agent `predicted_tier` to sidebar legend `.tier-badge.*` classes. */
 function predictedTierToBadgeClass(tier) {
   if (tier == null || tier === '') return null;
   const t = String(tier).trim().toLowerCase();
@@ -571,6 +576,16 @@ function predictedTierToBadgeClass(tier) {
   if (t.startsWith('rotation') || t.includes('backup')) return 'rotation';
   if (t.startsWith('reserve') || t.includes('poor')) return 'reserve';
   return null;
+}
+
+function rosterGradeTierClass(grade) {
+  const g = Number(grade);
+  if (!Number.isFinite(g)) return 'reserve';
+  if (g >= 80) return 'elite';
+  if (g >= 74) return 'good';
+  if (g >= 62) return 'starter';
+  if (g >= 50) return 'rotation';
+  return 'reserve';
 }
 
 function tierFromFairAav(positionKey, fairAav) {

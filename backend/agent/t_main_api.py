@@ -8,6 +8,7 @@ import pandas as pd, uvicorn, os
 
 _thread_pool = ThreadPoolExecutor(max_workers=2)
 from backend.agent.ol_agent_graph import ol_gm_agent, T_CSV_PATH
+from backend.agent.api_year_utils import clamp_analysis_year, history_as_of_year
 from backend.agent.team_context import (
     get_team_roster, compute_positional_need, get_team_cap,
     get_all_teams, aav_to_cap_pcts, is_player_on_team, get_roster_without_player,
@@ -34,22 +35,22 @@ async def get_t_players():
 
 
 @app.get("/teams")
-async def get_teams():
-    teams = get_all_teams()
+async def get_teams(analysis_year: int = Query(2025)):
+    teams = get_all_teams(reference_year=analysis_year)
     if not teams and not df_players.empty:
         teams = sorted(df_players["Team"].dropna().unique().tolist())
     return {"teams": teams}
 
 
 @app.get("/team-roster")
-async def team_roster(team: str = Query(...)):
+async def team_roster(team: str = Query(...), analysis_year: int = Query(2025)):
     if df_players.empty:
         raise HTTPException(status_code=503, detail="Player database not loaded.")
-    roster = get_team_roster(team, df_players, grade_col=T_GRADE_COL, snap_col=T_SNAP_COL)
+    roster = get_team_roster(team, df_players, grade_col=T_GRADE_COL, snap_col=T_SNAP_COL, reference_year=analysis_year)
     need_score, need_label = compute_positional_need(roster, position_df=df_players, team=team,
                                                       grade_col=T_GRADE_COL, snap_col=T_SNAP_COL,
-                                                      prod_stat_cols=T_PROD_STATS)
-    allocated_pct, available_pct = get_team_cap(team)
+                                                      prod_stat_cols=T_PROD_STATS, reference_year=analysis_year)
+    allocated_pct, available_pct = get_team_cap(team, reference_year=analysis_year)
     return {"team": team, "roster": roster, "positional_need": need_score,
             "need_label": need_label, "allocated_cap_pct": allocated_pct, "available_cap_pct": available_pct}
 
@@ -60,11 +61,13 @@ class EvaluationRequest(BaseModel):
     contract_years: int = Field(default=1, ge=1, le=7)
     team:              str   = ""
     cap_available_pct: float = 0.0
+    analysis_year:    int = Field(default=2025, ge=1900, le=2025)
 
 
 @app.post("/evaluate")
 async def evaluate_player(req: EvaluationRequest):
-    player_data = df_players[df_players["player"] == req.player_name].copy()
+    analysis_year = clamp_analysis_year(req.analysis_year)
+    player_data = history_as_of_year(df_players[df_players["player"] == req.player_name].copy(), analysis_year)
     if len(player_data) == 0:
         raise HTTPException(status_code=404, detail=f"Player '{req.player_name}' not found.")
 
@@ -75,20 +78,20 @@ async def evaluate_player(req: EvaluationRequest):
     team_ctx = {}
 
     if req.team:
-        roster = get_team_roster(req.team, df_players, grade_col=T_GRADE_COL, snap_col=T_SNAP_COL)
+        roster = get_team_roster(req.team, df_players, grade_col=T_GRADE_COL, snap_col=T_SNAP_COL, reference_year=analysis_year)
         re_signing = is_player_on_team(req.player_name, req.team, df_players)
         if re_signing:
             roster_without = get_roster_without_player(roster, req.player_name)
             need_score, need_label = compute_positional_need(roster_without, position_df=df_players,
                 team=req.team, exclude_player=req.player_name, grade_col=T_GRADE_COL,
-                snap_col=T_SNAP_COL, prod_stat_cols=T_PROD_STATS)
+                snap_col=T_SNAP_COL, prod_stat_cols=T_PROD_STATS, reference_year=analysis_year)
             player_cap = next((p["cap_pct"] for p in roster if p["player"].strip().lower() == req.player_name.strip().lower()), 0.0)
         else:
             roster_without = roster
             need_score, need_label = compute_positional_need(roster, position_df=df_players,
-                team=req.team, grade_col=T_GRADE_COL, snap_col=T_SNAP_COL, prod_stat_cols=T_PROD_STATS)
+                team=req.team, grade_col=T_GRADE_COL, snap_col=T_SNAP_COL, prod_stat_cols=T_PROD_STATS, reference_year=analysis_year)
             player_cap = 0.0
-        allocated_pct, available_pct = get_team_cap(req.team)
+        allocated_pct, available_pct = get_team_cap(req.team, reference_year=analysis_year)
         cap_avail = req.cap_available_pct if req.cap_available_pct > 0 else available_pct
         if re_signing: cap_avail += player_cap
         signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years)
@@ -107,7 +110,8 @@ async def evaluate_player(req: EvaluationRequest):
 
     initial_state = {
         "player_name": req.player_name, "salary_ask": req.salary_ask,
-        "contract_years": req.contract_years, "player_history": player_data,
+        "contract_years": req.contract_years,
+            "analysis_year": analysis_year, "analysis_year": analysis_year, "player_history": player_data,
         "ol_position": "T",
         "predicted_tier": "", "confidence": {}, "current_age": 28,
         "last_season_stats": {}, "career_stats": [], "stats_score": 0.0,
@@ -126,7 +130,8 @@ async def evaluate_player(req: EvaluationRequest):
         "reasoning": final_state["reasoning"],
         "data": {
             "predicted_tier": final_state["predicted_tier"], "current_age": final_state["current_age"],
-            "contract_years": req.contract_years, "effective_fair_aav": final_state["valuation"],
+            "contract_years": req.contract_years,
+            "analysis_year": analysis_year, "effective_fair_aav": final_state["valuation"],
             "effective_cap_burden": final_state["effective_cap_burden"],
             "total_nominal_value": final_state["total_nominal_value"],
             "total_ask": round(req.salary_ask * req.contract_years, 2),

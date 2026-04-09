@@ -19,6 +19,7 @@ from typing import Optional
 
 _thread_pool = ThreadPoolExecutor(max_workers=2)
 from backend.agent.ed_agent_graph import ed_gm_agent, ED_CSV_PATH
+from backend.agent.api_year_utils import clamp_analysis_year, history_as_of_year
 from backend.agent.team_context import (
     get_team_roster, compute_positional_need, get_team_cap,
     get_all_teams, aav_to_cap_pcts, is_player_on_team,
@@ -61,23 +62,23 @@ async def get_ed_players():
 
 
 @app.get("/teams")
-async def get_teams():
+async def get_teams(analysis_year: int = Query(2025)):
     """Return sorted list of all 32 team names from cap data."""
-    teams = get_all_teams()
+    teams = get_all_teams(reference_year=analysis_year)
     if not teams:
         teams = sorted(df_players["Team"].dropna().unique().tolist()) if not df_players.empty else []
     return {"teams": teams}
 
 
 @app.get("/team-roster")
-async def team_roster(team: str = Query(..., description="Team name")):
+async def team_roster(team: str = Query(..., description="Team name"), analysis_year: int = Query(2025)):
     """Return the team's ED players, cap summary, and positional need."""
     if df_players.empty:
         raise HTTPException(status_code=503, detail="Player database not loaded.")
 
-    roster = get_team_roster(team, df_players)
-    need_score, need_label = compute_positional_need(roster, position_df=df_players, team=team)
-    allocated_pct, available_pct = get_team_cap(team)
+    roster = get_team_roster(team, df_players, reference_year=analysis_year)
+    need_score, need_label = compute_positional_need(roster, position_df=df_players, team=team, reference_year=analysis_year)
+    allocated_pct, available_pct = get_team_cap(team, reference_year=analysis_year)
 
     return {
         "team": team,
@@ -95,6 +96,7 @@ class EvaluationRequest(BaseModel):
     contract_years: int = Field(default=1, ge=1, le=10)
     team:              str   = ""
     cap_available_pct: float = 0.0
+    analysis_year:    int = Field(default=2025, ge=1900, le=2025)
 
 
 @app.post("/evaluate")
@@ -106,7 +108,8 @@ async def evaluate_player(req: EvaluationRequest):
     age-based performance decay, and time discounting.
     Returns a SIGN / PASS recommendation with per-year breakdown.
     """
-    player_data = df_players[df_players["player"] == req.player_name].copy()
+    analysis_year = clamp_analysis_year(req.analysis_year)
+    player_data = history_as_of_year(df_players[df_players["player"] == req.player_name].copy(), analysis_year)
 
     if len(player_data) == 0:
         raise HTTPException(
@@ -127,7 +130,7 @@ async def evaluate_player(req: EvaluationRequest):
     }
 
     if req.team:
-        roster = get_team_roster(req.team, df_players)
+        roster = get_team_roster(req.team, df_players, reference_year=analysis_year)
         re_signing = is_player_on_team(req.player_name, req.team, df_players)
 
         if re_signing:
@@ -147,7 +150,7 @@ async def evaluate_player(req: EvaluationRequest):
             )
             player_cap = 0.0
 
-        allocated_pct, available_pct = get_team_cap(req.team)
+        allocated_pct, available_pct = get_team_cap(req.team, reference_year=analysis_year)
         cap_avail = req.cap_available_pct if req.cap_available_pct > 0 else available_pct
         if re_signing:
             cap_avail = cap_avail + player_cap
@@ -178,6 +181,8 @@ async def evaluate_player(req: EvaluationRequest):
         "player_name":    req.player_name,
         "salary_ask":     req.salary_ask,
         "contract_years": req.contract_years,
+            "analysis_year": analysis_year,
+        "analysis_year": analysis_year,
         "player_history": player_data,
         "predicted_tier":    "",
         "confidence":        {},
@@ -212,6 +217,7 @@ async def evaluate_player(req: EvaluationRequest):
             "predicted_tier":       final_state["predicted_tier"],
             "current_age":          final_state["current_age"],
             "contract_years":       req.contract_years,
+            "analysis_year":       analysis_year,
             "effective_fair_aav":   final_state["valuation"],
             "effective_cap_burden": final_state["effective_cap_burden"],
             "total_nominal_value":  final_state["total_nominal_value"],

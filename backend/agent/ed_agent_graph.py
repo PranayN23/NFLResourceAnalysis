@@ -370,6 +370,9 @@ def compute_contract_value(
     total_disc_value    = 0.0
     total_disc_ask      = 0.0
     total_nominal_value = 0.0
+    weighted_fair_num   = 0.0
+    weighted_burden_num = 0.0
+    weight_den          = 0.0
     grade               = float(composite_gr)
     player_yoy = player_recent_grade_yoy(history, grade_col)
 
@@ -388,10 +391,14 @@ def compute_contract_value(
         cap_adj_ask   = salary_ask / cap_factor
         disc_ask      = cap_adj_ask * time_discount
         year_surplus  = round(base_value - cap_adj_ask, 2)
+        front_weight  = 1.0 / float(yr)
 
         total_nominal_value += nominal_value
         total_disc_value    += disc_value
         total_disc_ask      += disc_ask
+        weighted_fair_num   += nominal_value * front_weight
+        weighted_burden_num += cap_adj_ask * front_weight
+        weight_den          += front_weight
 
         breakdown.append({
             "year":             yr,
@@ -404,8 +411,8 @@ def compute_contract_value(
             "year_surplus":     year_surplus,
         })
 
-    fair_aav             = round(total_disc_value / contract_years, 2)
-    effective_cap_burden = round(total_disc_ask   / contract_years, 2)
+    fair_aav             = round(weighted_fair_num / max(weight_den, 1e-6), 2)
+    effective_cap_burden = round(weighted_burden_num / max(weight_den, 1e-6), 2)
     return fair_aav, effective_cap_burden, round(total_nominal_value, 2), breakdown
 
 
@@ -460,7 +467,7 @@ def predict_performance(state: EDAgentState):
 
     # Age from last recorded season + current year offset
     history      = state["player_history"]
-    current_year = datetime.date.today().year
+    current_year = int(state.get("analysis_year") or datetime.date.today().year)
     if "age" in history.columns and "Year" in history.columns:
         last_row           = history.sort_values("Year").iloc[-1]
         age_at_last_season = int(float(last_row["age"]))
@@ -596,8 +603,9 @@ def make_decision(state: EDAgentState):
             val, grade_to_market_value, cg, roster, "ED",
         )
 
-    surplus = round(val_dec - burden, 2)
-    surplus_pct = (val_dec - burden) / max(val_dec, 0.01) * 100
+    # Keep pure value verdict anchored to market fair value; roster/cap context is layered after.
+    surplus = round(val - burden, 2)
+    surplus_pct = (val - burden) / max(val, 0.01) * 100
 
     if surplus_pct >= 20:
         decision    = "Exceptional Value"
