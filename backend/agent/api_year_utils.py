@@ -68,17 +68,23 @@ def age_during_season(player_df: pd.DataFrame, season_year: int) -> int | None:
 def resolve_player_age_for_evaluation(
     player_history_full: pd.DataFrame | None,
     player_history: pd.DataFrame,
+    analysis_year: int | None = None,
 ) -> int | None:
     """
-    Age during the evaluation season: max Year present in filtered ``player_history``,
-    with anchor ages taken from ``player_history_full`` (all seasons) when provided.
+    Age during the evaluation season.
+
+    If ``analysis_year`` is provided it is used directly as the target season
+    (e.g. analysis_year=2025 → age during the 2025 season, even if the latest
+    CSV row is 2024).  Falls back to the max Year in ``player_history`` when
+    ``analysis_year`` is not given.  Anchor ages are always taken from
+    ``player_history_full`` (all seasons).
     """
     if player_history is None or player_history.empty or "Year" not in player_history.columns:
         return None
     ys = pd.to_numeric(player_history["Year"], errors="coerce").dropna()
     if ys.empty:
         return None
-    eff = int(ys.max())
+    target_year = int(analysis_year) if analysis_year is not None else int(ys.max())
     if player_history_full is None or player_history_full.empty:
         return None
-    return age_during_season(player_history_full, eff)
+    return age_during_season(player_history_full, target_year)

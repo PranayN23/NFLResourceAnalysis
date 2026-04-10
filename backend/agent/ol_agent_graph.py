@@ -317,6 +317,7 @@ def compute_contract_value(
 
 class OLAgentState(TypedDict):
     player_name: str; salary_ask: float; contract_years: int; player_history: pd.DataFrame
+    player_history_full: pd.DataFrame; analysis_year: int
     ol_position: str  # "T", "G", or "C"
     predicted_tier: str; confidence: Dict[str, float]; current_age: int
     last_season_stats: dict; career_stats: List[dict]; stats_score: float; composite_grade: float
@@ -332,7 +333,7 @@ def predict_performance(state: OLAgentState):
     position = state.get("ol_position", "G")
     pass_weight = 0.65 if position == "T" else 0.50
     current_year = int(state.get("analysis_year") or datetime.date.today().year)
-    resolved_age = resolve_player_age_for_evaluation(state.get("player_history_full"), history)
+    resolved_age = resolve_player_age_for_evaluation(state.get("player_history_full"), history, analysis_year=current_year)
     if resolved_age is not None:
         current_age = resolved_age
     elif "age" in history.columns and "Year" in history.columns:

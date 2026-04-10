@@ -1,0 +1,106 @@
+[FA APIs] Starting backend.agent.ed_main_api on port 8002
+[FA APIs] Starting backend.agent.di_main_api on port 8003
+[FA APIs] Starting backend.agent.qb_main_api on port 8004
+[FA APIs] Starting backend.agent.hb_main_api on port 8005
+[FA APIs] Starting backend.agent.wr_main_api on port 8006
+[FA APIs] Starting backend.agent.te_main_api on port 8007
+[FA APIs] Starting backend.agent.t_main_api on port 8008
+[FA APIs] Starting backend.agent.g_main_api on port 8009
+[FA APIs] Starting backend.agent.c_main_api on port 8010
+[FA APIs] Starting backend.agent.lb_main_api on port 8011
+[FA APIs] Starting backend.agent.cb_main_api on port 8012
+[FA APIs] Starting backend.agent.s_main_api on port 8013
+[FA APIs] 12 servers running. Ctrl+C to stop all.
+INFO:     Started server process [80954]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8008 (Press CTRL+C to quit)
+INFO:     Started server process [80957]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+INFO:     Started server process [80958]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8012 (Press CTRL+C to quit)
+INFO:     Started server process [80952]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [80956]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8006 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+INFO:     Started server process [80955]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8009 (Press CTRL+C to quit)
+INFO:     Started server process [80953]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [80959]
+INFO:     Waiting for application startup.
+INFO:     Uvicorn running on http://127.0.0.1:8007 (Press CTRL+C to quit)
+INFO:     Application startup complete.
+INFO:     Started server process [80950]
+INFO:     Waiting for application startup.
+INFO:     Uvicorn running on http://127.0.0.1:8013 (Press CTRL+C to quit)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8004 (Press CTRL+C to quit)
+INFO:     Started server process [80951]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8005 (Press CTRL+C to quit)
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [80949]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [80948]
+INFO:     Waiting for application startup.
+INFO:     Uvicorn running on http://127.0.0.1:8003 (Press CTRL+C to quit)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8002 (Press CTRL+C to quit)
+[QB API] Loaded 1435 rows
+INFO:     127.0.0.1:62413 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62414 - "GET /player-directory?analysis_year=2016 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62415 - "GET /teams?analysis_year=2016 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62415 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62414 - "GET /player-directory?analysis_year=2019 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62413 - "GET /teams?analysis_year=2019 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62419 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:62419 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62441 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62444 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[T API] Loaded 2220 rows
+INFO:     127.0.0.1:62452 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[C API] Loaded 1045 rows
+INFO:     127.0.0.1:62456 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[S API] Loaded 2595 rows
+INFO:     127.0.0.1:62465 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[WR API] Loaded 3602 rows
+INFO:     127.0.0.1:62448 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[G API] Loaded 2073 rows
+INFO:     127.0.0.1:62454 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[TE API] Loaded 1972 rows
+INFO:     127.0.0.1:62450 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[CB API] Loaded 3344 rows
+INFO:     127.0.0.1:62464 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[HB API] Loaded 2225 rows
+INFO:     127.0.0.1:62445 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[LB API] Loaded 4079 rows
+INFO:     127.0.0.1:62462 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+Using device: cpu
+[DI API] Loaded player database: 4431 rows
+INFO:     127.0.0.1:62460 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+INFO:     127.0.0.1:62458 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62441 - "GET /team-roster?team=Rams&analysis_year=2019 HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:62441 - "POST /evaluate HTTP/1.1" 200 OK

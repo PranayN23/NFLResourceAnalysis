@@ -574,7 +574,9 @@ class QBAgentState(TypedDict):
     player_name:     str
     salary_ask:      float
     contract_years:  int
-    player_history:  pd.DataFrame
+    player_history:      pd.DataFrame
+    player_history_full: pd.DataFrame
+    analysis_year:       int
     predicted_tier:    str
     confidence:        Dict[str, float]
     current_age:       int
@@ -606,7 +608,7 @@ def predict_performance(state: QBAgentState):
     current_year = int(state.get("analysis_year") or datetime.date.today().year)
 
     resolved_age = resolve_player_age_for_evaluation(
-        state.get("player_history_full"), history
+        state.get("player_history_full"), history, analysis_year=current_year
     )
     if resolved_age is not None:
         current_age = resolved_age

@@ -277,6 +277,7 @@ def compute_contract_value(
 
 class LBAgentState(TypedDict):
     player_name: str; salary_ask: float; contract_years: int; player_history: pd.DataFrame
+    player_history_full: pd.DataFrame; analysis_year: int
     predicted_tier: str; confidence: Dict[str, float]; current_age: int
     last_season_stats: dict; career_stats: List[dict]; stats_score: float; composite_grade: float
     valuation: float; effective_cap_burden: float; total_nominal_value: float
@@ -289,7 +290,7 @@ class LBAgentState(TypedDict):
 def predict_performance(state: LBAgentState):
     history = state["player_history"]
     current_year = int(state.get("analysis_year") or datetime.date.today().year)
-    resolved_age = resolve_player_age_for_evaluation(state.get("player_history_full"), history)
+    resolved_age = resolve_player_age_for_evaluation(state.get("player_history_full"), history, analysis_year=current_year)
     if resolved_age is not None:
         current_age = resolved_age
     elif "age" in history.columns and "Year" in history.columns:

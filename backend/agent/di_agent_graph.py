@@ -436,7 +436,9 @@ class DIAgentState(TypedDict):
     player_name:    str
     salary_ask:     float
     contract_years: int
-    player_history: pd.DataFrame
+    player_history:      pd.DataFrame
+    player_history_full: pd.DataFrame
+    analysis_year:       int
 
     predicted_tier:    str
     confidence:        Dict[str, float]
@@ -476,7 +478,7 @@ def predict_performance(state: DIAgentState):
 
     history      = state["player_history"]
     current_year = int(state.get("analysis_year") or datetime.date.today().year)
-    resolved_age = resolve_player_age_for_evaluation(state.get("player_history_full"), history)
+    resolved_age = resolve_player_age_for_evaluation(state.get("player_history_full"), history, analysis_year=current_year)
     if resolved_age is not None:
         current_age = resolved_age
     elif "age" in history.columns and "Year" in history.columns:
