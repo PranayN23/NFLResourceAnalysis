@@ -1074,7 +1074,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     () => [...teamRankings].sort((a, b) => Number(a.rank) - Number(b.rank)),
     [teamRankings]
   );
-  const allPositionsTierBands = useMemo(() => fairAavTierBandsForAllPositions(), []);
+  const allPositionsTierBands = useMemo(() => fairAavTierBandsForAllPositions(analysisYear), [analysisYear]);
   const playerPickOptions = useMemo(
     () => [...new Set(
       playerDirectory.map((p) => `${p.player} (${p.position_key})`)
@@ -1813,7 +1813,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         </button>
 
         <div className="fa-legend">
-          <p className="fa-legend-title">2026 fair AAV by tier (all positions)</p>
+          <p className="fa-legend-title">{analysisYear} fair AAV by tier (all positions)</p>
           <div className="fa-legend-table-wrap">
             <table className="fa-legend-mini-table">
               <thead>

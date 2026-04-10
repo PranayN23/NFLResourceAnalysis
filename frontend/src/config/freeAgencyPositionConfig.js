@@ -14,6 +14,17 @@ export const NOTE_STD =
 /** Keep in sync with `backend/agent/team_context.py` (`_LEAGUE_CAP_BY_YEAR`, `CAP_GROWTH_RATE`). */
 export const FA_LEAGUE_CAP_GROWTH_RATE = 0.065;
 const FA_LEAGUE_CAP_BY_YEAR = {
+  2010: 102.0,
+  2011: 120.0,
+  2012: 120.6,
+  2013: 123.0,
+  2014: 133.0,
+  2015: 143.28,
+  2016: 155.27,
+  2017: 167.0,
+  2018: 177.2,
+  2019: 188.2,
+  2020: 198.2,
   2021: 182.5,
   2022: 208.2,
   2023: 224.8,
@@ -78,10 +89,21 @@ function interp(x, xs, ys) {
   return ys[ys.length - 1];
 }
 
-/** Mirrors Python `grade_to_market_value` */
-export function gradeToMarketAav(grade, valueAnchors) {
+export const FA_VALUE_ANCHOR_CALIBRATION_YEAR = 2026;
+
+/**
+ * Mirrors Python `cap_scale_for_year`: ratio of the selected year's cap to the
+ * calibration year's cap, so dollar values scale proportionally with the cap.
+ */
+export function capScaleForYear(year) {
+  return leagueCapMillions(year) / leagueCapMillions(FA_VALUE_ANCHOR_CALIBRATION_YEAR);
+}
+
+/** Mirrors Python `grade_to_market_value`, with optional year-based cap scaling. */
+export function gradeToMarketAav(grade, valueAnchors, analysisYear = FA_VALUE_ANCHOR_CALIBRATION_YEAR) {
   const g = Math.max(45, Math.min(100, Number(grade)));
-  return Math.round(interp(g, FA_GRADE_ANCHORS, valueAnchors) * FA_MARKET_CALIBRATION_FACTOR * 100) / 100;
+  const base = Math.round(interp(g, FA_GRADE_ANCHORS, valueAnchors) * FA_MARKET_CALIBRATION_FACTOR * 100) / 100;
+  return Math.round(base * capScaleForYear(analysisYear) * 100) / 100;
 }
 
 function fmtM(v) {
@@ -152,7 +174,7 @@ export const FA_POSITION_ORDER = [
  * Fair AAV ($M) tier bands for every position — same interpolation as `buildMarketTierLegend`
  * (grades 62 / 74 / 80 / 100; Elite / Good / Starter / Rotation).
  */
-export function fairAavTierBandsForAllPositions() {
+export function fairAavTierBandsForAllPositions(analysisYear = FA_VALUE_ANCHOR_CALIBRATION_YEAR) {
   const fmtM = (v) => {
     const r = Math.round(v * 100) / 100;
     if (Number.isInteger(r)) return String(r);
@@ -166,7 +188,7 @@ export function fairAavTierBandsForAllPositions() {
       return { pos: pk, elite: '—', good: '—', starter: '—', rotation: '—' };
     }
     const m = (g) =>
-      Math.round(gradeToMarketAav(g, va) * FA_LEGEND_AAV_DISPLAY_FACTOR * 100) / 100;
+      Math.round(gradeToMarketAav(g, va, analysisYear) * FA_LEGEND_AAV_DISPLAY_FACTOR * 100) / 100;
     return {
       pos: pk,
       elite: `$${fmtM(m(80))}–${fmtM(m(100))}M`,

@@ -17,6 +17,7 @@ from backend.agent.team_context import (
     assess_team_fit as _assess_team_fit_logic,
     aav_to_cap_pcts,
     decision_fair_aav_with_replacement,
+    cap_scale_for_year,
 )
 from backend.agent.grade_projection import (
     grade_to_tier_universal,
@@ -276,12 +277,14 @@ def compute_contract_value(
     position="G",
     history: pd.DataFrame = None,
     grade_col: str = "grades_offense",
+    analysis_year: int = 2026,
 ):
     breakdown = []; total_disc_value = total_disc_ask = total_nominal_value = 0.0
     weighted_fair_num = weighted_burden_num = weight_den = 0.0
     grade = float(composite_gr)
     player_yoy = player_recent_grade_yoy(history, grade_col)
     snap_rel, _ = snap_value_reliability_factor(history)
+    cap_scale = cap_scale_for_year(analysis_year)
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
@@ -293,7 +296,7 @@ def compute_contract_value(
             )
         cap_factor = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
         time_discount = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
-        base_value = grade_to_market_value(grade, position) * snap_rel
+        base_value = grade_to_market_value(grade, position) * snap_rel * cap_scale
         nominal_value = base_value * cap_factor
         cap_adj_ask = salary_ask / cap_factor
         front_weight = 1.0 / float(yr)
@@ -365,6 +368,7 @@ def predict_performance(state: OLAgentState):
 def evaluate_value(state: OLAgentState):
     position = state.get("ol_position", "G")
     hist = state.get("player_history")
+    ay = int(state.get("analysis_year") or 2026)
     fair_aav, eff_burden, total_nom, breakdown = compute_contract_value(
         state["composite_grade"],
         state["current_age"],
@@ -373,6 +377,7 @@ def evaluate_value(state: OLAgentState):
         position,
         history=hist,
         grade_col="grades_offense",
+        analysis_year=ay,
     )
     stat_proj = project_stats(
         state["last_season_stats"],
@@ -419,8 +424,9 @@ def make_decision(state: OLAgentState):
     val_dec = val
     rep_note = ""
     if team_nm and roster:
+        _scale = cap_scale_for_year(int(state.get("analysis_year") or 2026))
         def _gtmv(g):
-            return grade_to_market_value(g, position)
+            return grade_to_market_value(g, position) * _scale
         val_dec, rep_note = decision_fair_aav_with_replacement(
             val, _gtmv, cg, roster, position,
         )

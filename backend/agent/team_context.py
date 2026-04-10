@@ -21,7 +21,19 @@ from backend.agent.api_year_utils import age_during_season
 CAP_GROWTH_RATE = 0.065
 BASE_CAP_YEAR = 2024
 # Keep in sync with frontend `leagueCapMillions` (freeAgencyPositionConfig.js).
+# Historical caps: official NFL figures; 2021 reduced from 2020 due to COVID TV-revenue clawback.
 _LEAGUE_CAP_BY_YEAR: dict[int, float] = {
+    2010: 102.0,
+    2011: 120.0,
+    2012: 120.6,
+    2013: 123.0,
+    2014: 133.0,
+    2015: 143.28,
+    2016: 155.27,
+    2017: 167.0,
+    2018: 177.2,
+    2019: 188.2,
+    2020: 198.2,
     2021: 182.5,
     2022: 208.2,
     2023: 224.8,
@@ -29,6 +41,9 @@ _LEAGUE_CAP_BY_YEAR: dict[int, float] = {
     2025: 279.2,
     2026: 301.2,
 }
+
+# Value anchors in all agent graphs are calibrated to this year's OTC contracts.
+VALUE_ANCHOR_CALIBRATION_YEAR = 2026
 
 _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CAP_DATA_PATH = os.path.join(_BASE, "ML", "cap_data.csv")
@@ -60,6 +75,18 @@ def league_cap_millions(year: int) -> float:
     if y > hi:
         return round(float(_LEAGUE_CAP_BY_YEAR[hi]) * ((1.0 + CAP_GROWTH_RATE) ** (y - hi)), 2)
     return round(float(_LEAGUE_CAP_BY_YEAR[lo]) / ((1.0 + CAP_GROWTH_RATE) ** (lo - y)), 2)
+
+
+def cap_scale_for_year(year: int) -> float:
+    """
+    Multiplicative factor to convert value-anchor dollars (calibrated to
+    VALUE_ANCHOR_CALIBRATION_YEAR) into *year*-appropriate dollars.
+
+    A grade-80 QB worth $X in 2026 is worth ``X * cap_scale_for_year(2017)``
+    in 2017 dollars, since both player value and the absolute salary market
+    scale roughly proportionally with the league cap.
+    """
+    return league_cap_millions(year) / league_cap_millions(VALUE_ANCHOR_CALIBRATION_YEAR)
 
 
 def _safe_float(val, default=0.0) -> float:
