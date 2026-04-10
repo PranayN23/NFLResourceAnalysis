@@ -194,6 +194,82 @@ def _position_team_rank(team: str, year: int, cfg: dict[str, Any]) -> dict[str, 
     }
 
 
+_NFL_DIVISIONS: dict[str, str] = {
+    "Bills": "AFC East", "Patriots": "AFC East", "Jets": "AFC East", "Dolphins": "AFC East",
+    "Ravens": "AFC North", "Steelers": "AFC North", "Browns": "AFC North", "Bengals": "AFC North",
+    "Texans": "AFC South", "Colts": "AFC South", "Jaguars": "AFC South", "Titans": "AFC South",
+    "Chiefs": "AFC West", "Raiders": "AFC West", "Chargers": "AFC West", "Broncos": "AFC West",
+    "Eagles": "NFC East", "Cowboys": "NFC East", "Giants": "NFC East", "Commanders": "NFC East",
+    "Lions": "NFC North", "Packers": "NFC North", "Vikings": "NFC North", "Bears": "NFC North",
+    "Buccaneers": "NFC South", "Saints": "NFC South", "Falcons": "NFC South", "Panthers": "NFC South",
+    "49ers": "NFC West", "Seahawks": "NFC West", "Rams": "NFC West", "Cardinals": "NFC West",
+}
+
+_DIV_TEAMS: dict[str, list[str]] = {}
+for _t, _d in _NFL_DIVISIONS.items():
+    _DIV_TEAMS.setdefault(_d, []).append(_t)
+
+
+def _team_season_stats(team: str, year: int) -> dict[str, Any]:
+    """Return PPG, PPGA, league rank, division rank, and wins for a season."""
+    pr = _load_power_rankings()
+    abbr = TEAM_TO_ABBR.get(team, "")
+    result: dict[str, Any] = {"ppg": None, "ppga": None, "point_diff": None,
+                               "wins": None, "league_rank": None, "div_rank": None,
+                               "division": _NFL_DIVISIONS.get(team)}
+    if pr.empty or not abbr:
+        return result
+
+    season_data = pr[pd.to_numeric(pr["Season"], errors="coerce") == year].copy()
+    if season_data.empty:
+        return result
+
+    row = season_data[season_data["Team"] == abbr]
+    if row.empty:
+        return result
+    r = row.iloc[0]
+
+    def _safe(col: str) -> float | None:
+        try:
+            v = float(r.get(col, float("nan")))
+            return round(v, 1) if not (v != v) else None  # NaN check
+        except (TypeError, ValueError):
+            return None
+
+    ppg = _safe("For")
+    ppga = _safe("Against")
+    wins_raw = _safe("Wins")
+    wins = int(wins_raw) if wins_raw is not None else None
+    point_diff = _safe("Dif")
+
+    # League rank by nfelo (higher = better)
+    if "nfelo" in season_data.columns:
+        season_data["nfelo"] = pd.to_numeric(season_data["nfelo"], errors="coerce")
+        ranked = season_data.dropna(subset=["nfelo"]).sort_values("nfelo", ascending=False)
+        team_pos = ranked[ranked["Team"] == abbr]
+        league_rank = int(team_pos.index.get_loc(team_pos.index[0])) + 1 if not team_pos.empty else None
+    else:
+        league_rank = None
+
+    # Division rank by wins among division peers
+    division = _NFL_DIVISIONS.get(team)
+    div_rank = None
+    if division and wins is not None:
+        div_teams = _DIV_TEAMS.get(division, [])
+        div_abbrs = [TEAM_TO_ABBR.get(t, "") for t in div_teams]
+        div_data = season_data[season_data["Team"].isin(div_abbrs)].copy()
+        if not div_data.empty and "Wins" in div_data.columns:
+            div_data["_wins"] = pd.to_numeric(div_data["Wins"], errors="coerce")
+            div_data = div_data.dropna(subset=["_wins"]).sort_values("_wins", ascending=False)
+            me = div_data[div_data["Team"] == abbr]
+            if not me.empty:
+                div_rank = int(div_data.index.get_loc(me.index[0])) + 1
+
+    result.update({"ppg": ppg, "ppga": ppga, "point_diff": point_diff,
+                   "wins": wins, "league_rank": league_rank, "div_rank": div_rank})
+    return result
+
+
 def build_team_year_summary(team: str, analysis_year: int) -> dict[str, Any]:
     year = clamp_analysis_year(analysis_year)
     # Free agency in year Y uses prior season (Y-1) team performance context.
@@ -211,6 +287,7 @@ def build_team_year_summary(team: str, analysis_year: int) -> dict[str, Any]:
             "record": "record unavailable",
             "strengths": [],
             "weaknesses": [],
+            **_team_season_stats(team, season_context_year),
         }
     ordered = sorted(pos_rows, key=lambda x: x["score"], reverse=True)
     strengths = ordered[:3]
@@ -219,6 +296,7 @@ def build_team_year_summary(team: str, analysis_year: int) -> dict[str, Any]:
     # Example: analysis_year=2025 with latest player season=2024 should use 2024 record.
     season_year_used = max(int(r.get("year_used", year)) for r in pos_rows) if pos_rows else year
     record = _team_season_wins_phrase(team, season_year_used)
+    season_stats = _team_season_stats(team, season_year_used)
     def _fmt_group(r: dict[str, Any]) -> str:
         names = [p.get("player", "Unknown") for p in (r.get("players") or [])[:2]]
         if not names:
@@ -250,6 +328,7 @@ def build_team_year_summary(team: str, analysis_year: int) -> dict[str, Any]:
         "strengths": strengths,
         "weaknesses": weaknesses,
         "summary": summary,
+        **season_stats,
     }
 
 

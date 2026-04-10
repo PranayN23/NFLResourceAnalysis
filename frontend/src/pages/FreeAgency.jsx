@@ -799,7 +799,7 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
       value: displayedTier || 'N/A',
       tierBadgeClass: predictedTierToBadgeClass(displayedTier),
     },
-    { label: 'Current Age', value: current_age },
+    { label: is_extension ? 'Age at Ext. Start' : 'Current Age', value: current_age },
     { divider: true, title: 'Grade Breakdown' },
     { label: 'Model Grade', value: model_grade != null ? `${Number(model_grade).toFixed(1)} / 100` : 'N/A' },
     { label: 'Stats Grade', value: stats_grade != null ? `${Number(stats_grade).toFixed(1)} / 100` : 'N/A' },
@@ -921,6 +921,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   const [showRosterNetDialog, setShowRosterNetDialog] = useState(false);
   const [analysisYear, setAnalysisYear] = useState(defaultAnalysisYear);
   const [analysisYearMin, setAnalysisYearMin] = useState(2010);
+  const [teamBannerData, setTeamBannerData] = useState(null);
   const [extensionMode, setExtensionMode] = useState(false);
   const [yearsRemaining, setYearsRemaining] = useState(1);
   const [currentAav, setCurrentAav] = useState('');
@@ -1040,6 +1041,14 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       })
       .catch(() => setFullTeamRosterForDepartures([]));
   }, [selectedTeam, teamMode, analysisYear]);
+
+  useEffect(() => {
+    if (!selectedTeam || !teamMode) { setTeamBannerData(null); return; }
+    fetch(`${directoryApiBase}/team-summary?team=${encodeURIComponent(selectedTeam)}&analysis_year=${encodeURIComponent(analysisYear)}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => setTeamBannerData(d || null))
+      .catch(() => setTeamBannerData(null));
+  }, [selectedTeam, teamMode, analysisYear, directoryApiBase]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -2007,9 +2016,60 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
 
       <div className="fa-chat">
         <div className="fa-chat-header">
-          GM Decision Feed
-          {teamMode && selectedTeam && <span className="fa-chat-team-tag">{selectedTeam}</span>}
+          <span className="fa-chat-header-title">GM Decision Feed</span>
+          {teamMode && selectedTeam && (
+            <span className="fa-chat-team-tag">{selectedTeam}</span>
+          )}
         </div>
+
+        {teamMode && selectedTeam && teamBannerData && (
+          <div className="fa-team-banner">
+            <div className="fa-team-banner-name">{selectedTeam}</div>
+            <div className="fa-team-banner-stats">
+              {teamBannerData.wins != null && (
+                <div className="fa-tbs-pill">
+                  <span className="fa-tbs-label">Wins</span>
+                  <span className="fa-tbs-val">{teamBannerData.wins}</span>
+                </div>
+              )}
+              {teamBannerData.ppg != null && (
+                <div className="fa-tbs-pill">
+                  <span className="fa-tbs-label">PPG</span>
+                  <span className="fa-tbs-val">{teamBannerData.ppg}</span>
+                </div>
+              )}
+              {teamBannerData.ppga != null && (
+                <div className="fa-tbs-pill">
+                  <span className="fa-tbs-label">PPGA</span>
+                  <span className="fa-tbs-val">{teamBannerData.ppga}</span>
+                </div>
+              )}
+              {teamBannerData.league_rank != null && (
+                <div className="fa-tbs-pill">
+                  <span className="fa-tbs-label">League Rank</span>
+                  <span className="fa-tbs-val">#{teamBannerData.league_rank}</span>
+                </div>
+              )}
+              {teamBannerData.div_rank != null && teamBannerData.division && (
+                <div className="fa-tbs-pill">
+                  <span className="fa-tbs-label">{teamBannerData.division}</span>
+                  <span className="fa-tbs-val">#{teamBannerData.div_rank}</span>
+                </div>
+              )}
+            </div>
+            {teamBannerData.strengths?.length > 0 && (
+              <div className="fa-team-banner-positions">
+                <span className="fa-tbp-label">Top units:</span>
+                {teamBannerData.strengths.slice(0, 3).map((s, i) => (
+                  <span key={i} className="fa-tbp-chip fa-tbp-chip--strength">
+                    {s.pos}
+                    {s.players?.[0] && <span className="fa-tbp-player"> · {s.players[0].player}</span>}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         <div className="fa-chat-body">
           {messages.map((msg, i) => {
             const msgPosKey = msg.structured?.meta?.positionKey;
