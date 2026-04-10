@@ -21,6 +21,7 @@ from backend.agent.grade_projection import (
     grade_to_tier_universal,
     player_recent_grade_yoy,
     apply_yearly_grade_step,
+    projection_trend_multiplier,
 )
 from backend.agent.stat_projection_utils import (
     qb_full_role_dropbacks_17,
@@ -467,7 +468,9 @@ def project_stats(
         age = current_age + yr - 1
         if yr > 1:
             grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
-        scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
+        base_scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
+        trend_mult = projection_trend_multiplier("QB", age, yr, player_yoy)
+        scale = max(0.25, min(1.8, base_scale * trend_mult))
         base_atts_17 = float(last_stats.get("proj_atts_17g") or 0.0)
         proj_atts_y = max(40.0, min(660.0, base_atts_17 * scale))
         base_ypa = float(last_stats.get("ypa") or 0.0)

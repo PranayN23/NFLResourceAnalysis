@@ -42,22 +42,55 @@ def player_recent_grade_yoy(history: Optional[pd.DataFrame], grade_col: str) -> 
     if len(h) < 2:
         return None
 
-    deltas: list[float] = []
+    snap_candidates = (
+        "passing_snaps",
+        "dropbacks",
+        "pass_block_snaps",
+        "snap_counts_offense",
+        "snap_counts_defense",
+        "total_snaps",
+        "routes",
+        "targets",
+        "attempts",
+    )
+    snap_col = next((c for c in snap_candidates if c in h.columns), None)
+    if snap_col:
+        h[snap_col] = pd.to_numeric(h[snap_col], errors="coerce").fillna(0.0)
+    else:
+        h["_snap_fallback"] = 1.0
+        snap_col = "_snap_fallback"
+
+    deltas: list[tuple[float, float]] = []
     prev_yr: Optional[int] = None
     prev_g: Optional[float] = None
+    prev_snap: Optional[float] = None
     for _, row in h.iterrows():
         yr = int(round(float(row["Year"])))
         g = float(row[grade_col])
+        s = float(row.get(snap_col, 0.0) or 0.0)
         if np.isnan(g):
             continue
         if prev_yr is not None and prev_g is not None and yr == prev_yr + 1:
-            deltas.append(g - prev_g)
-        prev_yr, prev_g = yr, g
+            opp = max(1.0, min(float(prev_snap or 1.0), s))
+            deltas.append((g - prev_g, opp))
+        prev_yr, prev_g, prev_snap = yr, g, s
 
     if not deltas:
         return None
     tail = deltas[-3:]
-    return float(statistics.median(tail))
+    # Recency + opportunity weighting: down-weight tiny-sample deltas.
+    recency = [0.24, 0.33, 0.43][-len(tail):]
+    opp_baseline = 500.0 if snap_col in ("passing_snaps", "dropbacks") else 350.0
+    weighted_num = 0.0
+    weighted_den = 0.0
+    for (delta, opp), rw in zip(tail, recency):
+        opp_factor = max(0.30, min(1.0, np.sqrt(float(opp) / opp_baseline)))
+        w = rw * opp_factor
+        weighted_num += float(delta) * w
+        weighted_den += w
+    if weighted_den <= 0:
+        return float(statistics.median([d for d, _ in tail]))
+    return float(weighted_num / weighted_den)
 
 
 def blend_age_curve_delta(
@@ -98,3 +131,60 @@ def apply_yearly_grade_step(
     base = float(annual_delta_fn(age_transition))
     d = blend_age_curve_delta(base, age_transition, player_yoy)
     return max(45.0, min(99.0, float(grade) + d))
+
+
+def projection_trend_multiplier(
+    position_key: str,
+    age: int,
+    year_idx: int,
+    player_yoy: Optional[float],
+) -> float:
+    """
+    Position-specific production multiplier layered on top of grade scaling.
+    Positive recent trends for younger players get a larger boost in early years;
+    negative trends in post-prime years get a larger dampener.
+    """
+    yoy = 0.0 if player_yoy is None or (isinstance(player_yoy, float) and np.isnan(player_yoy)) else float(player_yoy)
+    yoy = max(-8.0, min(10.0, yoy))
+    pos = (position_key or "").upper()
+    # (develop_end_age, prime_end_age, max_growth_boost, max_decline_penalty)
+    profiles = {
+        "QB": (27, 33, 0.18, 0.14),
+        "HB": (24, 27, 0.22, 0.20),
+        "RB": (24, 27, 0.22, 0.20),
+        "WR": (25, 29, 0.20, 0.16),
+        "TE": (26, 30, 0.16, 0.14),
+        "T": (25, 31, 0.15, 0.13),
+        "G": (25, 31, 0.14, 0.12),
+        "C": (26, 32, 0.13, 0.12),
+        "ED": (25, 29, 0.18, 0.18),
+        "DI": (25, 30, 0.16, 0.18),
+        "LB": (24, 28, 0.18, 0.18),
+        "CB": (24, 28, 0.19, 0.19),
+        "S": (25, 30, 0.15, 0.16),
+    }
+    develop_end, prime_end, boost_cap, decline_cap = profiles.get(pos, (25, 29, 0.14, 0.12))
+    age_f = float(age)
+
+    if yoy >= 0:
+        if age_f >= prime_end + 3:
+            return 1.0
+        # Strongest during development, moderate in prime, fades after.
+        if age_f <= develop_end:
+            age_weight = 1.0
+        elif age_f <= prime_end:
+            age_weight = max(0.55, 1.0 - 0.12 * (age_f - develop_end))
+        else:
+            age_weight = max(0.25, 0.55 - 0.10 * (age_f - prime_end))
+        year_weight = max(0.85, min(1.25, 0.9 + 0.08 * float(year_idx)))
+        lift = min(boost_cap, (yoy / 10.0) * boost_cap * age_weight * year_weight)
+        return 1.0 + max(0.0, lift)
+
+    # Negative trend: amplify only after prime.
+    if age_f <= prime_end:
+        age_weight = max(0.25, 0.35 + 0.06 * max(0.0, age_f - develop_end))
+    else:
+        age_weight = min(1.0, 0.65 + 0.10 * (age_f - prime_end))
+    year_weight = max(0.9, min(1.35, 0.95 + 0.08 * float(year_idx)))
+    hit = min(decline_cap, (abs(yoy) / 8.0) * decline_cap * age_weight * year_weight)
+    return max(0.70, 1.0 - max(0.0, hit))

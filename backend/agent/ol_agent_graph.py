@@ -23,6 +23,7 @@ from backend.agent.grade_projection import (
     grade_to_tier_universal,
     player_recent_grade_yoy,
     apply_yearly_grade_step,
+    projection_trend_multiplier,
 )
 from backend.agent.stat_projection_utils import pass_block_snap_load_17, inactivity_retirement_penalty, apply_inactivity_to_projection_list, apply_projection_plausibility_caps, snap_value_reliability_factor
 import pandas as pd
@@ -252,7 +253,9 @@ def project_stats(
                 player_yoy,
                 lambda a: _annual_grade_delta(a, position),
             )
-        scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
+        base_scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
+        trend_mult = projection_trend_multiplier(position, age, yr, player_yoy)
+        scale = max(0.25, min(1.8, base_scale * trend_mult))
         # For OL, lower is better for allowed stats — scale inversely
         inv = 1.0 / max(scale, 0.25)
         projections.append({

@@ -18,6 +18,7 @@ from backend.agent.grade_projection import (
     grade_to_tier_universal,
     player_recent_grade_yoy,
     apply_yearly_grade_step,
+    projection_trend_multiplier,
 )
 from backend.agent.stat_projection_utils import offense_target_load_17, inactivity_retirement_penalty, apply_inactivity_to_projection_list, apply_projection_plausibility_caps, snap_value_reliability_factor
 import pandas as pd
@@ -140,31 +141,58 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     games = max(1.0, min(max_g, _safe_float(row.get("player_game_count"), max_g)))
     avail = round(games / max_g, 3)
 
-    c_yards = c_recs = c_tgts = c_drops = c_routes = c_yac = c_epa = c_games = 0.0
-    for _, r in valid_rows.iterrows():
+    # Baseline uses recent seasons with recency + opportunity weighting so
+    # low-snap early years do not anchor projections for ascending young WRs.
+    recent = valid_rows.sort_values("Year").tail(3).copy()
+    base_w = [0.20, 0.30, 0.50][-len(recent):]
+    opp_vals = []
+    for _, r in recent.iterrows():
+        routes = max(0.0, _safe_float(r.get("routes")))
+        tgts = max(0.0, _safe_float(r.get("targets")))
+        opp_vals.append(max(routes, tgts * 3.2, 1.0))
+    max_opp = max(opp_vals) if opp_vals else 1.0
+    weights = []
+    for bw, opp in zip(base_w, opp_vals):
+        # Keep opportunity signal bounded so one massive season does not fully dominate.
+        opp_factor = max(0.45, min(1.0, np.sqrt(opp / max_opp)))
+        weights.append(bw * opp_factor)
+    w_sum = max(sum(weights), 1e-9)
+    weights = [w / w_sum for w in weights]
+
+    w_yards = w_recs = w_tgts = w_drops = w_routes = w_yac = w_epa = 0.0
+    w_tgts_pg = w_recs_pg = 0.0
+    for (w, (_, r)) in zip(weights, recent.iterrows()):
         yr_g = 17.0 if int(_safe_float(r.get("Year"), 2024)) >= 2021 else 16.0
         g = max(1.0, min(yr_g, _safe_float(r.get("player_game_count"), yr_g)))
-        c_yards  += _safe_float(r.get("yards"))
-        c_recs   += _safe_float(r.get("receptions"))
-        c_tgts   += _safe_float(r.get("targets"))
-        c_drops  += _safe_float(r.get("drops"))
-        c_routes += _safe_float(r.get("routes"))
-        c_yac    += _safe_float(r.get("yards_after_catch"))
-        c_epa    += _safe_float(r.get("Net EPA"))
-        c_games  += g
+        yards = _safe_float(r.get("yards"))
+        recs = _safe_float(r.get("receptions"))
+        tgts = _safe_float(r.get("targets"))
+        drops = _safe_float(r.get("drops"))
+        routes = _safe_float(r.get("routes"))
+        yac = _safe_float(r.get("yards_after_catch"))
+        epa = _safe_float(r.get("Net EPA"))
 
-    c_tgts  = max(c_tgts, 1.0)
-    c_recs  = max(c_recs, 1.0)
-    c_routes= max(c_routes, 1.0)
-    c_games = max(c_games, 1.0)
-    proj_tgts_17g = round(offense_target_load_17(c_tgts, c_games, floor_17=74.0))
-    proj_recs_17g = max(round(c_recs / c_games * 17), round(proj_tgts_17g * 0.58))
+        w_yards += w * yards
+        w_recs += w * recs
+        w_tgts += w * tgts
+        w_drops += w * drops
+        w_routes += w * routes
+        w_yac += w * yac
+        w_epa += w * epa
+        w_tgts_pg += w * (tgts / g)
+        w_recs_pg += w * (recs / g)
 
-    career_ypr  = c_yards / c_recs
-    career_yprr = c_yards / c_routes
-    career_drop_rate  = c_drops / c_tgts
-    career_epa_t      = c_epa / c_tgts
-    career_yac_per_rec = c_yac / c_recs
+    w_tgts = max(w_tgts, 1.0)
+    w_recs = max(w_recs, 1.0)
+    w_routes = max(w_routes, 1.0)
+    proj_tgts_17g = round(offense_target_load_17(w_tgts_pg * 17.0, 17.0, floor_17=74.0))
+    proj_recs_17g = max(round(w_recs_pg * 17.0), round(proj_tgts_17g * 0.58))
+
+    career_ypr = w_yards / w_recs
+    career_yprr = w_yards / w_routes
+    career_drop_rate = w_drops / w_tgts
+    career_epa_t = w_epa / w_tgts
+    career_yac_per_rec = w_yac / w_recs
 
     return {
         "season":         year,
@@ -223,7 +251,9 @@ def project_stats(
         age = current_age + yr - 1
         if yr > 1:
             grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
-        scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
+        base_scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
+        trend_mult = projection_trend_multiplier("WR", age, yr, player_yoy)
+        scale = max(0.25, min(1.85, base_scale * trend_mult))
         projections.append({
             "year": yr, "age": age, "projected_grade": round(grade, 1),
             "receptions":   round(min(130, last_stats["recs_17g"] * scale)),
