@@ -584,6 +584,14 @@ function YearBreakdown({ rows }) {
         <tbody>
           {rows.map((r) => {
             const delta = r.market_value - r.cap_adj_ask;
+            // pct = how far ask is above (+) or below (-) fair value, as % of fair value
+            const pct = r.market_value > 0 ? ((r.cap_adj_ask - r.market_value) / r.market_value) * 100 : 0;
+            const deltaClass =
+              pct <= -15 ? 'fa-delta-huge-surplus' :
+              pct <= -5  ? 'fa-delta-surplus'      :
+              pct <=  5  ? 'fa-delta-neutral'      :
+              pct <=  15 ? 'fa-delta-overpay'      :
+                           'fa-delta-huge-overpay';
             return (
               <tr key={r.year}>
                 <td>{r.year}</td>
@@ -591,7 +599,7 @@ function YearBreakdown({ rows }) {
                 <td>{r.projected_grade}</td>
                 <td>${r.market_value}M</td>
                 <td>${r.cap_adj_ask}M</td>
-                <td className={delta >= 0 ? 'fa-pos-delta' : 'fa-neg-delta'}>
+                <td className={deltaClass}>
                   {delta >= 0 ? '+' : ''}{delta.toFixed(2)}M
                 </td>
               </tr>
@@ -644,12 +652,28 @@ function PositionStatsPanel({ careerStats, projectedStats, statRows, note }) {
                   <div className="fa-stats-col-sub">{s.games_played}/{s.max_games}g</div>
                 </th>
               ))}
-              {projectedStats.map(yr => (
-                <th key={`proj-${yr.year}`} className="fa-stats-col-proj">
-                  <div className="fa-stats-col-hdr">Yr {yr.year}</div>
-                  <div className="fa-stats-col-sub">Age {yr.age}</div>
-                </th>
-              ))}
+              {(() => {
+                let remainIdx = 0, extIdx = 0;
+                return projectedStats.map((yr, idx) => {
+                  let phaseClass, label;
+                  if (yr.phase === 'remaining') {
+                    phaseClass = 'fa-stats-col-remaining';
+                    label = `Deal Yr ${++remainIdx}`;
+                  } else if (yr.phase === 'extension') {
+                    phaseClass = extIdx === 0 ? 'fa-stats-col-extension fa-stats-col-ext-first' : 'fa-stats-col-extension';
+                    label = `Ext Yr ${++extIdx}`;
+                  } else {
+                    phaseClass = 'fa-stats-col-proj';
+                    label = `Yr ${yr.year}`;
+                  }
+                  return (
+                    <th key={`proj-${yr.phase ?? ''}-${idx}`} className={phaseClass}>
+                      <div className="fa-stats-col-hdr">{label}</div>
+                      <div className="fa-stats-col-sub">Age {yr.age}</div>
+                    </th>
+                  );
+                });
+              })()}
             </tr>
           </thead>
           <tbody>
@@ -665,7 +689,7 @@ function PositionStatsPanel({ careerStats, projectedStats, statRows, note }) {
                       : '—'}
                   </td>
                 ))}
-                {projectedStats.map(yr => {
+                {projectedStats.map((yr, idx) => {
                   const raw = projRaw(yr, row);
                   const val = fmtVal(row, raw);
                   const last = lastCareer?.[row.key];
@@ -674,10 +698,15 @@ function PositionStatsPanel({ careerStats, projectedStats, statRows, note }) {
                   if (!row.noDelta && rawProj != null && last != null && Number(last) !== 0) {
                     delta = Number(rawProj) - Number(last);
                   }
+                  const deltaClass = delta == null ? '' : delta > 0.05 ? 'fa-stat-up' : delta < -0.05 ? 'fa-stat-down' : '';
+                  const isFirstExt = yr.phase === 'extension' && (idx === 0 || projectedStats[idx - 1]?.phase !== 'extension');
+                  const phaseClass = yr.phase === 'remaining'
+                    ? 'fa-stats-cell-remaining'
+                    : yr.phase === 'extension'
+                    ? (isFirstExt ? 'fa-stats-cell-extension fa-stats-cell-ext-first' : 'fa-stats-cell-extension')
+                    : '';
                   return (
-                    <td key={yr.year} className={
-                      delta == null ? '' : delta > 0.05 ? 'fa-stat-up' : delta < -0.05 ? 'fa-stat-down' : ''
-                    }>
+                    <td key={`${idx}`} className={[deltaClass, phaseClass].filter(Boolean).join(' ')}>
                       {raw != null ? val : '—'}
                     </td>
                   );
@@ -755,6 +784,7 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
     predicted_tier, current_age, effective_fair_aav, effective_cap_burden,
     total_nominal_value, total_ask, confidence, year_breakdown,
     projected_stats, career_stats,
+    is_extension, extension_start_year, years_remaining, current_aav,
   } = data;
   const { model_grade, stats_grade, composite_grade, health_factor, avg_availability,
     transformer_grade, xgb_grade, age_adjustment } = confidence || {};
@@ -785,12 +815,24 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
     statRows.push({ label: 'Age Penalty (applied)', value: `-${Number(age_adjustment).toFixed(1)} pts` });
   }
 
+  if (is_extension) {
+    statRows.push(
+      { divider: true, title: 'Extension Context' },
+      { label: 'Extension Begins', value: extension_start_year ? `${extension_start_year} season` : 'N/A' },
+      { label: 'Years Remaining (current)', value: years_remaining != null ? `${years_remaining} yr` : 'N/A' },
+    );
+    if (current_aav && Number(current_aav) > 0) {
+      statRows.push({ label: 'Current AAV', value: `$${Number(current_aav).toFixed(1)}M / yr` });
+    }
+  }
+
   statRows.push(
     { divider: true, title: 'Health & Availability' },
     { label: 'Availability (3yr)', value: avg_availability != null ? `${Math.round(avg_availability * 100)}%` : 'N/A' },
     { label: 'Health Factor', value: health_factor != null ? `${health_factor >= 0 ? '+' : ''}${Number(health_factor).toFixed(1)} pts` : 'N/A' },
-    { divider: true, title: 'Contract Valuation' },
-    { label: 'Contract', value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
+    { divider: true, title: is_extension ? 'Extension Valuation' : 'Contract Valuation' },
+    { label: is_extension ? 'Extension AAV' : 'Contract', value: is_extension ? `$${ask}M/yr × ${years} yr` : `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
+    ...(is_extension ? [{ label: 'Total Extension Cost', value: `$${total_ask}M` }] : []),
     { label: 'Fair AAV (cap-adj PV)', value: `$${effective_fair_aav}M / yr` },
     { label: 'Real Cap Burden (PV)', value: `$${effective_cap_burden}M / yr` },
     { label: 'Total Nominal Value', value: `$${total_nominal_value}M` },
@@ -816,6 +858,7 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
     projected_stats: normalizedProjected,
     career_stats: normalizedCareer,
     team_context: team_context || null,
+    is_extension: !!is_extension,
     meta: {
       positionKey,
       ask: Number(ask),
@@ -825,6 +868,7 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
       playerName: result?.player || '',
       team: team_context?.team || '',
       analysisYear: Number(data?.analysis_year || 2025),
+      extensionStartYear: is_extension ? extension_start_year : null,
     },
   };
 }
@@ -877,6 +921,9 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   const [showRosterNetDialog, setShowRosterNetDialog] = useState(false);
   const [analysisYear, setAnalysisYear] = useState(defaultAnalysisYear);
   const [analysisYearMin, setAnalysisYearMin] = useState(2010);
+  const [extensionMode, setExtensionMode] = useState(false);
+  const [yearsRemaining, setYearsRemaining] = useState(1);
+  const [currentAav, setCurrentAav] = useState('');
 
   const leagueCapForUi = useMemo(() => {
     const v = Number(teamRoster?.league_cap_millions);
@@ -1008,11 +1055,14 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     setError('');
 
     const teamLabel = teamMode && selectedTeam ? ` as ${selectedTeam}` : '';
+    const extLabel = extensionMode
+      ? ` [Extension: ${yearsRemaining} yr remaining, starts ${analysisYear + yearsRemaining}]`
+      : '';
     setMessages((prev) => [
       ...prev,
       {
         role: 'user',
-        content: `Evaluate ${selectedPlayer} (${resolvedPositionKey}) — $${ask}M/yr × ${contractYears} yr contract${teamLabel}.`,
+        content: `Evaluate ${selectedPlayer} (${resolvedPositionKey}) — $${ask}M/yr × ${contractYears} yr ${extensionMode ? 'extension' : 'contract'}${teamLabel}${extLabel}.`,
       },
     ]);
     setLoading(true);
@@ -1023,6 +1073,9 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         salary_ask: ask,
         contract_years: contractYears,
         analysis_year: analysisYear,
+        is_extension: extensionMode,
+        years_remaining: extensionMode ? yearsRemaining : 0,
+        current_aav: extensionMode && currentAav ? parseFloat(currentAav) || 0 : 0,
       };
       if (teamMode && selectedTeam) {
         body.team = selectedTeam;
@@ -1032,22 +1085,59 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         }
       }
 
-      const resp = await fetch(`${apiBase}/evaluate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
+      // In extension mode, run a second call to get projections for the remaining deal years
+      const remainingBody = extensionMode ? {
+        player_name: selectedPlayer,
+        salary_ask: ask,
+        contract_years: yearsRemaining,
+        analysis_year: analysisYear,
+        is_extension: false,
+      } : null;
 
-      if (!resp.ok) {
+      const fetches = [
+        fetch(`${apiBase}/evaluate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }),
+        ...(remainingBody ? [
+          fetch(`${apiBase}/evaluate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(remainingBody),
+          }),
+        ] : []),
+      ];
+
+      const [extResp, remainResp] = await Promise.all(fetches);
+
+      if (!extResp.ok) {
         let detail = 'Evaluation failed.';
         try {
-          const err = await resp.json();
+          const err = await extResp.json();
           detail = err.detail || detail;
         } catch { /* ignore */ }
         throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
       }
 
-      const result = await resp.json();
+      const result = await extResp.json();
+
+      // Merge remaining-deal projections (phase: 'remaining') + extension projections (phase: 'extension')
+      if (extensionMode && remainResp?.ok) {
+        const remainResult = await remainResp.json();
+        const remainingStats = (remainResult?.data?.projected_stats || []).map((s, i) => ({
+          ...s,
+          phase: 'remaining',
+          year: i + 1,
+        }));
+        const extensionStats = (result?.data?.projected_stats || []).map((s, i) => ({
+          ...s,
+          phase: 'extension',
+          year: i + 1,
+        }));
+        result.data.projected_stats = [...remainingStats, ...extensionStats];
+      }
+
       setMessages((prev) => [
         ...prev,
         {
@@ -1633,6 +1723,73 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
           </label>
         </div>
 
+        <div className="fa-team-toggle">
+          <label className="fa-toggle-label">
+            <input
+              type="checkbox"
+              checked={extensionMode}
+              onChange={(e) => setExtensionMode(e.target.checked)}
+            />
+            <span className="fa-toggle-slider" />
+            <span className="fa-toggle-text">Contract Extension Mode</span>
+          </label>
+        </div>
+
+        {extensionMode && (
+          <div className="fa-extension-section">
+            <p className="fa-hint">
+              Evaluate an extension for a player still under contract. The agent projects
+              performance and fair value at the extension start year. Cap space is not a
+              constraint — the team is assumed to have room when the extension begins.
+            </p>
+            <div className="fa-field">
+              <label className="fa-label">
+                Years Remaining on Current Deal — {yearsRemaining} yr
+              </label>
+              <input
+                type="range"
+                min="1"
+                max="7"
+                step="1"
+                className="fa-slider"
+                value={yearsRemaining}
+                onChange={(e) => setYearsRemaining(Number(e.target.value))}
+              />
+              <div className="fa-slider-ticks">
+                {[1,2,3,4,5,6,7].map((n) => (
+                  <span
+                    key={n}
+                    className={n === yearsRemaining ? 'fa-tick fa-tick--active' : 'fa-tick'}
+                    onClick={() => setYearsRemaining(n)}
+                  >
+                    {n}
+                  </span>
+                ))}
+              </div>
+              <p className="fa-hint">
+                Extension begins: <strong>{analysisYear + yearsRemaining}</strong>
+              </p>
+            </div>
+            <div className="fa-field">
+              <label className="fa-label">Current AAV ($M/yr) — optional</label>
+              <div className="fa-price-row">
+                <span className="fa-dollar">$</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  className="fa-input"
+                  placeholder="e.g. 12.0"
+                  value={currentAav}
+                  onChange={(e) => setCurrentAav(e.target.value)}
+                />
+                <span className="fa-million">M</span>
+              </div>
+              <p className="fa-hint">Current deal AAV shown in result for reference only.</p>
+            </div>
+          </div>
+        )}
+
         <div className="fa-field">
           <label className="fa-label">Analysis Year</label>
           <select
@@ -1809,7 +1966,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
           onClick={handleAnalyze}
           disabled={loading || fetchingPlayers || !selectedPlayer}
         >
-          {loading ? 'Analyzing…' : teamMode ? 'Analyze as Team' : 'Analyze Player'}
+          {loading ? 'Analyzing…' : extensionMode ? 'Analyze Extension' : teamMode ? 'Analyze as Team' : 'Analyze Player'}
         </button>
 
         <div className="fa-legend">
@@ -1879,6 +2036,11 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                 </div>
               ) : (
                 <div className="fa-msg-card">
+                  {msg.structured.is_extension && (
+                    <div className="fa-extension-badge">
+                      EXTENSION — begins {msg.structured.meta?.extensionStartYear ?? ''}
+                    </div>
+                  )}
                   <div className={`fa-decision-badge ${msg.structured.highlight}`}>
                     {msg.structured.decision}
                   </div>

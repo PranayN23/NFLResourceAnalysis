@@ -657,8 +657,12 @@ html, body {
 .fa-breakdown-table td:first-child { text-align: left; color: #888; }
 .fa-breakdown-table tr:last-child td { border-bottom: none; }
 
-.fa-pos-delta { color: #5dbb6e; }
-.fa-neg-delta { color: #e05555; }
+/* Δ column: 5-tier colour scale based on % ask above/below fair value */
+.fa-delta-huge-surplus { color: #3de87a; font-weight: 600; }   /* >15% below fair — great value   */
+.fa-delta-surplus      { color: #8ecf6a; }                     /* 5–15% below fair — slight surplus */
+.fa-delta-neutral      { color: #c8c060; }                     /* ±5% — roughly fair               */
+.fa-delta-overpay      { color: #e09040; }                     /* 5–15% above fair — slight overpay */
+.fa-delta-huge-overpay { color: #e05050; font-weight: 600; }   /* >15% above fair — big overpay    */
 
 .fa-breakdown-note {
   color: #555;
@@ -738,6 +742,20 @@ html, body {
 /* Projected columns — gold tint */
 .fa-stats-col-proj { border-bottom: 2px solid #5a4200; }
 .fa-stats-col-proj .fa-stats-col-hdr { color: #c9960a; }
+
+/* Extension: remaining deal years — amber/orange tint */
+.fa-stats-col-remaining { border-bottom: 2px solid #7a4400; }
+.fa-stats-col-remaining .fa-stats-col-hdr { color: #e07820; }
+.fa-stats-col-remaining .fa-stats-col-sub { color: #7a5030; }
+.fa-stats-cell-remaining { color: #f0b070 !important; }
+
+/* Extension: extension years — blue tint */
+.fa-stats-col-extension { border-bottom: 2px solid #1a4a7a; }
+.fa-stats-col-ext-first { border-left: 2px solid #2a5a9a; }
+.fa-stats-col-extension .fa-stats-col-hdr { color: #64a0ff; }
+.fa-stats-col-extension .fa-stats-col-sub { color: #3a5a80; }
+.fa-stats-cell-extension { color: #90c0ff !important; }
+.fa-stats-cell-ext-first { border-left: 2px solid #1a3a5a !important; }
 
 .fa-stats-tbl td {
   color: #ccc;
@@ -1619,6 +1637,29 @@ html, body {
   font-size: 13px;
   line-height: 1.55;
   color: #b0acc4;
+}
+
+/* ── Contract Extension ── */
+.fa-extension-section {
+  margin-top: 4px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(100, 160, 255, 0.06);
+  border: 1px solid rgba(100, 160, 255, 0.18);
+}
+
+.fa-extension-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: #64a0ff;
+  background: rgba(100, 160, 255, 0.12);
+  border: 1px solid rgba(100, 160, 255, 0.3);
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin-bottom: 6px;
 }
 
 /* ── Responsive: stack on small screens ── */

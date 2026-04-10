@@ -92,11 +92,15 @@ class EvaluationRequest(BaseModel):
     team:              str   = ""
     cap_available_pct: float = 0.0
     analysis_year:    int = Field(default=2025, ge=1900, le=2025)
+    is_extension:   bool  = False
+    years_remaining: int  = Field(default=0, ge=0, le=10)
+    current_aav:    float = 0.0
 
 
 @app.post("/evaluate")
 async def evaluate_player(req: EvaluationRequest):
     analysis_year = clamp_analysis_year(req.analysis_year)
+    effective_year = max(1900, min(2032, analysis_year + req.years_remaining)) if req.is_extension else analysis_year
     player_full = df_players[df_players["player"] == req.player_name].copy()
     player_data = history_as_of_year(player_full, analysis_year)
     if len(player_data) == 0:
@@ -143,10 +147,19 @@ async def evaluate_player(req: EvaluationRequest):
             "salary_cap_year": int(analysis_year),
         }
 
+    if req.is_extension and team_ctx:
+        ext_signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years, effective_year)
+        team_state_fields["team_cap_available_pct"] = 100.0
+        team_state_fields["signing_cap_pcts"] = ext_signing_pcts
+        team_ctx["available_cap_pct"] = 100.0
+        team_ctx["signing_cap_pcts"] = ext_signing_pcts
+        team_ctx["league_cap_millions"] = round(league_cap_millions(effective_year), 2)
+        team_ctx["salary_cap_year"] = int(effective_year)
+
     initial_state = {
         "player_name": req.player_name, "salary_ask": req.salary_ask,
         "contract_years": req.contract_years,
-            "analysis_year": analysis_year,
+            "analysis_year": effective_year,
         "player_history": player_data,
         "player_history_full": player_full,
         "predicted_tier": "", "confidence": {}, "current_age": 27,
@@ -167,7 +180,11 @@ async def evaluate_player(req: EvaluationRequest):
         "data": {
             "predicted_tier": final_state["predicted_tier"], "current_age": final_state["current_age"],
             "contract_years": req.contract_years,
-            "analysis_year": analysis_year, "effective_fair_aav": final_state["valuation"],
+            "analysis_year": analysis_year, "effective_year": effective_year,
+            "is_extension": req.is_extension, "extension_start_year": effective_year if req.is_extension else None,
+            "years_remaining": req.years_remaining if req.is_extension else None,
+            "current_aav": req.current_aav if req.is_extension else None,
+            "effective_fair_aav": final_state["valuation"],
             "effective_cap_burden": final_state["effective_cap_burden"],
             "total_nominal_value": final_state["total_nominal_value"],
             "total_ask": round(req.salary_ask * req.contract_years, 2),
