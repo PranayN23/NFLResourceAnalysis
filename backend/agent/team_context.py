@@ -16,6 +16,7 @@ from backend.agent.scheme_personnel import (
     adjust_positional_need_blend_weights,
     get_team_scheme_personnel_row,
 )
+from backend.agent.api_year_utils import age_during_season
 
 CAP_GROWTH_RATE = 0.065
 BASE_CAP_YEAR = 2024
@@ -136,6 +137,7 @@ def get_team_roster(
     )
 
     roster = []
+    my = int(max_year)
     for _, row in team_df.iterrows():
         grade = _safe_float(row.get(_grade_col)) if _grade_col else 0.0
         snaps = _safe_float(row.get(_snap_col)) if _snap_col else 0.0
@@ -148,6 +150,15 @@ def get_team_roster(
 
         if snaps < 1 and grade < 1:
             continue
+
+        if "age" in position_df.columns and "Year" in position_df.columns:
+            nm = str(name).strip().lower()
+            p_hist = position_df[
+                position_df["player"].astype(str).str.strip().str.lower() == nm
+            ]
+            adj = age_during_season(p_hist, my)
+            if adj is not None:
+                age = float(adj)
 
         roster.append({
             "player": name,

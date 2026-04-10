@@ -97,7 +97,8 @@ class EvaluationRequest(BaseModel):
 @app.post("/evaluate")
 async def evaluate_player(req: EvaluationRequest):
     analysis_year = clamp_analysis_year(req.analysis_year)
-    player_data = history_as_of_year(df_players[df_players["player"] == req.player_name].copy(), analysis_year)
+    player_full = df_players[df_players["player"] == req.player_name].copy()
+    player_data = history_as_of_year(player_full, analysis_year)
     if len(player_data) == 0:
         raise HTTPException(status_code=404, detail=f"Player '{req.player_name}' not found.")
 
@@ -145,7 +146,9 @@ async def evaluate_player(req: EvaluationRequest):
     initial_state = {
         "player_name": req.player_name, "salary_ask": req.salary_ask,
         "contract_years": req.contract_years,
-            "analysis_year": analysis_year, "player_history": player_data,
+            "analysis_year": analysis_year,
+        "player_history": player_data,
+        "player_history_full": player_full,
         "predicted_tier": "", "confidence": {}, "current_age": 27,
         "last_season_stats": {}, "career_stats": [], "stats_score": 0.0,
         "composite_grade": 0.0, "valuation": 0.0, "effective_cap_burden": 0.0,

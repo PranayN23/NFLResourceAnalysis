@@ -27,6 +27,8 @@ import pandas as pd
 import numpy as np
 import os, datetime
 
+from backend.agent.api_year_utils import resolve_player_age_for_evaluation
+
 # ─────────────────────────────────────────────
 # Paths
 # ─────────────────────────────────────────────
@@ -466,10 +468,12 @@ def predict_performance(state: EDAgentState):
     tier, details = ed_engine.get_prediction(state["player_history"])
     model_grade   = details.get("predicted_grade", 60.0)
 
-    # Age from last recorded season + current year offset
     history      = state["player_history"]
     current_year = int(state.get("analysis_year") or datetime.date.today().year)
-    if "age" in history.columns and "Year" in history.columns:
+    resolved_age = resolve_player_age_for_evaluation(state.get("player_history_full"), history)
+    if resolved_age is not None:
+        current_age = resolved_age
+    elif "age" in history.columns and "Year" in history.columns:
         last_row           = history.sort_values("Year").iloc[-1]
         age_at_last_season = int(float(last_row["age"]))
         last_season_year   = int(float(last_row["Year"]))

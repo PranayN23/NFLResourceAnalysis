@@ -28,6 +28,8 @@ import pandas as pd
 import numpy as np
 import os, datetime
 
+from backend.agent.api_year_utils import resolve_player_age_for_evaluation
+
 _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 T_CSV_PATH = os.path.join(_BASE, "ML", "T.csv")
 G_CSV_PATH = os.path.join(_BASE, "ML", "G.csv")
@@ -330,7 +332,10 @@ def predict_performance(state: OLAgentState):
     position = state.get("ol_position", "G")
     pass_weight = 0.65 if position == "T" else 0.50
     current_year = int(state.get("analysis_year") or datetime.date.today().year)
-    if "age" in history.columns and "Year" in history.columns:
+    resolved_age = resolve_player_age_for_evaluation(state.get("player_history_full"), history)
+    if resolved_age is not None:
+        current_age = resolved_age
+    elif "age" in history.columns and "Year" in history.columns:
         last_row = history.sort_values("Year").iloc[-1]
         current_age = int(float(last_row["age"])) + (current_year - int(float(last_row["Year"])))
     else:
