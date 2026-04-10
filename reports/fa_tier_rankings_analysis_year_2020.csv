@@ -1,0 +1,1224 @@
+player,grade,model_grade,stats_grade,snaps,primary_team,teams,rank_overall,tier,rank_in_tier,position_key,position_label,season_year
+Corey Linsley,95.51,89.9,95.09,734.0,Packers,Packers,1,Elite,1,C,Center,2020
+Brandon Linder,88.18,80.0,89.47,530.0,Jaguars,Jaguars,2,Elite,2,C,Center,2020
+Ben Jones,86.71,78.6,87.95,1042.0,Titans,Titans,3,Elite,3,C,Center,2020
+Cody Whitehair,85.63,76.3,87.68,893.0,Bears,Bears,4,Elite,4,C,Center,2020
+J.C. Tretter,85.41,77.3,86.65,1061.0,Browns,Browns,5,Elite,5,C,Center,2020
+Frank Ragnow,85.25,80.3,84.38,929.0,Lions,Lions,6,Elite,6,C,Center,2020
+Chase Roullier,84.98,76.8,86.26,1089.0,Commanders,Commanders,7,Elite,7,C,Center,2020
+Rodney Hudson,82.66,73.6,84.53,1082.0,Raiders,Raiders,8,Elite,8,C,Center,2020
+Jason Kelce,82.0,69.6,86.1,1126.0,Eagles,Eagles,9,Elite,9,C,Center,2020
+Austin Reiter,79.89,70.9,81.72,867.0,Chiefs,Chiefs,10,Good,1,C,Center,2020
+Erik McCoy,79.82,70.1,82.14,1073.0,Saints,Saints,11,Good,2,C,Center,2020
+Ryan Kelly,78.8,69.0,81.16,1007.0,Colts,Colts,12,Good,3,C,Center,2020
+Ben Garland,78.08,71.1,78.56,333.0,49ers,49ers,13,Good,4,C,Center,2020
+Daniel Kilgore,78.04,68.6,80.16,236.0,Chiefs,Chiefs,14,Good,5,C,Center,2020
+Ryan Jensen,77.97,64.9,82.51,1061.0,Buccaneers,Buccaneers,15,Good,6,C,Center,2020
+David Andrews,77.88,67.7,80.5,724.0,Patriots,Patriots,16,Good,7,C,Center,2020
+Patrick Mekari,77.81,66.9,80.91,554.0,Ravens,Ravens,17,Good,8,C,Center,2020
+Alex Mack,77.15,65.9,80.48,972.0,Falcons,Falcons,18,Good,9,C,Center,2020
+Mitch Morse,76.5,65.8,79.47,880.0,Bills,Bills,19,Good,10,C,Center,2020
+Ted Karras,76.26,65.4,79.34,1068.0,Dolphins,Dolphins,20,Good,11,C,Center,2020
+Trey Hopkins,75.2,63.8,78.63,938.0,Bengals,Bengals,21,Good,12,C,Center,2020
+Trystan Colon,74.6,67.6,75.1,127.0,Ravens,Ravens,22,Good,13,C,Center,2020
+Connor McGovern,74.52,62.2,78.56,969.0,Jets,Jets,23,Good,14,C,Center,2020
+Garrett Bradbury,74.06,61.4,78.34,1082.0,Vikings,Vikings,24,Good,15,C,Center,2020
+Matt Paradis,73.89,63.4,76.71,1029.0,Panthers,Panthers,25,Starter,1,C,Center,2020
+A.Q. Shipley,72.44,56.0,79.23,157.0,Buccaneers,Buccaneers,26,Starter,2,C,Center,2020
+Maurkice Pouncey,71.62,60.5,74.86,863.0,Steelers,Steelers,27,Starter,3,C,Center,2020
+Sam Mustipher,71.53,58.9,75.78,504.0,Bears,Bears,28,Starter,4,C,Center,2020
+Billy Price,69.78,50.7,78.34,208.0,Bengals,Bengals,29,Starter,5,C,Center,2020
+Mason Cole,69.72,54.4,75.77,913.0,Cardinals,Cardinals,30,Starter,6,C,Center,2020
+Nick Martin,68.59,56.1,72.75,980.0,Texans,Texans,31,Starter,7,C,Center,2020
+Tyler Biadasz,68.2,53.5,73.84,427.0,Cowboys,Cowboys,32,Starter,8,C,Center,2020
+Hroniss Grasu,67.73,52.4,73.78,215.0,49ers,49ers,33,Starter,9,C,Center,2020
+J.C. Hassenauer,66.81,57.7,68.72,303.0,Steelers,Steelers,34,Starter,10,C,Center,2020
+Matt Skura,66.51,50.2,73.22,661.0,Ravens,Ravens,35,Starter,11,C,Center,2020
+Matt Hennessy,64.87,47.0,72.62,225.0,Falcons,Falcons,36,Starter,12,C,Center,2020
+Joe Looney,64.76,50.7,69.97,764.0,Cowboys,Cowboys,37,Starter,13,C,Center,2020
+James Ferentz,64.19,54.3,66.61,162.0,Patriots,Patriots,38,Starter,14,C,Center,2020
+Lloyd Cushenberry III,59.43,40.5,67.89,1076.0,Broncos,Broncos,39,Rotation/backup,1,C,Center,2020
+Jaire Alexander,91.91,90.6,89.76,900.0,Packers,Packers,1,Elite,1,CB,Cornerback,2020
+Xavien Howard,90.37,89.6,90.98,936.0,Dolphins,Dolphins,2,Elite,2,CB,Cornerback,2020
+Bryce Callahan,86.64,86.7,86.19,655.0,Broncos,Broncos,3,Elite,3,CB,Cornerback,2020
+Darious Williams,84.46,79.6,87.43,824.0,Rams,Rams,4,Elite,4,CB,Cornerback,2020
+Jamel Dean,84.37,79.9,86.84,711.0,Buccaneers,Buccaneers,5,Elite,5,CB,Cornerback,2020
+Jalen Ramsey,83.55,80.3,83.31,954.0,Rams,Rams,6,Elite,6,CB,Cornerback,2020
+Tre'Davious White,83.39,77.9,84.23,878.0,Bills,Bills,7,Elite,7,CB,Cornerback,2020
+Jonathan Jones,83.3,80.8,81.11,730.0,Patriots,Patriots,8,Elite,8,CB,Cornerback,2020
+James Bradberry,82.67,79.9,81.19,1021.0,Giants,Giants,9,Elite,9,CB,Cornerback,2020
+Marlon Humphrey,82.47,77.6,82.49,972.0,Ravens,Ravens,10,Elite,10,CB,Cornerback,2020
+Xavier Rhodes,82.46,77.5,82.33,902.0,Colts,Colts,11,Elite,11,CB,Cornerback,2020
+Brian Poole,81.12,79.5,83.36,483.0,Jets,Jets,12,Elite,12,CB,Cornerback,2020
+Kenny Moore II,80.42,78.1,79.57,952.0,Colts,Colts,13,Elite,13,CB,Cornerback,2020
+Ronald Darby,80.33,75.9,82.13,1002.0,Commanders,Commanders,14,Elite,14,CB,Cornerback,2020
+Ahkello Witherspoon,80.03,80.9,81.43,334.0,49ers,49ers,15,Elite,15,CB,Cornerback,2020
+Rashad Fenton,79.93,75.0,83.48,527.0,Chiefs,Chiefs,16,Good,1,CB,Cornerback,2020
+Malcolm Butler,79.2,72.7,81.55,1087.0,Titans,Titans,17,Good,2,CB,Cornerback,2020
+Troy Hill,79.05,75.7,78.69,973.0,Rams,Rams,18,Good,3,CB,Cornerback,2020
+Denzel Ward,78.84,74.6,81.47,776.0,Browns,Browns,19,Good,4,CB,Cornerback,2020
+William Jackson III,78.57,72.4,80.19,886.0,Bengals,Bengals,20,Good,5,CB,Cornerback,2020
+Cameron Sutton,77.53,73.9,76.82,552.0,Steelers,Steelers,21,Good,6,CB,Cornerback,2020
+J.C. Jackson,77.53,70.1,78.95,851.0,Patriots,Patriots,22,Good,7,CB,Cornerback,2020
+Jimmy Smith,76.94,75.7,79.24,454.0,Ravens,Ravens,23,Good,8,CB,Cornerback,2020
+Jason Verrett,76.75,76.1,79.27,803.0,49ers,49ers,24,Good,9,CB,Cornerback,2020
+Kyle Fuller,76.58,70.1,76.74,1060.0,Bears,Bears,25,Good,10,CB,Cornerback,2020
+Joe Haden,76.49,69.6,78.16,846.0,Steelers,Steelers,26,Good,11,CB,Cornerback,2020
+Ross Cockrell,76.4,74.2,79.33,238.0,Buccaneers,Buccaneers,27,Good,12,CB,Cornerback,2020
+Marcus Peters,76.37,69.4,77.88,912.0,Ravens,Ravens,28,Good,13,CB,Cornerback,2020
+Bashaud Breeland,76.2,72.9,78.72,690.0,Chiefs,Chiefs,29,Good,14,CB,Cornerback,2020
+L'Jarius Sneed,76.15,73.7,80.92,410.0,Chiefs,Chiefs,30,Good,15,CB,Cornerback,2020
+Bradley Roby,76.13,72.2,79.78,613.0,Texans,Texans,31,Good,16,CB,Cornerback,2020
+Donte Jackson,74.89,69.0,76.94,599.0,Panthers,Panthers,32,Good,17,CB,Cornerback,2020
+Darius Phillips,74.59,68.1,81.0,593.0,Bengals,Bengals,33,Good,18,CB,Cornerback,2020
+Sidney Jones IV,74.36,71.3,80.25,303.0,Jaguars,Jaguars,34,Good,19,CB,Cornerback,2020
+D.J. Reed,74.23,69.8,78.53,560.0,Seahawks,Seahawks,35,Good,20,CB,Cornerback,2020
+Steven Nelson,74.11,68.1,74.79,908.0,Steelers,Steelers,36,Good,21,CB,Cornerback,2020
+Charvarius Ward,73.57,66.8,77.47,782.0,Chiefs,Chiefs,37,Starter,1,CB,Cornerback,2020
+Josh Norman,73.5,69.9,77.46,344.0,Bills,Bills,38,Starter,2,CB,Cornerback,2020
+T.J. Carrie,73.43,67.0,74.9,396.0,Colts,Colts,39,Starter,3,CB,Cornerback,2020
+Janoris Jenkins,73.38,66.0,76.02,805.0,Saints,Saints,40,Starter,4,CB,Cornerback,2020
+Carlton Davis III,73.34,66.4,76.08,906.0,Buccaneers,Buccaneers,41,Starter,5,CB,Cornerback,2020
+Trevon Diggs,72.81,63.9,78.75,758.0,Cowboys,Cowboys,42,Starter,6,CB,Cornerback,2020
+Mike Hilton,72.75,67.0,74.7,464.0,Steelers,Steelers,43,Starter,7,CB,Cornerback,2020
+Mackensie Alexander,72.63,67.2,74.79,642.0,Bengals,Bengals,44,Starter,8,CB,Cornerback,2020
+Shaquill Griffin,72.39,63.6,76.78,812.0,Seahawks,Seahawks,45,Starter,9,CB,Cornerback,2020
+Richard Sherman,72.37,67.2,78.1,332.0,49ers,49ers,46,Starter,10,CB,Cornerback,2020
+Kendall Fuller,72.37,65.3,75.74,893.0,Commanders,Commanders,47,Starter,11,CB,Cornerback,2020
+Michael Davis,72.28,62.9,76.25,958.0,Chargers,Chargers,48,Starter,12,CB,Cornerback,2020
+Darius Slay,72.26,63.1,75.55,885.0,Eagles,Eagles,49,Starter,13,CB,Cornerback,2020
+Breon Borders,71.71,71.4,76.08,360.0,Titans,Titans,50,Starter,14,CB,Cornerback,2020
+Terrance Mitchell,71.49,63.4,76.89,1070.0,Browns,Browns,51,Starter,15,CB,Cornerback,2020
+Cameron Dantzler,71.22,69.8,73.2,601.0,Vikings,Vikings,52,Starter,16,CB,Cornerback,2020
+Ugo Amadi,71.14,67.1,75.26,552.0,Seahawks,Seahawks,53,Starter,17,CB,Cornerback,2020
+Chandon Sullivan,70.9,65.4,71.96,729.0,Packers,Packers,54,Starter,18,CB,Cornerback,2020
+Javelin Guidry,70.5,76.5,73.2,172.0,Jets,Jets,55,Starter,19,CB,Cornerback,2020
+Byron Murphy Jr.,70.44,63.3,71.69,795.0,Cardinals,Cardinals,56,Starter,20,CB,Cornerback,2020
+Casey Hayward Jr.,70.24,59.5,74.26,788.0,Chargers,Chargers,57,Starter,21,CB,Cornerback,2020
+Fabian Moreau,70.09,64.3,73.12,158.0,Commanders,Commanders,58,Starter,22,CB,Cornerback,2020
+Johnathan Joseph,69.67,63.1,73.53,423.0,Cardinals,Cardinals,59,Starter,23,CB,Cornerback,2020
+Rasul Douglas,69.49,60.2,72.99,821.0,Panthers,Panthers,60,Starter,24,CB,Cornerback,2020
+Trayvon Mullen,69.04,58.3,72.03,933.0,Raiders,Raiders,61,Starter,25,CB,Cornerback,2020
+K'Waun Williams,68.97,64.8,72.49,284.0,49ers,49ers,62,Starter,26,CB,Cornerback,2020
+Byron Jones,68.97,61.5,71.14,814.0,Dolphins,Dolphins,63,Starter,27,CB,Cornerback,2020
+Adoree' Jackson,68.94,66.8,74.53,155.0,Titans,Titans,64,Starter,28,CB,Cornerback,2020
+Blidi Wreh-Wilson,68.87,63.2,74.0,245.0,Falcons,Falcons,65,Starter,29,CB,Cornerback,2020
+Corn Elder,68.77,68.2,66.65,411.0,Panthers,Panthers,66,Starter,30,CB,Cornerback,2020
+Dontae Johnson,68.09,65.2,72.84,273.0,49ers,49ers,67,Starter,31,CB,Cornerback,2020
+Stephon Gilmore,68.0,58.5,72.76,632.0,Patriots,Patriots,68,Starter,32,CB,Cornerback,2020
+Desmond King II,67.46,60.9,68.7,709.0,Titans,Titans,69,Starter,33,CB,Cornerback,2020
+Jaylon Johnson,67.06,56.1,73.33,867.0,Bears,Bears,70,Starter,34,CB,Cornerback,2020
+Marshon Lattimore,66.96,53.7,73.3,871.0,Saints,Saints,71,Starter,35,CB,Cornerback,2020
+Levi Wallace,66.53,56.0,73.35,612.0,Bills,Bills,72,Starter,36,CB,Cornerback,2020
+Darqueze Dennard,66.48,63.1,71.55,439.0,Falcons,Falcons,73,Starter,37,CB,Cornerback,2020
+Harrison Hand,66.26,62.4,78.08,163.0,Vikings,Vikings,74,Starter,38,CB,Cornerback,2020
+Patrick Robinson,65.77,56.9,74.38,248.0,Saints,Saints,75,Starter,39,CB,Cornerback,2020
+Emmanuel Moseley,65.46,54.6,70.62,499.0,49ers,49ers,76,Starter,40,CB,Cornerback,2020
+Jason McCourty,65.41,51.8,71.57,665.0,Patriots,Patriots,77,Starter,41,CB,Cornerback,2020
+Darryl Roberts,65.27,55.0,72.31,469.0,Lions,Lions,78,Starter,42,CB,Cornerback,2020
+Tye Smith,65.1,64.1,69.2,169.0,Titans,Titans,79,Starter,43,CB,Cornerback,2020
+Bryce Hall,65.0,62.8,70.64,547.0,Jets,Jets,80,Starter,44,CB,Cornerback,2020
+Chris Harris Jr.,64.97,57.4,70.34,568.0,Chargers,Chargers,81,Starter,45,CB,Cornerback,2020
+Isaiah Oliver,64.96,53.3,69.6,831.0,Falcons,Falcons,82,Starter,46,CB,Cornerback,2020
+CJ Henderson,64.87,58.3,73.41,474.0,Jaguars,Jaguars,83,Starter,47,CB,Cornerback,2020
+A.J. Terrell,64.84,57.0,67.98,908.0,Falcons,Falcons,84,Starter,48,CB,Cornerback,2020
+Joejuan Williams,64.61,53.7,74.89,172.0,Patriots,Patriots,85,Starter,49,CB,Cornerback,2020
+Keion Crossen,64.58,61.5,70.9,307.0,Texans,Texans,86,Starter,50,CB,Cornerback,2020
+Anthony Averett,64.43,60.6,70.0,355.0,Ravens,Ravens,87,Starter,51,CB,Cornerback,2020
+Taron Johnson,64.36,55.6,68.32,825.0,Bills,Bills,88,Starter,52,CB,Cornerback,2020
+Patrick Peterson,64.11,53.1,69.17,1096.0,Cardinals,Cardinals,89,Starter,53,CB,Cornerback,2020
+Sean Murphy-Bunting,63.6,55.2,65.41,884.0,Buccaneers,Buccaneers,90,Starter,54,CB,Cornerback,2020
+Jimmy Moreland,63.27,56.7,64.26,601.0,Commanders,Commanders,91,Starter,55,CB,Cornerback,2020
+Nevin Lawson,63.25,54.7,67.92,737.0,Raiders,Raiders,92,Starter,56,CB,Cornerback,2020
+Nickell Robey-Coleman,63.22,53.3,66.19,612.0,Eagles,Eagles,93,Starter,57,CB,Cornerback,2020
+Josh Jackson,62.44,51.7,69.09,331.0,Packers,Packers,94,Starter,58,CB,Cornerback,2020
+Jamal Perry,62.29,53.6,67.95,140.0,Dolphins,Dolphins,95,Starter,59,CB,Cornerback,2020
+Tre Herndon,62.18,50.7,68.48,1017.0,Jaguars,Jaguars,96,Starter,60,CB,Cornerback,2020
+A.J. Bouye,62.06,52.4,70.26,410.0,Broncos,Broncos,97,Starter,61,CB,Cornerback,2020
+Chidobe Awuzie,61.95,52.0,68.78,452.0,Cowboys,Cowboys,98,Rotation/backup,1,CB,Cornerback,2020
+Rashard Robinson,61.68,55.9,72.62,187.0,Cowboys,Cowboys,99,Rotation/backup,2,CB,Cornerback,2020
+Kevin King,61.55,52.1,68.69,664.0,Packers,Packers,100,Rotation/backup,3,CB,Cornerback,2020
+Mike Hughes,61.55,56.7,69.58,173.0,Vikings,Vikings,101,Rotation/backup,4,CB,Cornerback,2020
+Jamar Taylor,60.86,52.9,69.09,203.0,49ers,49ers,102,Rotation/backup,5,CB,Cornerback,2020
+Rock Ya-Sin,60.68,48.2,67.18,550.0,Colts,Colts,103,Rotation/backup,6,CB,Cornerback,2020
+Chris Claybrooks,60.64,57.4,62.8,375.0,Jaguars,Jaguars,104,Rotation/backup,7,CB,Cornerback,2020
+Myles Hartsfield,60.49,59.8,64.09,140.0,Panthers,Panthers,105,Rotation/backup,8,CB,Cornerback,2020
+Tre Flowers,60.41,51.0,65.65,578.0,Seahawks,Seahawks,106,Rotation/backup,9,CB,Cornerback,2020
+Amani Oruwariye,60.24,51.2,65.61,1028.0,Lions,Lions,107,Rotation/backup,10,CB,Cornerback,2020
+Isaac Yiadom,60.14,52.1,64.88,634.0,Giants,Giants,108,Rotation/backup,11,CB,Cornerback,2020
+Justin Coleman,59.71,48.4,65.68,470.0,Lions,Lions,109,Rotation/backup,12,CB,Cornerback,2020
+Duke Shelley,59.62,58.8,66.86,209.0,Bears,Bears,110,Rotation/backup,13,CB,Cornerback,2020
+Kevin Johnson,59.6,52.7,65.55,575.0,Browns,Browns,111,Rotation/backup,14,CB,Cornerback,2020
+Jourdan Lewis,59.59,45.8,66.28,817.0,Cowboys,Cowboys,112,Rotation/backup,15,CB,Cornerback,2020
+Anthony Brown,59.37,48.3,68.1,534.0,Cowboys,Cowboys,113,Rotation/backup,16,CB,Cornerback,2020
+Buster Skrine,59.33,46.2,66.42,557.0,Bears,Bears,114,Rotation/backup,17,CB,Cornerback,2020
+De'Vante Bausby,59.19,54.0,70.06,277.0,Broncos,Broncos,115,Rotation/backup,18,CB,Cornerback,2020
+Tevaughn Campbell,59.17,50.3,67.16,326.0,Chargers,Chargers,116,Rotation/backup,19,CB,Cornerback,2020
+Ka'dar Hollman,59.16,54.9,68.9,108.0,Packers,Packers,117,Rotation/backup,20,CB,Cornerback,2020
+Nik Needham,58.86,45.3,66.6,617.0,Dolphins,Dolphins,118,Rotation/backup,21,CB,Cornerback,2020
+Phillip Gaines,58.66,53.5,66.78,262.0,Texans,Texans,119,Rotation/backup,22,CB,Cornerback,2020
+Pierre Desir,58.18,42.5,69.05,519.0,Ravens,Ravens,120,Rotation/backup,23,CB,Cornerback,2020
+Darnay Holmes,57.93,48.8,64.02,442.0,Giants,Giants,121,Rotation/backup,24,CB,Cornerback,2020
+Dre Kirkpatrick,57.84,46.1,66.28,750.0,Cardinals,Cardinals,122,Rotation/backup,25,CB,Cornerback,2020
+Quinton Dunbar,57.69,44.2,71.17,397.0,Seahawks,Seahawks,123,Rotation/backup,26,CB,Cornerback,2020
+Daryl Worley,57.59,42.2,68.36,346.0,Raiders,Raiders,124,Rotation/backup,27,CB,Cornerback,2020
+Antonio Hamilton Sr.,57.24,47.5,68.68,136.0,Chiefs,Chiefs,125,Rotation/backup,28,CB,Cornerback,2020
+Kristian Fulton,57.18,56.5,66.89,203.0,Titans,Titans,126,Rotation/backup,29,CB,Cornerback,2020
+Chris Jones,56.72,46.8,66.06,273.0,Vikings,Vikings,127,Rotation/backup,30,CB,Cornerback,2020
+David Long Jr.,55.94,49.5,62.31,116.0,Rams,Rams,128,Rotation/backup,31,CB,Cornerback,2020
+Essang Bassey,55.9,48.4,62.98,382.0,Broncos,Broncos,129,Rotation/backup,32,CB,Cornerback,2020
+John Reid,55.64,56.8,61.57,145.0,Texans,Texans,130,Rotation/backup,33,CB,Cornerback,2020
+Kris Boyd,55.43,50.3,63.02,343.0,Vikings,Vikings,131,Rotation/backup,34,CB,Cornerback,2020
+Blessuan Austin,55.29,47.4,63.15,681.0,Jets,Jets,132,Rotation/backup,35,CB,Cornerback,2020
+Michael Ojemudia,55.06,49.9,56.41,852.0,Broncos,Broncos,133,Rotation/backup,36,CB,Cornerback,2020
+M.J. Stewart,54.71,44.1,64.39,229.0,Browns,Browns,134,Rotation/backup,37,CB,Cornerback,2020
+Tavierre Thomas,54.44,51.1,63.18,204.0,Browns,Browns,135,Rotation/backup,38,CB,Cornerback,2020
+Davontae Harris,54.17,46.5,63.55,117.0,Ravens,Ravens,136,Rotation/backup,39,CB,Cornerback,2020
+Cre'Von LeBlanc,54.1,43.3,65.79,217.0,Eagles,Eagles,137,Rotation/backup,40,CB,Cornerback,2020
+Jeff Gladney,53.51,48.5,52.68,958.0,Vikings,Vikings,138,Rotation/backup,41,CB,Cornerback,2020
+Greg Mabin,53.48,41.4,68.52,248.0,Jaguars,Jaguars,139,Rotation/backup,42,CB,Cornerback,2020
+Desmond Trufant,53.27,36.7,67.55,324.0,Lions,Lions,140,Rotation/backup,43,CB,Cornerback,2020
+Avonte Maddox,53.19,37.1,65.38,509.0,Eagles,Eagles,141,Rotation/backup,44,CB,Cornerback,2020
+Vernon Hargreaves III,53.17,37.3,63.01,980.0,Texans,Texans,142,Rotation/backup,45,CB,Cornerback,2020
+Isaiah Johnson,52.98,35.7,68.28,181.0,Raiders,Raiders,143,Rotation/backup,46,CB,Cornerback,2020
+LeShaun Sims,52.96,40.1,61.95,607.0,Bengals,Bengals,144,Rotation/backup,47,CB,Cornerback,2020
+Kendall Sheffield,52.66,36.9,62.39,524.0,Falcons,Falcons,145,Rotation/backup,48,CB,Cornerback,2020
+Ryan Lewis,52.56,42.8,65.42,271.0,Giants,Giants,146,Rotation/backup,49,CB,Cornerback,2020
+Justin Layne,50.55,47.3,57.92,120.0,Steelers,Steelers,147,Rotation/backup,50,CB,Cornerback,2020
+Troy Pride Jr.,49.9,41.7,53.28,529.0,Panthers,Panthers,148,Rotation/backup,51,CB,Cornerback,2020
+Lamar Jackson,49.77,45.8,56.58,453.0,Jets,Jets,149,Rotation/backup,52,CB,Cornerback,2020
+D.J. Hayden,49.18,32.6,63.36,234.0,Jaguars,Jaguars,150,Rotation/backup,53,CB,Cornerback,2020
+Keisean Nixon,47.18,40.7,56.96,155.0,Raiders,Raiders,151,Rotation/backup,54,CB,Cornerback,2020
+Jeff Okudah,46.99,30.9,60.85,460.0,Lions,Lions,152,Rotation/backup,55,CB,Cornerback,2020
+Kindle Vildor,46.65,49.8,56.35,136.0,Bears,Bears,153,Rotation/backup,56,CB,Cornerback,2020
+Noah Igbinoghene,45.38,38.8,51.85,286.0,Dolphins,Dolphins,154,Rotation/backup,57,CB,Cornerback,2020
+Damon Arnette,45.29,37.5,53.62,343.0,Raiders,Raiders,155,Rotation/backup,58,CB,Cornerback,2020
+Corey Ballentine,45.0,34.4,51.91,107.0,Jets,Jets,156,Rotation/backup,59,CB,Cornerback,2020
+Michael Jacquet,45.0,39.1,61.41,160.0,Eagles,Eagles,157,Rotation/backup,60,CB,Cornerback,2020
+Chris Jackson,45.0,31.1,51.85,241.0,Titans,Titans,158,Rotation/backup,61,CB,Cornerback,2020
+Luq Barcoo,45.0,31.3,53.5,152.0,Jaguars,Jaguars,159,Rotation/backup,62,CB,Cornerback,2020
+Aaron Donald,92.85,88.4,91.65,866.0,Rams,Rams,1,Elite,1,DI,Defensive Interior,2020
+Quinnen Williams,88.06,89.87,85.82,587.0,Jets,Jets,2,Elite,2,DI,Defensive Interior,2020
+DeForest Buckner,86.3,90.07,80.13,751.0,Colts,Colts,3,Elite,3,DI,Defensive Interior,2020
+Grady Jarrett,85.86,85.78,82.16,851.0,Falcons,Falcons,4,Elite,4,DI,Defensive Interior,2020
+Leonard Williams,85.6,89.58,79.1,803.0,Giants,Giants,5,Elite,5,DI,Defensive Interior,2020
+Cameron Heyward,83.77,83.27,80.46,807.0,Steelers,Steelers,6,Elite,6,DI,Defensive Interior,2020
+Kenny Clark,83.66,85.81,80.24,595.0,Packers,Packers,7,Elite,7,DI,Defensive Interior,2020
+Dexter Lawrence,83.47,87.91,76.35,655.0,Giants,Giants,8,Elite,8,DI,Defensive Interior,2020
+Fletcher Cox,83.24,84.97,78.43,747.0,Eagles,Eagles,9,Elite,9,DI,Defensive Interior,2020
+Calais Campbell,82.98,76.15,85.45,410.0,Ravens,Ravens,10,Elite,10,DI,Defensive Interior,2020
+Chris Jones,82.71,87.52,76.81,695.0,Chiefs,Chiefs,11,Elite,11,DI,Defensive Interior,2020
+Mario Edwards Jr.,82.51,83.93,78.64,256.0,Bears,Bears,12,Elite,12,DI,Defensive Interior,2020
+Jonathan Allen,81.44,79.74,78.73,809.0,Commanders,Commanders,13,Elite,13,DI,Defensive Interior,2020
+Shelby Harris,81.42,80.64,80.37,441.0,Broncos,Broncos,14,Elite,14,DI,Defensive Interior,2020
+Zach Sieler,81.36,73.72,88.02,532.0,Dolphins,Dolphins,15,Elite,15,DI,Defensive Interior,2020
+Dalvin Tomlinson,81.02,82.02,76.18,658.0,Giants,Giants,16,Elite,16,DI,Defensive Interior,2020
+Stephon Tuitt,80.98,85.25,78.04,779.0,Steelers,Steelers,17,Elite,17,DI,Defensive Interior,2020
+Poona Ford,80.74,78.66,79.31,670.0,Seahawks,Seahawks,18,Elite,18,DI,Defensive Interior,2020
+Folorunso Fatukasi,80.32,83.15,78.54,507.0,Jets,Jets,19,Elite,19,DI,Defensive Interior,2020
+Sebastian Joseph-Day,79.32,73.06,79.32,412.0,Rams,Rams,20,Good,1,DI,Defensive Interior,2020
+Sheldon Richardson,79.27,73.1,79.21,799.0,Browns,Browns,21,Good,2,DI,Defensive Interior,2020
+Jurrell Casey,79.04,80.81,81.3,156.0,Broncos,Broncos,22,Good,3,DI,Defensive Interior,2020
+B.J. Hill,78.95,77.97,75.44,375.0,Giants,Giants,23,Good,4,DI,Defensive Interior,2020
+Dre'Mont Jones,78.89,78.98,77.39,560.0,Broncos,Broncos,24,Good,5,DI,Defensive Interior,2020
+Vita Vea,78.79,88.7,74.36,224.0,Buccaneers,Buccaneers,25,Good,6,DI,Defensive Interior,2020
+Tim Settle,77.68,71.26,78.52,348.0,Commanders,Commanders,26,Good,7,DI,Defensive Interior,2020
+Akiem Hicks,77.59,71.69,81.32,795.0,Bears,Bears,27,Good,8,DI,Defensive Interior,2020
+Jeffery Simmons,77.4,84.53,71.86,841.0,Titans,Titans,28,Good,9,DI,Defensive Interior,2020
+David Onyemata,77.11,75.39,74.92,599.0,Saints,Saints,29,Good,10,DI,Defensive Interior,2020
+Daron Payne,76.62,74.36,74.28,882.0,Commanders,Commanders,30,Good,11,DI,Defensive Interior,2020
+James Smith-Williams,76.51,57.75,86.93,100.0,Commanders,Commanders,31,Good,12,DI,Defensive Interior,2020
+Zach Kerr,76.2,73.34,76.76,390.0,Panthers,Panthers,32,Good,13,DI,Defensive Interior,2020
+Bilal Nichols,76.2,67.67,79.07,618.0,Bears,Bears,33,Good,14,DI,Defensive Interior,2020
+Christian Wilkins,75.54,73.01,74.36,637.0,Dolphins,Dolphins,34,Good,15,DI,Defensive Interior,2020
+DJ Reader,75.44,79.07,74.91,259.0,Bengals,Bengals,35,Good,16,DI,Defensive Interior,2020
+Javon Hargrave,75.37,65.22,78.49,602.0,Eagles,Eagles,36,Good,17,DI,Defensive Interior,2020
+Linval Joseph,75.18,67.84,77.05,726.0,Chargers,Chargers,37,Good,18,DI,Defensive Interior,2020
+Malcom Brown,75.15,70.24,76.02,345.0,Saints,Saints,38,Good,19,DI,Defensive Interior,2020
+Maurice Hurst,75.12,77.46,72.63,277.0,Raiders,Raiders,39,Good,20,DI,Defensive Interior,2020
+Henry Anderson,74.99,67.82,76.54,549.0,Jets,Jets,40,Good,21,DI,Defensive Interior,2020
+Ndamukong Suh,74.79,62.59,78.75,788.0,Buccaneers,Buccaneers,41,Good,22,DI,Defensive Interior,2020
+Lawrence Guy Sr.,74.72,64.33,78.52,503.0,Patriots,Patriots,42,Good,23,DI,Defensive Interior,2020
+Greg Gaines,74.54,67.65,77.32,201.0,Rams,Rams,43,Good,24,DI,Defensive Interior,2020
+Shy Tuttle,73.42,69.15,74.05,326.0,Saints,Saints,44,Starter,1,DI,Defensive Interior,2020
+Derek Wolfe,73.07,64.99,76.58,621.0,Ravens,Ravens,45,Starter,2,DI,Defensive Interior,2020
+Ed Oliver,72.93,57.59,78.99,578.0,Bills,Bills,46,Starter,3,DI,Defensive Interior,2020
+Michael Brockers,72.61,64.14,74.61,625.0,Rams,Rams,47,Starter,4,DI,Defensive Interior,2020
+Tyson Alualu,72.54,71.43,69.85,448.0,Steelers,Steelers,48,Starter,5,DI,Defensive Interior,2020
+Damon Harrison Sr.,72.49,60.2,81.51,150.0,Packers,Packers,49,Starter,6,DI,Defensive Interior,2020
+Geno Atkins,72.37,55.68,83.49,119.0,Bengals,Bengals,50,Starter,7,DI,Defensive Interior,2020
+Steve McLendon,72.26,57.28,78.59,443.0,Buccaneers,Buccaneers,51,Starter,8,DI,Defensive Interior,2020
+Derrick Brown,72.1,66.14,71.91,742.0,Panthers,Panthers,52,Starter,9,DI,Defensive Interior,2020
+Johnathan Hankins,72.01,61.46,75.08,665.0,Raiders,Raiders,53,Starter,10,DI,Defensive Interior,2020
+DeShawn Williams,71.87,72.88,73.01,436.0,Broncos,Broncos,54,Starter,11,DI,Defensive Interior,2020
+Brandon Williams,71.84,63.41,75.47,354.0,Ravens,Ravens,55,Starter,12,DI,Defensive Interior,2020
+DaQuan Jones,71.64,68.02,69.89,706.0,Titans,Titans,56,Starter,13,DI,Defensive Interior,2020
+Kawann Short,71.31,60.67,85.81,123.0,Panthers,Panthers,57,Starter,14,DI,Defensive Interior,2020
+DeMarcus Walker,71.06,57.95,81.79,384.0,Broncos,Broncos,58,Starter,15,DI,Defensive Interior,2020
+Malik Jackson,70.99,57.36,81.11,537.0,Eagles,Eagles,59,Starter,16,DI,Defensive Interior,2020
+Chris Wormley,70.96,75.59,65.27,148.0,Steelers,Steelers,60,Starter,17,DI,Defensive Interior,2020
+Larry Ogunjobi,70.95,54.73,78.43,642.0,Browns,Browns,61,Starter,18,DI,Defensive Interior,2020
+Taven Bryan,70.6,65.56,69.79,511.0,Jaguars,Jaguars,62,Starter,19,DI,Defensive Interior,2020
+Morgan Fox,70.29,54.46,76.67,403.0,Rams,Rams,63,Starter,20,DI,Defensive Interior,2020
+Raekwon Davis,70.26,71.49,65.28,538.0,Dolphins,Dolphins,64,Starter,21,DI,Defensive Interior,2020
+Grover Stewart,70.23,62.19,71.63,581.0,Colts,Colts,65,Starter,22,DI,Defensive Interior,2020
+Brent Urban,70.02,59.72,73.65,370.0,Bears,Bears,66,Starter,23,DI,Defensive Interior,2020
+Vincent Taylor,69.77,54.78,81.85,207.0,Browns,Browns,67,Starter,24,DI,Defensive Interior,2020
+Derrick Nnadi,69.66,65.56,68.74,460.0,Chiefs,Chiefs,68,Starter,25,DI,Defensive Interior,2020
+Jarran Reed,69.52,58.42,74.64,847.0,Seahawks,Seahawks,69,Starter,26,DI,Defensive Interior,2020
+John Cominsky,69.19,55.07,77.57,399.0,Falcons,Falcons,70,Starter,27,DI,Defensive Interior,2020
+Roy Robertson-Harris,68.97,62.29,73.74,245.0,Bears,Bears,71,Starter,28,DI,Defensive Interior,2020
+William Gholston,68.86,53.69,74.81,606.0,Buccaneers,Buccaneers,72,Starter,29,DI,Defensive Interior,2020
+Mike Pennel,68.66,58.9,74.55,322.0,Chiefs,Chiefs,73,Starter,30,DI,Defensive Interior,2020
+Tershawn Wharton,68.59,58.1,71.41,518.0,Chiefs,Chiefs,74,Starter,31,DI,Defensive Interior,2020
+Kingsley Keke,68.52,63.88,69.66,414.0,Packers,Packers,75,Starter,32,DI,Defensive Interior,2020
+Dean Lowry,68.49,56.8,72.12,601.0,Packers,Packers,76,Starter,33,DI,Defensive Interior,2020
+Quinton Jefferson,68.33,59.09,70.96,534.0,Bills,Bills,77,Starter,34,DI,Defensive Interior,2020
+Hassan Ridgeway,68.18,64.46,76.3,138.0,Eagles,Eagles,78,Starter,35,DI,Defensive Interior,2020
+Danny Shelton,67.93,58.23,72.93,498.0,Lions,Lions,79,Starter,36,DI,Defensive Interior,2020
+Adam Butler,67.81,52.38,74.44,481.0,Patriots,Patriots,80,Starter,37,DI,Defensive Interior,2020
+John Franklin-Myers,67.62,58.61,70.5,500.0,Jets,Jets,81,Starter,38,DI,Defensive Interior,2020
+D.J. Jones,67.57,57.14,74.2,420.0,49ers,49ers,82,Starter,39,DI,Defensive Interior,2020
+Sheldon Rankins,67.34,59.77,72.19,415.0,Saints,Saints,83,Starter,40,DI,Defensive Interior,2020
+Mike Daniels,67.25,49.95,80.67,356.0,Bengals,Bengals,84,Starter,41,DI,Defensive Interior,2020
+Armon Watts,67.0,60.93,70.4,392.0,Vikings,Vikings,85,Starter,42,DI,Defensive Interior,2020
+Tyler Lancaster,66.87,58.01,70.18,352.0,Packers,Packers,86,Starter,43,DI,Defensive Interior,2020
+Vernon Butler,66.75,55.82,71.95,428.0,Bills,Bills,87,Starter,44,DI,Defensive Interior,2020
+Mike Purcell,66.72,56.23,76.11,218.0,Broncos,Broncos,88,Starter,45,DI,Defensive Interior,2020
+Austin Johnson,66.71,60.51,66.68,231.0,Giants,Giants,89,Starter,46,DI,Defensive Interior,2020
+Christian Covington,66.57,52.97,72.3,559.0,Bengals,Bengals,90,Starter,47,DI,Defensive Interior,2020
+Abry Jones,66.47,57.4,74.29,159.0,Jaguars,Jaguars,91,Starter,48,DI,Defensive Interior,2020
+John Jenkins,66.38,59.63,71.19,223.0,Bears,Bears,92,Starter,49,DI,Defensive Interior,2020
+Justin Zimmer,65.65,55.24,78.01,275.0,Bills,Bills,93,Starter,50,DI,Defensive Interior,2020
+Justin Jones,65.47,58.56,68.92,527.0,Chargers,Chargers,94,Starter,51,DI,Defensive Interior,2020
+Javon Kinlaw,65.2,52.25,71.75,547.0,49ers,49ers,95,Starter,52,DI,Defensive Interior,2020
+Neville Gallimore,64.93,48.5,73.8,416.0,Cowboys,Cowboys,96,Starter,53,DI,Defensive Interior,2020
+Kevin Givens,64.92,53.51,76.18,387.0,49ers,49ers,97,Starter,54,DI,Defensive Interior,2020
+Davon Godchaux,64.79,54.79,73.02,172.0,Dolphins,Dolphins,98,Starter,55,DI,Defensive Interior,2020
+A'Shawn Robinson,64.46,52.49,74.0,111.0,Rams,Rams,99,Starter,56,DI,Defensive Interior,2020
+P.J. Hall,64.37,56.64,68.91,343.0,Texans,Texans,100,Starter,57,DI,Defensive Interior,2020
+Harrison Phillips,64.16,61.92,67.63,332.0,Bills,Bills,101,Starter,58,DI,Defensive Interior,2020
+L.J. Collier,63.8,52.15,67.4,559.0,Seahawks,Seahawks,102,Starter,59,DI,Defensive Interior,2020
+Jonathan Bullard,63.79,54.74,73.05,117.0,Seahawks,Seahawks,103,Starter,60,DI,Defensive Interior,2020
+Da'Shawn Hand,63.54,57.52,71.21,353.0,Lions,Lions,104,Starter,61,DI,Defensive Interior,2020
+Charles Omenihu,63.5,53.8,67.23,546.0,Texans,Texans,105,Starter,62,DI,Defensive Interior,2020
+Nathan Shepherd,63.5,56.48,67.24,336.0,Jets,Jets,106,Starter,63,DI,Defensive Interior,2020
+Allen Bailey,63.26,46.5,70.58,424.0,Falcons,Falcons,107,Starter,64,DI,Defensive Interior,2020
+Jordan Phillips,63.2,49.4,71.89,266.0,Cardinals,Cardinals,108,Starter,65,DI,Defensive Interior,2020
+Corey Peters,63.19,51.86,70.42,379.0,Cardinals,Cardinals,109,Starter,66,DI,Defensive Interior,2020
+Doug Costin,62.64,62.23,62.92,456.0,Jaguars,Jaguars,110,Starter,67,DI,Defensive Interior,2020
+Tyeler Davison,62.33,53.43,64.52,519.0,Falcons,Falcons,111,Starter,68,DI,Defensive Interior,2020
+T.Y. McGill,62.21,56.15,70.51,127.0,Eagles,Eagles,112,Starter,69,DI,Defensive Interior,2020
+Isaiah Buggs,62.13,49.67,72.9,131.0,Steelers,Steelers,113,Starter,70,DI,Defensive Interior,2020
+Xavier Williams,62.11,45.98,74.21,320.0,Bengals,Bengals,114,Starter,71,DI,Defensive Interior,2020
+Tyrone Crawford,61.82,46.74,71.67,445.0,Cowboys,Cowboys,115,Rotation/backup,1,DI,Defensive Interior,2020
+Carlos Watkins,61.62,48.8,70.37,542.0,Texans,Texans,116,Rotation/backup,2,DI,Defensive Interior,2020
+Montravius Adams,61.42,51.45,68.69,130.0,Packers,Packers,117,Rotation/backup,3,DI,Defensive Interior,2020
+Leki Fotu,60.87,45.43,72.19,284.0,Cardinals,Cardinals,118,Rotation/backup,4,DI,Defensive Interior,2020
+John Penisini,60.55,43.86,67.51,576.0,Lions,Lions,119,Rotation/backup,5,DI,Defensive Interior,2020
+Damion Square,60.0,47.73,64.02,253.0,Chargers,Chargers,120,Rotation/backup,6,DI,Defensive Interior,2020
+Maliek Collins,59.45,49.34,64.72,505.0,Raiders,Raiders,121,Rotation/backup,7,DI,Defensive Interior,2020
+Brandon Dunn,59.44,46.75,65.71,451.0,Texans,Texans,122,Rotation/backup,8,DI,Defensive Interior,2020
+Ross Blacklock,59.23,45.12,65.5,254.0,Texans,Texans,123,Rotation/backup,9,DI,Defensive Interior,2020
+DaVon Hamilton,58.95,50.2,65.81,408.0,Jaguars,Jaguars,124,Rotation/backup,10,DI,Defensive Interior,2020
+Angelo Blackson,58.86,44.15,64.82,550.0,Cardinals,Cardinals,125,Rotation/backup,11,DI,Defensive Interior,2020
+Antwaun Woods,58.78,49.15,64.17,457.0,Cowboys,Cowboys,126,Rotation/backup,12,DI,Defensive Interior,2020
+Jaleel Johnson,58.64,43.33,64.68,654.0,Vikings,Vikings,127,Rotation/backup,13,DI,Defensive Interior,2020
+Kendal Vickers,58.52,44.74,64.57,315.0,Raiders,Raiders,128,Rotation/backup,14,DI,Defensive Interior,2020
+Caraun Reid,58.44,50.58,69.52,144.0,Jaguars,Jaguars,129,Rotation/backup,15,DI,Defensive Interior,2020
+Byron Cowart,58.3,49.5,65.99,419.0,Patriots,Patriots,130,Rotation/backup,16,DI,Defensive Interior,2020
+Rakeem Nunez-Roches,58.21,45.79,65.02,483.0,Buccaneers,Buccaneers,131,Rotation/backup,17,DI,Defensive Interior,2020
+Margus Hunt,57.82,39.54,67.6,387.0,Bengals,Bengals,132,Rotation/backup,18,DI,Defensive Interior,2020
+Bravvion Roy,57.79,43.85,63.95,419.0,Panthers,Panthers,133,Rotation/backup,19,DI,Defensive Interior,2020
+Akeem Spence,57.79,42.98,69.01,103.0,Patriots,Patriots,134,Rotation/backup,20,DI,Defensive Interior,2020
+Shamar Stephen,57.26,46.85,60.55,662.0,Vikings,Vikings,135,Rotation/backup,21,DI,Defensive Interior,2020
+Justin Ellis,57.13,48.8,65.92,358.0,Ravens,Ravens,136,Rotation/backup,22,DI,Defensive Interior,2020
+Taylor Stallworth,55.49,46.75,61.31,253.0,Colts,Colts,137,Rotation/backup,23,DI,Defensive Interior,2020
+Trevon Coley,55.27,45.17,65.86,192.0,Jets,Jets,138,Rotation/backup,24,DI,Defensive Interior,2020
+Matt Dickerson,54.86,46.75,65.36,197.0,Titans,Titans,139,Rotation/backup,25,DI,Defensive Interior,2020
+Trysten Hill,54.79,47.34,66.27,212.0,Cowboys,Cowboys,140,Rotation/backup,26,DI,Defensive Interior,2020
+Sylvester Williams,54.54,42.68,66.29,173.0,Broncos,Broncos,141,Rotation/backup,27,DI,Defensive Interior,2020
+Malcolm Roach,54.43,43.9,64.58,233.0,Saints,Saints,142,Rotation/backup,28,DI,Defensive Interior,2020
+Domata Peko Sr.,54.32,35.97,70.41,177.0,Cardinals,Cardinals,143,Rotation/backup,29,DI,Defensive Interior,2020
+Kevin Strong,54.27,48.83,63.37,209.0,Lions,Lions,144,Rotation/backup,30,DI,Defensive Interior,2020
+Bryan Mone,54.09,55.19,57.79,228.0,Seahawks,Seahawks,145,Rotation/backup,31,DI,Defensive Interior,2020
+Rashard Lawrence,52.96,42.97,62.76,166.0,Cardinals,Cardinals,146,Rotation/backup,32,DI,Defensive Interior,2020
+Rasheem Green,52.62,42.37,61.54,365.0,Seahawks,Seahawks,147,Rotation/backup,33,DI,Defensive Interior,2020
+Eli Ankou,52.23,43.18,63.89,186.0,Cowboys,Cowboys,148,Rotation/backup,34,DI,Defensive Interior,2020
+Kentavius Street,51.38,42.67,58.75,380.0,49ers,49ers,149,Rotation/backup,35,DI,Defensive Interior,2020
+Daniel Ekuale,51.31,47.4,57.82,290.0,Jaguars,Jaguars,150,Rotation/backup,36,DI,Defensive Interior,2020
+Teair Tart,50.87,47.23,59.99,155.0,Titans,Titans,151,Rotation/backup,37,DI,Defensive Interior,2020
+McTelvin Agim,50.77,44.98,56.72,141.0,Broncos,Broncos,152,Rotation/backup,38,DI,Defensive Interior,2020
+Jordan Elliott,50.64,46.35,49.34,307.0,Browns,Browns,153,Rotation/backup,39,DI,Defensive Interior,2020
+Justin Hamilton,49.46,49.0,54.77,236.0,Cowboys,Cowboys,154,Rotation/backup,40,DI,Defensive Interior,2020
+Marlon Davidson,49.24,52.68,51.11,132.0,Falcons,Falcons,155,Rotation/backup,41,DI,Defensive Interior,2020
+Larrell Murchison,47.45,41.48,53.52,136.0,Titans,Titans,156,Rotation/backup,42,DI,Defensive Interior,2020
+Broderick Washington,45.0,39.78,48.29,161.0,Ravens,Ravens,157,Rotation/backup,43,DI,Defensive Interior,2020
+T.J. Watt,93.03,96.33,87.18,856.0,Steelers,Steelers,1,Elite,1,ED,Edge,2020
+Joey Bosa,91.47,97.12,87.51,549.0,Chargers,Chargers,2,Elite,2,ED,Edge,2020
+Khalil Mack,89.24,93.04,82.96,894.0,Bears,Bears,3,Elite,3,ED,Edge,2020
+Myles Garrett,87.8,95.2,81.61,758.0,Browns,Browns,4,Elite,4,ED,Edge,2020
+DeMarcus Lawrence,85.32,89.47,78.38,668.0,Cowboys,Cowboys,5,Elite,5,ED,Edge,2020
+Shaquil Barrett,84.33,82.19,82.74,824.0,Buccaneers,Buccaneers,6,Elite,6,ED,Edge,2020
+Montez Sweat,82.52,83.97,77.39,693.0,Commanders,Commanders,7,Elite,7,ED,Edge,2020
+Brandon Graham,82.44,80.64,79.47,759.0,Eagles,Eagles,8,Elite,8,ED,Edge,2020
+Justin Houston,81.83,70.77,85.87,608.0,Colts,Colts,9,Elite,9,ED,Edge,2020
+Cameron Jordan,81.8,86.05,74.8,816.0,Saints,Saints,10,Elite,10,ED,Edge,2020
+Za'Darius Smith,80.37,79.44,76.82,858.0,Packers,Packers,11,Elite,11,ED,Edge,2020
+Brian Burns,80.33,75.65,79.93,750.0,Panthers,Panthers,12,Elite,12,ED,Edge,2020
+Marcus Davenport,79.25,87.29,73.89,374.0,Saints,Saints,13,Good,1,ED,Edge,2020
+Rashan Gary,78.45,70.88,79.98,456.0,Packers,Packers,14,Good,2,ED,Edge,2020
+Uchenna Nwosu,77.96,67.66,83.79,356.0,Chargers,Chargers,15,Good,3,ED,Edge,2020
+Bradley Chubb,77.55,71.73,82.05,741.0,Broncos,Broncos,16,Good,4,ED,Edge,2020
+Chase Winovich,76.29,66.3,78.78,593.0,Patriots,Patriots,17,Good,5,ED,Edge,2020
+Trey Flowers,76.22,77.94,76.1,309.0,Lions,Lions,18,Good,6,ED,Edge,2020
+Chase Young,75.54,88.32,63.89,770.0,Commanders,Commanders,19,Good,7,ED,Edge,2020
+Olivier Vernon,74.45,74.47,74.24,805.0,Browns,Browns,20,Good,8,ED,Edge,2020
+Genard Avery,74.37,65.0,84.78,126.0,Eagles,Eagles,21,Good,9,ED,Edge,2020
+Andrew Van Ginkel,74.29,69.41,73.37,479.0,Dolphins,Dolphins,22,Good,10,ED,Edge,2020
+Carlos Dunlap,74.29,66.71,76.32,593.0,Seahawks,Seahawks,23,Good,11,ED,Edge,2020
+Matthew Judon,73.97,59.36,80.58,563.0,Ravens,Ravens,24,Starter,1,ED,Edge,2020
+Trey Hendrickson,73.96,68.52,77.17,558.0,Saints,Saints,25,Starter,2,ED,Edge,2020
+Jadeveon Clowney,73.96,86.36,66.85,425.0,Titans,Titans,26,Starter,3,ED,Edge,2020
+Carl Lawson,73.61,68.27,76.13,723.0,Bengals,Bengals,27,Starter,4,ED,Edge,2020
+Terrell Lewis,73.19,72.2,78.02,124.0,Rams,Rams,28,Starter,5,ED,Edge,2020
+Randy Gregory,73.05,74.48,71.48,270.0,Cowboys,Cowboys,29,Starter,6,ED,Edge,2020
+Ryan Kerrigan,72.94,55.13,81.9,398.0,Commanders,Commanders,30,Starter,7,ED,Edge,2020
+Markus Golden,72.93,57.95,79.79,591.0,Cardinals,Cardinals,31,Starter,8,ED,Edge,2020
+Pernell McPhee,72.87,63.63,78.83,458.0,Ravens,Ravens,32,Starter,9,ED,Edge,2020
+Frank Clark,72.52,62.34,76.29,759.0,Chiefs,Chiefs,33,Starter,10,ED,Edge,2020
+Chandler Jones,72.24,66.89,77.38,286.0,Cardinals,Cardinals,34,Starter,11,ED,Edge,2020
+Melvin Ingram III,71.93,66.64,76.92,361.0,Chargers,Chargers,35,Starter,12,ED,Edge,2020
+Shaq Lawson,71.01,67.19,71.16,571.0,Dolphins,Dolphins,36,Starter,13,ED,Edge,2020
+Jerry Hughes,70.96,61.21,73.81,629.0,Bills,Bills,37,Starter,14,ED,Edge,2020
+Tyus Bowser,70.49,62.63,71.77,540.0,Ravens,Ravens,38,Starter,15,ED,Edge,2020
+Deatrich Wise Jr.,70.49,68.81,68.08,565.0,Patriots,Patriots,39,Starter,16,ED,Edge,2020
+Derek Barnett,70.49,69.65,71.15,535.0,Eagles,Eagles,40,Starter,17,ED,Edge,2020
+Yannick Ngakoue,70.44,59.9,74.14,657.0,Ravens,Ravens,41,Starter,18,ED,Edge,2020
+J.J. Watt,70.1,61.05,74.46,1013.0,Texans,Texans,42,Starter,19,ED,Edge,2020
+Robert Quinn,70.09,55.92,76.52,548.0,Bears,Bears,43,Starter,20,ED,Edge,2020
+Arik Armstead,70.05,65.53,68.89,750.0,49ers,49ers,44,Starter,21,ED,Edge,2020
+Clelin Ferrell,69.86,81.55,61.55,461.0,Raiders,Raiders,45,Starter,22,ED,Edge,2020
+Mario Addison,69.71,52.4,77.91,606.0,Bills,Bills,46,Starter,23,ED,Edge,2020
+Jacob Martin,69.7,59.59,73.94,375.0,Texans,Texans,47,Starter,24,ED,Edge,2020
+Dante Fowler Jr.,68.89,62.14,70.48,601.0,Falcons,Falcons,48,Starter,25,ED,Edge,2020
+Everson Griffen,68.78,56.95,74.9,528.0,Lions,Lions,49,Starter,26,ED,Edge,2020
+Carl Granderson,68.46,63.42,72.21,291.0,Saints,Saints,50,Starter,27,ED,Edge,2020
+Samson Ebukam,68.38,60.66,69.36,364.0,Rams,Rams,51,Starter,28,ED,Edge,2020
+Sam Hubbard,68.21,62.94,69.44,665.0,Bengals,Bengals,52,Starter,29,ED,Edge,2020
+Bud Dupree,68.18,63.34,69.84,609.0,Steelers,Steelers,53,Starter,30,ED,Edge,2020
+Preston Smith,68.06,58.01,70.59,814.0,Packers,Packers,54,Starter,31,ED,Edge,2020
+Josh Sweat,67.94,64.47,68.79,422.0,Eagles,Eagles,55,Starter,32,ED,Edge,2020
+Jabaal Sheard,67.91,64.11,70.34,275.0,Giants,Giants,56,Starter,33,ED,Edge,2020
+Ifeadi Odenigbo,67.79,63.18,67.21,696.0,Vikings,Vikings,57,Starter,34,ED,Edge,2020
+Josh Uche,67.43,67.97,70.21,179.0,Patriots,Patriots,58,Starter,35,ED,Edge,2020
+Vinny Curry,67.4,56.95,73.63,310.0,Eagles,Eagles,59,Starter,36,ED,Edge,2020
+Emmanuel Ogbah,67.39,66.84,65.88,792.0,Dolphins,Dolphins,60,Starter,37,ED,Edge,2020
+Frankie Luvu,67.34,62.5,69.54,257.0,Jets,Jets,61,Starter,38,ED,Edge,2020
+Maxx Crosby,67.16,60.29,67.57,906.0,Raiders,Raiders,62,Starter,39,ED,Edge,2020
+Alton Robinson,67.05,63.32,67.46,336.0,Seahawks,Seahawks,63,Starter,40,ED,Edge,2020
+Jason Pierre-Paul,67.01,57.86,70.82,943.0,Buccaneers,Buccaneers,64,Starter,41,ED,Edge,2020
+Whitney Mercilus,66.87,54.02,72.84,614.0,Texans,Texans,65,Starter,42,ED,Edge,2020
+Jordan Jenkins,66.61,59.47,69.91,528.0,Jets,Jets,66,Starter,43,ED,Edge,2020
+Romeo Okwara,66.54,64.91,64.29,748.0,Lions,Lions,67,Starter,44,ED,Edge,2020
+Kerry Hyder Jr.,66.01,54.89,71.14,722.0,49ers,49ers,68,Starter,45,ED,Edge,2020
+Aaron Lynch,65.99,54.49,74.27,152.0,Jaguars,Jaguars,69,Starter,46,ED,Edge,2020
+Ogbo Okoronkwo,65.9,62.5,70.64,158.0,Rams,Rams,70,Starter,47,ED,Edge,2020
+Jeremiah Attaochu,65.83,56.4,72.31,414.0,Broncos,Broncos,71,Starter,48,ED,Edge,2020
+Alex Highsmith,65.07,60.67,63.83,440.0,Steelers,Steelers,72,Starter,49,ED,Edge,2020
+Malik Reed,64.74,60.71,63.65,785.0,Broncos,Broncos,73,Starter,50,ED,Edge,2020
+Harold Landry III,64.15,59.67,62.97,1050.0,Titans,Titans,74,Starter,51,ED,Edge,2020
+Aldon Smith,63.99,54.86,67.38,809.0,Cowboys,Cowboys,75,Starter,52,ED,Edge,2020
+Jihad Ward,63.52,54.76,68.32,271.0,Ravens,Ravens,76,Starter,53,ED,Edge,2020
+Justin Hollins,63.41,58.66,63.2,349.0,Rams,Rams,77,Starter,54,ED,Edge,2020
+Devon Kennard,63.31,54.59,66.72,362.0,Cardinals,Cardinals,78,Starter,55,ED,Edge,2020
+Kyler Fackrell,63.19,51.07,69.18,608.0,Giants,Giants,79,Starter,56,ED,Edge,2020
+Vic Beasley Jr.,62.93,55.24,67.02,199.0,Raiders,Raiders,80,Starter,57,ED,Edge,2020
+Jaylon Ferguson,62.91,59.64,63.01,303.0,Ravens,Ravens,81,Starter,58,ED,Edge,2020
+Alex Okafor,62.72,53.26,69.35,283.0,Chiefs,Chiefs,82,Starter,59,ED,Edge,2020
+Barkevious Mingo,62.66,49.88,69.52,391.0,Bears,Bears,83,Starter,60,ED,Edge,2020
+Efe Obada,62.41,55.66,63.99,415.0,Panthers,Panthers,84,Starter,61,ED,Edge,2020
+Adrian Clayborn,62.2,52.0,66.08,404.0,Browns,Browns,85,Starter,62,ED,Edge,2020
+Bruce Irvin,62.14,48.74,75.14,121.0,Seahawks,Seahawks,86,Starter,63,ED,Edge,2020
+Trent Murphy,62.12,55.23,66.29,343.0,Bills,Bills,87,Starter,64,ED,Edge,2020
+Mike Danna,62.07,58.89,63.15,334.0,Chiefs,Chiefs,88,Starter,65,ED,Edge,2020
+Carter Coughlin,62.02,57.26,67.27,193.0,Giants,Giants,89,Starter,66,ED,Edge,2020
+A.J. Epenesa,61.97,60.41,60.93,291.0,Bills,Bills,90,Rotation/backup,1,ED,Edge,2020
+Lorenzo Carter,61.93,60.83,64.75,234.0,Giants,Giants,91,Rotation/backup,2,ED,Edge,2020
+Derek Rivers,61.93,52.78,68.03,115.0,Rams,Rams,92,Rotation/backup,3,ED,Edge,2020
+John Simon,61.6,49.86,66.29,702.0,Patriots,Patriots,93,Rotation/backup,4,ED,Edge,2020
+Tarell Basham,61.44,59.45,60.26,734.0,Jets,Jets,94,Rotation/backup,5,ED,Edge,2020
+Dion Jordan,61.09,53.63,67.0,375.0,49ers,49ers,95,Rotation/backup,6,ED,Edge,2020
+Yetur Gross-Matos,60.99,59.02,62.3,377.0,Panthers,Panthers,96,Rotation/backup,7,ED,Edge,2020
+Benson Mayowa,60.93,54.18,63.34,571.0,Seahawks,Seahawks,97,Rotation/backup,8,ED,Edge,2020
+Oshane Ximines,60.63,59.5,65.04,110.0,Giants,Giants,98,Rotation/backup,9,ED,Edge,2020
+James Vaughters,60.47,54.95,62.06,243.0,Bears,Bears,99,Rotation/backup,10,ED,Edge,2020
+Anthony Nelson,60.41,68.81,53.38,324.0,Buccaneers,Buccaneers,100,Rotation/backup,11,ED,Edge,2020
+Carl Nassib,60.23,57.67,59.66,463.0,Raiders,Raiders,101,Rotation/backup,12,ED,Edge,2020
+Chris Smith,59.92,54.48,63.54,115.0,Raiders,Raiders,102,Rotation/backup,13,ED,Edge,2020
+Damontre Moore,59.69,59.56,66.12,184.0,Seahawks,Seahawks,103,Rotation/backup,14,ED,Edge,2020
+Dawuane Smoot,59.59,56.67,59.04,665.0,Jaguars,Jaguars,104,Rotation/backup,15,ED,Edge,2020
+Charles Harris,58.49,58.25,57.71,289.0,Falcons,Falcons,105,Rotation/backup,16,ED,Edge,2020
+D.J. Wonnum,58.19,56.2,57.44,471.0,Vikings,Vikings,106,Rotation/backup,17,ED,Edge,2020
+Khalid Kareem,58.19,56.51,55.15,259.0,Bengals,Bengals,107,Rotation/backup,18,ED,Edge,2020
+Cassius Marsh,58.15,50.22,63.43,151.0,Steelers,Steelers,108,Rotation/backup,19,ED,Edge,2020
+Bryce Huff,58.09,56.28,57.22,296.0,Jets,Jets,109,Rotation/backup,20,ED,Edge,2020
+Al-Quadin Muhammad,57.9,57.48,54.21,579.0,Colts,Colts,110,Rotation/backup,21,ED,Edge,2020
+Ryan Anderson,57.82,54.83,59.92,146.0,Commanders,Commanders,111,Rotation/backup,22,ED,Edge,2020
+K'Lavon Chaisson,57.74,55.71,54.92,569.0,Jaguars,Jaguars,112,Rotation/backup,23,ED,Edge,2020
+Kamalei Correa,57.71,51.74,62.08,197.0,Jaguars,Jaguars,113,Rotation/backup,24,ED,Edge,2020
+Alex Barrett,57.38,58.34,63.44,120.0,49ers,49ers,114,Rotation/backup,25,ED,Edge,2020
+Arden Key,57.0,59.33,55.13,435.0,Raiders,Raiders,115,Rotation/backup,26,ED,Edge,2020
+Ben Banogu,56.92,54.12,59.57,100.0,Colts,Colts,116,Rotation/backup,27,ED,Edge,2020
+Anthony Chickillo,56.87,51.31,60.58,164.0,Broncos,Broncos,117,Rotation/backup,28,ED,Edge,2020
+Kyle Phillips,56.79,59.31,57.2,171.0,Jets,Jets,118,Rotation/backup,29,ED,Edge,2020
+Dorance Armstrong,56.7,54.23,54.69,368.0,Cowboys,Cowboys,119,Rotation/backup,30,ED,Edge,2020
+Derick Roberson,56.58,55.29,63.95,248.0,Titans,Titans,120,Rotation/backup,31,ED,Edge,2020
+Isaac Rochell,56.49,54.15,53.89,438.0,Chargers,Chargers,121,Rotation/backup,32,ED,Edge,2020
+Jordan Willis,56.25,58.57,56.37,229.0,49ers,49ers,122,Rotation/backup,33,ED,Edge,2020
+Stephen Weatherly,56.13,52.96,57.72,358.0,Panthers,Panthers,123,Rotation/backup,34,ED,Edge,2020
+Porter Gustin,56.04,59.26,54.93,326.0,Browns,Browns,124,Rotation/backup,35,ED,Edge,2020
+Tanoh Kpassagnon,55.84,54.02,54.36,720.0,Chiefs,Chiefs,125,Rotation/backup,36,ED,Edge,2020
+Darryl Johnson,55.71,54.14,53.63,225.0,Bills,Bills,126,Rotation/backup,37,ED,Edge,2020
+Marquis Haynes Sr.,55.67,53.08,57.82,390.0,Panthers,Panthers,127,Rotation/backup,38,ED,Edge,2020
+Zach Allen,55.6,52.75,55.28,505.0,Cardinals,Cardinals,128,Rotation/backup,39,ED,Edge,2020
+Tashawn Bower,54.13,53.98,61.32,137.0,Patriots,Patriots,129,Rotation/backup,40,ED,Edge,2020
+Jonathan Greenard,53.75,55.09,52.86,265.0,Texans,Texans,130,Rotation/backup,41,ED,Edge,2020
+Steven Means,53.61,47.44,55.22,646.0,Falcons,Falcons,131,Rotation/backup,42,ED,Edge,2020
+Christian Jones,52.37,45.55,52.75,510.0,Lions,Lions,132,Rotation/backup,43,ED,Edge,2020
+Shilique Calhoun,51.78,49.08,54.73,256.0,Patriots,Patriots,133,Rotation/backup,44,ED,Edge,2020
+Adam Gotsis,51.42,44.49,51.88,579.0,Jaguars,Jaguars,134,Rotation/backup,45,ED,Edge,2020
+Amani Bledsoe,51.29,52.54,48.38,312.0,Bengals,Bengals,135,Rotation/backup,46,ED,Edge,2020
+Austin Larkin,50.62,52.98,55.29,127.0,Panthers,Panthers,136,Rotation/backup,47,ED,Edge,2020
+Austin Bryant,50.37,58.24,52.16,212.0,Lions,Lions,137,Rotation/backup,48,ED,Edge,2020
+Olasunkanmi Adeniyi,50.26,52.29,47.88,146.0,Steelers,Steelers,138,Rotation/backup,49,ED,Edge,2020
+Kylie Fitts,47.33,52.14,48.6,140.0,Cardinals,Cardinals,139,Rotation/backup,50,ED,Edge,2020
+Jabari Zuniga,46.09,51.32,46.77,103.0,Jets,Jets,140,Rotation/backup,51,ED,Edge,2020
+Zack Martin,96.0,91.3,94.97,618.0,Cowboys,Cowboys,1,Elite,1,G,Guard,2020
+Wyatt Teller,95.25,92.7,92.78,694.0,Browns,Browns,2,Elite,2,G,Guard,2020
+Ali Marpet,93.44,86.7,93.77,849.0,Buccaneers,Buccaneers,3,Elite,3,G,Guard,2020
+Quenton Nelson,92.29,86.2,92.18,1082.0,Colts,Colts,4,Elite,4,G,Guard,2020
+Joel Bitonio,90.52,84.6,90.3,1061.0,Browns,Browns,5,Elite,5,G,Guard,2020
+Shaq Mason,90.48,85.4,89.7,782.0,Patriots,Patriots,6,Elite,6,G,Guard,2020
+Brandon Scherff,89.22,84.1,88.47,857.0,Commanders,Commanders,7,Elite,7,G,Guard,2020
+Laken Tomlinson,85.65,78.8,86.05,1094.0,49ers,49ers,8,Elite,8,G,Guard,2020
+Chris Lindstrom,84.49,77.1,85.25,1122.0,Falcons,Falcons,9,Elite,9,G,Guard,2020
+Joe Thuney,81.82,74.2,82.73,980.0,Patriots,Patriots,10,Elite,10,G,Guard,2020
+Damien Lewis,81.63,70.2,85.09,967.0,Seahawks,Seahawks,11,Elite,11,G,Guard,2020
+Austin Corbett,80.48,70.9,82.7,1120.0,Rams,Rams,12,Elite,12,G,Guard,2020
+Connor Williams,80.11,71.2,81.89,1146.0,Cowboys,Cowboys,13,Elite,13,G,Guard,2020
+Rodger Saffold,80.02,70.2,82.4,872.0,Titans,Titans,14,Elite,14,G,Guard,2020
+David Edwards,79.11,70.3,80.81,1006.0,Rams,Rams,15,Good,1,G,Guard,2020
+Mike Iupati,79.04,67.8,82.36,498.0,Seahawks,Seahawks,16,Good,2,G,Guard,2020
+Nate Davis,78.75,69.7,80.62,1074.0,Titans,Titans,17,Good,3,G,Guard,2020
+Graham Glasgow,78.64,68.5,81.24,764.0,Broncos,Broncos,18,Good,4,G,Guard,2020
+Tom Compton,78.45,68.1,81.19,148.0,49ers,49ers,19,Good,5,G,Guard,2020
+Wes Schweitzer,77.9,69.0,79.66,990.0,Commanders,Commanders,20,Good,6,G,Guard,2020
+Oday Aboushi,77.89,66.6,81.25,622.0,Lions,Lions,21,Good,7,G,Guard,2020
+Elgton Jenkins,77.6,67.7,80.04,1037.0,Packers,Packers,22,Good,8,G,Guard,2020
+Alex Cappa,77.48,69.0,78.97,1070.0,Buccaneers,Buccaneers,23,Good,9,G,Guard,2020
+A.J. Cann,77.4,69.0,78.84,919.0,Jaguars,Jaguars,24,Good,10,G,Guard,2020
+Nick Allegretti,77.17,66.2,80.31,694.0,Chiefs,Chiefs,25,Good,11,G,Guard,2020
+Alex Lewis,77.05,66.6,79.85,544.0,Jets,Jets,26,Good,12,G,Guard,2020
+Mark Glowinski,76.4,67.3,78.3,1090.0,Colts,Colts,27,Good,13,G,Guard,2020
+Justin Pugh,76.33,64.8,79.85,958.0,Cardinals,Cardinals,28,Good,14,G,Guard,2020
+Jon Feliciano,76.2,64.6,79.77,571.0,Bills,Bills,29,Good,15,G,Guard,2020
+Andrew Norwell,76.1,67.9,77.4,801.0,Jaguars,Jaguars,30,Good,16,G,Guard,2020
+Kevin Zeitler,75.71,65.9,78.09,1003.0,Giants,Giants,31,Good,17,G,Guard,2020
+Lucas Patrick,75.53,64.8,78.52,939.0,Packers,Packers,32,Good,18,G,Guard,2020
+Germain Ifedi,75.22,65.0,77.86,1066.0,Bears,Bears,33,Good,19,G,Guard,2020
+Bradley Bozeman,74.9,64.3,77.8,1017.0,Ravens,Ravens,34,Good,20,G,Guard,2020
+Kelechi Osemele,74.74,59.8,80.53,282.0,Chiefs,Chiefs,35,Good,21,G,Guard,2020
+Ereck Flowers,74.68,65.9,76.36,857.0,Dolphins,Dolphins,36,Good,22,G,Guard,2020
+Alex Redmond,74.56,61.5,79.1,448.0,Bengals,Bengals,37,Good,23,G,Guard,2020
+James Daniels,74.01,65.8,75.31,305.0,Bears,Bears,38,Good,24,G,Guard,2020
+Gabe Jackson,73.77,63.7,76.32,1062.0,Raiders,Raiders,39,Starter,1,G,Guard,2020
+Ike Boettger,73.39,65.3,74.62,623.0,Bills,Bills,40,Starter,2,G,Guard,2020
+Connor McGovern,72.72,61.7,75.9,606.0,Cowboys,Cowboys,41,Starter,3,G,Guard,2020
+Zach Fulton,72.59,63.0,74.81,953.0,Texans,Texans,42,Starter,4,G,Guard,2020
+David DeCastro,72.55,64.1,74.02,845.0,Steelers,Steelers,43,Starter,5,G,Guard,2020
+John Miller,72.38,61.2,75.66,910.0,Panthers,Panthers,44,Starter,6,G,Guard,2020
+Andrus Peat,72.22,61.2,75.4,766.0,Saints,Saints,45,Starter,7,G,Guard,2020
+Stefen Wisniewski,71.81,61.2,74.72,209.0,Chiefs,Chiefs,46,Starter,8,G,Guard,2020
+Isaac Seumalo,71.58,62.4,73.53,588.0,Eagles,Eagles,47,Starter,9,G,Guard,2020
+Dalton Risner,71.25,61.3,73.72,999.0,Broncos,Broncos,48,Starter,10,G,Guard,2020
+Joe Dahl,70.78,57.4,75.53,264.0,Lions,Lions,49,Starter,11,G,Guard,2020
+Kevin Dotson,70.62,66.2,69.4,358.0,Steelers,Steelers,50,Starter,12,G,Guard,2020
+Xavier Su'a-Filo,70.48,59.1,73.9,293.0,Bengals,Bengals,51,Starter,13,G,Guard,2020
+Quinton Spain,70.47,56.7,75.48,720.0,Bengals,Bengals,52,Starter,14,G,Guard,2020
+Jonah Jackson,70.04,57.0,74.56,1006.0,Lions,Lions,53,Starter,15,G,Guard,2020
+Ryan Groy,69.96,57.7,73.96,271.0,Chargers,Chargers,54,Starter,16,G,Guard,2020
+Michael Jordan,69.61,55.7,74.72,731.0,Bengals,Bengals,55,Starter,17,G,Guard,2020
+Will Hernandez,69.43,58.1,72.81,525.0,Giants,Giants,56,Starter,18,G,Guard,2020
+Sua Opeta,69.15,57.6,72.69,170.0,Eagles,Eagles,57,Starter,19,G,Guard,2020
+Matt Pryor,67.99,55.4,72.21,776.0,Eagles,Eagles,58,Starter,20,G,Guard,2020
+Brian Winters,67.77,54.6,72.39,618.0,Bills,Bills,59,Starter,21,G,Guard,2020
+James Carpenter,67.74,56.1,71.34,826.0,Falcons,Falcons,60,Starter,22,G,Guard,2020
+Senio Kelemete,67.57,54.5,72.11,367.0,Texans,Texans,61,Starter,23,G,Guard,2020
+Ben Bartch,67.45,58.5,69.25,219.0,Jaguars,Jaguars,62,Starter,24,G,Guard,2020
+Justin McCray,67.45,54.8,71.71,156.0,Falcons,Falcons,63,Starter,25,G,Guard,2020
+Andrew Wylie,67.32,54.9,71.44,972.0,Chiefs,Chiefs,64,Starter,26,G,Guard,2020
+Cesar Ruiz,67.28,58.6,68.9,744.0,Saints,Saints,65,Starter,27,G,Guard,2020
+Ben Powers,66.09,59.4,66.38,513.0,Ravens,Ravens,66,Starter,28,G,Guard,2020
+J.R. Sweezy,66.0,52.5,70.83,643.0,Cardinals,Cardinals,67,Starter,29,G,Guard,2020
+Max Scharping,65.86,52.1,70.87,454.0,Texans,Texans,68,Starter,30,G,Guard,2020
+Jordan Simmons,65.14,51.6,70.0,593.0,Seahawks,Seahawks,69,Starter,31,G,Guard,2020
+Solomon Kindley,65.05,51.3,70.05,748.0,Dolphins,Dolphins,70,Starter,32,G,Guard,2020
+Michael Schofield III,64.94,50.3,70.54,270.0,Panthers,Panthers,71,Starter,33,G,Guard,2020
+Forrest Lamp,64.03,49.4,69.62,1174.0,Chargers,Chargers,72,Starter,34,G,Guard,2020
+Pat Elflein,63.71,48.0,70.01,419.0,Jets,Jets,73,Starter,35,G,Guard,2020
+John Simpson,62.55,45.8,69.55,252.0,Raiders,Raiders,74,Starter,36,G,Guard,2020
+Tyre Phillips,61.84,47.1,67.5,418.0,Ravens,Ravens,75,Rotation/backup,1,G,Guard,2020
+Dakota Dozier,61.64,44.7,68.77,1083.0,Vikings,Vikings,76,Rotation/backup,2,G,Guard,2020
+Jon Runyan,61.56,53.8,62.56,160.0,Packers,Packers,77,Rotation/backup,3,G,Guard,2020
+Rashaad Coward,61.53,46.2,67.59,333.0,Bears,Bears,78,Rotation/backup,4,G,Guard,2020
+Wes Martin,60.88,44.8,67.44,339.0,Commanders,Commanders,79,Rotation/backup,5,G,Guard,2020
+Austin Schlottmann,58.72,39.8,67.17,269.0,Broncos,Broncos,80,Rotation/backup,6,G,Guard,2020
+Netane Muti,57.19,37.1,66.41,122.0,Broncos,Broncos,81,Rotation/backup,7,G,Guard,2020
+Trai Turner,56.6,34.8,66.97,536.0,Chargers,Chargers,82,Rotation/backup,8,G,Guard,2020
+Shane Lemieux,55.17,32.2,66.31,504.0,Giants,Giants,83,Rotation/backup,9,G,Guard,2020
+Dru Samia,54.89,33.1,65.25,272.0,Vikings,Vikings,84,Rotation/backup,10,G,Guard,2020
+Nick Chubb,87.66,86.7,84.13,158.0,Browns,Browns,1,Elite,1,HB,Running Back,2020
+Derrick Henry,86.81,92.4,78.92,223.0,Titans,Titans,2,Elite,2,HB,Running Back,2020
+Dalvin Cook,83.66,89.0,75.93,263.0,Vikings,Vikings,3,Elite,3,HB,Running Back,2020
+Alvin Kamara,83.31,82.2,79.88,345.0,Saints,Saints,4,Elite,4,HB,Running Back,2020
+Gus Edwards,81.18,85.8,73.93,104.0,Ravens,Ravens,5,Elite,5,HB,Running Back,2020
+Tony Pollard,80.4,71.7,82.04,199.0,Cowboys,Cowboys,6,Elite,6,HB,Running Back,2020
+Austin Ekeler,80.37,77.0,78.45,235.0,Chargers,Chargers,7,Elite,7,HB,Running Back,2020
+Jonathan Taylor,80.35,83.9,73.81,203.0,Colts,Colts,8,Elite,8,HB,Running Back,2020
+Aaron Jones,80.21,79.4,76.58,253.0,Packers,Packers,9,Elite,9,HB,Running Back,2020
+J.K. Dobbins,79.29,71.5,80.31,217.0,Ravens,Ravens,10,Good,1,HB,Running Back,2020
+Chris Carson,78.93,78.1,75.32,207.0,Seahawks,Seahawks,11,Good,2,HB,Running Back,2020
+Kareem Hunt,78.43,74.0,77.21,252.0,Browns,Browns,12,Good,3,HB,Running Back,2020
+Josh Jacobs,77.61,76.3,74.32,231.0,Raiders,Raiders,13,Good,4,HB,Running Back,2020
+Antonio Gibson,77.45,80.9,70.99,182.0,Commanders,Commanders,14,Good,5,HB,Running Back,2020
+Darrell Henderson,77.04,80.4,70.64,147.0,Rams,Rams,15,Good,6,HB,Running Back,2020
+David Montgomery,76.73,81.8,69.19,391.0,Bears,Bears,16,Good,7,HB,Running Back,2020
+Clyde Edwards-Helaire,76.5,75.3,73.14,286.0,Chiefs,Chiefs,17,Good,8,HB,Running Back,2020
+James Robinson,76.1,72.9,74.07,286.0,Jaguars,Jaguars,18,Good,9,HB,Running Back,2020
+Ronald Jones,74.74,73.6,71.34,190.0,Buccaneers,Buccaneers,19,Good,10,HB,Running Back,2020
+Devin Singletary,74.54,66.7,75.6,318.0,Bills,Bills,20,Good,11,HB,Running Back,2020
+Latavius Murray,74.14,82.4,64.47,133.0,Saints,Saints,21,Good,12,HB,Running Back,2020
+Le'Veon Bell,73.71,73.9,69.42,153.0,Chiefs,Chiefs,22,Starter,1,HB,Running Back,2020
+Nyheim Hines,73.5,81.6,63.94,264.0,Colts,Colts,23,Starter,2,HB,Running Back,2020
+Miles Sanders,73.29,63.0,75.98,295.0,Eagles,Eagles,24,Starter,3,HB,Running Back,2020
+Myles Gaskin,72.76,74.5,67.43,208.0,Dolphins,Dolphins,25,Starter,4,HB,Running Back,2020
+Zack Moss,72.56,72.3,68.57,173.0,Bills,Bills,26,Starter,5,HB,Running Back,2020
+Rex Burkhead,72.38,78.2,64.33,123.0,Patriots,Patriots,27,Starter,6,HB,Running Back,2020
+Melvin Gordon III,72.14,72.5,67.73,290.0,Broncos,Broncos,28,Starter,7,HB,Running Back,2020
+Wayne Gallman,71.87,71.1,68.22,160.0,Giants,Giants,29,Starter,8,HB,Running Back,2020
+Ezekiel Elliott,71.47,65.3,71.42,387.0,Cowboys,Cowboys,30,Starter,9,HB,Running Back,2020
+Duke Johnson Jr.,71.25,62.6,72.85,204.0,Texans,Texans,31,Starter,10,HB,Running Back,2020
+James Conner,71.01,68.0,68.85,269.0,Steelers,Steelers,32,Starter,11,HB,Running Back,2020
+D'Andre Swift,70.94,69.4,67.8,226.0,Lions,Lions,33,Starter,12,HB,Running Back,2020
+Jerick McKinnon,70.81,73.7,64.72,213.0,49ers,49ers,34,Starter,13,HB,Running Back,2020
+Boston Scott,70.37,68.2,67.65,211.0,Eagles,Eagles,35,Starter,14,HB,Running Back,2020
+Devontae Booker,70.32,68.7,67.23,105.0,Raiders,Raiders,36,Starter,15,HB,Running Back,2020
+Mike Davis,70.07,75.1,62.55,303.0,Panthers,Panthers,37,Starter,16,HB,Running Back,2020
+Chase Edmonds,69.99,69.2,66.35,305.0,Cardinals,Cardinals,38,Starter,17,HB,Running Back,2020
+Carlos Hyde,69.91,68.1,66.95,125.0,Seahawks,Seahawks,39,Starter,18,HB,Running Back,2020
+Cam Akers,69.89,68.4,66.71,107.0,Rams,Rams,40,Starter,19,HB,Running Back,2020
+Jamaal Williams,69.89,73.2,63.51,201.0,Packers,Packers,41,Starter,20,HB,Running Back,2020
+Kenyan Drake,69.71,60.9,71.41,251.0,Cardinals,Cardinals,42,Starter,21,HB,Running Back,2020
+Jalen Richard,69.62,57.8,73.33,123.0,Raiders,Raiders,43,Starter,22,HB,Running Back,2020
+Jeremy McNichols,69.45,58.2,72.78,152.0,Titans,Titans,44,Starter,23,HB,Running Back,2020
+Jeff Wilson Jr.,69.28,69.1,65.23,133.0,49ers,49ers,45,Starter,24,HB,Running Back,2020
+Ty Johnson,68.97,69.1,64.71,100.0,Jets,Jets,46,Starter,25,HB,Running Back,2020
+Joe Mixon,68.78,65.3,66.93,128.0,Bengals,Bengals,47,Starter,26,HB,Running Back,2020
+Kerryon Johnson,68.13,61.6,68.31,159.0,Lions,Lions,48,Starter,27,HB,Running Back,2020
+J.D. McKissic,68.03,62.7,67.41,399.0,Commanders,Commanders,49,Starter,28,HB,Running Back,2020
+Adrian Peterson,67.88,59.6,69.24,110.0,Lions,Lions,50,Starter,29,HB,Running Back,2020
+Brian Hill,67.88,57.9,70.36,165.0,Falcons,Falcons,51,Starter,30,HB,Running Back,2020
+Chris Thompson,66.66,54.9,70.34,127.0,Jaguars,Jaguars,52,Starter,31,HB,Running Back,2020
+David Johnson,66.62,62.9,64.93,333.0,Texans,Texans,53,Starter,32,HB,Running Back,2020
+Dion Lewis,66.56,54.7,70.3,201.0,Giants,Giants,54,Starter,33,HB,Running Back,2020
+Giovani Bernard,66.36,63.4,64.17,276.0,Bengals,Bengals,55,Starter,34,HB,Running Back,2020
+Leonard Fournette,65.85,59.8,65.71,216.0,Buccaneers,Buccaneers,56,Starter,35,HB,Running Back,2020
+James White,65.56,65.5,61.43,184.0,Patriots,Patriots,57,Starter,36,HB,Running Back,2020
+Todd Gurley II,65.17,54.8,67.91,229.0,Falcons,Falcons,58,Starter,37,HB,Running Back,2020
+Ito Smith,64.76,59.0,64.43,139.0,Falcons,Falcons,59,Starter,38,HB,Running Back,2020
+Dare Ogunbowale,64.54,58.8,64.2,121.0,Jaguars,Jaguars,60,Starter,39,HB,Running Back,2020
+Frank Gore,64.27,60.8,62.41,136.0,Jets,Jets,61,Starter,40,HB,Running Back,2020
+Malcolm Brown,62.58,57.1,62.07,276.0,Rams,Rams,62,Starter,41,HB,Running Back,2020
+Joshua Kelley,62.58,63.1,58.07,130.0,Chargers,Chargers,63,Starter,42,HB,Running Back,2020
+Kalen Ballage,62.36,62.7,57.96,143.0,Chargers,Chargers,64,Starter,43,HB,Running Back,2020
+Darrel Williams,61.05,61.0,56.92,177.0,Chiefs,Chiefs,65,Rotation/backup,1,HB,Running Back,2020
+Fred Warner,83.89,88.6,76.59,973.0,49ers,49ers,1,Elite,1,LB,Linebacker,2020
+Bobby Wagner,81.84,83.2,76.97,1141.0,Seahawks,Seahawks,2,Elite,2,LB,Linebacker,2020
+Lavonte David,80.25,81.5,75.67,1058.0,Buccaneers,Buccaneers,3,Elite,3,LB,Linebacker,2020
+Denzel Perryman,79.48,83.3,77.04,317.0,Chargers,Chargers,4,Good,1,LB,Linebacker,2020
+Eric Kendricks,78.51,82.6,74.95,754.0,Vikings,Vikings,5,Good,2,LB,Linebacker,2020
+Demario Davis,77.43,78.1,72.82,1032.0,Saints,Saints,6,Good,3,LB,Linebacker,2020
+Blake Martinez,77.16,75.9,73.84,1063.0,Giants,Giants,7,Good,4,LB,Linebacker,2020
+Mykal Walker,74.75,74.0,71.09,387.0,Falcons,Falcons,8,Good,5,LB,Linebacker,2020
+K.J. Wright,73.41,75.3,70.26,990.0,Seahawks,Seahawks,9,Starter,1,LB,Linebacker,2020
+Myles Jack,70.85,69.1,70.45,931.0,Jaguars,Jaguars,10,Starter,2,LB,Linebacker,2020
+Cole Holcomb,70.82,72.0,69.77,555.0,Commanders,Commanders,11,Starter,3,LB,Linebacker,2020
+Roquan Smith,70.62,67.2,69.99,1016.0,Bears,Bears,12,Starter,4,LB,Linebacker,2020
+Sione Takitaki,70.1,71.2,68.99,435.0,Browns,Browns,13,Starter,5,LB,Linebacker,2020
+Willie Gay,70.03,68.1,68.19,269.0,Chiefs,Chiefs,14,Starter,6,LB,Linebacker,2020
+Josey Jewell,69.75,68.1,68.25,1011.0,Broncos,Broncos,15,Starter,7,LB,Linebacker,2020
+L.J. Fort,69.41,69.4,68.69,381.0,Ravens,Ravens,16,Starter,8,LB,Linebacker,2020
+Kamal Martin,69.02,73.3,68.25,190.0,Packers,Packers,17,Starter,9,LB,Linebacker,2020
+Deion Jones,68.84,68.7,66.85,1040.0,Falcons,Falcons,18,Starter,10,LB,Linebacker,2020
+Malcolm Smith,68.31,70.8,68.22,559.0,Browns,Browns,19,Starter,11,LB,Linebacker,2020
+B.J. Goodson,68.28,65.4,67.91,848.0,Browns,Browns,20,Starter,12,LB,Linebacker,2020
+Isaiah Simmons,66.98,59.9,67.53,376.0,Cardinals,Cardinals,21,Starter,13,LB,Linebacker,2020
+Nick Kwiatkoski,66.78,67.1,67.4,651.0,Raiders,Raiders,22,Starter,14,LB,Linebacker,2020
+Nicholas Morrow,66.37,63.7,65.45,723.0,Raiders,Raiders,23,Starter,15,LB,Linebacker,2020
+Kevin Pierre-Louis,66.24,67.7,68.08,506.0,Commanders,Commanders,24,Starter,16,LB,Linebacker,2020
+Jayon Brown,66.21,66.3,65.73,653.0,Titans,Titans,25,Starter,17,LB,Linebacker,2020
+Jamie Collins Sr.,66.18,64.2,64.36,829.0,Lions,Lions,26,Starter,18,LB,Linebacker,2020
+Jermaine Carter,66.16,66.5,66.86,284.0,Panthers,Panthers,27,Starter,19,LB,Linebacker,2020
+T.J. Edwards,66.01,66.5,65.69,492.0,Eagles,Eagles,28,Starter,20,LB,Linebacker,2020
+Joe Giles-Harris,65.94,75.6,66.66,205.0,Jaguars,Jaguars,29,Starter,21,LB,Linebacker,2020
+Zach Cunningham,64.85,60.9,63.74,944.0,Texans,Texans,30,Starter,22,LB,Linebacker,2020
+Dre Greenlaw,64.33,59.8,65.13,700.0,49ers,49ers,31,Starter,23,LB,Linebacker,2020
+Jarrad Davis,63.91,62.2,63.48,329.0,Lions,Lions,32,Starter,24,LB,Linebacker,2020
+Nick Vigil,63.82,60.6,64.93,312.0,Chargers,Chargers,33,Starter,25,LB,Linebacker,2020
+Robert Spillane,63.04,66.3,65.3,379.0,Steelers,Steelers,34,Starter,26,LB,Linebacker,2020
+Rashaan Evans,62.9,53.7,65.29,895.0,Titans,Titans,35,Starter,27,LB,Linebacker,2020
+Alex Singleton,62.85,58.9,61.96,750.0,Eagles,Eagles,36,Starter,28,LB,Linebacker,2020
+Neville Hewitt,62.68,59.3,63.47,1130.0,Jets,Jets,37,Starter,29,LB,Linebacker,2020
+Jaylon Smith,62.5,54.2,63.87,1083.0,Cowboys,Cowboys,38,Starter,30,LB,Linebacker,2020
+Avery Williamson,62.4,51.7,65.88,665.0,Steelers,Steelers,39,Starter,31,LB,Linebacker,2020
+Kyle Van Noy,62.19,61.6,59.45,811.0,Dolphins,Dolphins,40,Starter,32,LB,Linebacker,2020
+Alex Anzalone,62.04,60.9,63.53,525.0,Saints,Saints,41,Starter,33,LB,Linebacker,2020
+Azeez Al-Shaair,61.97,61.0,62.75,305.0,49ers,49ers,42,Rotation/backup,1,LB,Linebacker,2020
+Foyesade Oluokun,61.5,56.6,61.11,895.0,Falcons,Falcons,43,Rotation/backup,2,LB,Linebacker,2020
+Jerome Baker,61.42,55.2,61.4,868.0,Dolphins,Dolphins,44,Rotation/backup,3,LB,Linebacker,2020
+Todd Davis,61.29,60.6,62.36,281.0,Vikings,Vikings,45,Rotation/backup,4,LB,Linebacker,2020
+Kenneth Murray Jr.,61.08,54.4,61.36,959.0,Chargers,Chargers,46,Rotation/backup,5,LB,Linebacker,2020
+Malik Harrison,60.92,52.8,62.16,265.0,Ravens,Ravens,47,Rotation/backup,6,LB,Linebacker,2020
+Troy Reeder,60.54,60.4,62.2,423.0,Rams,Rams,48,Rotation/backup,7,LB,Linebacker,2020
+Jon Bostic,60.41,52.7,61.38,966.0,Commanders,Commanders,49,Rotation/backup,8,LB,Linebacker,2020
+Eric Wilson,60.24,53.5,60.99,1034.0,Vikings,Vikings,50,Rotation/backup,9,LB,Linebacker,2020
+Devin Bush,60.15,59.7,63.45,278.0,Steelers,Steelers,51,Rotation/backup,10,LB,Linebacker,2020
+Thomas Davis Sr.,60.04,54.8,64.89,137.0,Commanders,Commanders,52,Rotation/backup,11,LB,Linebacker,2020
+Joe Schobert,59.96,54.2,60.26,1110.0,Jaguars,Jaguars,53,Rotation/backup,12,LB,Linebacker,2020
+Anfernee Jennings,59.84,54.6,62.3,293.0,Patriots,Patriots,54,Rotation/backup,13,LB,Linebacker,2020
+Brennan Scarlett,59.58,55.7,62.79,286.0,Texans,Texans,55,Rotation/backup,14,LB,Linebacker,2020
+Damien Wilson,59.29,51.8,61.69,531.0,Chiefs,Chiefs,56,Rotation/backup,15,LB,Linebacker,2020
+Ja'Whaun Bentley,59.24,53.2,63.36,608.0,Patriots,Patriots,57,Rotation/backup,16,LB,Linebacker,2020
+Jordan Hicks,59.23,50.4,61.79,1024.0,Cardinals,Cardinals,58,Rotation/backup,17,LB,Linebacker,2020
+Benardrick McKinney,58.99,57.8,62.48,234.0,Texans,Texans,59,Rotation/backup,18,LB,Linebacker,2020
+Josh Bynes,58.75,52.5,61.03,761.0,Bengals,Bengals,60,Rotation/backup,19,LB,Linebacker,2020
+Kwon Alexander,58.74,58.6,61.34,668.0,Saints,Saints,61,Rotation/backup,20,LB,Linebacker,2020
+Anthony Walker Jr.,58.59,48.0,61.68,697.0,Colts,Colts,62,Rotation/backup,21,LB,Linebacker,2020
+Anthony Hitchens,58.42,50.5,61.1,603.0,Chiefs,Chiefs,63,Rotation/backup,22,LB,Linebacker,2020
+Logan Wilson,58.34,54.7,60.77,343.0,Bengals,Bengals,64,Rotation/backup,23,LB,Linebacker,2020
+Duke Riley,58.06,55.1,60.35,571.0,Eagles,Eagles,65,Rotation/backup,24,LB,Linebacker,2020
+Jordyn Brooks,57.95,47.6,62.76,367.0,Seahawks,Seahawks,66,Rotation/backup,25,LB,Linebacker,2020
+Shaq Thompson,57.89,49.8,60.15,1031.0,Panthers,Panthers,67,Rotation/backup,26,LB,Linebacker,2020
+De'Vondre Campbell,57.82,49.0,59.54,880.0,Cardinals,Cardinals,68,Rotation/backup,27,LB,Linebacker,2020
+Matt Milano,57.75,55.8,58.95,335.0,Bills,Bills,69,Rotation/backup,28,LB,Linebacker,2020
+Bobby Okereke,57.21,49.6,59.42,685.0,Colts,Colts,70,Rotation/backup,29,LB,Linebacker,2020
+Tremaine Edmunds,57.17,47.9,59.92,911.0,Bills,Bills,71,Rotation/backup,30,LB,Linebacker,2020
+Reggie Ragland,56.99,48.0,59.45,562.0,Lions,Lions,72,Rotation/backup,31,LB,Linebacker,2020
+Terez Hall,56.3,51.8,63.46,259.0,Patriots,Patriots,73,Rotation/backup,32,LB,Linebacker,2020
+Kyzir White,55.89,51.5,59.97,538.0,Chargers,Chargers,74,Rotation/backup,33,LB,Linebacker,2020
+Cody Barton,55.84,54.3,61.04,115.0,Seahawks,Seahawks,75,Rotation/backup,34,LB,Linebacker,2020
+Vince Williams,55.82,50.6,57.22,672.0,Steelers,Steelers,76,Rotation/backup,35,LB,Linebacker,2020
+David Long Jr.,55.82,54.2,60.15,379.0,Titans,Titans,77,Rotation/backup,36,LB,Linebacker,2020
+Leighton Vander Esch,55.67,50.6,60.2,460.0,Cowboys,Cowboys,78,Rotation/backup,37,LB,Linebacker,2020
+Germaine Pratt,55.4,41.5,60.89,686.0,Bengals,Bengals,79,Rotation/backup,38,LB,Linebacker,2020
+David Mayo,55.36,48.6,59.97,194.0,Giants,Giants,80,Rotation/backup,39,LB,Linebacker,2020
+Will Compton,55.16,50.4,62.4,124.0,Titans,Titans,81,Rotation/backup,40,LB,Linebacker,2020
+A.J. Klein,55.0,46.1,57.09,652.0,Bills,Bills,82,Rotation/backup,41,LB,Linebacker,2020
+Joe Thomas,54.95,47.7,60.94,410.0,Cowboys,Cowboys,83,Rotation/backup,42,LB,Linebacker,2020
+Chris Board,54.94,51.4,58.04,263.0,Ravens,Ravens,84,Rotation/backup,43,LB,Linebacker,2020
+Danny Trevathan,54.76,44.1,59.89,832.0,Bears,Bears,85,Rotation/backup,44,LB,Linebacker,2020
+Cory Littleton,54.31,46.3,56.51,849.0,Raiders,Raiders,86,Rotation/backup,45,LB,Linebacker,2020
+Devante Downs,54.17,46.2,59.48,233.0,Giants,Giants,87,Rotation/backup,46,LB,Linebacker,2020
+Kamu Grugier-Hill,54.14,50.4,56.43,207.0,Dolphins,Dolphins,88,Rotation/backup,47,LB,Linebacker,2020
+Ben Niemann,53.98,46.5,57.72,468.0,Chiefs,Chiefs,89,Rotation/backup,48,LB,Linebacker,2020
+Nathan Gerry,53.56,45.7,60.56,479.0,Eagles,Eagles,90,Rotation/backup,49,LB,Linebacker,2020
+Krys Barnes,53.3,43.7,59.7,421.0,Packers,Packers,91,Rotation/backup,50,LB,Linebacker,2020
+Devin White,53.24,43.4,57.45,993.0,Buccaneers,Buccaneers,92,Rotation/backup,51,LB,Linebacker,2020
+Jacob Phillips,52.53,45.3,60.49,169.0,Browns,Browns,93,Rotation/backup,52,LB,Linebacker,2020
+Akeem Davis-Gaither,52.45,40.7,56.11,314.0,Bengals,Bengals,94,Rotation/backup,53,LB,Linebacker,2020
+Ty Summers,52.42,44.8,60.7,176.0,Packers,Packers,95,Rotation/backup,54,LB,Linebacker,2020
+Adarius Taylor,52.25,45.5,57.9,111.0,Panthers,Panthers,96,Rotation/backup,55,LB,Linebacker,2020
+Kenny Young,51.87,41.6,58.3,472.0,Rams,Rams,97,Rotation/backup,56,LB,Linebacker,2020
+Tyrell Adams,50.99,43.5,56.92,812.0,Texans,Texans,98,Rotation/backup,57,LB,Linebacker,2020
+Micah Kiser,49.34,40.0,58.16,559.0,Rams,Rams,99,Rotation/backup,58,LB,Linebacker,2020
+Christian Kirksey,49.11,43.8,57.34,548.0,Packers,Packers,100,Rotation/backup,59,LB,Linebacker,2020
+Tyrel Dodson,48.69,52.3,58.08,172.0,Bills,Bills,101,Rotation/backup,60,LB,Linebacker,2020
+Mack Wilson Sr.,48.67,36.2,55.17,372.0,Browns,Browns,102,Rotation/backup,61,LB,Linebacker,2020
+Jahlani Tavai,48.6,32.1,55.81,624.0,Lions,Lions,103,Rotation/backup,62,LB,Linebacker,2020
+Tahir Whitehead,48.27,31.9,56.05,398.0,Panthers,Panthers,104,Rotation/backup,63,LB,Linebacker,2020
+Sean Lee,47.93,34.8,58.04,180.0,Cowboys,Cowboys,105,Rotation/backup,64,LB,Linebacker,2020
+Raekwon McMillan,47.43,30.3,57.7,170.0,Raiders,Raiders,106,Rotation/backup,65,LB,Linebacker,2020
+Harvey Langi,47.19,34.9,55.38,513.0,Jets,Jets,107,Rotation/backup,66,LB,Linebacker,2020
+Elandon Roberts,47.03,29.3,56.86,402.0,Dolphins,Dolphins,108,Rotation/backup,67,LB,Linebacker,2020
+Patrick Queen,46.96,29.7,54.3,858.0,Ravens,Ravens,109,Rotation/backup,68,LB,Linebacker,2020
+Tae Crowder,46.48,36.4,55.29,403.0,Giants,Giants,110,Rotation/backup,69,LB,Linebacker,2020
+Troy Dye,45.0,28.8,55.04,201.0,Vikings,Vikings,111,Rotation/backup,70,LB,Linebacker,2020
+Bryce Hager,45.0,30.2,54.64,138.0,Jets,Jets,112,Rotation/backup,71,LB,Linebacker,2020
+Darius Harris,45.0,28.8,55.67,126.0,Chiefs,Chiefs,113,Rotation/backup,72,LB,Linebacker,2020
+Hardy Nickerson,45.0,29.9,58.81,102.0,Vikings,Vikings,114,Rotation/backup,73,LB,Linebacker,2020
+Dakota Allen,45.0,29.5,57.92,103.0,Jaguars,Jaguars,115,Rotation/backup,74,LB,Linebacker,2020
+Aaron Rodgers,88.14,89.63,83.12,607.0,Packers,Packers,1,Elite,1,QB,Quarterback,2020
+Deshaun Watson,87.32,86.73,83.39,687.0,Texans,Texans,2,Elite,2,QB,Quarterback,2020
+Patrick Mahomes,86.86,88.83,81.32,693.0,Chiefs,Chiefs,3,Elite,3,QB,Quarterback,2020
+Russell Wilson,86.09,88.78,79.64,695.0,Seahawks,Seahawks,4,Elite,4,QB,Quarterback,2020
+Tom Brady,83.73,87.65,76.01,680.0,Buccaneers,Buccaneers,5,Elite,5,QB,Quarterback,2020
+Derek Carr,81.81,81.95,78.35,604.0,Raiders,Raiders,6,Elite,6,QB,Quarterback,2020
+Kirk Cousins,81.47,81.57,78.49,613.0,Vikings,Vikings,7,Elite,7,QB,Quarterback,2020
+Josh Allen,81.07,81.14,77.58,677.0,Bills,Bills,8,Elite,8,QB,Quarterback,2020
+Ryan Tannehill,80.49,83.29,78.1,557.0,Titans,Titans,9,Elite,9,QB,Quarterback,2020
+Matt Ryan,78.28,80.09,72.25,721.0,Falcons,Falcons,10,Good,1,QB,Quarterback,2020
+Philip Rivers,78.16,76.56,75.98,600.0,Colts,Colts,11,Good,2,QB,Quarterback,2020
+Matthew Stafford,78.14,78.83,75.67,626.0,Lions,Lions,12,Good,3,QB,Quarterback,2020
+Baker Mayfield,77.45,79.07,73.29,568.0,Browns,Browns,13,Good,4,QB,Quarterback,2020
+Drew Brees,77.24,78.19,77.79,421.0,Saints,Saints,14,Good,5,QB,Quarterback,2020
+Dak Prescott,75.96,77.65,77.18,247.0,Cowboys,Cowboys,15,Good,6,QB,Quarterback,2020
+Lamar Jackson,75.64,78.33,74.1,478.0,Ravens,Ravens,16,Good,7,QB,Quarterback,2020
+Kyler Murray,74.37,72.78,71.13,674.0,Cardinals,Cardinals,17,Good,8,QB,Quarterback,2020
+Jared Goff,73.56,73.3,69.45,617.0,Rams,Rams,18,Starter,1,QB,Quarterback,2020
+Justin Herbert,73.52,78.4,74.27,689.0,Chargers,Chargers,19,Starter,2,QB,Quarterback,2020
+Ryan Fitzpatrick,72.01,73.54,73.4,316.0,Dolphins,Dolphins,20,Starter,3,QB,Quarterback,2020
+Ben Roethlisberger,69.07,68.59,68.97,672.0,Steelers,Steelers,21,Starter,4,QB,Quarterback,2020
+Daniel Jones,68.51,71.76,63.97,552.0,Giants,Giants,22,Starter,5,QB,Quarterback,2020
+Gardner Minshew,68.39,67.53,69.94,396.0,Jaguars,Jaguars,23,Starter,6,QB,Quarterback,2020
+Teddy Bridgewater,68.14,67.07,71.7,594.0,Panthers,Panthers,24,Starter,7,QB,Quarterback,2020
+Jimmy Garoppolo,67.48,70.76,73.09,159.0,49ers,49ers,25,Starter,8,QB,Quarterback,2020
+Andy Dalton,66.43,69.44,64.81,393.0,Cowboys,Cowboys,26,Starter,9,QB,Quarterback,2020
+Joe Burrow,65.06,74.3,66.69,472.0,Bengals,Bengals,27,Starter,10,QB,Quarterback,2020
+Cam Newton,64.52,67.16,65.53,444.0,Patriots,Patriots,28,Starter,11,QB,Quarterback,2020
+Carson Wentz,63.97,66.29,59.92,544.0,Eagles,Eagles,29,Starter,12,QB,Quarterback,2020
+Mitch Trubisky,63.76,60.21,68.0,340.0,Bears,Bears,30,Starter,13,QB,Quarterback,2020
+Taysom Hill,63.26,69.78,74.28,161.0,Saints,Saints,31,Starter,14,QB,Quarterback,2020
+C.J. Beathard,62.1,64.85,73.59,123.0,49ers,49ers,32,Starter,15,QB,Quarterback,2020
+Nick Foles,61.8,66.97,64.25,350.0,Bears,Bears,33,Rotation/backup,1,QB,Quarterback,2020
+Drew Lock,61.44,62.67,63.19,510.0,Broncos,Broncos,34,Rotation/backup,2,QB,Quarterback,2020
+Tua Tagovailoa,60.64,63.9,63.29,347.0,Dolphins,Dolphins,35,Rotation/backup,3,QB,Quarterback,2020
+Alex Smith,60.47,67.18,62.15,289.0,Commanders,Commanders,36,Rotation/backup,4,QB,Quarterback,2020
+Mike Glennon,60.42,68.87,63.54,198.0,Jaguars,Jaguars,37,Rotation/backup,5,QB,Quarterback,2020
+Nick Mullens,60.01,57.79,67.54,365.0,49ers,49ers,38,Rotation/backup,6,QB,Quarterback,2020
+Kyle Allen,59.76,56.16,70.04,107.0,Commanders,Commanders,39,Rotation/backup,7,QB,Quarterback,2020
+Joe Flacco,58.84,61.72,63.73,160.0,Jets,Jets,40,Rotation/backup,8,QB,Quarterback,2020
+Jalen Hurts,58.37,57.5,63.58,197.0,Eagles,Eagles,41,Rotation/backup,9,QB,Quarterback,2020
+Sam Darnold,57.25,56.93,57.9,449.0,Jets,Jets,42,Rotation/backup,10,QB,Quarterback,2020
+Brandon Allen,57.08,53.96,62.24,167.0,Bengals,Bengals,43,Rotation/backup,11,QB,Quarterback,2020
+Jake Luton,52.13,37.7,55.56,123.0,Jaguars,Jaguars,44,Rotation/backup,12,QB,Quarterback,2020
+Adrian Amos,91.48,91.5,87.3,1008.0,Packers,Packers,1,Elite,1,S,Safety,2020
+Jessie Bates III,90.3,90.0,86.34,1050.0,Bengals,Bengals,2,Elite,2,S,Safety,2020
+John Johnson III,87.13,85.6,87.11,1025.0,Rams,Rams,3,Elite,3,S,Safety,2020
+Marcus Maye,85.14,85.8,82.61,1137.0,Jets,Jets,4,Elite,4,S,Safety,2020
+Minkah Fitzpatrick,82.41,80.1,79.78,1021.0,Steelers,Steelers,5,Elite,5,S,Safety,2020
+Kareem Jackson,82.01,81.3,79.25,1083.0,Broncos,Broncos,6,Elite,6,S,Safety,2020
+Justin Simmons,81.78,79.0,79.46,1088.0,Broncos,Broncos,7,Elite,7,S,Safety,2020
+Jordan Poyer,80.66,76.4,79.34,1010.0,Bills,Bills,8,Elite,8,S,Safety,2020
+Harrison Smith,80.55,76.7,79.26,1030.0,Vikings,Vikings,9,Elite,9,S,Safety,2020
+Marcus Williams,79.9,72.4,82.09,880.0,Saints,Saints,10,Good,1,S,Safety,2020
+Darnell Savage,77.74,76.7,75.7,876.0,Packers,Packers,11,Good,2,S,Safety,2020
+Terrell Edmunds,77.61,76.0,75.03,865.0,Steelers,Steelers,12,Good,3,S,Safety,2020
+Jimmie Ward,76.65,72.5,78.69,851.0,49ers,49ers,13,Good,4,S,Safety,2020
+Ronnie Harrison,76.26,74.4,76.99,325.0,Browns,Browns,14,Good,5,S,Safety,2020
+Jeff Heath,76.08,72.8,76.6,415.0,Raiders,Raiders,15,Good,6,S,Safety,2020
+Mike Edwards,75.94,77.2,73.93,189.0,Buccaneers,Buccaneers,16,Good,7,S,Safety,2020
+Marcus Epps,75.82,74.8,77.02,365.0,Eagles,Eagles,17,Good,8,S,Safety,2020
+Jeremy Reaves,75.64,76.9,81.47,263.0,Commanders,Commanders,18,Good,9,S,Safety,2020
+Chuck Clark,75.5,69.5,76.06,1063.0,Ravens,Ravens,19,Good,10,S,Safety,2020
+Rodney McLeod,75.33,77.3,74.11,873.0,Eagles,Eagles,20,Good,11,S,Safety,2020
+Budda Baker,74.47,68.9,74.53,1005.0,Cardinals,Cardinals,21,Good,12,S,Safety,2020
+Khari Willis,74.07,69.1,75.3,842.0,Colts,Colts,22,Good,13,S,Safety,2020
+Kevin Byard,73.48,63.9,75.7,1103.0,Titans,Titans,23,Starter,1,S,Safety,2020
+Andrew Wingard,72.81,69.8,75.6,461.0,Jaguars,Jaguars,24,Starter,2,S,Safety,2020
+Amani Hooker,72.6,70.8,69.63,470.0,Titans,Titans,25,Starter,3,S,Safety,2020
+Vonn Bell,72.09,64.6,73.85,1061.0,Bengals,Bengals,26,Starter,4,S,Safety,2020
+Micah Hyde,71.54,66.8,71.26,938.0,Bills,Bills,27,Starter,5,S,Safety,2020
+Tashaun Gipson Sr.,71.18,64.7,71.97,1054.0,Bears,Bears,28,Starter,6,S,Safety,2020
+Anthony Harris,70.73,63.6,72.99,1074.0,Vikings,Vikings,29,Starter,7,S,Safety,2020
+Donovan Wilson,70.57,70.5,74.79,673.0,Cowboys,Cowboys,30,Starter,8,S,Safety,2020
+Taylor Rapp,70.36,69.1,71.99,365.0,Rams,Rams,31,Starter,9,S,Safety,2020
+Devin McCourty,70.35,64.3,70.21,960.0,Patriots,Patriots,32,Starter,10,S,Safety,2020
+Rayshawn Jenkins,70.18,70.0,67.9,860.0,Chargers,Chargers,33,Starter,11,S,Safety,2020
+Duron Harmon,69.43,64.4,68.61,1102.0,Lions,Lions,34,Starter,12,S,Safety,2020
+Eric Rowe,69.26,64.1,68.54,919.0,Dolphins,Dolphins,35,Starter,13,S,Safety,2020
+Jalen Mills,69.2,66.9,67.09,1014.0,Eagles,Eagles,36,Starter,14,S,Safety,2020
+Jarrod Wilson,68.81,64.7,70.3,765.0,Jaguars,Jaguars,37,Starter,15,S,Safety,2020
+Jordan Whitehead,68.71,63.7,68.71,920.0,Buccaneers,Buccaneers,38,Starter,16,S,Safety,2020
+Justin Reid,68.69,67.2,67.4,888.0,Texans,Texans,39,Starter,17,S,Safety,2020
+Tavon Wilson,68.22,64.2,70.28,219.0,Colts,Colts,40,Starter,18,S,Safety,2020
+Adrian Phillips,68.15,62.2,70.76,747.0,Patriots,Patriots,41,Starter,19,S,Safety,2020
+DeShon Elliott,68.07,66.2,68.9,1044.0,Ravens,Ravens,42,Starter,20,S,Safety,2020
+Jalen Thompson,68.02,68.4,72.31,232.0,Cardinals,Cardinals,43,Starter,21,S,Safety,2020
+Quandre Diggs,67.7,58.6,71.48,1075.0,Seahawks,Seahawks,44,Starter,22,S,Safety,2020
+Tyrann Mathieu,67.49,60.4,68.57,982.0,Chiefs,Chiefs,45,Starter,23,S,Safety,2020
+Xavier Woods,67.28,62.5,67.55,990.0,Cowboys,Cowboys,46,Starter,24,S,Safety,2020
+Xavier McKinney,66.95,69.2,74.7,211.0,Giants,Giants,47,Starter,25,S,Safety,2020
+Bobby McCain,66.95,63.1,68.09,923.0,Dolphins,Dolphins,48,Starter,26,S,Safety,2020
+Chris Banjo,66.76,63.6,72.3,436.0,Cardinals,Cardinals,49,Starter,27,S,Safety,2020
+Keanu Neal,66.65,66.2,70.49,917.0,Falcons,Falcons,50,Starter,28,S,Safety,2020
+Jeremy Chinn,66.44,64.4,64.66,967.0,Panthers,Panthers,51,Starter,29,S,Safety,2020
+Ricardo Allen,65.34,60.1,69.45,604.0,Falcons,Falcons,52,Starter,30,S,Safety,2020
+Jaquiski Tartt,65.04,63.5,69.5,374.0,49ers,49ers,53,Starter,31,S,Safety,2020
+Antoine Winfield Jr.,65.04,55.0,67.57,1034.0,Buccaneers,Buccaneers,54,Starter,32,S,Safety,2020
+Kenny Vaccaro,64.56,63.6,63.21,871.0,Titans,Titans,55,Starter,33,S,Safety,2020
+Brandon Jones,64.43,59.2,63.75,385.0,Dolphins,Dolphins,56,Starter,34,S,Safety,2020
+Jordan Fuller,64.35,58.6,68.19,708.0,Rams,Rams,57,Starter,35,S,Safety,2020
+D.J. Swearinger Sr.,64.06,60.8,68.12,124.0,Saints,Saints,58,Starter,36,S,Safety,2020
+Damontae Kazee,63.68,61.7,68.65,241.0,Falcons,Falcons,59,Starter,37,S,Safety,2020
+Malcolm Jenkins,63.51,52.0,67.01,1036.0,Saints,Saints,60,Starter,38,S,Safety,2020
+Sharrod Neasman,63.32,59.4,66.66,292.0,Falcons,Falcons,61,Starter,39,S,Safety,2020
+Eddie Jackson,63.32,55.8,64.58,1059.0,Bears,Bears,62,Starter,40,S,Safety,2020
+Jabrill Peppers,63.06,57.2,64.88,912.0,Giants,Giants,63,Starter,41,S,Safety,2020
+Nick Scott,62.43,59.7,70.11,193.0,Rams,Rams,64,Starter,42,S,Safety,2020
+Erik Harris,62.36,57.9,62.74,724.0,Raiders,Raiders,65,Starter,43,S,Safety,2020
+Julian Love,62.02,54.9,63.63,722.0,Giants,Giants,66,Starter,44,S,Safety,2020
+Juan Thornhill,61.92,55.5,62.04,765.0,Chiefs,Chiefs,67,Rotation/backup,1,S,Safety,2020
+Julian Blackmon,61.83,54.5,63.59,916.0,Colts,Colts,68,Rotation/backup,2,S,Safety,2020
+Troy Apke,61.75,58.0,65.4,441.0,Commanders,Commanders,69,Rotation/backup,3,S,Safety,2020
+Deshazor Everett,61.25,59.3,64.84,357.0,Commanders,Commanders,70,Rotation/backup,4,S,Safety,2020
+Will Redmond,61.08,62.5,60.65,340.0,Packers,Packers,71,Rotation/backup,5,S,Safety,2020
+Tarvarius Moore,61.01,56.1,63.04,541.0,49ers,49ers,72,Rotation/backup,6,S,Safety,2020
+Jamal Adams,60.63,53.1,64.19,784.0,Seahawks,Seahawks,73,Rotation/backup,7,S,Safety,2020
+Will Harris,60.22,55.5,59.2,312.0,Lions,Lions,74,Rotation/backup,8,S,Safety,2020
+Jahleel Addae,60.15,56.7,61.42,211.0,Chargers,Chargers,75,Rotation/backup,9,S,Safety,2020
+Adrian Colbert,60.11,60.0,67.49,104.0,Giants,Giants,76,Rotation/backup,10,S,Safety,2020
+Kyle Dugger,59.92,55.4,60.85,520.0,Patriots,Patriots,77,Rotation/backup,11,S,Safety,2020
+Juston Burris,59.62,59.5,58.67,790.0,Panthers,Panthers,78,Rotation/backup,12,S,Safety,2020
+Daniel Sorensen,59.52,58.5,58.44,883.0,Chiefs,Chiefs,79,Rotation/backup,13,S,Safety,2020
+Tre Boston,58.57,49.9,60.6,1037.0,Panthers,Panthers,80,Rotation/backup,14,S,Safety,2020
+Raven Greene,58.07,60.1,62.75,324.0,Packers,Packers,81,Rotation/backup,15,S,Safety,2020
+Daniel Thomas,58.01,62.4,64.34,162.0,Jaguars,Jaguars,82,Rotation/backup,16,S,Safety,2020
+Landon Collins,57.91,56.1,60.79,398.0,Commanders,Commanders,83,Rotation/backup,17,S,Safety,2020
+Eric Murray,57.84,50.4,59.89,941.0,Texans,Texans,84,Rotation/backup,18,S,Safety,2020
+Armani Watts,57.28,59.7,62.44,102.0,Chiefs,Chiefs,85,Rotation/backup,19,S,Safety,2020
+Matthias Farley,57.14,60.5,62.09,201.0,Jets,Jets,86,Rotation/backup,20,S,Safety,2020
+Deionte Thompson,56.2,55.0,59.46,332.0,Cardinals,Cardinals,87,Rotation/backup,21,S,Safety,2020
+Karl Joseph,55.63,48.4,60.65,660.0,Browns,Browns,88,Rotation/backup,22,S,Safety,2020
+Sam Franklin Jr.,55.34,51.6,60.96,251.0,Panthers,Panthers,89,Rotation/backup,23,S,Safety,2020
+Dean Marlowe,54.26,52.1,59.04,230.0,Bills,Bills,90,Rotation/backup,24,S,Safety,2020
+K'Von Wallace,54.19,54.0,54.31,203.0,Eagles,Eagles,91,Rotation/backup,25,S,Safety,2020
+Darian Thompson,54.11,51.3,57.13,479.0,Cowboys,Cowboys,92,Rotation/backup,26,S,Safety,2020
+Ashtyn Davis,53.49,45.1,63.25,402.0,Jets,Jets,93,Rotation/backup,27,S,Safety,2020
+Sheldrick Redwine,53.14,51.5,57.1,276.0,Browns,Browns,94,Rotation/backup,28,S,Safety,2020
+Terrence Brooks,52.66,47.3,56.65,254.0,Patriots,Patriots,95,Rotation/backup,29,S,Safety,2020
+Tracy Walker III,52.17,40.8,57.05,755.0,Lions,Lions,96,Rotation/backup,30,S,Safety,2020
+Bradley McDougald,52.11,42.8,59.15,432.0,Jets,Jets,97,Rotation/backup,31,S,Safety,2020
+Nasir Adderley,51.8,42.5,59.95,886.0,Chargers,Chargers,98,Rotation/backup,32,S,Safety,2020
+Josh Jones,50.87,39.2,57.81,700.0,Jaguars,Jaguars,99,Rotation/backup,33,S,Safety,2020
+Andrew Sendejo,49.98,40.9,56.14,918.0,Browns,Browns,100,Rotation/backup,34,S,Safety,2020
+Marcell Harris,47.33,36.6,56.77,348.0,49ers,49ers,101,Rotation/backup,35,S,Safety,2020
+Johnathan Abram,45.0,30.3,56.88,856.0,Raiders,Raiders,102,Rotation/backup,36,S,Safety,2020
+David Bakhtiari,96.69,91.8,95.78,758.0,Packers,Packers,1,Elite,1,T,Tackle,2020
+Trent Williams,96.3,91.9,95.06,957.0,49ers,49ers,2,Elite,2,T,Tackle,2020
+Garett Bolles,96.02,90.6,95.47,1015.0,Broncos,Broncos,3,Elite,3,T,Tackle,2020
+Andrew Whitworth,94.69,88.7,94.52,600.0,Rams,Rams,4,Elite,4,T,Tackle,2020
+D.J. Humphries,94.18,88.3,93.94,1129.0,Cardinals,Cardinals,5,Elite,5,T,Tackle,2020
+Duane Brown,91.56,87.3,90.24,1048.0,Seahawks,Seahawks,6,Elite,6,T,Tackle,2020
+Terron Armstead,91.12,86.3,90.17,857.0,Saints,Saints,7,Elite,7,T,Tackle,2020
+Jack Conklin,90.32,84.3,90.17,999.0,Browns,Browns,8,Elite,8,T,Tackle,2020
+Ryan Ramczyk,88.61,81.5,89.19,1038.0,Saints,Saints,9,Elite,9,T,Tackle,2020
+Isaiah Wynn,88.59,82.6,88.42,641.0,Patriots,Patriots,10,Elite,10,T,Tackle,2020
+Tristan Wirfs,88.18,81.8,88.26,1073.0,Buccaneers,Buccaneers,11,Elite,11,T,Tackle,2020
+Morgan Moses,88.17,80.6,89.05,1065.0,Commanders,Commanders,12,Elite,12,T,Tackle,2020
+Taylor Moton,88.07,81.6,88.22,1032.0,Panthers,Panthers,13,Elite,13,T,Tackle,2020
+Taylor Decker,87.94,82.0,87.73,1048.0,Lions,Lions,14,Elite,14,T,Tackle,2020
+Mike McGlinchey,87.81,79.6,89.12,1091.0,49ers,49ers,15,Elite,15,T,Tackle,2020
+Rob Havenstein,87.76,80.2,88.64,1117.0,Rams,Rams,16,Elite,16,T,Tackle,2020
+Ronnie Stanley,87.36,79.9,88.16,312.0,Ravens,Ravens,17,Elite,17,T,Tackle,2020
+Braden Smith,87.35,80.1,88.02,937.0,Colts,Colts,18,Elite,18,T,Tackle,2020
+Brian O'Neill,86.91,78.0,88.68,1070.0,Vikings,Vikings,19,Elite,19,T,Tackle,2020
+Eric Fisher,85.79,80.0,85.49,1049.0,Chiefs,Chiefs,20,Elite,20,T,Tackle,2020
+Dion Dawkins,84.96,78.1,85.36,1034.0,Bills,Bills,21,Elite,21,T,Tackle,2020
+Orlando Brown Jr.,84.26,76.5,85.26,1027.0,Ravens,Ravens,22,Elite,22,T,Tackle,2020
+Rick Wagner,84.2,77.0,84.84,610.0,Packers,Packers,23,Elite,23,T,Tackle,2020
+Cornelius Lucas,83.86,78.2,83.47,536.0,Commanders,Commanders,24,Elite,24,T,Tackle,2020
+Laremy Tunsil,83.2,75.4,84.24,817.0,Texans,Texans,25,Elite,25,T,Tackle,2020
+Mekhi Becton,83.19,74.4,84.88,691.0,Jets,Jets,26,Elite,26,T,Tackle,2020
+Charles Leno Jr.,82.91,74.6,84.28,1066.0,Bears,Bears,27,Elite,27,T,Tackle,2020
+Kendall Lamm,82.65,76.8,82.39,113.0,Browns,Browns,28,Elite,28,T,Tackle,2020
+Mitchell Schwartz,82.28,74.7,83.16,357.0,Chiefs,Chiefs,29,Elite,29,T,Tackle,2020
+Jake Matthews,81.97,75.5,82.11,1113.0,Falcons,Falcons,30,Elite,30,T,Tackle,2020
+Lane Johnson,81.72,71.9,84.1,405.0,Eagles,Eagles,31,Elite,31,T,Tackle,2020
+Russell Okung,81.66,73.0,83.27,406.0,Panthers,Panthers,32,Elite,32,T,Tackle,2020
+Donovan Smith,81.66,71.8,84.07,962.0,Buccaneers,Buccaneers,33,Elite,33,T,Tackle,2020
+James Hurst,81.31,70.1,84.62,377.0,Saints,Saints,34,Elite,34,T,Tackle,2020
+Brandon Shell,81.05,72.7,82.45,673.0,Seahawks,Seahawks,35,Elite,35,T,Tackle,2020
+Alejandro Villanueva,80.87,74.6,80.88,1098.0,Steelers,Steelers,36,Elite,36,T,Tackle,2020
+Rashod Hill,80.87,72.2,82.49,121.0,Vikings,Vikings,37,Elite,37,T,Tackle,2020
+Anthony Castonzo,80.86,73.4,81.66,749.0,Colts,Colts,38,Elite,38,T,Tackle,2020
+Demar Dotson,80.79,70.8,83.29,451.0,Broncos,Broncos,39,Elite,39,T,Tackle,2020
+Bobby Massie,80.38,72.6,81.4,470.0,Bears,Bears,40,Elite,40,T,Tackle,2020
+Riley Reiff,80.15,71.3,81.89,1003.0,Vikings,Vikings,41,Elite,41,T,Tackle,2020
+Mike Remmers,80.05,70.1,82.52,709.0,Chiefs,Chiefs,42,Elite,42,T,Tackle,2020
+Kolton Miller,79.76,73.0,80.1,961.0,Raiders,Raiders,43,Good,1,T,Tackle,2020
+Jordan Mailata,79.49,70.4,81.39,733.0,Eagles,Eagles,44,Good,2,T,Tackle,2020
+Trent Brown,79.49,68.9,82.38,282.0,Raiders,Raiders,45,Good,3,T,Tackle,2020
+Matt Peart,79.3,69.7,81.53,150.0,Giants,Giants,46,Good,4,T,Tackle,2020
+Kelvin Beachum,78.98,69.0,81.47,1126.0,Cardinals,Cardinals,47,Good,5,T,Tackle,2020
+Tyron Smith,77.82,67.8,80.33,154.0,Cowboys,Cowboys,48,Good,6,T,Tackle,2020
+Jonah Williams,77.75,70.1,78.69,634.0,Bengals,Bengals,49,Good,7,T,Tackle,2020
+Roderick Johnson,77.61,64.5,82.18,245.0,Texans,Texans,50,Good,8,T,Tackle,2020
+Dennis Kelly,77.52,65.9,81.1,1049.0,Titans,Titans,51,Good,9,T,Tackle,2020
+Bobby Hart,77.06,66.3,80.06,872.0,Bengals,Bengals,52,Good,10,T,Tackle,2020
+Ty Sambrailo,76.93,65.6,80.31,415.0,Titans,Titans,53,Good,11,T,Tackle,2020
+Cedric Ogbuehi,76.92,65.5,80.36,277.0,Seahawks,Seahawks,54,Good,12,T,Tackle,2020
+Jason Peters,76.42,67.6,78.14,509.0,Eagles,Eagles,55,Good,13,T,Tackle,2020
+Chuma Edoga,76.2,61.3,81.96,235.0,Jets,Jets,56,Good,14,T,Tackle,2020
+Kaleb McGary,76.11,64.3,79.82,890.0,Falcons,Falcons,57,Good,15,T,Tackle,2020
+Tyrell Crosby,75.12,64.2,78.23,657.0,Lions,Lions,58,Good,16,T,Tackle,2020
+Tytus Howard,74.81,62.1,79.11,811.0,Texans,Texans,59,Good,17,T,Tackle,2020
+Jesse Davis,74.51,62.6,78.28,1055.0,Dolphins,Dolphins,60,Good,18,T,Tackle,2020
+Josh Wells,74.44,65.1,76.5,111.0,Buccaneers,Buccaneers,61,Good,19,T,Tackle,2020
+Jedrick Wills Jr.,74.34,61.5,78.73,957.0,Browns,Browns,62,Good,20,T,Tackle,2020
+Justin Herron,74.13,63.4,77.11,352.0,Patriots,Patriots,63,Good,21,T,Tackle,2020
+Taylor Lewan,73.79,61.8,77.61,239.0,Titans,Titans,64,Starter,1,T,Tackle,2020
+Chaz Green,73.72,61.9,77.43,209.0,Colts,Colts,65,Starter,2,T,Tackle,2020
+David Quessenberry,73.41,61.7,77.05,437.0,Titans,Titans,66,Starter,3,T,Tackle,2020
+Bryan Bulaga,73.23,61.6,76.81,444.0,Chargers,Chargers,67,Starter,4,T,Tackle,2020
+Andrew Thomas,73.16,62.4,76.16,978.0,Giants,Giants,68,Starter,5,T,Tackle,2020
+George Fant,73.15,61.6,76.69,829.0,Jets,Jets,69,Starter,6,T,Tackle,2020
+Cam Robinson,73.1,61.7,76.54,973.0,Jaguars,Jaguars,70,Starter,7,T,Tackle,2020
+Geron Christian,73.0,62.3,75.96,398.0,Commanders,Commanders,71,Starter,8,T,Tackle,2020
+Trent Scott,72.91,60.2,77.21,347.0,Panthers,Panthers,72,Starter,9,T,Tackle,2020
+Sam Young,72.38,59.0,77.14,382.0,Raiders,Raiders,73,Starter,10,T,Tackle,2020
+Cam Fleming,72.38,58.4,77.54,913.0,Giants,Giants,74,Starter,11,T,Tackle,2020
+Chukwuma Okorafor,71.05,57.5,75.91,1033.0,Steelers,Steelers,75,Starter,12,T,Tackle,2020
+Jawaan Taylor,70.69,56.5,75.99,1037.0,Jaguars,Jaguars,76,Starter,13,T,Tackle,2020
+Conor McDermott,69.55,54.2,75.62,247.0,Jets,Jets,77,Starter,14,T,Tackle,2020
+Matt Gono,69.4,54.9,74.9,336.0,Falcons,Falcons,78,Starter,15,T,Tackle,2020
+Trey Pipkins III,69.34,54.8,74.87,571.0,Chargers,Chargers,79,Starter,16,T,Tackle,2020
+Sam Tevi,68.05,52.9,73.98,1024.0,Chargers,Chargers,80,Starter,17,T,Tackle,2020
+Matt Nelson,67.5,55.8,71.14,242.0,Lions,Lions,81,Starter,18,T,Tackle,2020
+Austin Jackson,67.07,52.5,72.61,848.0,Dolphins,Dolphins,82,Starter,19,T,Tackle,2020
+David Sharpe,67.04,50.9,73.63,184.0,Commanders,Commanders,83,Starter,20,T,Tackle,2020
+Hakeem Adeniji,66.89,51.6,72.92,233.0,Bengals,Bengals,84,Starter,21,T,Tackle,2020
+Greg Little,66.56,44.1,77.36,134.0,Panthers,Panthers,85,Starter,22,T,Tackle,2020
+Terence Steele,66.17,50.3,72.58,970.0,Cowboys,Cowboys,86,Starter,23,T,Tackle,2020
+Brandon Parker,65.81,48.9,72.91,345.0,Raiders,Raiders,87,Starter,24,T,Tackle,2020
+Fred Johnson,65.11,48.4,72.08,491.0,Bengals,Bengals,88,Starter,25,T,Tackle,2020
+Brandon Knight,65.07,48.5,71.95,774.0,Cowboys,Cowboys,89,Starter,26,T,Tackle,2020
+Le'Raven Clark,64.96,49.1,71.36,148.0,Colts,Colts,90,Starter,27,T,Tackle,2020
+Calvin Anderson,64.39,55.1,66.42,132.0,Broncos,Broncos,91,Starter,28,T,Tackle,2020
+Justin Skule,64.0,45.4,72.23,255.0,49ers,49ers,92,Starter,29,T,Tackle,2020
+George Kittle,85.3,84.9,81.4,262.0,49ers,49ers,1,Elite,1,TE,Tight End,2020
+Travis Kelce,83.96,93.5,73.43,635.0,Chiefs,Chiefs,2,Elite,2,TE,Tight End,2020
+Mark Andrews,83.35,81.8,80.21,364.0,Ravens,Ravens,3,Elite,3,TE,Tight End,2020
+Mo Alie-Cox,82.15,78.2,80.62,226.0,Colts,Colts,4,Elite,4,TE,Tight End,2020
+Darren Waller,82.03,86.5,74.89,620.0,Raiders,Raiders,5,Elite,5,TE,Tight End,2020
+Pharaoh Brown,80.69,81.3,76.12,126.0,Texans,Texans,6,Elite,6,TE,Tight End,2020
+Rob Gronkowski,79.27,72.1,79.89,498.0,Buccaneers,Buccaneers,7,Good,1,TE,Tight End,2020
+Richard Rodgers,78.43,88.6,67.48,174.0,Eagles,Eagles,8,Good,2,TE,Tight End,2020
+Adam Trautman,77.12,79.4,71.44,172.0,Saints,Saints,9,Good,3,TE,Tight End,2020
+Dallas Goedert,76.35,79.6,70.01,390.0,Eagles,Eagles,10,Good,4,TE,Tight End,2020
+Anthony Firkser,75.69,77.1,70.59,250.0,Titans,Titans,11,Good,5,TE,Tight End,2020
+Donald Parham Jr.,75.59,64.5,78.82,136.0,Chargers,Chargers,12,Good,6,TE,Tight End,2020
+Foster Moreau,74.76,67.2,75.64,117.0,Raiders,Raiders,13,Good,7,TE,Tight End,2020
+Will Dissly,74.68,66.1,76.23,308.0,Seahawks,Seahawks,14,Good,8,TE,Tight End,2020
+Jordan Reed,74.51,66.2,75.88,190.0,49ers,49ers,15,Good,9,TE,Tight End,2020
+Mike Gesicki,74.23,78.1,67.48,473.0,Dolphins,Dolphins,16,Good,10,TE,Tight End,2020
+Dan Arnold,74.12,61.7,78.24,312.0,Cardinals,Cardinals,17,Good,11,TE,Tight End,2020
+T.J. Hockenson,73.24,75.5,67.56,538.0,Lions,Lions,18,Starter,1,TE,Tight End,2020
+Darren Fells,73.06,69.5,71.27,313.0,Texans,Texans,19,Starter,2,TE,Tight End,2020
+Hunter Henry,72.78,69.3,70.94,586.0,Chargers,Chargers,20,Starter,3,TE,Tight End,2020
+Tyler Higbee,72.61,69.2,70.71,424.0,Rams,Rams,21,Starter,4,TE,Tight End,2020
+David Njoku,72.6,66.9,72.23,216.0,Browns,Browns,22,Starter,5,TE,Tight End,2020
+Jonnu Smith,72.57,75.2,66.65,353.0,Titans,Titans,23,Starter,6,TE,Tight End,2020
+Robert Tonyan,72.43,68.0,71.21,426.0,Packers,Packers,24,Starter,7,TE,Tight End,2020
+Jared Cook,72.16,71.9,68.16,338.0,Saints,Saints,25,Starter,8,TE,Tight End,2020
+Noah Fant,72.13,71.2,68.58,466.0,Broncos,Broncos,26,Starter,9,TE,Tight End,2020
+Kyle Rudolph,72.02,66.5,71.53,296.0,Vikings,Vikings,27,Starter,10,TE,Tight End,2020
+Trey Burton,71.97,66.7,71.31,242.0,Colts,Colts,28,Starter,11,TE,Tight End,2020
+Marcedes Lewis,71.89,68.0,70.31,191.0,Packers,Packers,29,Starter,12,TE,Tight End,2020
+Jack Doyle,71.8,67.0,70.83,244.0,Colts,Colts,30,Starter,13,TE,Tight End,2020
+Greg Olsen,71.79,62.0,74.15,316.0,Seahawks,Seahawks,31,Starter,14,TE,Tight End,2020
+Jordan Akins,71.23,71.8,66.68,301.0,Texans,Texans,32,Starter,15,TE,Tight End,2020
+Austin Hooper,70.96,68.3,68.56,366.0,Browns,Browns,33,Starter,16,TE,Tight End,2020
+Blake Bell,70.38,63.1,71.07,154.0,Cowboys,Cowboys,34,Starter,17,TE,Tight End,2020
+Adam Shaheen,70.34,66.0,69.06,160.0,Dolphins,Dolphins,35,Starter,18,TE,Tight End,2020
+Tyler Kroft,70.13,64.3,69.85,135.0,Bills,Bills,36,Starter,19,TE,Tight End,2020
+Durham Smythe,69.88,68.7,66.5,207.0,Dolphins,Dolphins,37,Starter,20,TE,Tight End,2020
+Jimmy Graham,69.87,62.7,70.49,445.0,Bears,Bears,38,Starter,21,TE,Tight End,2020
+Cameron Brate,69.81,67.8,66.99,198.0,Buccaneers,Buccaneers,39,Starter,22,TE,Tight End,2020
+Zach Ertz,69.8,57.3,73.97,424.0,Eagles,Eagles,40,Starter,23,TE,Tight End,2020
+Nick Boyle,69.71,70.6,64.95,151.0,Ravens,Ravens,41,Starter,24,TE,Tight End,2020
+Irv Smith Jr.,69.07,70.0,64.29,322.0,Vikings,Vikings,42,Starter,25,TE,Tight End,2020
+Chris Herndon,68.81,57.6,72.11,438.0,Jets,Jets,43,Starter,26,TE,Tight End,2020
+Gerald Everett,68.47,62.8,68.09,353.0,Rams,Rams,44,Starter,27,TE,Tight End,2020
+Dawson Knox,68.47,61.4,69.02,249.0,Bills,Bills,45,Starter,28,TE,Tight End,2020
+Evan Engram,68.34,60.6,69.34,567.0,Giants,Giants,46,Starter,29,TE,Tight End,2020
+Jesse James,68.33,61.2,68.92,237.0,Lions,Lions,47,Starter,30,TE,Tight End,2020
+Maxx Williams,68.17,67.7,64.32,122.0,Cardinals,Cardinals,48,Starter,31,TE,Tight End,2020
+Tyler Eifert,67.48,62.2,66.84,417.0,Jaguars,Jaguars,49,Starter,32,TE,Tight End,2020
+Harrison Bryant,67.4,60.7,67.7,294.0,Browns,Browns,50,Starter,33,TE,Tight End,2020
+Jason Witten,67.15,60.8,67.21,179.0,Raiders,Raiders,51,Starter,34,TE,Tight End,2020
+Kaden Smith,66.84,66.9,62.64,203.0,Giants,Giants,52,Starter,35,TE,Tight End,2020
+Drew Sample,66.67,61.4,66.02,513.0,Bengals,Bengals,53,Starter,36,TE,Tight End,2020
+Ross Dwelley,66.43,61.3,65.69,234.0,49ers,49ers,54,Starter,37,TE,Tight End,2020
+Eric Ebron,66.38,55.7,69.33,536.0,Steelers,Steelers,55,Starter,38,TE,Tight End,2020
+Dalton Schultz,66.32,63.9,63.76,620.0,Cowboys,Cowboys,56,Starter,39,TE,Tight End,2020
+Logan Thomas,66.31,64.5,63.35,661.0,Commanders,Commanders,57,Starter,40,TE,Tight End,2020
+Darrell Daniels,66.2,59.1,66.76,117.0,Cardinals,Cardinals,58,Starter,41,TE,Tight End,2020
+James O'Shaughnessy,66.0,57.7,67.37,264.0,Jaguars,Jaguars,59,Starter,42,TE,Tight End,2020
+Hayden Hurst,65.88,58.9,66.37,588.0,Falcons,Falcons,60,Starter,43,TE,Tight End,2020
+Geoff Swaim,65.66,62.2,63.8,126.0,Titans,Titans,61,Starter,44,TE,Tight End,2020
+Cole Kmet,65.65,58.7,66.12,326.0,Bears,Bears,62,Starter,45,TE,Tight End,2020
+Josh Hill,65.43,62.7,63.08,141.0,Saints,Saints,63,Starter,46,TE,Tight End,2020
+Jacob Hollister,64.98,62.5,62.47,220.0,Seahawks,Seahawks,64,Starter,47,TE,Tight End,2020
+Nick Vannett,64.73,57.2,65.58,154.0,Broncos,Broncos,65,Starter,48,TE,Tight End,2020
+Devin Asiasi,64.65,51.6,69.19,109.0,Patriots,Patriots,66,Starter,49,TE,Tight End,2020
+Chris Manhertz,64.4,58.1,64.43,220.0,Panthers,Panthers,67,Starter,50,TE,Tight End,2020
+Ryan Izzo,64.29,52.1,68.25,292.0,Patriots,Patriots,68,Starter,51,TE,Tight End,2020
+Demetrius Harris,64.28,58.5,63.97,109.0,Bears,Bears,69,Starter,52,TE,Tight End,2020
+Ryan Griffin,64.1,56.1,65.26,157.0,Jets,Jets,70,Starter,53,TE,Tight End,2020
+Levine Toilolo,63.89,56.5,64.65,102.0,Giants,Giants,71,Starter,54,TE,Tight End,2020
+Tyler Conklin,62.55,52.6,65.01,257.0,Vikings,Vikings,72,Starter,55,TE,Tight End,2020
+Nick Keizer,59.95,47.5,64.09,127.0,Chiefs,Chiefs,73,Rotation/backup,1,TE,Tight End,2020
+Ian Thomas,59.6,42.8,66.64,501.0,Panthers,Panthers,74,Rotation/backup,2,TE,Tight End,2020
+Vance McDonald,59.24,45.6,64.16,239.0,Steelers,Steelers,75,Rotation/backup,3,TE,Tight End,2020
+Luke Stocker,57.43,48.1,59.49,212.0,Falcons,Falcons,76,Rotation/backup,4,TE,Tight End,2020
+Justin Jefferson,89.4,90.4,84.57,563.0,Vikings,Vikings,1,Elite,1,WR,Wide Receiver,2020
+A.J. Brown,89.25,90.1,84.51,429.0,Titans,Titans,2,Elite,2,WR,Wide Receiver,2020
+Davante Adams,87.56,92.2,80.3,489.0,Packers,Packers,3,Elite,3,WR,Wide Receiver,2020
+Julio Jones,86.06,86.3,81.74,314.0,Falcons,Falcons,4,Elite,4,WR,Wide Receiver,2020
+Will Fuller V,85.72,86.2,81.24,406.0,Texans,Texans,5,Elite,5,WR,Wide Receiver,2020
+Stefon Diggs,85.38,89.4,78.53,658.0,Bills,Bills,6,Elite,6,WR,Wide Receiver,2020
+Antonio Brown,85.22,85.8,80.66,249.0,Buccaneers,Buccaneers,7,Elite,7,WR,Wide Receiver,2020
+DeAndre Hopkins,84.75,87.1,79.01,663.0,Cardinals,Cardinals,8,Elite,8,WR,Wide Receiver,2020
+Corey Davis,84.68,86.9,79.03,398.0,Titans,Titans,9,Elite,9,WR,Wide Receiver,2020
+Tyreek Hill,84.06,83.2,80.46,621.0,Chiefs,Chiefs,10,Elite,10,WR,Wide Receiver,2020
+Michael Thomas,84.05,85.2,79.11,215.0,Saints,Saints,11,Elite,11,WR,Wide Receiver,2020
+Kenny Golladay,83.76,81.6,81.04,150.0,Lions,Lions,12,Elite,12,WR,Wide Receiver,2020
+Allen Robinson II,83.69,88.4,76.38,625.0,Bears,Bears,13,Elite,13,WR,Wide Receiver,2020
+Chris Godwin,83.27,80.3,81.09,462.0,Buccaneers,Buccaneers,14,Elite,14,WR,Wide Receiver,2020
+Calvin Ridley,82.85,84.9,77.32,593.0,Falcons,Falcons,15,Elite,15,WR,Wide Receiver,2020
+Adam Thielen,82.54,87.4,75.14,536.0,Vikings,Vikings,16,Elite,16,WR,Wide Receiver,2020
+DJ Moore,82.39,79.1,80.41,568.0,Panthers,Panthers,17,Elite,17,WR,Wide Receiver,2020
+Keenan Allen,81.87,84.9,75.68,554.0,Chargers,Chargers,18,Elite,18,WR,Wide Receiver,2020
+Jarvis Landry,81.84,84.2,76.1,428.0,Browns,Browns,19,Elite,19,WR,Wide Receiver,2020
+D.K. Metcalf,81.73,82.7,76.91,667.0,Seahawks,Seahawks,20,Elite,20,WR,Wide Receiver,2020
+Donovan Peoples-Jones,81.61,71.8,83.99,138.0,Browns,Browns,21,Elite,21,WR,Wide Receiver,2020
+Brandin Cooks,81.51,81.1,77.61,583.0,Texans,Texans,22,Elite,22,WR,Wide Receiver,2020
+Cole Beasley,81.36,84.9,74.83,497.0,Bills,Bills,23,Elite,23,WR,Wide Receiver,2020
+Cooper Kupp,80.67,80.8,76.42,542.0,Rams,Rams,24,Elite,24,WR,Wide Receiver,2020
+T.Y. Hilton,80.61,77.7,78.38,465.0,Colts,Colts,25,Elite,25,WR,Wide Receiver,2020
+Terry McLaurin,80.48,78.0,77.96,624.0,Commanders,Commanders,26,Elite,26,WR,Wide Receiver,2020
+Deebo Samuel,80.21,79.8,76.31,177.0,49ers,49ers,27,Elite,27,WR,Wide Receiver,2020
+Chase Claypool,80.19,75.6,79.08,474.0,Steelers,Steelers,28,Elite,28,WR,Wide Receiver,2020
+Rashard Higgins,79.97,77.4,77.52,306.0,Browns,Browns,29,Good,1,WR,Wide Receiver,2020
+Bryan Edwards,79.57,69.5,82.12,143.0,Raiders,Raiders,30,Good,2,WR,Wide Receiver,2020
+Jakobi Meyers,79.25,78.6,75.52,346.0,Patriots,Patriots,31,Good,3,WR,Wide Receiver,2020
+Mike Evans,79.07,74.1,78.21,599.0,Buccaneers,Buccaneers,32,Good,4,WR,Wide Receiver,2020
+Odell Beckham Jr.,79.02,75.3,77.34,189.0,Browns,Browns,33,Good,5,WR,Wide Receiver,2020
+Tim Patrick,79.01,74.5,77.85,455.0,Broncos,Broncos,34,Good,6,WR,Wide Receiver,2020
+Brandon Aiyuk,78.98,80.1,74.07,455.0,49ers,49ers,35,Good,7,WR,Wide Receiver,2020
+Amari Cooper,78.95,75.9,76.82,638.0,Cowboys,Cowboys,36,Good,8,WR,Wide Receiver,2020
+Tee Higgins,78.62,75.9,76.26,527.0,Bengals,Bengals,37,Good,9,WR,Wide Receiver,2020
+DeSean Jackson,78.5,66.8,82.13,134.0,Eagles,Eagles,38,Good,10,WR,Wide Receiver,2020
+Mike Williams,78.36,72.7,77.96,514.0,Chargers,Chargers,39,Good,11,WR,Wide Receiver,2020
+DeVante Parker,78.2,76.4,75.23,484.0,Dolphins,Dolphins,40,Good,12,WR,Wide Receiver,2020
+Hunter Renfrow,77.88,74.8,75.77,401.0,Raiders,Raiders,41,Good,13,WR,Wide Receiver,2020
+Collin Johnson,77.75,73.4,76.49,180.0,Jaguars,Jaguars,42,Good,14,WR,Wide Receiver,2020
+Emmanuel Sanders,77.57,74.6,75.39,378.0,Saints,Saints,43,Good,15,WR,Wide Receiver,2020
+Tyler Boyd,77.24,75.8,74.04,537.0,Bengals,Bengals,44,Good,16,WR,Wide Receiver,2020
+Tyler Lockett,77.18,76.4,73.53,660.0,Seahawks,Seahawks,45,Good,17,WR,Wide Receiver,2020
+Sterling Shepard,76.92,79.6,70.97,395.0,Giants,Giants,46,Good,18,WR,Wide Receiver,2020
+Robert Woods,76.73,71.3,76.18,612.0,Rams,Rams,47,Good,19,WR,Wide Receiver,2020
+Jamison Crowder,76.67,75.3,73.41,411.0,Jets,Jets,48,Good,20,WR,Wide Receiver,2020
+Denzel Mims,76.64,69.4,77.3,264.0,Jets,Jets,49,Good,21,WR,Wide Receiver,2020
+John Brown,76.6,70.3,76.63,306.0,Bills,Bills,50,Good,22,WR,Wide Receiver,2020
+Mecole Hardman Jr.,76.54,69.8,76.86,361.0,Chiefs,Chiefs,51,Good,23,WR,Wide Receiver,2020
+Danny Amendola,76.34,74.9,73.14,352.0,Lions,Lions,52,Good,24,WR,Wide Receiver,2020
+Nelson Agholor,76.22,73.8,73.66,465.0,Raiders,Raiders,53,Good,25,WR,Wide Receiver,2020
+Braxton Berrios,75.9,72.4,74.07,189.0,Jets,Jets,54,Good,26,WR,Wide Receiver,2020
+Marvin Jones Jr.,75.61,73.6,72.78,667.0,Lions,Lions,55,Good,27,WR,Wide Receiver,2020
+DJ Chark Jr.,75.47,71.3,74.09,497.0,Jaguars,Jaguars,56,Good,28,WR,Wide Receiver,2020
+KhaDarel Hodge,75.43,70.3,74.68,140.0,Browns,Browns,57,Good,29,WR,Wide Receiver,2020
+Richie James,75.37,64.5,78.45,247.0,49ers,49ers,58,Good,30,WR,Wide Receiver,2020
+Curtis Samuel,75.33,77.1,69.99,435.0,Panthers,Panthers,59,Good,31,WR,Wide Receiver,2020
+Allen Lazard,75.32,71.7,73.56,277.0,Packers,Packers,60,Good,32,WR,Wide Receiver,2020
+Scott Miller,75.11,66.9,76.41,336.0,Buccaneers,Buccaneers,61,Good,33,WR,Wide Receiver,2020
+Breshad Perriman,75.08,63.6,78.56,393.0,Jets,Jets,62,Good,34,WR,Wide Receiver,2020
+David Moore,75.07,67.7,75.82,314.0,Seahawks,Seahawks,63,Good,35,WR,Wide Receiver,2020
+Marquise Brown,75.04,70.1,74.16,466.0,Ravens,Ravens,64,Good,36,WR,Wide Receiver,2020
+Randall Cobb,74.96,71.6,73.03,277.0,Texans,Texans,65,Good,37,WR,Wide Receiver,2020
+Auden Tate,74.92,73.4,71.77,101.0,Bengals,Bengals,66,Good,38,WR,Wide Receiver,2020
+CeeDee Lamb,74.75,71.6,72.68,539.0,Cowboys,Cowboys,67,Good,39,WR,Wide Receiver,2020
+Quintez Cephus,74.73,64.8,77.19,231.0,Lions,Lions,68,Good,40,WR,Wide Receiver,2020
+Olamide Zaccheaus,74.71,68.6,74.61,184.0,Falcons,Falcons,69,Good,41,WR,Wide Receiver,2020
+Kendrick Bourne,74.4,72.0,71.84,476.0,49ers,49ers,70,Good,42,WR,Wide Receiver,2020
+Russell Gage,74.3,76.4,68.74,548.0,Falcons,Falcons,71,Good,43,WR,Wide Receiver,2020
+Darius Slayton,74.06,67.8,74.06,583.0,Giants,Giants,72,Good,44,WR,Wide Receiver,2020
+Laviska Shenault Jr.,74.01,71.5,71.51,392.0,Jaguars,Jaguars,73,Good,45,WR,Wide Receiver,2020
+Willie Snead IV,73.77,71.6,71.05,296.0,Ravens,Ravens,74,Starter,1,WR,Wide Receiver,2020
+Isaiah McKenzie,73.7,72.1,70.6,149.0,Bills,Bills,75,Starter,2,WR,Wide Receiver,2020
+Travis Fulgham,73.56,71.2,70.96,387.0,Eagles,Eagles,76,Starter,3,WR,Wide Receiver,2020
+Jerry Jeudy,73.47,65.2,74.82,545.0,Broncos,Broncos,77,Starter,4,WR,Wide Receiver,2020
+Equanimeous St. Brown,73.44,60.4,77.97,107.0,Packers,Packers,78,Starter,5,WR,Wide Receiver,2020
+Michael Gallup,73.43,66.3,74.02,655.0,Cowboys,Cowboys,79,Starter,6,WR,Wide Receiver,2020
+Adam Humphries,73.19,69.9,71.21,168.0,Titans,Titans,80,Starter,7,WR,Wide Receiver,2020
+Gabe Davis,73.16,64.9,74.5,508.0,Bills,Bills,81,Starter,8,WR,Wide Receiver,2020
+Marquez Callaway,73.15,69.1,71.69,150.0,Saints,Saints,82,Starter,9,WR,Wide Receiver,2020
+Deonte Harty,73.12,71.6,69.96,125.0,Saints,Saints,83,Starter,10,WR,Wide Receiver,2020
+Julian Edelman,73.03,68.8,71.68,175.0,Patriots,Patriots,84,Starter,11,WR,Wide Receiver,2020
+Jalen Reagor,72.99,64.0,74.82,321.0,Eagles,Eagles,85,Starter,12,WR,Wide Receiver,2020
+Zach Pascal,72.9,64.2,74.53,501.0,Colts,Colts,86,Starter,13,WR,Wide Receiver,2020
+Keke Coutee,72.9,68.2,71.87,228.0,Texans,Texans,87,Starter,14,WR,Wide Receiver,2020
+Chris Conley,72.83,70.1,70.48,315.0,Jaguars,Jaguars,88,Starter,15,WR,Wide Receiver,2020
+Josh Reynolds,72.7,65.7,73.2,511.0,Rams,Rams,89,Starter,16,WR,Wide Receiver,2020
+JuJu Smith-Schuster,72.6,68.2,71.36,687.0,Steelers,Steelers,90,Starter,17,WR,Wide Receiver,2020
+Jakeem Grant Sr.,72.54,70.9,69.46,247.0,Dolphins,Dolphins,91,Starter,18,WR,Wide Receiver,2020
+Golden Tate,72.53,66.0,72.71,318.0,Giants,Giants,92,Starter,19,WR,Wide Receiver,2020
+A.J. Green,72.52,66.3,72.5,538.0,Bengals,Bengals,93,Starter,20,WR,Wide Receiver,2020
+Byron Pringle,72.43,64.6,73.49,163.0,Chiefs,Chiefs,94,Starter,21,WR,Wide Receiver,2020
+Diontae Johnson,72.28,69.4,70.04,557.0,Steelers,Steelers,95,Starter,22,WR,Wide Receiver,2020
+Darnell Mooney,72.14,68.7,70.27,537.0,Bears,Bears,96,Starter,23,WR,Wide Receiver,2020
+Cam Sims,71.88,61.3,74.76,410.0,Commanders,Commanders,97,Starter,24,WR,Wide Receiver,2020
+Preston Williams,71.79,65.5,71.81,221.0,Dolphins,Dolphins,98,Starter,25,WR,Wide Receiver,2020
+Sammy Watkins,71.78,64.4,72.53,361.0,Chiefs,Chiefs,99,Starter,26,WR,Wide Receiver,2020
+Marquez Valdes-Scantling,71.68,57.7,76.84,497.0,Packers,Packers,100,Starter,27,WR,Wide Receiver,2020
+Michael Pittman Jr.,71.61,62.6,73.45,385.0,Colts,Colts,101,Starter,28,WR,Wide Receiver,2020
+Miles Boykin,71.61,62.5,73.51,272.0,Ravens,Ravens,102,Starter,29,WR,Wide Receiver,2020
+Christian Kirk,70.84,62.3,72.36,540.0,Cardinals,Cardinals,103,Starter,30,WR,Wide Receiver,2020
+James Washington,70.83,60.9,73.29,322.0,Steelers,Steelers,104,Starter,31,WR,Wide Receiver,2020
+Van Jefferson,70.22,67.1,68.14,159.0,Rams,Rams,105,Starter,32,WR,Wide Receiver,2020
+Noah Brown,70.19,66.7,68.35,143.0,Cowboys,Cowboys,106,Starter,33,WR,Wide Receiver,2020
+Olabisi Johnson,70.18,67.0,68.13,148.0,Vikings,Vikings,107,Starter,34,WR,Wide Receiver,2020
+Mohamed Sanu,70.02,65.5,68.86,197.0,Lions,Lions,108,Starter,35,WR,Wide Receiver,2020
+Marvin Hall,69.7,57.4,73.74,258.0,Browns,Browns,109,Starter,36,WR,Wide Receiver,2020
+Henry Ruggs III,69.68,54.0,75.96,366.0,Raiders,Raiders,110,Starter,37,WR,Wide Receiver,2020
+Tyler Johnson,69.46,58.9,72.33,171.0,Buccaneers,Buccaneers,111,Starter,38,WR,Wide Receiver,2020
+Keelan Cole Sr.,69.42,64.4,68.6,601.0,Jaguars,Jaguars,112,Starter,39,WR,Wide Receiver,2020
+Damiere Byrd,69.18,61.4,70.2,496.0,Patriots,Patriots,113,Starter,40,WR,Wide Receiver,2020
+Demarcus Robinson,69.05,62.9,68.98,523.0,Chiefs,Chiefs,114,Starter,41,WR,Wide Receiver,2020
+Tre'Quan Smith,68.62,59.9,70.26,425.0,Saints,Saints,115,Starter,42,WR,Wide Receiver,2020
+Cedrick Wilson Jr.,68.57,61.1,69.39,159.0,Cowboys,Cowboys,116,Starter,43,WR,Wide Receiver,2020
+Freddie Swain,68.29,53.4,74.05,241.0,Seahawks,Seahawks,117,Starter,44,WR,Wide Receiver,2020
+Larry Fitzgerald,68.14,59.6,69.66,473.0,Cardinals,Cardinals,118,Starter,45,WR,Wide Receiver,2020
+Kalif Raymond,68.08,53.5,73.64,129.0,Titans,Titans,119,Starter,46,WR,Wide Receiver,2020
+Devin Duvernay,67.87,60.5,68.61,202.0,Ravens,Ravens,120,Starter,47,WR,Wide Receiver,2020
+Ray-Ray McCloud III,67.74,70.2,61.94,105.0,Steelers,Steelers,121,Starter,48,WR,Wide Receiver,2020
+Zay Jones,67.72,62.9,66.77,170.0,Raiders,Raiders,122,Starter,49,WR,Wide Receiver,2020
+Anthony Miller,67.31,58.5,69.01,447.0,Bears,Bears,123,Starter,50,WR,Wide Receiver,2020
+Andy Isabella,67.07,56.8,69.75,221.0,Cardinals,Cardinals,124,Starter,51,WR,Wide Receiver,2020
+C.J. Board,66.93,67.4,62.45,116.0,Giants,Giants,125,Starter,52,WR,Wide Receiver,2020
+Jalen Guyton,66.88,52.2,72.5,617.0,Chargers,Chargers,126,Starter,53,WR,Wide Receiver,2020
+Chad Hansen,66.82,60.7,66.74,209.0,Texans,Texans,127,Starter,54,WR,Wide Receiver,2020
+Isaiah Ford,66.67,61.1,66.21,274.0,Dolphins,Dolphins,128,Starter,55,WR,Wide Receiver,2020
+Isaiah Wright,66.59,59.0,67.49,247.0,Commanders,Commanders,129,Starter,56,WR,Wide Receiver,2020
+Alex Erickson,66.45,53.4,70.99,116.0,Bengals,Bengals,130,Starter,57,WR,Wide Receiver,2020
+Chad Beebe,66.37,57.2,68.32,233.0,Vikings,Vikings,131,Starter,58,WR,Wide Receiver,2020
+Cameron Batson,66.31,58.1,67.62,157.0,Titans,Titans,132,Starter,59,WR,Wide Receiver,2020
+Alshon Jeffery,65.87,51.3,71.41,153.0,Eagles,Eagles,133,Starter,60,WR,Wide Receiver,2020
+KeeSean Johnson,65.74,61.2,64.6,145.0,Cardinals,Cardinals,134,Starter,61,WR,Wide Receiver,2020
+Dontrelle Inman,65.72,61.5,64.36,240.0,Commanders,Commanders,135,Starter,62,WR,Wide Receiver,2020
+Brandon Powell,65.39,56.7,67.01,136.0,Falcons,Falcons,136,Starter,63,WR,Wide Receiver,2020
+DaeSean Hamilton,65.3,58.4,65.74,325.0,Broncos,Broncos,137,Starter,64,WR,Wide Receiver,2020
+KJ Hamler,64.72,55.9,66.44,351.0,Broncos,Broncos,138,Starter,65,WR,Wide Receiver,2020
+N'Keal Harry,64.6,57.8,64.96,332.0,Patriots,Patriots,139,Starter,66,WR,Wide Receiver,2020
+Mike Thomas,64.5,55.2,66.53,142.0,Bengals,Bengals,140,Starter,67,WR,Wide Receiver,2020
+Mack Hollins,64.43,58.2,64.41,162.0,Dolphins,Dolphins,141,Starter,68,WR,Wide Receiver,2020
+John Hightower,64.32,50.5,69.37,250.0,Eagles,Eagles,142,Starter,69,WR,Wide Receiver,2020
+Greg Ward,64.27,58.8,63.75,543.0,Eagles,Eagles,143,Starter,70,WR,Wide Receiver,2020
+Jamal Agnew,64.07,56.7,64.82,128.0,Lions,Lions,144,Starter,71,WR,Wide Receiver,2020
+Steven Sims,63.75,56.7,64.29,286.0,Commanders,Commanders,145,Starter,72,WR,Wide Receiver,2020
+Trent Taylor,63.34,53.9,65.46,154.0,49ers,49ers,146,Starter,73,WR,Wide Receiver,2020
+K.J. Hill,62.31,55.0,63.01,100.0,Chargers,Chargers,147,Starter,74,WR,Wide Receiver,2020
+Christian Blake,61.84,51.3,64.7,156.0,Falcons,Falcons,148,Rotation/backup,1,WR,Wide Receiver,2020
+Jeff Smith,60.9,52.1,62.6,221.0,Jets,Jets,149,Rotation/backup,2,WR,Wide Receiver,2020
+Javon Wims,60.53,53.9,60.79,153.0,Bears,Bears,150,Rotation/backup,3,WR,Wide Receiver,2020

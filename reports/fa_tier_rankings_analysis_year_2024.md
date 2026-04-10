@@ -1,8 +1,8 @@
 # Free Agency — position rankings by tier
 
 - **Regenerate:** from repo root, `PYTHONPATH=. python backend/agent/export_fa_tier_rankings.py [--analysis-year 2025] [--min-snaps 100]`, `--year-min 2020 --year-max 2025`, or `--all-analysis-years`.
-- **Generated (UTC):** 2026-04-10 20:26:27Z
-- **Requested analysis_year:** 2025 (clamped to 2025)
+- **Generated (UTC):** 2026-04-10 20:26:32Z
+- **Requested analysis_year:** 2024 (clamped to 2024)
 - **Tier cutoffs (same as FA UI):** Elite ≥80 · Good ≥74 · Starter ≥62 · else Rotation/backup
 - **Grade (composite):** same pipeline as FA `/evaluate` with **no team selected** — each position's `predict_performance` (PFF-style model grade + stats grade, weights vary by position; QB adds sample reliability and volume logic), then health and inactivity adjustments. **ED/DI** use the transformer ML `predicted_grade` as the model component.
 - **Season (`Year` in ML CSVs):** per position, latest season with data such that `Year ≤ analysis_year` (see each section header).

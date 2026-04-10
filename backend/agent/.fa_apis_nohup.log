@@ -67,3 +67,22 @@ INFO:     Uvicorn running on http://127.0.0.1:8003 (Press CTRL+C to quit)
 INFO:     Uvicorn running on http://127.0.0.1:8002 (Press CTRL+C to quit)
 [WR API] Loaded 3602 rows
 INFO:     127.0.0.1:52248 - "GET /docs HTTP/1.1" 200 OK
+[QB API] Loaded 1435 rows
+INFO:     127.0.0.1:53368 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53369 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53368 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53371 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53372 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53373 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53371 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53374 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53372 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53373 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53375 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53374 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53376 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53375 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53379 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53381 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53379 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53375 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
