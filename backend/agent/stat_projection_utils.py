@@ -4,6 +4,7 @@ or make turnover stats meaningless. Used by position agent_graph modules.
 """
 from __future__ import annotations
 import datetime
+import math
 import pandas as pd
 
 
@@ -315,6 +316,122 @@ def snap_value_reliability_factor(
         "recent_weighted": round(float(recent_weighted), 2),
         "peak": round(float(peak), 2),
     }
+
+
+def shrink_model_grade_for_season_snap_volume(
+    raw_model_grade: float,
+    history: pd.DataFrame | None,
+    *,
+    grade_col: str,
+    snap_profile: list[tuple[str, float]],
+    grade_fallback_col: str | None = None,
+    anchor: float = 60.0,
+    stress_floor: float = 0.40,
+    established_blend: float = 0.40,
+    prior_volume_ratio: float = 0.58,
+    prior_grade_threshold: float = 72.0,
+    prior_elite_grade: float = 78.5,
+    prior_elite_volume_ratio: float = 0.46,
+) -> tuple[float, dict]:
+    """
+    Pull the PFF / ML *model* grade toward *anchor* when the latest season has low snaps,
+    on the theory that sustaining an elite mark over a full workload is harder than in a
+    small role. If an *earlier* season shows a high snap year with a solid (or elite) grade,
+    blend partway back toward 1.0 stress — typical injury / role blip without rewriting history.
+
+    *snap_profile*: ordered ``(column_name, full_season_snap_baseline)`` pairs; the first
+    column present in *history* is used (e.g. TE/WR exports often have ``total_snaps`` not
+    ``snap_counts_offense``).
+
+    Applied to model_grade only (stats_grade unchanged); composite is recomputed by callers.
+    """
+    meta: dict = {
+        "snap_volume_adjust": False,
+        "season_snaps": None,
+        "snap_volume_stress": 1.0,
+        "prior_full_snap_season": False,
+        "snap_volume_column": None,
+    }
+    if history is None or history.empty or "Year" not in history.columns:
+        return float(raw_model_grade), meta
+    snap_col: str | None = None
+    full_snap_reference = 700.0
+    for col, ref in snap_profile:
+        if col in history.columns:
+            snap_col = col
+            full_snap_reference = float(ref)
+            break
+    if snap_col is None or full_snap_reference <= 1.0:
+        return float(raw_model_grade), meta
+    gc, gf = grade_col, grade_fallback_col
+    if gc not in history.columns:
+        if gf and gf in history.columns:
+            gc, gf = gf, None
+        else:
+            return float(raw_model_grade), meta
+
+    h = history.copy()
+    h["_y"] = pd.to_numeric(h["Year"], errors="coerce")
+    h = h.dropna(subset=["_y"])
+    if h.empty:
+        return float(raw_model_grade), meta
+
+    h["_sn"] = pd.to_numeric(h[snap_col], errors="coerce").fillna(0.0).clip(lower=0.0)
+
+    def _cell_grade(row: pd.Series) -> float:
+        g1 = pd.to_numeric(row.get(gc), errors="coerce")
+        if gf:
+            g2 = pd.to_numeric(row.get(gf), errors="coerce")
+            if pd.isna(g1) or abs(float(g1)) < 1e-6:
+                return float(g2) if pd.notna(g2) else float("nan")
+        return float(g1) if pd.notna(g1) else float("nan")
+
+    yearly: list[tuple[int, float, float]] = []
+    for yr, grp in h.groupby(h["_y"].astype(int)):
+        ssum = float(grp["_sn"].sum())
+        vals = [_cell_grade(row) for _, row in grp.iterrows()]
+        vals = [v for v in vals if v == v]  # drop NaN
+        gmean = float(sum(vals) / len(vals)) if vals else float("nan")
+        yearly.append((int(yr), ssum, gmean))
+
+    yearly.sort(key=lambda x: x[0])
+    if not yearly:
+        return float(raw_model_grade), meta
+
+    last_y, season_snaps, _ = yearly[-1]
+
+    prior_full_snap = False
+    for yr, ssum, gmean in yearly:
+        if yr >= last_y:
+            continue
+        if gmean != gmean:
+            continue
+        if ssum >= full_snap_reference * prior_volume_ratio and gmean >= prior_grade_threshold:
+            prior_full_snap = True
+            break
+        if ssum >= full_snap_reference * prior_elite_volume_ratio and gmean >= prior_elite_grade:
+            prior_full_snap = True
+            break
+
+    u = min(1.0, season_snaps / full_snap_reference)
+    stress = math.sqrt(u)
+    stress = max(float(stress_floor), min(1.0, stress))
+    if prior_full_snap:
+        stress = min(1.0, stress + (1.0 - stress) * float(established_blend))
+
+    raw = float(raw_model_grade)
+    adj = float(anchor) + (raw - float(anchor)) * stress
+    adj = max(40.0, min(100.0, adj))
+    meta.update(
+        {
+            "snap_volume_adjust": True,
+            "season_snaps": round(season_snaps, 1),
+            "snap_volume_stress": round(stress, 3),
+            "prior_full_snap_season": prior_full_snap,
+            "snap_volume_column": snap_col,
+        }
+    )
+    return round(adj, 2), meta
 
 
 def apply_inactivity_to_projection_list(

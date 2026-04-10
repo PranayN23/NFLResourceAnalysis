@@ -24,7 +24,15 @@ from backend.agent.grade_projection import (
     apply_yearly_grade_step,
     projection_trend_multiplier,
 )
-from backend.agent.stat_projection_utils import pass_rush_snap_load_17, run_def_snap_load_17, inactivity_retirement_penalty, apply_inactivity_to_projection_list, apply_projection_plausibility_caps, snap_value_reliability_factor
+from backend.agent.stat_projection_utils import (
+    pass_rush_snap_load_17,
+    run_def_snap_load_17,
+    inactivity_retirement_penalty,
+    apply_inactivity_to_projection_list,
+    apply_projection_plausibility_caps,
+    shrink_model_grade_for_season_snap_volume,
+    snap_value_reliability_factor,
+)
 import pandas as pd
 import numpy as np
 import os, datetime
@@ -474,7 +482,7 @@ def predict_performance(state: EDAgentState):
     print(f"[ED Agent] Predicting performance for {state['player_name']}...")
 
     tier, details = ed_engine.get_prediction(state["player_history"])
-    model_grade   = details.get("predicted_grade", 60.0)
+    raw_mg = float(details.get("predicted_grade", 60.0))
 
     history      = state["player_history"]
     current_year = int(state.get("analysis_year") or datetime.date.today().year)
@@ -497,6 +505,16 @@ def predict_performance(state: EDAgentState):
     health_adj, avg_avail = _compute_health_factor(history)
     inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=current_year)
 
+    model_grade, snap_m = shrink_model_grade_for_season_snap_volume(
+        raw_mg,
+        history,
+        grade_col="grades_defense",
+        snap_profile=[
+            ("snap_counts_defense", 820.0),
+            ("total_snaps", 800.0),
+        ],
+    )
+
     # Stats grade uses snap-rate metrics + 17g-projected stops (health-independent)
     sg = _stats_grade(
         last_stats["pressure_pct"],   # rate: unaffected by games played
@@ -517,11 +535,14 @@ def predict_performance(state: EDAgentState):
         "composite_grade":   cg,
         "confidence": {
             "model_grade":       round(model_grade, 2),
+            "model_grade_pre_snap_volume": round(raw_mg, 2),
             "stats_grade":       sg,
             "composite_grade":   cg,
             "health_factor":     health_adj,
             "inactivity_penalty": inactivity_adj,
             "avg_availability":  avg_avail,
+            "snap_volume_stress": snap_m.get("snap_volume_stress", 1.0),
+            "prior_full_snap_season": snap_m.get("prior_full_snap_season", False),
             "xgb_grade":         details.get("xgb_grade"),
             "transformer_grade": details.get("transformer_grade"),
             "age_adjustment":    details.get("age_adjustment"),

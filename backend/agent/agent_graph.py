@@ -32,6 +32,7 @@ from backend.agent.stat_projection_utils import (
     inactivity_retirement_penalty,
     apply_inactivity_to_projection_list,
     apply_projection_plausibility_caps,
+    shrink_model_grade_for_season_snap_volume,
     snap_value_reliability_factor,
 )
 import pandas as pd
@@ -643,7 +644,17 @@ def predict_performance(state: QBAgentState):
         mg_num += pg * db * rw
         mg_den += db * rw
         recent_dbs += db
-    model_grade = (mg_num / mg_den) if mg_den > 0 else _safe_float(valid_rows.iloc[-1].get("grades_pass") or valid_rows.iloc[-1].get("grades_offense"), 60.0)
+    raw_mg = (mg_num / mg_den) if mg_den > 0 else _safe_float(valid_rows.iloc[-1].get("grades_pass") or valid_rows.iloc[-1].get("grades_offense"), 60.0)
+    model_grade, snap_m = shrink_model_grade_for_season_snap_volume(
+        raw_mg,
+        history,
+        grade_col="grades_pass",
+        grade_fallback_col="grades_offense",
+        snap_profile=[
+            ("dropbacks", 560.0),
+            ("passing_snaps", 560.0),
+        ],
+    )
 
     # Team context: starter / fringe / backup → role-based dropback load (counts + INTs scale to role)
     team_nm = (state.get("team_name") or "").strip()
@@ -709,6 +720,7 @@ def predict_performance(state: QBAgentState):
         "composite_grade":   cg,
         "confidence": {
             "model_grade":      round(model_grade, 2),
+            "model_grade_pre_snap_volume": round(raw_mg, 2),
             "stats_grade":      sg,
             "composite_grade":  cg,
             "health_factor":    health_adj,
@@ -720,6 +732,8 @@ def predict_performance(state: QBAgentState):
             "sample_reliability": round(sample_reliability, 3),
             "volume_reliability": round(vol_rel, 3),
             "gap_reliability": round(gap_rel, 3),
+            "snap_volume_stress": snap_m.get("snap_volume_stress", 1.0),
+            "prior_full_snap_season": snap_m.get("prior_full_snap_season", False),
             "projected_signing_role": role,
             "projected_signing_role_reason": role_reason,
         },

@@ -19,7 +19,14 @@ from backend.agent.grade_projection import (
     apply_yearly_grade_step,
     projection_trend_multiplier,
 )
-from backend.agent.stat_projection_utils import offense_target_load_17, inactivity_retirement_penalty, apply_inactivity_to_projection_list, apply_projection_plausibility_caps, snap_value_reliability_factor
+from backend.agent.stat_projection_utils import (
+    offense_target_load_17,
+    inactivity_retirement_penalty,
+    apply_inactivity_to_projection_list,
+    apply_projection_plausibility_caps,
+    shrink_model_grade_for_season_snap_volume,
+    snap_value_reliability_factor,
+)
 import pandas as pd
 import numpy as np
 import os, datetime
@@ -332,7 +339,17 @@ def predict_performance(state: HBAgentState):
     health_adj, avg_avail = _compute_health_factor(history)
     inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=current_year)
 
-    model_grade = _safe_float(history.sort_values("Year").iloc[-1].get("grades_offense"), 60.0)
+    raw_mg = _safe_float(history.sort_values("Year").iloc[-1].get("grades_offense"), 60.0)
+    model_grade, snap_m = shrink_model_grade_for_season_snap_volume(
+        raw_mg,
+        history,
+        grade_col="grades_offense",
+        snap_profile=[
+            ("snap_counts_offense", 515.0),
+            ("total_snaps", 500.0),
+            ("routes", 380.0),
+        ],
+    )
 
     sg = _stats_grade(
         last_stats["yco_attempt"], last_stats["ypc"],
@@ -346,8 +363,17 @@ def predict_performance(state: HBAgentState):
         "predicted_tier": _grade_to_tier(cg), "current_age": current_age,
         "last_season_stats": last_stats, "career_stats": career_stats,
         "stats_score": sg, "composite_grade": cg,
-        "confidence": {"model_grade": round(model_grade, 2), "stats_grade": sg,
-                       "composite_grade": cg, "health_factor": health_adj, "inactivity_penalty": inactivity_adj, "avg_availability": avg_avail},
+        "confidence": {
+            "model_grade": round(model_grade, 2),
+            "model_grade_pre_snap_volume": round(raw_mg, 2),
+            "stats_grade": sg,
+            "composite_grade": cg,
+            "health_factor": health_adj,
+            "inactivity_penalty": inactivity_adj,
+            "avg_availability": avg_avail,
+            "snap_volume_stress": snap_m.get("snap_volume_stress", 1.0),
+            "prior_full_snap_season": snap_m.get("prior_full_snap_season", False),
+        },
     }
 
 

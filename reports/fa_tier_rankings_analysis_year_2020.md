@@ -1,7 +1,7 @@
 # Free Agency — position rankings by tier
 
 - **Regenerate:** from repo root, `PYTHONPATH=. python backend/agent/export_fa_tier_rankings.py [--analysis-year 2025] [--min-snaps 100]`, `--year-min 2020 --year-max 2025`, or `--all-analysis-years`.
-- **Generated (UTC):** 2026-04-10 20:26:45Z
+- **Generated (UTC):** 2026-04-10 20:37:56Z
 - **Requested analysis_year:** 2020 (clamped to 2020)
 - **Tier cutoffs (same as FA UI):** Elite ≥80 · Good ≥74 · Starter ≥62 · else Rotation/backup
 - **Grade (composite):** same pipeline as FA `/evaluate` with **no team selected** — each position's `predict_performance` (PFF-style model grade + stats grade, weights vary by position; QB adds sample reliability and volume logic), then health and inactivity adjustments. **ED/DI** use the transformer ML `predicted_grade` as the model component.
@@ -17,54 +17,54 @@
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 1 | 1 | Corey Linsley | 95.51 | 89.90 | 95.09 | 734 | Packers |
-| 2 | 2 | Brandon Linder | 88.18 | 80.00 | 89.47 | 530 | Jaguars |
+| 1 | 1 | Corey Linsley | 94.53 | 87.45 | 95.09 | 734 | Packers |
+| 2 | 2 | Brandon Linder | 86.90 | 76.80 | 89.47 | 530 | Jaguars |
 | 3 | 3 | Ben Jones | 86.71 | 78.60 | 87.95 | 1042 | Titans |
-| 4 | 4 | Cody Whitehair | 85.63 | 76.30 | 87.68 | 893 | Bears |
+| 4 | 4 | Cody Whitehair | 85.44 | 75.83 | 87.68 | 893 | Bears |
 | 5 | 5 | J.C. Tretter | 85.41 | 77.30 | 86.65 | 1061 | Browns |
-| 6 | 6 | Frank Ragnow | 85.25 | 80.30 | 84.38 | 929 | Lions |
+| 6 | 6 | Frank Ragnow | 85.01 | 79.71 | 84.38 | 929 | Lions |
 | 7 | 7 | Chase Roullier | 84.98 | 76.80 | 86.26 | 1089 | Commanders |
 | 8 | 8 | Rodney Hudson | 82.66 | 73.60 | 84.53 | 1082 | Raiders |
 | 9 | 9 | Jason Kelce | 82.00 | 69.60 | 86.10 | 1126 | Eagles |
 
-### Good (15 players)
+### Good (14 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 10 | 1 | Austin Reiter | 79.89 | 70.90 | 81.72 | 867 | Chiefs |
-| 11 | 2 | Erik McCoy | 79.82 | 70.10 | 82.14 | 1073 | Saints |
+| 10 | 1 | Erik McCoy | 79.82 | 70.10 | 82.14 | 1073 | Saints |
+| 11 | 2 | Austin Reiter | 79.62 | 70.23 | 81.72 | 867 | Chiefs |
 | 12 | 3 | Ryan Kelly | 78.80 | 69.00 | 81.16 | 1007 | Colts |
-| 13 | 4 | Ben Garland | 78.08 | 71.10 | 78.56 | 333 | 49ers |
-| 14 | 5 | Daniel Kilgore | 78.04 | 68.60 | 80.16 | 236 | Chiefs |
-| 15 | 6 | Ryan Jensen | 77.97 | 64.90 | 82.51 | 1061 | Buccaneers |
-| 16 | 7 | David Andrews | 77.88 | 67.70 | 80.50 | 724 | Patriots |
-| 17 | 8 | Patrick Mekari | 77.81 | 66.90 | 80.91 | 554 | Ravens |
-| 18 | 9 | Alex Mack | 77.15 | 65.90 | 80.48 | 972 | Falcons |
-| 19 | 10 | Mitch Morse | 76.50 | 65.80 | 79.47 | 880 | Bills |
-| 20 | 11 | Ted Karras | 76.26 | 65.40 | 79.34 | 1068 | Dolphins |
-| 21 | 12 | Trey Hopkins | 75.20 | 63.80 | 78.63 | 938 | Bengals |
-| 22 | 13 | Trystan Colon | 74.60 | 67.60 | 75.10 | 127 | Ravens |
-| 23 | 14 | Connor McGovern | 74.52 | 62.20 | 78.56 | 969 | Jets |
-| 24 | 15 | Garrett Bradbury | 74.06 | 61.40 | 78.34 | 1082 | Vikings |
+| 13 | 4 | Ryan Jensen | 77.97 | 64.90 | 82.51 | 1061 | Buccaneers |
+| 14 | 5 | David Andrews | 77.62 | 67.04 | 80.50 | 724 | Patriots |
+| 15 | 6 | Alex Mack | 77.14 | 65.88 | 80.48 | 972 | Falcons |
+| 16 | 7 | Patrick Mekari | 77.11 | 65.17 | 80.91 | 554 | Ravens |
+| 17 | 8 | Mitch Morse | 76.43 | 65.61 | 79.47 | 880 | Bills |
+| 18 | 9 | Daniel Kilgore | 76.28 | 64.21 | 80.16 | 236 | Chiefs |
+| 19 | 10 | Ted Karras | 76.26 | 65.40 | 79.34 | 1068 | Dolphins |
+| 20 | 11 | Ben Garland | 76.22 | 66.45 | 78.56 | 333 | 49ers |
+| 21 | 12 | Trey Hopkins | 75.16 | 63.71 | 78.63 | 938 | Bengals |
+| 22 | 13 | Connor McGovern | 74.51 | 62.19 | 78.56 | 969 | Jets |
+| 23 | 14 | Garrett Bradbury | 74.06 | 61.40 | 78.34 | 1082 | Vikings |
 
-### Starter (14 players)
+### Starter (15 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 25 | 1 | Matt Paradis | 73.89 | 63.40 | 76.71 | 1029 | Panthers |
-| 26 | 2 | A.Q. Shipley | 72.44 | 56.00 | 79.23 | 157 | Buccaneers |
-| 27 | 3 | Maurkice Pouncey | 71.62 | 60.50 | 74.86 | 863 | Steelers |
-| 28 | 4 | Sam Mustipher | 71.53 | 58.90 | 75.78 | 504 | Bears |
-| 29 | 5 | Billy Price | 69.78 | 50.70 | 78.34 | 208 | Bengals |
-| 30 | 6 | Mason Cole | 69.72 | 54.40 | 75.77 | 913 | Cardinals |
-| 31 | 7 | Nick Martin | 68.59 | 56.10 | 72.75 | 980 | Texans |
-| 32 | 8 | Tyler Biadasz | 68.20 | 53.50 | 73.84 | 427 | Cowboys |
-| 33 | 9 | Hroniss Grasu | 67.73 | 52.40 | 73.78 | 215 | 49ers |
-| 34 | 10 | J.C. Hassenauer | 66.81 | 57.70 | 68.72 | 303 | Steelers |
-| 35 | 11 | Matt Skura | 66.51 | 50.20 | 73.22 | 661 | Ravens |
-| 36 | 12 | Matt Hennessy | 64.87 | 47.00 | 72.62 | 225 | Falcons |
-| 37 | 13 | Joe Looney | 64.76 | 50.70 | 69.97 | 764 | Cowboys |
-| 38 | 14 | James Ferentz | 64.19 | 54.30 | 66.61 | 162 | Patriots |
+| 24 | 1 | Matt Paradis | 73.89 | 63.40 | 76.71 | 1029 | Panthers |
+| 25 | 2 | A.Q. Shipley | 73.40 | 58.40 | 79.23 | 157 | Buccaneers |
+| 26 | 3 | Trystan Colon | 72.78 | 63.04 | 75.10 | 127 | Ravens |
+| 27 | 4 | Billy Price | 71.80 | 55.73 | 78.34 | 208 | Bengals |
+| 28 | 5 | Sam Mustipher | 71.65 | 59.21 | 75.78 | 504 | Bears |
+| 29 | 6 | Maurkice Pouncey | 71.61 | 60.48 | 74.86 | 863 | Steelers |
+| 30 | 7 | Mason Cole | 69.81 | 54.61 | 75.77 | 913 | Cardinals |
+| 31 | 8 | Hroniss Grasu | 69.35 | 56.45 | 73.78 | 215 | 49ers |
+| 32 | 9 | Tyler Biadasz | 69.09 | 55.72 | 73.84 | 427 | Cowboys |
+| 33 | 10 | Nick Martin | 68.59 | 56.11 | 72.75 | 980 | Texans |
+| 34 | 11 | Matt Hennessy | 67.59 | 53.79 | 72.62 | 225 | Falcons |
+| 35 | 12 | Matt Skura | 67.22 | 51.97 | 73.22 | 661 | Ravens |
+| 36 | 13 | J.C. Hassenauer | 67.22 | 58.72 | 68.72 | 303 | Steelers |
+| 37 | 14 | James Ferentz | 65.54 | 57.69 | 66.61 | 162 | Patriots |
+| 38 | 15 | Joe Looney | 65.21 | 51.81 | 69.97 | 764 | Cowboys |
 
 ### Rotation/backup (1 players)
 
@@ -77,366 +77,366 @@
 - **Season used:** `2020`
 - **PFF column (model anchor):** `grades_defense` · **Snap column (volume filter):** `snap_counts_defense`
 
-### Elite (15 players)
+### Elite (14 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
 | 1 | 1 | Jaire Alexander | 91.91 | 90.60 | 89.76 | 900 | Packers |
 | 2 | 2 | Xavien Howard | 90.37 | 89.60 | 90.98 | 936 | Dolphins |
-| 3 | 3 | Bryce Callahan | 86.64 | 86.70 | 86.19 | 655 | Broncos |
-| 4 | 4 | Darious Williams | 84.46 | 79.60 | 87.43 | 824 | Rams |
-| 5 | 5 | Jamel Dean | 84.37 | 79.90 | 86.84 | 711 | Buccaneers |
+| 3 | 3 | Bryce Callahan | 85.94 | 84.95 | 86.19 | 655 | Broncos |
+| 4 | 4 | Darious Williams | 84.45 | 79.59 | 87.43 | 824 | Rams |
+| 5 | 5 | Jamel Dean | 83.80 | 78.47 | 86.84 | 711 | Buccaneers |
 | 6 | 6 | Jalen Ramsey | 83.55 | 80.30 | 83.31 | 954 | Rams |
 | 7 | 7 | Tre'Davious White | 83.39 | 77.90 | 84.23 | 878 | Bills |
-| 8 | 8 | Jonathan Jones | 83.30 | 80.80 | 81.11 | 730 | Patriots |
+| 8 | 8 | Jonathan Jones | 82.80 | 79.57 | 81.11 | 730 | Patriots |
 | 9 | 9 | James Bradberry | 82.67 | 79.90 | 81.19 | 1021 | Giants |
 | 10 | 10 | Marlon Humphrey | 82.47 | 77.60 | 82.49 | 972 | Ravens |
 | 11 | 11 | Xavier Rhodes | 82.46 | 77.50 | 82.33 | 902 | Colts |
-| 12 | 12 | Brian Poole | 81.12 | 79.50 | 83.36 | 483 | Jets |
-| 13 | 13 | Kenny Moore II | 80.42 | 78.10 | 79.57 | 952 | Colts |
-| 14 | 14 | Ronald Darby | 80.33 | 75.90 | 82.13 | 1002 | Commanders |
-| 15 | 15 | Ahkello Witherspoon | 80.03 | 80.90 | 81.43 | 334 | 49ers |
+| 12 | 12 | Kenny Moore II | 80.42 | 78.10 | 79.57 | 952 | Colts |
+| 13 | 13 | Ronald Darby | 80.33 | 75.90 | 82.13 | 1002 | Commanders |
+| 14 | 14 | Brian Poole | 80.02 | 76.75 | 83.36 | 483 | Jets |
 
-### Good (21 players)
-
-| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
-|---:|---:|---|---:|---:|---:|---:|---|
-| 16 | 1 | Rashad Fenton | 79.93 | 75.00 | 83.48 | 527 | Chiefs |
-| 17 | 2 | Malcolm Butler | 79.20 | 72.70 | 81.55 | 1087 | Titans |
-| 18 | 3 | Troy Hill | 79.05 | 75.70 | 78.69 | 973 | Rams |
-| 19 | 4 | Denzel Ward | 78.84 | 74.60 | 81.47 | 776 | Browns |
-| 20 | 5 | William Jackson III | 78.57 | 72.40 | 80.19 | 886 | Bengals |
-| 21 | 6 | Cameron Sutton | 77.53 | 73.90 | 76.82 | 552 | Steelers |
-| 22 | 7 | J.C. Jackson | 77.53 | 70.10 | 78.95 | 851 | Patriots |
-| 23 | 8 | Jimmy Smith | 76.94 | 75.70 | 79.24 | 454 | Ravens |
-| 24 | 9 | Jason Verrett | 76.75 | 76.10 | 79.27 | 803 | 49ers |
-| 25 | 10 | Kyle Fuller | 76.58 | 70.10 | 76.74 | 1060 | Bears |
-| 26 | 11 | Joe Haden | 76.49 | 69.60 | 78.16 | 846 | Steelers |
-| 27 | 12 | Ross Cockrell | 76.40 | 74.20 | 79.33 | 238 | Buccaneers |
-| 28 | 13 | Marcus Peters | 76.37 | 69.40 | 77.88 | 912 | Ravens |
-| 29 | 14 | Bashaud Breeland | 76.20 | 72.90 | 78.72 | 690 | Chiefs |
-| 30 | 15 | L'Jarius Sneed | 76.15 | 73.70 | 80.92 | 410 | Chiefs |
-| 31 | 16 | Bradley Roby | 76.13 | 72.20 | 79.78 | 613 | Texans |
-| 32 | 17 | Donte Jackson | 74.89 | 69.00 | 76.94 | 599 | Panthers |
-| 33 | 18 | Darius Phillips | 74.59 | 68.10 | 81.00 | 593 | Bengals |
-| 34 | 19 | Sidney Jones IV | 74.36 | 71.30 | 80.25 | 303 | Jaguars |
-| 35 | 20 | D.J. Reed | 74.23 | 69.80 | 78.53 | 560 | Seahawks |
-| 36 | 21 | Steven Nelson | 74.11 | 68.10 | 74.79 | 908 | Steelers |
-
-### Starter (61 players)
+### Good (20 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 37 | 1 | Charvarius Ward | 73.57 | 66.80 | 77.47 | 782 | Chiefs |
-| 38 | 2 | Josh Norman | 73.50 | 69.90 | 77.46 | 344 | Bills |
-| 39 | 3 | T.J. Carrie | 73.43 | 67.00 | 74.90 | 396 | Colts |
-| 40 | 4 | Janoris Jenkins | 73.38 | 66.00 | 76.02 | 805 | Saints |
-| 41 | 5 | Carlton Davis III | 73.34 | 66.40 | 76.08 | 906 | Buccaneers |
-| 42 | 6 | Trevon Diggs | 72.81 | 63.90 | 78.75 | 758 | Cowboys |
-| 43 | 7 | Mike Hilton | 72.75 | 67.00 | 74.70 | 464 | Steelers |
-| 44 | 8 | Mackensie Alexander | 72.63 | 67.20 | 74.79 | 642 | Bengals |
-| 45 | 9 | Shaquill Griffin | 72.39 | 63.60 | 76.78 | 812 | Seahawks |
-| 46 | 10 | Richard Sherman | 72.37 | 67.20 | 78.10 | 332 | 49ers |
-| 47 | 11 | Kendall Fuller | 72.37 | 65.30 | 75.74 | 893 | Commanders |
-| 48 | 12 | Michael Davis | 72.28 | 62.90 | 76.25 | 958 | Chargers |
-| 49 | 13 | Darius Slay | 72.26 | 63.10 | 75.55 | 885 | Eagles |
-| 50 | 14 | Breon Borders | 71.71 | 71.40 | 76.08 | 360 | Titans |
-| 51 | 15 | Terrance Mitchell | 71.49 | 63.40 | 76.89 | 1070 | Browns |
-| 52 | 16 | Cameron Dantzler | 71.22 | 69.80 | 73.20 | 601 | Vikings |
-| 53 | 17 | Ugo Amadi | 71.14 | 67.10 | 75.26 | 552 | Seahawks |
-| 54 | 18 | Chandon Sullivan | 70.90 | 65.40 | 71.96 | 729 | Packers |
-| 55 | 19 | Javelin Guidry | 70.50 | 76.50 | 73.20 | 172 | Jets |
-| 56 | 20 | Byron Murphy Jr. | 70.44 | 63.30 | 71.69 | 795 | Cardinals |
-| 57 | 21 | Casey Hayward Jr. | 70.24 | 59.50 | 74.26 | 788 | Chargers |
-| 58 | 22 | Fabian Moreau | 70.09 | 64.30 | 73.12 | 158 | Commanders |
-| 59 | 23 | Johnathan Joseph | 69.67 | 63.10 | 73.53 | 423 | Cardinals |
-| 60 | 24 | Rasul Douglas | 69.49 | 60.20 | 72.99 | 821 | Panthers |
-| 61 | 25 | Trayvon Mullen | 69.04 | 58.30 | 72.03 | 933 | Raiders |
-| 62 | 26 | K'Waun Williams | 68.97 | 64.80 | 72.49 | 284 | 49ers |
-| 63 | 27 | Byron Jones | 68.97 | 61.50 | 71.14 | 814 | Dolphins |
-| 64 | 28 | Adoree' Jackson | 68.94 | 66.80 | 74.53 | 155 | Titans |
-| 65 | 29 | Blidi Wreh-Wilson | 68.87 | 63.20 | 74.00 | 245 | Falcons |
-| 66 | 30 | Corn Elder | 68.77 | 68.20 | 66.65 | 411 | Panthers |
-| 67 | 31 | Dontae Johnson | 68.09 | 65.20 | 72.84 | 273 | 49ers |
-| 68 | 32 | Stephon Gilmore | 68.00 | 58.50 | 72.76 | 632 | Patriots |
-| 69 | 33 | Desmond King II | 67.46 | 60.90 | 68.70 | 709 | Titans |
-| 70 | 34 | Jaylon Johnson | 67.06 | 56.10 | 73.33 | 867 | Bears |
-| 71 | 35 | Marshon Lattimore | 66.96 | 53.70 | 73.30 | 871 | Saints |
-| 72 | 36 | Levi Wallace | 66.53 | 56.00 | 73.35 | 612 | Bills |
-| 73 | 37 | Darqueze Dennard | 66.48 | 63.10 | 71.55 | 439 | Falcons |
-| 74 | 38 | Harrison Hand | 66.26 | 62.40 | 78.08 | 163 | Vikings |
-| 75 | 39 | Patrick Robinson | 65.77 | 56.90 | 74.38 | 248 | Saints |
-| 76 | 40 | Emmanuel Moseley | 65.46 | 54.60 | 70.62 | 499 | 49ers |
-| 77 | 41 | Jason McCourty | 65.41 | 51.80 | 71.57 | 665 | Patriots |
-| 78 | 42 | Darryl Roberts | 65.27 | 55.00 | 72.31 | 469 | Lions |
-| 79 | 43 | Tye Smith | 65.10 | 64.10 | 69.20 | 169 | Titans |
-| 80 | 44 | Bryce Hall | 65.00 | 62.80 | 70.64 | 547 | Jets |
-| 81 | 45 | Chris Harris Jr. | 64.97 | 57.40 | 70.34 | 568 | Chargers |
-| 82 | 46 | Isaiah Oliver | 64.96 | 53.30 | 69.60 | 831 | Falcons |
-| 83 | 47 | CJ Henderson | 64.87 | 58.30 | 73.41 | 474 | Jaguars |
-| 84 | 48 | A.J. Terrell | 64.84 | 57.00 | 67.98 | 908 | Falcons |
-| 85 | 49 | Joejuan Williams | 64.61 | 53.70 | 74.89 | 172 | Patriots |
-| 86 | 50 | Keion Crossen | 64.58 | 61.50 | 70.90 | 307 | Texans |
-| 87 | 51 | Anthony Averett | 64.43 | 60.60 | 70.00 | 355 | Ravens |
-| 88 | 52 | Taron Johnson | 64.36 | 55.60 | 68.32 | 825 | Bills |
-| 89 | 53 | Patrick Peterson | 64.11 | 53.10 | 69.17 | 1096 | Cardinals |
-| 90 | 54 | Sean Murphy-Bunting | 63.60 | 55.20 | 65.41 | 884 | Buccaneers |
-| 91 | 55 | Jimmy Moreland | 63.27 | 56.70 | 64.26 | 601 | Commanders |
-| 92 | 56 | Nevin Lawson | 63.25 | 54.70 | 67.92 | 737 | Raiders |
-| 93 | 57 | Nickell Robey-Coleman | 63.22 | 53.30 | 66.19 | 612 | Eagles |
-| 94 | 58 | Josh Jackson | 62.44 | 51.70 | 69.09 | 331 | Packers |
-| 95 | 59 | Jamal Perry | 62.29 | 53.60 | 67.95 | 140 | Dolphins |
-| 96 | 60 | Tre Herndon | 62.18 | 50.70 | 68.48 | 1017 | Jaguars |
-| 97 | 61 | A.J. Bouye | 62.06 | 52.40 | 70.26 | 410 | Broncos |
+| 15 | 1 | Malcolm Butler | 79.20 | 72.70 | 81.55 | 1087 | Titans |
+| 16 | 2 | Troy Hill | 79.05 | 75.70 | 78.69 | 973 | Rams |
+| 17 | 3 | Denzel Ward | 78.74 | 74.34 | 81.47 | 776 | Browns |
+| 18 | 4 | Rashad Fenton | 78.72 | 71.99 | 83.48 | 527 | Chiefs |
+| 19 | 5 | William Jackson III | 78.57 | 72.40 | 80.19 | 886 | Bengals |
+| 20 | 6 | Ahkello Witherspoon | 78.20 | 76.34 | 81.43 | 334 | 49ers |
+| 21 | 7 | J.C. Jackson | 77.53 | 70.10 | 78.95 | 851 | Patriots |
+| 22 | 8 | Jason Verrett | 76.70 | 75.97 | 79.27 | 803 | 49ers |
+| 23 | 9 | Kyle Fuller | 76.58 | 70.10 | 76.74 | 1060 | Bears |
+| 24 | 10 | Cameron Sutton | 76.52 | 71.37 | 76.82 | 552 | Steelers |
+| 25 | 11 | Joe Haden | 76.49 | 69.60 | 78.16 | 846 | Steelers |
+| 26 | 12 | Marcus Peters | 76.37 | 69.40 | 77.88 | 912 | Ravens |
+| 27 | 13 | Jimmy Smith | 75.97 | 73.27 | 79.24 | 454 | Ravens |
+| 28 | 14 | Bashaud Breeland | 75.94 | 72.24 | 78.72 | 690 | Chiefs |
+| 29 | 15 | Bradley Roby | 75.72 | 71.19 | 79.78 | 613 | Texans |
+| 30 | 16 | Ross Cockrell | 74.82 | 70.26 | 79.33 | 238 | Buccaneers |
+| 31 | 17 | L'Jarius Sneed | 74.54 | 69.66 | 80.92 | 410 | Chiefs |
+| 32 | 18 | Donte Jackson | 74.36 | 67.67 | 76.94 | 599 | Panthers |
+| 33 | 19 | Steven Nelson | 74.11 | 68.10 | 74.79 | 908 | Steelers |
+| 34 | 20 | Darius Phillips | 74.10 | 66.87 | 81.00 | 593 | Bengals |
 
-### Rotation/backup (62 players)
+### Starter (66 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 98 | 1 | Chidobe Awuzie | 61.95 | 52.00 | 68.78 | 452 | Cowboys |
-| 99 | 2 | Rashard Robinson | 61.68 | 55.90 | 72.62 | 187 | Cowboys |
-| 100 | 3 | Kevin King | 61.55 | 52.10 | 68.69 | 664 | Packers |
-| 101 | 4 | Mike Hughes | 61.55 | 56.70 | 69.58 | 173 | Vikings |
-| 102 | 5 | Jamar Taylor | 60.86 | 52.90 | 69.09 | 203 | 49ers |
-| 103 | 6 | Rock Ya-Sin | 60.68 | 48.20 | 67.18 | 550 | Colts |
-| 104 | 7 | Chris Claybrooks | 60.64 | 57.40 | 62.80 | 375 | Jaguars |
-| 105 | 8 | Myles Hartsfield | 60.49 | 59.80 | 64.09 | 140 | Panthers |
-| 106 | 9 | Tre Flowers | 60.41 | 51.00 | 65.65 | 578 | Seahawks |
-| 107 | 10 | Amani Oruwariye | 60.24 | 51.20 | 65.61 | 1028 | Lions |
-| 108 | 11 | Isaac Yiadom | 60.14 | 52.10 | 64.88 | 634 | Giants |
-| 109 | 12 | Justin Coleman | 59.71 | 48.40 | 65.68 | 470 | Lions |
-| 110 | 13 | Duke Shelley | 59.62 | 58.80 | 66.86 | 209 | Bears |
-| 111 | 14 | Kevin Johnson | 59.60 | 52.70 | 65.55 | 575 | Browns |
-| 112 | 15 | Jourdan Lewis | 59.59 | 45.80 | 66.28 | 817 | Cowboys |
-| 113 | 16 | Anthony Brown | 59.37 | 48.30 | 68.10 | 534 | Cowboys |
-| 114 | 17 | Buster Skrine | 59.33 | 46.20 | 66.42 | 557 | Bears |
-| 115 | 18 | De'Vante Bausby | 59.19 | 54.00 | 70.06 | 277 | Broncos |
-| 116 | 19 | Tevaughn Campbell | 59.17 | 50.30 | 67.16 | 326 | Chargers |
-| 117 | 20 | Ka'dar Hollman | 59.16 | 54.90 | 68.90 | 108 | Packers |
-| 118 | 21 | Nik Needham | 58.86 | 45.30 | 66.60 | 617 | Dolphins |
-| 119 | 22 | Phillip Gaines | 58.66 | 53.50 | 66.78 | 262 | Texans |
-| 120 | 23 | Pierre Desir | 58.18 | 42.50 | 69.05 | 519 | Ravens |
-| 121 | 24 | Darnay Holmes | 57.93 | 48.80 | 64.02 | 442 | Giants |
-| 122 | 25 | Dre Kirkpatrick | 57.84 | 46.10 | 66.28 | 750 | Cardinals |
-| 123 | 26 | Quinton Dunbar | 57.69 | 44.20 | 71.17 | 397 | Seahawks |
-| 124 | 27 | Daryl Worley | 57.59 | 42.20 | 68.36 | 346 | Raiders |
-| 125 | 28 | Antonio Hamilton Sr. | 57.24 | 47.50 | 68.68 | 136 | Chiefs |
-| 126 | 29 | Kristian Fulton | 57.18 | 56.50 | 66.89 | 203 | Titans |
-| 127 | 30 | Chris Jones | 56.72 | 46.80 | 66.06 | 273 | Vikings |
-| 128 | 31 | David Long Jr. | 55.94 | 49.50 | 62.31 | 116 | Rams |
-| 129 | 32 | Essang Bassey | 55.90 | 48.40 | 62.98 | 382 | Broncos |
-| 130 | 33 | John Reid | 55.64 | 56.80 | 61.57 | 145 | Texans |
-| 131 | 34 | Kris Boyd | 55.43 | 50.30 | 63.02 | 343 | Vikings |
-| 132 | 35 | Blessuan Austin | 55.29 | 47.40 | 63.15 | 681 | Jets |
-| 133 | 36 | Michael Ojemudia | 55.06 | 49.90 | 56.41 | 852 | Broncos |
-| 134 | 37 | M.J. Stewart | 54.71 | 44.10 | 64.39 | 229 | Browns |
-| 135 | 38 | Tavierre Thomas | 54.44 | 51.10 | 63.18 | 204 | Browns |
-| 136 | 39 | Davontae Harris | 54.17 | 46.50 | 63.55 | 117 | Ravens |
-| 137 | 40 | Cre'Von LeBlanc | 54.10 | 43.30 | 65.79 | 217 | Eagles |
-| 138 | 41 | Jeff Gladney | 53.51 | 48.50 | 52.68 | 958 | Vikings |
-| 139 | 42 | Greg Mabin | 53.48 | 41.40 | 68.52 | 248 | Jaguars |
-| 140 | 43 | Desmond Trufant | 53.27 | 36.70 | 67.55 | 324 | Lions |
-| 141 | 44 | Avonte Maddox | 53.19 | 37.10 | 65.38 | 509 | Eagles |
-| 142 | 45 | Vernon Hargreaves III | 53.17 | 37.30 | 63.01 | 980 | Texans |
-| 143 | 46 | Isaiah Johnson | 52.98 | 35.70 | 68.28 | 181 | Raiders |
-| 144 | 47 | LeShaun Sims | 52.96 | 40.10 | 61.95 | 607 | Bengals |
-| 145 | 48 | Kendall Sheffield | 52.66 | 36.90 | 62.39 | 524 | Falcons |
-| 146 | 49 | Ryan Lewis | 52.56 | 42.80 | 65.42 | 271 | Giants |
-| 147 | 50 | Justin Layne | 50.55 | 47.30 | 57.92 | 120 | Steelers |
-| 148 | 51 | Troy Pride Jr. | 49.90 | 41.70 | 53.28 | 529 | Panthers |
-| 149 | 52 | Lamar Jackson | 49.77 | 45.80 | 56.58 | 453 | Jets |
-| 150 | 53 | D.J. Hayden | 49.18 | 32.60 | 63.36 | 234 | Jaguars |
-| 151 | 54 | Keisean Nixon | 47.18 | 40.70 | 56.96 | 155 | Raiders |
-| 152 | 55 | Jeff Okudah | 46.99 | 30.90 | 60.85 | 460 | Lions |
-| 153 | 56 | Kindle Vildor | 46.65 | 49.80 | 56.35 | 136 | Bears |
-| 154 | 57 | Noah Igbinoghene | 45.38 | 38.80 | 51.85 | 286 | Dolphins |
-| 155 | 58 | Damon Arnette | 45.29 | 37.50 | 53.62 | 343 | Raiders |
-| 156 | 59 | Corey Ballentine | 45.00 | 34.40 | 51.91 | 107 | Jets |
-| 157 | 60 | Michael Jacquet | 45.00 | 39.10 | 61.41 | 160 | Eagles |
-| 158 | 61 | Chris Jackson | 45.00 | 31.10 | 51.85 | 241 | Titans |
-| 159 | 62 | Luq Barcoo | 45.00 | 31.30 | 53.50 | 152 | Jaguars |
+| 35 | 1 | D.J. Reed | 73.54 | 68.07 | 78.53 | 560 | Seahawks |
+| 36 | 2 | Charvarius Ward | 73.50 | 66.62 | 77.47 | 782 | Chiefs |
+| 37 | 3 | Janoris Jenkins | 73.37 | 65.96 | 76.02 | 805 | Saints |
+| 38 | 4 | Carlton Davis III | 73.34 | 66.40 | 76.08 | 906 | Buccaneers |
+| 39 | 5 | T.J. Carrie | 72.91 | 65.71 | 74.90 | 396 | Colts |
+| 40 | 6 | Trevon Diggs | 72.75 | 63.74 | 78.75 | 758 | Cowboys |
+| 41 | 7 | Josh Norman | 72.66 | 67.80 | 77.46 | 344 | Bills |
+| 42 | 8 | Sidney Jones IV | 72.58 | 66.85 | 80.25 | 303 | Jaguars |
+| 43 | 9 | Mackensie Alexander | 72.43 | 66.69 | 74.79 | 642 | Bengals |
+| 44 | 10 | Shaquill Griffin | 72.38 | 63.58 | 76.78 | 812 | Seahawks |
+| 45 | 11 | Kendall Fuller | 72.37 | 65.30 | 75.74 | 893 | Commanders |
+| 46 | 12 | Mike Hilton | 72.33 | 65.95 | 74.70 | 464 | Steelers |
+| 47 | 13 | Michael Davis | 72.28 | 62.90 | 76.25 | 958 | Chargers |
+| 48 | 14 | Darius Slay | 72.26 | 63.10 | 75.55 | 885 | Eagles |
+| 49 | 15 | Richard Sherman | 71.74 | 65.62 | 78.10 | 332 | 49ers |
+| 50 | 16 | Terrance Mitchell | 71.49 | 63.40 | 76.89 | 1070 | Browns |
+| 51 | 17 | Chandon Sullivan | 70.77 | 65.08 | 71.96 | 729 | Packers |
+| 52 | 18 | Cameron Dantzler | 70.64 | 68.36 | 73.20 | 601 | Vikings |
+| 53 | 19 | Ugo Amadi | 70.62 | 65.81 | 75.26 | 552 | Seahawks |
+| 54 | 20 | Byron Murphy Jr. | 70.42 | 63.24 | 71.69 | 795 | Cardinals |
+| 55 | 21 | Casey Hayward Jr. | 70.24 | 59.51 | 74.26 | 788 | Chargers |
+| 56 | 22 | Breon Borders | 70.16 | 67.53 | 76.08 | 360 | Titans |
+| 57 | 23 | Rasul Douglas | 69.49 | 60.20 | 72.99 | 821 | Panthers |
+| 58 | 24 | Johnathan Joseph | 69.46 | 62.57 | 73.53 | 423 | Cardinals |
+| 59 | 25 | Fabian Moreau | 69.12 | 61.88 | 73.12 | 158 | Commanders |
+| 60 | 26 | Trayvon Mullen | 69.04 | 58.30 | 72.03 | 933 | Raiders |
+| 61 | 27 | Byron Jones | 68.97 | 61.49 | 71.14 | 814 | Dolphins |
+| 62 | 28 | K'Waun Williams | 68.50 | 63.61 | 72.49 | 284 | 49ers |
+| 63 | 29 | Blidi Wreh-Wilson | 68.29 | 61.74 | 74.00 | 245 | Falcons |
+| 64 | 30 | Stephon Gilmore | 68.04 | 58.61 | 72.76 | 632 | Patriots |
+| 65 | 31 | Adoree' Jackson | 68.01 | 64.49 | 74.53 | 155 | Titans |
+| 66 | 32 | Corn Elder | 67.81 | 65.79 | 66.65 | 411 | Panthers |
+| 67 | 33 | Desmond King II | 67.43 | 60.83 | 68.70 | 709 | Titans |
+| 68 | 34 | Dontae Johnson | 67.21 | 62.99 | 72.84 | 273 | 49ers |
+| 69 | 35 | Jaylon Johnson | 67.06 | 56.10 | 73.33 | 867 | Bears |
+| 70 | 36 | Marshon Lattimore | 66.96 | 53.70 | 73.30 | 871 | Saints |
+| 71 | 37 | Javelin Guidry | 66.91 | 67.53 | 73.20 | 172 | Jets |
+| 72 | 38 | Levi Wallace | 66.66 | 56.33 | 73.35 | 612 | Bills |
+| 73 | 39 | Darqueze Dennard | 66.28 | 62.60 | 71.55 | 439 | Falcons |
+| 74 | 40 | Patrick Robinson | 66.10 | 57.74 | 74.38 | 248 | Saints |
+| 75 | 41 | Joejuan Williams | 65.98 | 57.12 | 74.89 | 172 | Patriots |
+| 76 | 42 | Emmanuel Moseley | 65.94 | 55.80 | 70.62 | 499 | 49ers |
+| 77 | 43 | Darryl Roberts | 65.76 | 56.23 | 72.31 | 469 | Lions |
+| 78 | 44 | Harrison Hand | 65.73 | 61.07 | 78.08 | 163 | Vikings |
+| 79 | 45 | Jason McCourty | 65.61 | 52.30 | 71.57 | 665 | Patriots |
+| 80 | 46 | Chris Harris Jr. | 65.08 | 57.67 | 70.34 | 568 | Chargers |
+| 81 | 47 | CJ Henderson | 65.03 | 58.71 | 73.41 | 474 | Jaguars |
+| 82 | 48 | Isaiah Oliver | 64.96 | 53.30 | 69.60 | 831 | Falcons |
+| 83 | 49 | A.J. Terrell | 64.84 | 57.00 | 67.98 | 908 | Falcons |
+| 84 | 50 | Bryce Hall | 64.80 | 62.28 | 70.64 | 547 | Jets |
+| 85 | 51 | Taron Johnson | 64.36 | 55.60 | 68.32 | 825 | Bills |
+| 86 | 52 | Keion Crossen | 64.35 | 60.92 | 70.90 | 307 | Texans |
+| 87 | 53 | Anthony Averett | 64.35 | 60.39 | 70.00 | 355 | Ravens |
+| 88 | 54 | Tye Smith | 64.20 | 61.86 | 69.20 | 169 | Titans |
+| 89 | 55 | Patrick Peterson | 64.11 | 53.10 | 69.17 | 1096 | Cardinals |
+| 90 | 56 | Jamal Perry | 63.79 | 57.36 | 67.95 | 140 | Dolphins |
+| 91 | 57 | Josh Jackson | 63.66 | 54.74 | 69.09 | 331 | Packers |
+| 92 | 58 | Sean Murphy-Bunting | 63.60 | 55.20 | 65.41 | 884 | Buccaneers |
+| 93 | 59 | Jimmy Moreland | 63.46 | 57.18 | 64.26 | 601 | Commanders |
+| 94 | 60 | Nickell Robey-Coleman | 63.45 | 53.86 | 66.19 | 612 | Eagles |
+| 95 | 61 | Nevin Lawson | 63.37 | 54.99 | 67.92 | 737 | Raiders |
+| 96 | 62 | Chidobe Awuzie | 62.78 | 54.08 | 68.78 | 452 | Cowboys |
+| 97 | 63 | A.J. Bouye | 62.60 | 53.75 | 70.26 | 410 | Broncos |
+| 98 | 64 | Rashard Robinson | 62.54 | 58.05 | 72.62 | 187 | Cowboys |
+| 99 | 65 | Mike Hughes | 62.26 | 58.49 | 69.58 | 173 | Vikings |
+| 100 | 66 | Tre Herndon | 62.18 | 50.70 | 68.48 | 1017 | Jaguars |
+
+### Rotation/backup (59 players)
+
+| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
+|---:|---:|---|---:|---:|---:|---:|---|
+| 101 | 1 | Kevin King | 61.88 | 52.91 | 68.69 | 664 | Packers |
+| 102 | 2 | Jamar Taylor | 61.72 | 55.05 | 69.09 | 203 | 49ers |
+| 103 | 3 | Rock Ya-Sin | 61.55 | 50.37 | 67.18 | 550 | Colts |
+| 104 | 4 | Tre Flowers | 61.00 | 52.47 | 65.65 | 578 | Seahawks |
+| 105 | 5 | Chris Claybrooks | 60.98 | 58.25 | 62.80 | 375 | Jaguars |
+| 106 | 6 | Tevaughn Campbell | 60.61 | 53.90 | 67.16 | 326 | Chargers |
+| 107 | 7 | Myles Hartsfield | 60.54 | 59.92 | 64.09 | 140 | Panthers |
+| 108 | 8 | Isaac Yiadom | 60.53 | 53.07 | 64.88 | 634 | Giants |
+| 109 | 9 | Justin Coleman | 60.39 | 50.11 | 65.68 | 470 | Lions |
+| 110 | 10 | Ka'dar Hollman | 60.38 | 57.96 | 68.90 | 108 | Packers |
+| 111 | 11 | Buster Skrine | 60.32 | 48.66 | 66.42 | 557 | Bears |
+| 112 | 12 | Anthony Brown | 60.29 | 50.59 | 68.10 | 534 | Cowboys |
+| 113 | 13 | Amani Oruwariye | 60.24 | 51.20 | 65.61 | 1028 | Lions |
+| 114 | 14 | Antonio Hamilton Sr. | 60.21 | 54.92 | 68.68 | 136 | Chiefs |
+| 115 | 15 | De'Vante Bausby | 60.19 | 56.52 | 70.06 | 277 | Broncos |
+| 116 | 16 | Daryl Worley | 60.09 | 48.47 | 68.36 | 346 | Raiders |
+| 117 | 17 | Kevin Johnson | 60.08 | 53.91 | 65.55 | 575 | Browns |
+| 118 | 18 | Duke Shelley | 59.86 | 59.40 | 66.86 | 209 | Bears |
+| 119 | 19 | Phillip Gaines | 59.79 | 56.34 | 66.78 | 262 | Texans |
+| 120 | 20 | Nik Needham | 59.66 | 47.29 | 66.60 | 617 | Dolphins |
+| 121 | 21 | Jourdan Lewis | 59.62 | 45.87 | 66.28 | 817 | Cowboys |
+| 122 | 22 | Darnay Holmes | 59.13 | 51.80 | 64.02 | 442 | Giants |
+| 123 | 23 | Pierre Desir | 59.05 | 44.67 | 69.05 | 519 | Ravens |
+| 124 | 24 | Chris Jones | 58.96 | 52.41 | 66.06 | 273 | Vikings |
+| 125 | 25 | Quinton Dunbar | 58.85 | 47.10 | 71.17 | 397 | Seahawks |
+| 126 | 26 | David Long Jr. | 58.46 | 55.80 | 62.31 | 116 | Rams |
+| 127 | 27 | Isaiah Johnson | 58.15 | 48.62 | 68.28 | 181 | Raiders |
+| 128 | 28 | Dre Kirkpatrick | 58.10 | 46.75 | 66.28 | 750 | Cardinals |
+| 129 | 29 | Kristian Fulton | 57.89 | 58.26 | 66.89 | 203 | Titans |
+| 130 | 30 | M.J. Stewart | 57.72 | 51.62 | 64.39 | 229 | Browns |
+| 131 | 31 | Davontae Harris | 57.41 | 54.60 | 63.55 | 117 | Ravens |
+| 132 | 32 | Essang Bassey | 57.38 | 52.11 | 62.98 | 382 | Broncos |
+| 133 | 33 | Cre'Von LeBlanc | 57.36 | 51.44 | 65.79 | 217 | Eagles |
+| 134 | 34 | Greg Mabin | 56.84 | 49.80 | 68.52 | 248 | Jaguars |
+| 135 | 35 | Kris Boyd | 56.81 | 53.75 | 63.02 | 343 | Vikings |
+| 136 | 36 | John Reid | 56.39 | 58.66 | 61.57 | 145 | Texans |
+| 137 | 37 | Tavierre Thomas | 56.23 | 55.57 | 63.18 | 204 | Browns |
+| 138 | 38 | Blessuan Austin | 55.75 | 48.55 | 63.15 | 681 | Jets |
+| 139 | 39 | Ryan Lewis | 55.50 | 50.14 | 65.42 | 271 | Giants |
+| 140 | 40 | Desmond Trufant | 55.36 | 41.92 | 67.55 | 324 | Lions |
+| 141 | 41 | Avonte Maddox | 55.15 | 42.01 | 65.38 | 509 | Eagles |
+| 142 | 42 | Michael Ojemudia | 55.06 | 49.90 | 56.41 | 852 | Broncos |
+| 143 | 43 | Kendall Sheffield | 54.54 | 41.59 | 62.39 | 524 | Falcons |
+| 144 | 44 | Vernon Hargreaves III | 54.25 | 40.00 | 63.01 | 980 | Texans |
+| 145 | 45 | LeShaun Sims | 54.09 | 42.93 | 61.95 | 607 | Bengals |
+| 146 | 46 | Justin Layne | 53.60 | 54.92 | 57.92 | 120 | Steelers |
+| 147 | 47 | Jeff Gladney | 53.51 | 48.50 | 52.68 | 958 | Vikings |
+| 148 | 48 | D.J. Hayden | 52.25 | 40.28 | 63.36 | 234 | Jaguars |
+| 149 | 49 | Keisean Nixon | 51.55 | 51.63 | 56.96 | 155 | Raiders |
+| 150 | 50 | Troy Pride Jr. | 51.36 | 45.35 | 53.28 | 529 | Panthers |
+| 151 | 51 | Lamar Jackson | 51.24 | 49.48 | 56.58 | 453 | Jets |
+| 152 | 52 | Jeff Okudah | 50.63 | 40.00 | 60.85 | 460 | Lions |
+| 153 | 53 | Kindle Vildor | 49.07 | 55.86 | 56.35 | 136 | Bears |
+| 154 | 54 | Noah Igbinoghene | 48.87 | 47.52 | 51.85 | 286 | Dolphins |
+| 155 | 55 | Michael Jacquet | 48.57 | 50.80 | 61.41 | 160 | Eagles |
+| 156 | 56 | Damon Arnette | 48.49 | 45.49 | 53.62 | 343 | Raiders |
+| 157 | 57 | Corey Ballentine | 46.99 | 49.76 | 51.91 | 107 | Jets |
+| 158 | 58 | Chris Jackson | 46.98 | 44.38 | 51.85 | 241 | Titans |
+| 159 | 59 | Luq Barcoo | 45.00 | 47.68 | 53.50 | 152 | Jaguars |
 
 ## DI — Defensive Interior
 
 - **Season used:** `2020`
 - **PFF column (model anchor):** `grades_defense` · **Snap column (volume filter):** `snap_counts_defense`
 
-### Elite (19 players)
+### Elite (17 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
 | 1 | 1 | Aaron Donald | 92.85 | 88.40 | 91.65 | 866 | Rams |
-| 2 | 2 | Quinnen Williams | 88.06 | 89.87 | 85.82 | 587 | Jets |
-| 3 | 3 | DeForest Buckner | 86.30 | 90.07 | 80.13 | 751 | Colts |
+| 2 | 2 | Quinnen Williams | 86.22 | 85.27 | 85.82 | 587 | Jets |
+| 3 | 3 | DeForest Buckner | 85.98 | 89.29 | 80.13 | 751 | Colts |
 | 4 | 4 | Grady Jarrett | 85.86 | 85.78 | 82.16 | 851 | Falcons |
-| 5 | 5 | Leonard Williams | 85.60 | 89.58 | 79.10 | 803 | Giants |
-| 6 | 6 | Cameron Heyward | 83.77 | 83.27 | 80.46 | 807 | Steelers |
-| 7 | 7 | Kenny Clark | 83.66 | 85.81 | 80.24 | 595 | Packers |
-| 8 | 8 | Dexter Lawrence | 83.47 | 87.91 | 76.35 | 655 | Giants |
-| 9 | 9 | Fletcher Cox | 83.24 | 84.97 | 78.43 | 747 | Eagles |
-| 10 | 10 | Calais Campbell | 82.98 | 76.15 | 85.45 | 410 | Ravens |
-| 11 | 11 | Chris Jones | 82.71 | 87.52 | 76.81 | 695 | Chiefs |
-| 12 | 12 | Mario Edwards Jr. | 82.51 | 83.93 | 78.64 | 256 | Bears |
-| 13 | 13 | Jonathan Allen | 81.44 | 79.74 | 78.73 | 809 | Commanders |
-| 14 | 14 | Shelby Harris | 81.42 | 80.64 | 80.37 | 441 | Broncos |
-| 15 | 15 | Zach Sieler | 81.36 | 73.72 | 88.02 | 532 | Dolphins |
-| 16 | 16 | Dalvin Tomlinson | 81.02 | 82.02 | 76.18 | 658 | Giants |
-| 17 | 17 | Stephon Tuitt | 80.98 | 85.25 | 78.04 | 779 | Steelers |
-| 18 | 18 | Poona Ford | 80.74 | 78.66 | 79.31 | 670 | Seahawks |
-| 19 | 19 | Folorunso Fatukasi | 80.32 | 83.15 | 78.54 | 507 | Jets |
+| 5 | 5 | Leonard Williams | 85.53 | 89.40 | 79.10 | 803 | Giants |
+| 6 | 6 | Cameron Heyward | 83.73 | 83.16 | 80.46 | 807 | Steelers |
+| 7 | 7 | Fletcher Cox | 82.96 | 84.29 | 78.43 | 747 | Eagles |
+| 8 | 8 | Dexter Lawrence | 82.76 | 86.13 | 76.35 | 655 | Giants |
+| 9 | 9 | Kenny Clark | 82.74 | 83.52 | 80.24 | 595 | Packers |
+| 10 | 10 | Chris Jones | 82.19 | 86.21 | 76.81 | 695 | Chiefs |
+| 11 | 11 | Calais Campbell | 81.84 | 73.31 | 85.45 | 410 | Ravens |
+| 12 | 12 | Jonathan Allen | 81.39 | 79.61 | 78.73 | 809 | Commanders |
+| 13 | 13 | Stephon Tuitt | 80.83 | 84.87 | 78.04 | 779 | Steelers |
+| 14 | 14 | Dalvin Tomlinson | 80.46 | 80.64 | 76.18 | 658 | Giants |
+| 15 | 15 | Poona Ford | 80.31 | 77.58 | 79.31 | 670 | Seahawks |
+| 16 | 16 | Zach Sieler | 80.29 | 71.05 | 88.02 | 532 | Dolphins |
+| 17 | 17 | Shelby Harris | 80.10 | 77.34 | 80.37 | 441 | Broncos |
 
-### Good (24 players)
+### Good (23 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 20 | 1 | Sebastian Joseph-Day | 79.32 | 73.06 | 79.32 | 412 | Rams |
-| 21 | 2 | Sheldon Richardson | 79.27 | 73.10 | 79.21 | 799 | Browns |
-| 22 | 3 | Jurrell Casey | 79.04 | 80.81 | 81.30 | 156 | Broncos |
-| 23 | 4 | B.J. Hill | 78.95 | 77.97 | 75.44 | 375 | Giants |
-| 24 | 5 | Dre'Mont Jones | 78.89 | 78.98 | 77.39 | 560 | Broncos |
-| 25 | 6 | Vita Vea | 78.79 | 88.70 | 74.36 | 224 | Buccaneers |
-| 26 | 7 | Tim Settle | 77.68 | 71.26 | 78.52 | 348 | Commanders |
-| 27 | 8 | Akiem Hicks | 77.59 | 71.69 | 81.32 | 795 | Bears |
-| 28 | 9 | Jeffery Simmons | 77.40 | 84.53 | 71.86 | 841 | Titans |
-| 29 | 10 | David Onyemata | 77.11 | 75.39 | 74.92 | 599 | Saints |
-| 30 | 11 | Daron Payne | 76.62 | 74.36 | 74.28 | 882 | Commanders |
-| 31 | 12 | James Smith-Williams | 76.51 | 57.75 | 86.93 | 100 | Commanders |
-| 32 | 13 | Zach Kerr | 76.20 | 73.34 | 76.76 | 390 | Panthers |
-| 33 | 14 | Bilal Nichols | 76.20 | 67.67 | 79.07 | 618 | Bears |
-| 34 | 15 | Christian Wilkins | 75.54 | 73.01 | 74.36 | 637 | Dolphins |
-| 35 | 16 | DJ Reader | 75.44 | 79.07 | 74.91 | 259 | Bengals |
-| 36 | 17 | Javon Hargrave | 75.37 | 65.22 | 78.49 | 602 | Eagles |
-| 37 | 18 | Linval Joseph | 75.18 | 67.84 | 77.05 | 726 | Chargers |
-| 38 | 19 | Malcom Brown | 75.15 | 70.24 | 76.02 | 345 | Saints |
-| 39 | 20 | Maurice Hurst | 75.12 | 77.46 | 72.63 | 277 | Raiders |
-| 40 | 21 | Henry Anderson | 74.99 | 67.82 | 76.54 | 549 | Jets |
-| 41 | 22 | Ndamukong Suh | 74.79 | 62.59 | 78.75 | 788 | Buccaneers |
-| 42 | 23 | Lawrence Guy Sr. | 74.72 | 64.33 | 78.52 | 503 | Patriots |
-| 43 | 24 | Greg Gaines | 74.54 | 67.65 | 77.32 | 201 | Rams |
+| 18 | 1 | Mario Edwards Jr. | 79.97 | 77.59 | 78.64 | 256 | Bears |
+| 19 | 2 | Sheldon Richardson | 79.23 | 73.00 | 79.21 | 799 | Browns |
+| 20 | 3 | Folorunso Fatukasi | 79.14 | 80.18 | 78.54 | 507 | Jets |
+| 21 | 4 | Sebastian Joseph-Day | 77.80 | 69.26 | 79.32 | 412 | Rams |
+| 22 | 5 | Dre'Mont Jones | 77.57 | 75.68 | 77.39 | 560 | Broncos |
+| 23 | 6 | B.J. Hill | 77.56 | 74.48 | 75.44 | 375 | Giants |
+| 24 | 7 | Akiem Hicks | 77.54 | 71.58 | 81.32 | 795 | Bears |
+| 25 | 8 | Jeffery Simmons | 77.40 | 84.53 | 71.86 | 841 | Titans |
+| 26 | 9 | James Smith-Williams | 77.05 | 59.10 | 86.93 | 100 | Commanders |
+| 27 | 10 | Daron Payne | 76.62 | 74.36 | 74.28 | 882 | Commanders |
+| 28 | 11 | David Onyemata | 76.57 | 74.05 | 74.92 | 599 | Saints |
+| 29 | 12 | Jurrell Casey | 76.23 | 73.77 | 81.30 | 156 | Broncos |
+| 30 | 13 | Tim Settle | 76.11 | 67.34 | 78.52 | 348 | Commanders |
+| 31 | 14 | Bilal Nichols | 75.80 | 66.66 | 79.07 | 618 | Bears |
+| 32 | 15 | Vita Vea | 75.50 | 80.48 | 74.36 | 224 | Buccaneers |
+| 33 | 16 | Javon Hargrave | 75.19 | 64.77 | 78.49 | 602 | Eagles |
+| 34 | 17 | Linval Joseph | 75.06 | 67.56 | 77.05 | 726 | Chargers |
+| 35 | 18 | Christian Wilkins | 74.92 | 71.47 | 74.36 | 637 | Dolphins |
+| 36 | 19 | Ndamukong Suh | 74.77 | 62.56 | 78.75 | 788 | Buccaneers |
+| 37 | 20 | Henry Anderson | 74.65 | 66.97 | 76.54 | 549 | Jets |
+| 38 | 21 | Zach Kerr | 74.55 | 69.20 | 76.76 | 390 | Panthers |
+| 39 | 22 | Lawrence Guy Sr. | 74.50 | 63.77 | 78.52 | 503 | Patriots |
+| 40 | 23 | Malcom Brown | 74.28 | 68.08 | 76.02 | 345 | Saints |
 
-### Starter (71 players)
-
-| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
-|---:|---:|---|---:|---:|---:|---:|---|
-| 44 | 1 | Shy Tuttle | 73.42 | 69.15 | 74.05 | 326 | Saints |
-| 45 | 2 | Derek Wolfe | 73.07 | 64.99 | 76.58 | 621 | Ravens |
-| 46 | 3 | Ed Oliver | 72.93 | 57.59 | 78.99 | 578 | Bills |
-| 47 | 4 | Michael Brockers | 72.61 | 64.14 | 74.61 | 625 | Rams |
-| 48 | 5 | Tyson Alualu | 72.54 | 71.43 | 69.85 | 448 | Steelers |
-| 49 | 6 | Damon Harrison Sr. | 72.49 | 60.20 | 81.51 | 150 | Packers |
-| 50 | 7 | Geno Atkins | 72.37 | 55.68 | 83.49 | 119 | Bengals |
-| 51 | 8 | Steve McLendon | 72.26 | 57.28 | 78.59 | 443 | Buccaneers |
-| 52 | 9 | Derrick Brown | 72.10 | 66.14 | 71.91 | 742 | Panthers |
-| 53 | 10 | Johnathan Hankins | 72.01 | 61.46 | 75.08 | 665 | Raiders |
-| 54 | 11 | DeShawn Williams | 71.87 | 72.88 | 73.01 | 436 | Broncos |
-| 55 | 12 | Brandon Williams | 71.84 | 63.41 | 75.47 | 354 | Ravens |
-| 56 | 13 | DaQuan Jones | 71.64 | 68.02 | 69.89 | 706 | Titans |
-| 57 | 14 | Kawann Short | 71.31 | 60.67 | 85.81 | 123 | Panthers |
-| 58 | 15 | DeMarcus Walker | 71.06 | 57.95 | 81.79 | 384 | Broncos |
-| 59 | 16 | Malik Jackson | 70.99 | 57.36 | 81.11 | 537 | Eagles |
-| 60 | 17 | Chris Wormley | 70.96 | 75.59 | 65.27 | 148 | Steelers |
-| 61 | 18 | Larry Ogunjobi | 70.95 | 54.73 | 78.43 | 642 | Browns |
-| 62 | 19 | Taven Bryan | 70.60 | 65.56 | 69.79 | 511 | Jaguars |
-| 63 | 20 | Morgan Fox | 70.29 | 54.46 | 76.67 | 403 | Rams |
-| 64 | 21 | Raekwon Davis | 70.26 | 71.49 | 65.28 | 538 | Dolphins |
-| 65 | 22 | Grover Stewart | 70.23 | 62.19 | 71.63 | 581 | Colts |
-| 66 | 23 | Brent Urban | 70.02 | 59.72 | 73.65 | 370 | Bears |
-| 67 | 24 | Vincent Taylor | 69.77 | 54.78 | 81.85 | 207 | Browns |
-| 68 | 25 | Derrick Nnadi | 69.66 | 65.56 | 68.74 | 460 | Chiefs |
-| 69 | 26 | Jarran Reed | 69.52 | 58.42 | 74.64 | 847 | Seahawks |
-| 70 | 27 | John Cominsky | 69.19 | 55.07 | 77.57 | 399 | Falcons |
-| 71 | 28 | Roy Robertson-Harris | 68.97 | 62.29 | 73.74 | 245 | Bears |
-| 72 | 29 | William Gholston | 68.86 | 53.69 | 74.81 | 606 | Buccaneers |
-| 73 | 30 | Mike Pennel | 68.66 | 58.90 | 74.55 | 322 | Chiefs |
-| 74 | 31 | Tershawn Wharton | 68.59 | 58.10 | 71.41 | 518 | Chiefs |
-| 75 | 32 | Kingsley Keke | 68.52 | 63.88 | 69.66 | 414 | Packers |
-| 76 | 33 | Dean Lowry | 68.49 | 56.80 | 72.12 | 601 | Packers |
-| 77 | 34 | Quinton Jefferson | 68.33 | 59.09 | 70.96 | 534 | Bills |
-| 78 | 35 | Hassan Ridgeway | 68.18 | 64.46 | 76.30 | 138 | Eagles |
-| 79 | 36 | Danny Shelton | 67.93 | 58.23 | 72.93 | 498 | Lions |
-| 80 | 37 | Adam Butler | 67.81 | 52.38 | 74.44 | 481 | Patriots |
-| 81 | 38 | John Franklin-Myers | 67.62 | 58.61 | 70.50 | 500 | Jets |
-| 82 | 39 | D.J. Jones | 67.57 | 57.14 | 74.20 | 420 | 49ers |
-| 83 | 40 | Sheldon Rankins | 67.34 | 59.77 | 72.19 | 415 | Saints |
-| 84 | 41 | Mike Daniels | 67.25 | 49.95 | 80.67 | 356 | Bengals |
-| 85 | 42 | Armon Watts | 67.00 | 60.93 | 70.40 | 392 | Vikings |
-| 86 | 43 | Tyler Lancaster | 66.87 | 58.01 | 70.18 | 352 | Packers |
-| 87 | 44 | Vernon Butler | 66.75 | 55.82 | 71.95 | 428 | Bills |
-| 88 | 45 | Mike Purcell | 66.72 | 56.23 | 76.11 | 218 | Broncos |
-| 89 | 46 | Austin Johnson | 66.71 | 60.51 | 66.68 | 231 | Giants |
-| 90 | 47 | Christian Covington | 66.57 | 52.97 | 72.30 | 559 | Bengals |
-| 91 | 48 | Abry Jones | 66.47 | 57.40 | 74.29 | 159 | Jaguars |
-| 92 | 49 | John Jenkins | 66.38 | 59.63 | 71.19 | 223 | Bears |
-| 93 | 50 | Justin Zimmer | 65.65 | 55.24 | 78.01 | 275 | Bills |
-| 94 | 51 | Justin Jones | 65.47 | 58.56 | 68.92 | 527 | Chargers |
-| 95 | 52 | Javon Kinlaw | 65.20 | 52.25 | 71.75 | 547 | 49ers |
-| 96 | 53 | Neville Gallimore | 64.93 | 48.50 | 73.80 | 416 | Cowboys |
-| 97 | 54 | Kevin Givens | 64.92 | 53.51 | 76.18 | 387 | 49ers |
-| 98 | 55 | Davon Godchaux | 64.79 | 54.79 | 73.02 | 172 | Dolphins |
-| 99 | 56 | A'Shawn Robinson | 64.46 | 52.49 | 74.00 | 111 | Rams |
-| 100 | 57 | P.J. Hall | 64.37 | 56.64 | 68.91 | 343 | Texans |
-| 101 | 58 | Harrison Phillips | 64.16 | 61.92 | 67.63 | 332 | Bills |
-| 102 | 59 | L.J. Collier | 63.80 | 52.15 | 67.40 | 559 | Seahawks |
-| 103 | 60 | Jonathan Bullard | 63.79 | 54.74 | 73.05 | 117 | Seahawks |
-| 104 | 61 | Da'Shawn Hand | 63.54 | 57.52 | 71.21 | 353 | Lions |
-| 105 | 62 | Charles Omenihu | 63.50 | 53.80 | 67.23 | 546 | Texans |
-| 106 | 63 | Nathan Shepherd | 63.50 | 56.48 | 67.24 | 336 | Jets |
-| 107 | 64 | Allen Bailey | 63.26 | 46.50 | 70.58 | 424 | Falcons |
-| 108 | 65 | Jordan Phillips | 63.20 | 49.40 | 71.89 | 266 | Cardinals |
-| 109 | 66 | Corey Peters | 63.19 | 51.86 | 70.42 | 379 | Cardinals |
-| 110 | 67 | Doug Costin | 62.64 | 62.23 | 62.92 | 456 | Jaguars |
-| 111 | 68 | Tyeler Davison | 62.33 | 53.43 | 64.52 | 519 | Falcons |
-| 112 | 69 | T.Y. McGill | 62.21 | 56.15 | 70.51 | 127 | Eagles |
-| 113 | 70 | Isaiah Buggs | 62.13 | 49.67 | 72.90 | 131 | Steelers |
-| 114 | 71 | Xavier Williams | 62.11 | 45.98 | 74.21 | 320 | Bengals |
-
-### Rotation/backup (43 players)
+### Starter (79 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 115 | 1 | Tyrone Crawford | 61.82 | 46.74 | 71.67 | 445 | Cowboys |
-| 116 | 2 | Carlos Watkins | 61.62 | 48.80 | 70.37 | 542 | Texans |
-| 117 | 3 | Montravius Adams | 61.42 | 51.45 | 68.69 | 130 | Packers |
-| 118 | 4 | Leki Fotu | 60.87 | 45.43 | 72.19 | 284 | Cardinals |
-| 119 | 5 | John Penisini | 60.55 | 43.86 | 67.51 | 576 | Lions |
-| 120 | 6 | Damion Square | 60.00 | 47.73 | 64.02 | 253 | Chargers |
-| 121 | 7 | Maliek Collins | 59.45 | 49.34 | 64.72 | 505 | Raiders |
-| 122 | 8 | Brandon Dunn | 59.44 | 46.75 | 65.71 | 451 | Texans |
-| 123 | 9 | Ross Blacklock | 59.23 | 45.12 | 65.50 | 254 | Texans |
-| 124 | 10 | DaVon Hamilton | 58.95 | 50.20 | 65.81 | 408 | Jaguars |
-| 125 | 11 | Angelo Blackson | 58.86 | 44.15 | 64.82 | 550 | Cardinals |
-| 126 | 12 | Antwaun Woods | 58.78 | 49.15 | 64.17 | 457 | Cowboys |
-| 127 | 13 | Jaleel Johnson | 58.64 | 43.33 | 64.68 | 654 | Vikings |
-| 128 | 14 | Kendal Vickers | 58.52 | 44.74 | 64.57 | 315 | Raiders |
-| 129 | 15 | Caraun Reid | 58.44 | 50.58 | 69.52 | 144 | Jaguars |
-| 130 | 16 | Byron Cowart | 58.30 | 49.50 | 65.99 | 419 | Patriots |
-| 131 | 17 | Rakeem Nunez-Roches | 58.21 | 45.79 | 65.02 | 483 | Buccaneers |
-| 132 | 18 | Margus Hunt | 57.82 | 39.54 | 67.60 | 387 | Bengals |
-| 133 | 19 | Bravvion Roy | 57.79 | 43.85 | 63.95 | 419 | Panthers |
-| 134 | 20 | Akeem Spence | 57.79 | 42.98 | 69.01 | 103 | Patriots |
-| 135 | 21 | Shamar Stephen | 57.26 | 46.85 | 60.55 | 662 | Vikings |
-| 136 | 22 | Justin Ellis | 57.13 | 48.80 | 65.92 | 358 | Ravens |
-| 137 | 23 | Taylor Stallworth | 55.49 | 46.75 | 61.31 | 253 | Colts |
-| 138 | 24 | Trevon Coley | 55.27 | 45.17 | 65.86 | 192 | Jets |
-| 139 | 25 | Matt Dickerson | 54.86 | 46.75 | 65.36 | 197 | Titans |
-| 140 | 26 | Trysten Hill | 54.79 | 47.34 | 66.27 | 212 | Cowboys |
-| 141 | 27 | Sylvester Williams | 54.54 | 42.68 | 66.29 | 173 | Broncos |
-| 142 | 28 | Malcolm Roach | 54.43 | 43.90 | 64.58 | 233 | Saints |
-| 143 | 29 | Domata Peko Sr. | 54.32 | 35.97 | 70.41 | 177 | Cardinals |
-| 144 | 30 | Kevin Strong | 54.27 | 48.83 | 63.37 | 209 | Lions |
-| 145 | 31 | Bryan Mone | 54.09 | 55.19 | 57.79 | 228 | Seahawks |
-| 146 | 32 | Rashard Lawrence | 52.96 | 42.97 | 62.76 | 166 | Cardinals |
-| 147 | 33 | Rasheem Green | 52.62 | 42.37 | 61.54 | 365 | Seahawks |
-| 148 | 34 | Eli Ankou | 52.23 | 43.18 | 63.89 | 186 | Cowboys |
-| 149 | 35 | Kentavius Street | 51.38 | 42.67 | 58.75 | 380 | 49ers |
-| 150 | 36 | Daniel Ekuale | 51.31 | 47.40 | 57.82 | 290 | Jaguars |
-| 151 | 37 | Teair Tart | 50.87 | 47.23 | 59.99 | 155 | Titans |
-| 152 | 38 | McTelvin Agim | 50.77 | 44.98 | 56.72 | 141 | Broncos |
-| 153 | 39 | Jordan Elliott | 50.64 | 46.35 | 49.34 | 307 | Browns |
-| 154 | 40 | Justin Hamilton | 49.46 | 49.00 | 54.77 | 236 | Cowboys |
-| 155 | 41 | Marlon Davidson | 49.24 | 52.68 | 51.11 | 132 | Falcons |
-| 156 | 42 | Larrell Murchison | 47.45 | 41.48 | 53.52 | 136 | Titans |
-| 157 | 43 | Broderick Washington | 45.00 | 39.78 | 48.29 | 161 | Ravens |
+| 41 | 1 | DJ Reader | 73.44 | 74.06 | 74.91 | 259 | Bengals |
+| 42 | 2 | Maurice Hurst | 73.37 | 73.07 | 72.63 | 277 | Raiders |
+| 43 | 3 | Ed Oliver | 73.09 | 57.98 | 78.99 | 578 | Bills |
+| 44 | 4 | Greg Gaines | 73.00 | 63.79 | 77.32 | 201 | Rams |
+| 45 | 5 | Geno Atkins | 72.99 | 57.24 | 83.49 | 119 | Bengals |
+| 46 | 6 | Derek Wolfe | 72.92 | 64.60 | 76.58 | 621 | Ravens |
+| 47 | 7 | Michael Brockers | 72.48 | 63.82 | 74.61 | 625 | Rams |
+| 48 | 8 | Damon Harrison Sr. | 72.46 | 60.13 | 81.51 | 150 | Packers |
+| 49 | 9 | Steve McLendon | 72.43 | 57.71 | 78.59 | 443 | Buccaneers |
+| 50 | 10 | Shy Tuttle | 72.07 | 65.77 | 74.05 | 326 | Saints |
+| 51 | 11 | Derrick Brown | 71.98 | 65.84 | 71.91 | 742 | Panthers |
+| 52 | 12 | Johnathan Hankins | 71.98 | 61.37 | 75.08 | 665 | Raiders |
+| 53 | 13 | Tyson Alualu | 71.83 | 69.64 | 69.85 | 448 | Steelers |
+| 54 | 14 | Brandon Williams | 71.56 | 62.71 | 75.47 | 354 | Ravens |
+| 55 | 15 | DaQuan Jones | 71.50 | 67.67 | 69.89 | 706 | Titans |
+| 56 | 16 | DeMarcus Walker | 71.32 | 58.60 | 81.79 | 384 | Broncos |
+| 57 | 17 | Kawann Short | 71.22 | 60.43 | 85.81 | 123 | Panthers |
+| 58 | 18 | Larry Ogunjobi | 71.19 | 55.34 | 78.43 | 642 | Browns |
+| 59 | 19 | Malik Jackson | 71.11 | 57.66 | 81.11 | 537 | Eagles |
+| 60 | 20 | Morgan Fox | 70.95 | 56.12 | 76.67 | 403 | Rams |
+| 61 | 21 | Vincent Taylor | 70.81 | 57.38 | 81.85 | 207 | Browns |
+| 62 | 22 | DeShawn Williams | 70.47 | 69.39 | 73.01 | 436 | Broncos |
+| 63 | 23 | Taven Bryan | 70.32 | 64.86 | 69.79 | 511 | Jaguars |
+| 64 | 24 | Grover Stewart | 70.09 | 61.84 | 71.63 | 581 | Colts |
+| 65 | 25 | Brent Urban | 70.05 | 59.81 | 73.65 | 370 | Bears |
+| 66 | 26 | John Cominsky | 69.79 | 56.56 | 77.57 | 399 | Falcons |
+| 67 | 27 | Jarran Reed | 69.52 | 58.42 | 74.64 | 847 | Seahawks |
+| 68 | 28 | Raekwon Davis | 69.39 | 69.31 | 65.28 | 538 | Dolphins |
+| 69 | 29 | William Gholston | 69.22 | 54.58 | 74.81 | 606 | Buccaneers |
+| 70 | 30 | Derrick Nnadi | 69.10 | 64.16 | 68.74 | 460 | Chiefs |
+| 71 | 31 | Mike Pennel | 68.82 | 59.31 | 74.55 | 322 | Chiefs |
+| 72 | 32 | Tershawn Wharton | 68.74 | 58.49 | 71.41 | 518 | Chiefs |
+| 73 | 33 | Dean Lowry | 68.60 | 57.08 | 72.12 | 601 | Packers |
+| 74 | 34 | Roy Robertson-Harris | 68.55 | 61.25 | 73.74 | 245 | Bears |
+| 75 | 35 | Adam Butler | 68.52 | 54.16 | 74.44 | 481 | Patriots |
+| 76 | 36 | Quinton Jefferson | 68.38 | 59.20 | 70.96 | 534 | Bills |
+| 77 | 37 | Mike Daniels | 68.08 | 52.01 | 80.67 | 356 | Bengals |
+| 78 | 38 | Kingsley Keke | 68.07 | 62.76 | 69.66 | 414 | Packers |
+| 79 | 39 | Danny Shelton | 68.02 | 58.46 | 72.93 | 498 | Lions |
+| 80 | 40 | D.J. Jones | 67.89 | 57.95 | 74.20 | 420 | 49ers |
+| 81 | 41 | John Franklin-Myers | 67.74 | 58.91 | 70.50 | 500 | Jets |
+| 82 | 42 | Mike Purcell | 67.45 | 58.06 | 76.11 | 218 | Broncos |
+| 83 | 43 | Chris Wormley | 67.37 | 66.62 | 65.27 | 148 | Steelers |
+| 84 | 44 | Sheldon Rankins | 67.36 | 59.81 | 72.19 | 415 | Saints |
+| 85 | 45 | Vernon Butler | 67.21 | 56.98 | 71.95 | 428 | Bills |
+| 86 | 46 | Tyler Lancaster | 67.15 | 58.70 | 70.18 | 352 | Packers |
+| 87 | 47 | Hassan Ridgeway | 67.13 | 61.83 | 76.30 | 138 | Eagles |
+| 88 | 48 | Christian Covington | 67.06 | 54.20 | 72.30 | 559 | Bengals |
+| 89 | 49 | Armon Watts | 66.89 | 60.64 | 70.40 | 392 | Vikings |
+| 90 | 50 | Abry Jones | 66.82 | 58.27 | 74.29 | 159 | Jaguars |
+| 91 | 51 | Austin Johnson | 66.62 | 60.27 | 66.68 | 231 | Giants |
+| 92 | 52 | John Jenkins | 66.45 | 59.81 | 71.19 | 223 | Bears |
+| 93 | 53 | Justin Zimmer | 66.45 | 57.24 | 78.01 | 275 | Bills |
+| 94 | 54 | Neville Gallimore | 66.25 | 51.81 | 73.80 | 416 | Cowboys |
+| 95 | 55 | Javon Kinlaw | 65.77 | 53.67 | 71.75 | 547 | 49ers |
+| 96 | 56 | Kevin Givens | 65.73 | 55.54 | 76.18 | 387 | 49ers |
+| 97 | 57 | Justin Jones | 65.58 | 58.85 | 68.92 | 527 | Chargers |
+| 98 | 58 | A'Shawn Robinson | 65.54 | 55.19 | 74.00 | 111 | Rams |
+| 99 | 59 | Davon Godchaux | 65.46 | 56.48 | 73.02 | 172 | Dolphins |
+| 100 | 60 | Jonathan Bullard | 65.05 | 57.90 | 73.05 | 117 | Seahawks |
+| 101 | 61 | Jordan Phillips | 65.03 | 53.96 | 71.89 | 266 | Cardinals |
+| 102 | 62 | P.J. Hall | 64.85 | 57.83 | 68.91 | 343 | Texans |
+| 103 | 63 | Allen Bailey | 64.77 | 50.29 | 70.58 | 424 | Falcons |
+| 104 | 64 | Isaiah Buggs | 64.61 | 55.87 | 72.90 | 131 | Steelers |
+| 105 | 65 | L.J. Collier | 64.35 | 53.52 | 67.40 | 559 | Seahawks |
+| 106 | 66 | Corey Peters | 64.23 | 54.47 | 70.42 | 379 | Cardinals |
+| 107 | 67 | Xavier Williams | 64.21 | 51.24 | 74.21 | 320 | Bengals |
+| 108 | 68 | Nathan Shepherd | 64.00 | 57.75 | 67.24 | 336 | Jets |
+| 109 | 69 | Charles Omenihu | 63.95 | 54.94 | 67.23 | 546 | Texans |
+| 110 | 70 | Harrison Phillips | 63.88 | 61.22 | 67.63 | 332 | Bills |
+| 111 | 71 | Da'Shawn Hand | 63.75 | 58.03 | 71.21 | 353 | Lions |
+| 112 | 72 | Montravius Adams | 63.48 | 56.58 | 68.69 | 130 | Packers |
+| 113 | 73 | Leki Fotu | 63.27 | 51.43 | 72.19 | 284 | Cardinals |
+| 114 | 74 | T.Y. McGill | 63.13 | 58.46 | 70.51 | 127 | Eagles |
+| 115 | 75 | Tyeler Davison | 62.66 | 54.24 | 64.52 | 519 | Falcons |
+| 116 | 76 | Tyrone Crawford | 62.66 | 48.84 | 71.67 | 445 | Cowboys |
+| 117 | 77 | Carlos Watkins | 62.46 | 50.89 | 70.37 | 542 | Texans |
+| 118 | 78 | Doug Costin | 62.42 | 61.66 | 62.92 | 456 | Jaguars |
+| 119 | 79 | Damion Square | 62.18 | 53.18 | 64.02 | 253 | Chargers |
+
+### Rotation/backup (38 players)
+
+| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
+|---:|---:|---|---:|---:|---:|---:|---|
+| 120 | 1 | Ross Blacklock | 61.87 | 51.72 | 65.50 | 254 | Texans |
+| 121 | 2 | Akeem Spence | 61.87 | 53.19 | 69.01 | 103 | Patriots |
+| 122 | 3 | John Penisini | 61.59 | 46.47 | 67.51 | 576 | Lions |
+| 123 | 4 | Kendal Vickers | 60.84 | 50.54 | 64.57 | 315 | Raiders |
+| 124 | 5 | Brandon Dunn | 60.80 | 50.17 | 65.71 | 451 | Texans |
+| 125 | 6 | Caraun Reid | 60.63 | 56.05 | 69.52 | 144 | Jaguars |
+| 126 | 7 | Maliek Collins | 60.36 | 51.63 | 64.72 | 505 | Raiders |
+| 127 | 8 | DaVon Hamilton | 60.10 | 53.09 | 65.81 | 408 | Jaguars |
+| 128 | 9 | Angelo Blackson | 60.01 | 47.02 | 64.82 | 550 | Cardinals |
+| 129 | 10 | Antwaun Woods | 59.88 | 51.90 | 64.17 | 457 | Cowboys |
+| 130 | 11 | Bravvion Roy | 59.63 | 48.46 | 63.95 | 419 | Panthers |
+| 131 | 12 | Rakeem Nunez-Roches | 59.53 | 49.09 | 65.02 | 483 | Buccaneers |
+| 132 | 13 | Byron Cowart | 59.50 | 52.49 | 65.99 | 419 | Patriots |
+| 133 | 14 | Domata Peko Sr. | 59.47 | 48.84 | 70.41 | 177 | Cardinals |
+| 134 | 15 | Jaleel Johnson | 59.35 | 45.11 | 64.68 | 654 | Vikings |
+| 135 | 16 | Margus Hunt | 59.35 | 43.38 | 67.60 | 387 | Bengals |
+| 136 | 17 | Trevon Coley | 58.33 | 52.82 | 65.86 | 192 | Jets |
+| 137 | 18 | Sylvester Williams | 58.28 | 52.04 | 66.29 | 173 | Broncos |
+| 138 | 19 | Justin Ellis | 58.04 | 51.08 | 65.92 | 358 | Ravens |
+| 139 | 20 | Taylor Stallworth | 57.84 | 52.64 | 61.31 | 253 | Colts |
+| 140 | 21 | Shamar Stephen | 57.79 | 48.18 | 60.55 | 662 | Vikings |
+| 141 | 22 | Matt Dickerson | 57.56 | 53.51 | 65.36 | 197 | Titans |
+| 142 | 23 | Malcolm Roach | 57.44 | 51.42 | 64.58 | 233 | Saints |
+| 143 | 24 | Trysten Hill | 57.28 | 53.56 | 66.27 | 212 | Cowboys |
+| 144 | 25 | Rashard Lawrence | 56.71 | 52.34 | 62.76 | 166 | Cardinals |
+| 145 | 26 | Kevin Strong | 56.49 | 54.36 | 63.37 | 209 | Lions |
+| 146 | 27 | Eli Ankou | 55.75 | 51.99 | 63.89 | 186 | Cowboys |
+| 147 | 28 | Bryan Mone | 55.00 | 57.46 | 57.79 | 228 | Seahawks |
+| 148 | 29 | Rasheem Green | 54.97 | 48.24 | 61.54 | 365 | Seahawks |
+| 149 | 30 | McTelvin Agim | 54.29 | 53.77 | 56.72 | 141 | Broncos |
+| 150 | 31 | Teair Tart | 53.75 | 54.45 | 59.99 | 155 | Titans |
+| 151 | 32 | Kentavius Street | 53.59 | 48.20 | 58.75 | 380 | 49ers |
+| 152 | 33 | Daniel Ekuale | 53.36 | 52.51 | 57.82 | 290 | Jaguars |
+| 153 | 34 | Jordan Elliott | 52.76 | 51.65 | 49.34 | 307 | Browns |
+| 154 | 35 | Larrell Murchison | 51.85 | 52.46 | 53.52 | 136 | Titans |
+| 155 | 36 | Justin Hamilton | 51.50 | 54.10 | 54.77 | 236 | Cowboys |
+| 156 | 37 | Marlon Davidson | 50.99 | 57.06 | 51.11 | 132 | Falcons |
+| 157 | 38 | Broderick Washington | 46.89 | 51.04 | 48.29 | 161 | Ravens |
 
 ## ED — Edge
 
@@ -448,359 +448,359 @@
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
 | 1 | 1 | T.J. Watt | 93.03 | 96.33 | 87.18 | 856 | Steelers |
-| 2 | 2 | Joey Bosa | 91.47 | 97.12 | 87.51 | 549 | Chargers |
+| 2 | 2 | Joey Bosa | 89.85 | 93.07 | 87.51 | 549 | Chargers |
 | 3 | 3 | Khalil Mack | 89.24 | 93.04 | 82.96 | 894 | Bears |
-| 4 | 4 | Myles Garrett | 87.80 | 95.20 | 81.61 | 758 | Browns |
-| 5 | 5 | DeMarcus Lawrence | 85.32 | 89.47 | 78.38 | 668 | Cowboys |
+| 4 | 4 | Myles Garrett | 87.47 | 94.39 | 81.61 | 758 | Browns |
+| 5 | 5 | DeMarcus Lawrence | 84.63 | 87.75 | 78.38 | 668 | Cowboys |
 | 6 | 6 | Shaquil Barrett | 84.33 | 82.19 | 82.74 | 824 | Buccaneers |
-| 7 | 7 | Montez Sweat | 82.52 | 83.97 | 77.39 | 693 | Commanders |
-| 8 | 8 | Brandon Graham | 82.44 | 80.64 | 79.47 | 759 | Eagles |
-| 9 | 9 | Justin Houston | 81.83 | 70.77 | 85.87 | 608 | Colts |
-| 10 | 10 | Cameron Jordan | 81.80 | 86.05 | 74.80 | 816 | Saints |
+| 7 | 7 | Brandon Graham | 82.25 | 80.17 | 79.47 | 759 | Eagles |
+| 8 | 8 | Cameron Jordan | 81.78 | 86.01 | 74.80 | 816 | Saints |
+| 9 | 9 | Montez Sweat | 81.75 | 82.04 | 77.39 | 693 | Commanders |
+| 10 | 10 | Justin Houston | 81.47 | 69.87 | 85.87 | 608 | Colts |
 | 11 | 11 | Za'Darius Smith | 80.37 | 79.44 | 76.82 | 858 | Packers |
-| 12 | 12 | Brian Burns | 80.33 | 75.65 | 79.93 | 750 | Panthers |
+| 12 | 12 | Brian Burns | 80.06 | 74.97 | 79.93 | 750 | Panthers |
 
-### Good (11 players)
-
-| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
-|---:|---:|---|---:|---:|---:|---:|---|
-| 13 | 1 | Marcus Davenport | 79.25 | 87.29 | 73.89 | 374 | Saints |
-| 14 | 2 | Rashan Gary | 78.45 | 70.88 | 79.98 | 456 | Packers |
-| 15 | 3 | Uchenna Nwosu | 77.96 | 67.66 | 83.79 | 356 | Chargers |
-| 16 | 4 | Bradley Chubb | 77.55 | 71.73 | 82.05 | 741 | Broncos |
-| 17 | 5 | Chase Winovich | 76.29 | 66.30 | 78.78 | 593 | Patriots |
-| 18 | 6 | Trey Flowers | 76.22 | 77.94 | 76.10 | 309 | Lions |
-| 19 | 7 | Chase Young | 75.54 | 88.32 | 63.89 | 770 | Commanders |
-| 20 | 8 | Olivier Vernon | 74.45 | 74.47 | 74.24 | 805 | Browns |
-| 21 | 9 | Genard Avery | 74.37 | 65.00 | 84.78 | 126 | Eagles |
-| 22 | 10 | Andrew Van Ginkel | 74.29 | 69.41 | 73.37 | 479 | Dolphins |
-| 23 | 11 | Carlos Dunlap | 74.29 | 66.71 | 76.32 | 593 | Seahawks |
-
-### Starter (66 players)
+### Good (10 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 24 | 1 | Matthew Judon | 73.97 | 59.36 | 80.58 | 563 | Ravens |
-| 25 | 2 | Trey Hendrickson | 73.96 | 68.52 | 77.17 | 558 | Saints |
-| 26 | 3 | Jadeveon Clowney | 73.96 | 86.36 | 66.85 | 425 | Titans |
-| 27 | 4 | Carl Lawson | 73.61 | 68.27 | 76.13 | 723 | Bengals |
-| 28 | 5 | Terrell Lewis | 73.19 | 72.20 | 78.02 | 124 | Rams |
-| 29 | 6 | Randy Gregory | 73.05 | 74.48 | 71.48 | 270 | Cowboys |
-| 30 | 7 | Ryan Kerrigan | 72.94 | 55.13 | 81.90 | 398 | Commanders |
-| 31 | 8 | Markus Golden | 72.93 | 57.95 | 79.79 | 591 | Cardinals |
-| 32 | 9 | Pernell McPhee | 72.87 | 63.63 | 78.83 | 458 | Ravens |
-| 33 | 10 | Frank Clark | 72.52 | 62.34 | 76.29 | 759 | Chiefs |
-| 34 | 11 | Chandler Jones | 72.24 | 66.89 | 77.38 | 286 | Cardinals |
-| 35 | 12 | Melvin Ingram III | 71.93 | 66.64 | 76.92 | 361 | Chargers |
-| 36 | 13 | Shaq Lawson | 71.01 | 67.19 | 71.16 | 571 | Dolphins |
-| 37 | 14 | Jerry Hughes | 70.96 | 61.21 | 73.81 | 629 | Bills |
-| 38 | 15 | Tyus Bowser | 70.49 | 62.63 | 71.77 | 540 | Ravens |
-| 39 | 16 | Deatrich Wise Jr. | 70.49 | 68.81 | 68.08 | 565 | Patriots |
-| 40 | 17 | Derek Barnett | 70.49 | 69.65 | 71.15 | 535 | Eagles |
-| 41 | 18 | Yannick Ngakoue | 70.44 | 59.90 | 74.14 | 657 | Ravens |
-| 42 | 19 | J.J. Watt | 70.10 | 61.05 | 74.46 | 1013 | Texans |
-| 43 | 20 | Robert Quinn | 70.09 | 55.92 | 76.52 | 548 | Bears |
-| 44 | 21 | Arik Armstead | 70.05 | 65.53 | 68.89 | 750 | 49ers |
-| 45 | 22 | Clelin Ferrell | 69.86 | 81.55 | 61.55 | 461 | Raiders |
-| 46 | 23 | Mario Addison | 69.71 | 52.40 | 77.91 | 606 | Bills |
-| 47 | 24 | Jacob Martin | 69.70 | 59.59 | 73.94 | 375 | Texans |
-| 48 | 25 | Dante Fowler Jr. | 68.89 | 62.14 | 70.48 | 601 | Falcons |
-| 49 | 26 | Everson Griffen | 68.78 | 56.95 | 74.90 | 528 | Lions |
-| 50 | 27 | Carl Granderson | 68.46 | 63.42 | 72.21 | 291 | Saints |
-| 51 | 28 | Samson Ebukam | 68.38 | 60.66 | 69.36 | 364 | Rams |
-| 52 | 29 | Sam Hubbard | 68.21 | 62.94 | 69.44 | 665 | Bengals |
-| 53 | 30 | Bud Dupree | 68.18 | 63.34 | 69.84 | 609 | Steelers |
-| 54 | 31 | Preston Smith | 68.06 | 58.01 | 70.59 | 814 | Packers |
-| 55 | 32 | Josh Sweat | 67.94 | 64.47 | 68.79 | 422 | Eagles |
-| 56 | 33 | Jabaal Sheard | 67.91 | 64.11 | 70.34 | 275 | Giants |
-| 57 | 34 | Ifeadi Odenigbo | 67.79 | 63.18 | 67.21 | 696 | Vikings |
-| 58 | 35 | Josh Uche | 67.43 | 67.97 | 70.21 | 179 | Patriots |
-| 59 | 36 | Vinny Curry | 67.40 | 56.95 | 73.63 | 310 | Eagles |
-| 60 | 37 | Emmanuel Ogbah | 67.39 | 66.84 | 65.88 | 792 | Dolphins |
-| 61 | 38 | Frankie Luvu | 67.34 | 62.50 | 69.54 | 257 | Jets |
-| 62 | 39 | Maxx Crosby | 67.16 | 60.29 | 67.57 | 906 | Raiders |
-| 63 | 40 | Alton Robinson | 67.05 | 63.32 | 67.46 | 336 | Seahawks |
-| 64 | 41 | Jason Pierre-Paul | 67.01 | 57.86 | 70.82 | 943 | Buccaneers |
-| 65 | 42 | Whitney Mercilus | 66.87 | 54.02 | 72.84 | 614 | Texans |
-| 66 | 43 | Jordan Jenkins | 66.61 | 59.47 | 69.91 | 528 | Jets |
-| 67 | 44 | Romeo Okwara | 66.54 | 64.91 | 64.29 | 748 | Lions |
-| 68 | 45 | Kerry Hyder Jr. | 66.01 | 54.89 | 71.14 | 722 | 49ers |
-| 69 | 46 | Aaron Lynch | 65.99 | 54.49 | 74.27 | 152 | Jaguars |
-| 70 | 47 | Ogbo Okoronkwo | 65.90 | 62.50 | 70.64 | 158 | Rams |
-| 71 | 48 | Jeremiah Attaochu | 65.83 | 56.40 | 72.31 | 414 | Broncos |
-| 72 | 49 | Alex Highsmith | 65.07 | 60.67 | 63.83 | 440 | Steelers |
-| 73 | 50 | Malik Reed | 64.74 | 60.71 | 63.65 | 785 | Broncos |
-| 74 | 51 | Harold Landry III | 64.15 | 59.67 | 62.97 | 1050 | Titans |
-| 75 | 52 | Aldon Smith | 63.99 | 54.86 | 67.38 | 809 | Cowboys |
-| 76 | 53 | Jihad Ward | 63.52 | 54.76 | 68.32 | 271 | Ravens |
-| 77 | 54 | Justin Hollins | 63.41 | 58.66 | 63.20 | 349 | Rams |
-| 78 | 55 | Devon Kennard | 63.31 | 54.59 | 66.72 | 362 | Cardinals |
-| 79 | 56 | Kyler Fackrell | 63.19 | 51.07 | 69.18 | 608 | Giants |
-| 80 | 57 | Vic Beasley Jr. | 62.93 | 55.24 | 67.02 | 199 | Raiders |
-| 81 | 58 | Jaylon Ferguson | 62.91 | 59.64 | 63.01 | 303 | Ravens |
-| 82 | 59 | Alex Okafor | 62.72 | 53.26 | 69.35 | 283 | Chiefs |
-| 83 | 60 | Barkevious Mingo | 62.66 | 49.88 | 69.52 | 391 | Bears |
-| 84 | 61 | Efe Obada | 62.41 | 55.66 | 63.99 | 415 | Panthers |
-| 85 | 62 | Adrian Clayborn | 62.20 | 52.00 | 66.08 | 404 | Browns |
-| 86 | 63 | Bruce Irvin | 62.14 | 48.74 | 75.14 | 121 | Seahawks |
-| 87 | 64 | Trent Murphy | 62.12 | 55.23 | 66.29 | 343 | Bills |
-| 88 | 65 | Mike Danna | 62.07 | 58.89 | 63.15 | 334 | Chiefs |
-| 89 | 66 | Carter Coughlin | 62.02 | 57.26 | 67.27 | 193 | Giants |
+| 13 | 1 | Rashan Gary | 77.34 | 68.11 | 79.98 | 456 | Packers |
+| 14 | 2 | Bradley Chubb | 77.32 | 71.15 | 82.05 | 741 | Broncos |
+| 15 | 3 | Marcus Davenport | 77.12 | 81.97 | 73.89 | 374 | Saints |
+| 16 | 4 | Uchenna Nwosu | 76.91 | 65.05 | 83.79 | 356 | Chargers |
+| 17 | 5 | Chase Winovich | 75.91 | 65.36 | 78.78 | 593 | Patriots |
+| 18 | 6 | Chase Young | 75.19 | 87.44 | 63.89 | 770 | Commanders |
+| 19 | 7 | Trey Flowers | 74.55 | 73.78 | 76.10 | 309 | Lions |
+| 20 | 8 | Olivier Vernon | 74.42 | 74.39 | 74.24 | 805 | Browns |
+| 21 | 9 | Carlos Dunlap | 74.05 | 66.11 | 76.32 | 593 | Seahawks |
+| 22 | 10 | Matthew Judon | 74.02 | 59.47 | 80.58 | 563 | Ravens |
 
-### Rotation/backup (51 players)
+### Starter (68 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 90 | 1 | A.J. Epenesa | 61.97 | 60.41 | 60.93 | 291 | Bills |
-| 91 | 2 | Lorenzo Carter | 61.93 | 60.83 | 64.75 | 234 | Giants |
-| 92 | 3 | Derek Rivers | 61.93 | 52.78 | 68.03 | 115 | Rams |
-| 93 | 4 | John Simon | 61.60 | 49.86 | 66.29 | 702 | Patriots |
-| 94 | 5 | Tarell Basham | 61.44 | 59.45 | 60.26 | 734 | Jets |
-| 95 | 6 | Dion Jordan | 61.09 | 53.63 | 67.00 | 375 | 49ers |
-| 96 | 7 | Yetur Gross-Matos | 60.99 | 59.02 | 62.30 | 377 | Panthers |
-| 97 | 8 | Benson Mayowa | 60.93 | 54.18 | 63.34 | 571 | Seahawks |
-| 98 | 9 | Oshane Ximines | 60.63 | 59.50 | 65.04 | 110 | Giants |
-| 99 | 10 | James Vaughters | 60.47 | 54.95 | 62.06 | 243 | Bears |
-| 100 | 11 | Anthony Nelson | 60.41 | 68.81 | 53.38 | 324 | Buccaneers |
-| 101 | 12 | Carl Nassib | 60.23 | 57.67 | 59.66 | 463 | Raiders |
-| 102 | 13 | Chris Smith | 59.92 | 54.48 | 63.54 | 115 | Raiders |
-| 103 | 14 | Damontre Moore | 59.69 | 59.56 | 66.12 | 184 | Seahawks |
-| 104 | 15 | Dawuane Smoot | 59.59 | 56.67 | 59.04 | 665 | Jaguars |
-| 105 | 16 | Charles Harris | 58.49 | 58.25 | 57.71 | 289 | Falcons |
-| 106 | 17 | D.J. Wonnum | 58.19 | 56.20 | 57.44 | 471 | Vikings |
-| 107 | 18 | Khalid Kareem | 58.19 | 56.51 | 55.15 | 259 | Bengals |
-| 108 | 19 | Cassius Marsh | 58.15 | 50.22 | 63.43 | 151 | Steelers |
-| 109 | 20 | Bryce Huff | 58.09 | 56.28 | 57.22 | 296 | Jets |
-| 110 | 21 | Al-Quadin Muhammad | 57.90 | 57.48 | 54.21 | 579 | Colts |
-| 111 | 22 | Ryan Anderson | 57.82 | 54.83 | 59.92 | 146 | Commanders |
-| 112 | 23 | K'Lavon Chaisson | 57.74 | 55.71 | 54.92 | 569 | Jaguars |
-| 113 | 24 | Kamalei Correa | 57.71 | 51.74 | 62.08 | 197 | Jaguars |
-| 114 | 25 | Alex Barrett | 57.38 | 58.34 | 63.44 | 120 | 49ers |
-| 115 | 26 | Arden Key | 57.00 | 59.33 | 55.13 | 435 | Raiders |
-| 116 | 27 | Ben Banogu | 56.92 | 54.12 | 59.57 | 100 | Colts |
-| 117 | 28 | Anthony Chickillo | 56.87 | 51.31 | 60.58 | 164 | Broncos |
-| 118 | 29 | Kyle Phillips | 56.79 | 59.31 | 57.20 | 171 | Jets |
-| 119 | 30 | Dorance Armstrong | 56.70 | 54.23 | 54.69 | 368 | Cowboys |
-| 120 | 31 | Derick Roberson | 56.58 | 55.29 | 63.95 | 248 | Titans |
-| 121 | 32 | Isaac Rochell | 56.49 | 54.15 | 53.89 | 438 | Chargers |
-| 122 | 33 | Jordan Willis | 56.25 | 58.57 | 56.37 | 229 | 49ers |
-| 123 | 34 | Stephen Weatherly | 56.13 | 52.96 | 57.72 | 358 | Panthers |
-| 124 | 35 | Porter Gustin | 56.04 | 59.26 | 54.93 | 326 | Browns |
-| 125 | 36 | Tanoh Kpassagnon | 55.84 | 54.02 | 54.36 | 720 | Chiefs |
-| 126 | 37 | Darryl Johnson | 55.71 | 54.14 | 53.63 | 225 | Bills |
-| 127 | 38 | Marquis Haynes Sr. | 55.67 | 53.08 | 57.82 | 390 | Panthers |
-| 128 | 39 | Zach Allen | 55.60 | 52.75 | 55.28 | 505 | Cardinals |
-| 129 | 40 | Tashawn Bower | 54.13 | 53.98 | 61.32 | 137 | Patriots |
-| 130 | 41 | Jonathan Greenard | 53.75 | 55.09 | 52.86 | 265 | Texans |
-| 131 | 42 | Steven Means | 53.61 | 47.44 | 55.22 | 646 | Falcons |
-| 132 | 43 | Christian Jones | 52.37 | 45.55 | 52.75 | 510 | Lions |
-| 133 | 44 | Shilique Calhoun | 51.78 | 49.08 | 54.73 | 256 | Patriots |
-| 134 | 45 | Adam Gotsis | 51.42 | 44.49 | 51.88 | 579 | Jaguars |
-| 135 | 46 | Amani Bledsoe | 51.29 | 52.54 | 48.38 | 312 | Bengals |
-| 136 | 47 | Austin Larkin | 50.62 | 52.98 | 55.29 | 127 | Panthers |
-| 137 | 48 | Austin Bryant | 50.37 | 58.24 | 52.16 | 212 | Lions |
-| 138 | 49 | Olasunkanmi Adeniyi | 50.26 | 52.29 | 47.88 | 146 | Steelers |
-| 139 | 50 | Kylie Fitts | 47.33 | 52.14 | 48.60 | 140 | Cardinals |
-| 140 | 51 | Jabari Zuniga | 46.09 | 51.32 | 46.77 | 103 | Jets |
+| 23 | 1 | Carl Lawson | 73.41 | 67.77 | 76.13 | 723 | Bengals |
+| 24 | 2 | Andrew Van Ginkel | 73.40 | 67.19 | 73.37 | 479 | Dolphins |
+| 25 | 3 | Trey Hendrickson | 73.36 | 67.03 | 77.17 | 558 | Saints |
+| 26 | 4 | Ryan Kerrigan | 73.30 | 56.02 | 81.90 | 398 | Commanders |
+| 27 | 5 | Genard Avery | 73.17 | 62.00 | 84.78 | 126 | Eagles |
+| 28 | 6 | Markus Golden | 73.01 | 58.14 | 79.79 | 591 | Cardinals |
+| 29 | 7 | Pernell McPhee | 72.65 | 63.08 | 78.83 | 458 | Ravens |
+| 30 | 8 | Frank Clark | 72.50 | 62.29 | 76.29 | 759 | Chiefs |
+| 31 | 9 | Jadeveon Clowney | 72.19 | 81.93 | 66.85 | 425 | Titans |
+| 32 | 10 | Chandler Jones | 71.57 | 65.20 | 77.38 | 286 | Cardinals |
+| 33 | 11 | Melvin Ingram III | 71.39 | 65.30 | 76.92 | 361 | Chargers |
+| 34 | 12 | Jerry Hughes | 70.92 | 61.12 | 73.81 | 629 | Bills |
+| 35 | 13 | Randy Gregory | 70.58 | 68.31 | 71.48 | 270 | Cowboys |
+| 36 | 14 | Shaq Lawson | 70.54 | 66.00 | 71.16 | 571 | Dolphins |
+| 37 | 15 | Yannick Ngakoue | 70.45 | 59.91 | 74.14 | 657 | Ravens |
+| 38 | 16 | Tyus Bowser | 70.29 | 62.13 | 71.77 | 540 | Ravens |
+| 39 | 17 | Robert Quinn | 70.27 | 56.37 | 76.52 | 548 | Bears |
+| 40 | 18 | Terrell Lewis | 70.26 | 64.88 | 78.02 | 124 | Rams |
+| 41 | 19 | J.J. Watt | 70.10 | 61.05 | 74.46 | 1013 | Texans |
+| 42 | 20 | Arik Armstead | 69.99 | 65.39 | 68.89 | 750 | 49ers |
+| 43 | 21 | Mario Addison | 69.96 | 53.04 | 77.91 | 606 | Bills |
+| 44 | 22 | Deatrich Wise Jr. | 69.89 | 67.31 | 68.08 | 565 | Patriots |
+| 45 | 23 | Derek Barnett | 69.75 | 67.79 | 71.15 | 535 | Eagles |
+| 46 | 24 | Jacob Martin | 69.75 | 59.72 | 73.94 | 375 | Texans |
+| 47 | 25 | Everson Griffen | 68.92 | 57.31 | 74.90 | 528 | Lions |
+| 48 | 26 | Dante Fowler Jr. | 68.82 | 61.96 | 70.48 | 601 | Falcons |
+| 49 | 27 | Samson Ebukam | 68.29 | 60.44 | 69.36 | 364 | Rams |
+| 50 | 28 | Sam Hubbard | 68.09 | 62.65 | 69.44 | 665 | Bengals |
+| 51 | 29 | Bud Dupree | 68.07 | 63.06 | 69.84 | 609 | Steelers |
+| 52 | 30 | Preston Smith | 68.06 | 58.01 | 70.59 | 814 | Packers |
+| 53 | 31 | Carl Granderson | 67.91 | 62.04 | 72.21 | 291 | Saints |
+| 54 | 32 | Ifeadi Odenigbo | 67.73 | 63.03 | 67.21 | 696 | Vikings |
+| 55 | 33 | Clelin Ferrell | 67.70 | 76.16 | 61.55 | 461 | Raiders |
+| 56 | 34 | Vinny Curry | 67.68 | 57.65 | 73.63 | 310 | Eagles |
+| 57 | 35 | Jabaal Sheard | 67.49 | 63.07 | 70.34 | 275 | Giants |
+| 58 | 36 | Josh Sweat | 67.44 | 63.21 | 68.79 | 422 | Eagles |
+| 59 | 37 | Emmanuel Ogbah | 67.35 | 66.72 | 65.88 | 792 | Dolphins |
+| 60 | 38 | Aaron Lynch | 67.24 | 57.63 | 74.27 | 152 | Jaguars |
+| 61 | 39 | Maxx Crosby | 67.16 | 60.29 | 67.57 | 906 | Raiders |
+| 62 | 40 | Whitney Mercilus | 67.06 | 54.50 | 72.84 | 614 | Texans |
+| 63 | 41 | Jason Pierre-Paul | 67.01 | 57.86 | 70.82 | 943 | Buccaneers |
+| 64 | 42 | Frankie Luvu | 66.90 | 61.40 | 69.54 | 257 | Jets |
+| 65 | 43 | Jordan Jenkins | 66.65 | 59.57 | 69.91 | 528 | Jets |
+| 66 | 44 | Alton Robinson | 66.58 | 62.13 | 67.46 | 336 | Seahawks |
+| 67 | 45 | Romeo Okwara | 66.45 | 64.69 | 64.29 | 748 | Lions |
+| 68 | 46 | Kerry Hyder Jr. | 66.14 | 55.21 | 71.14 | 722 | 49ers |
+| 69 | 47 | Jeremiah Attaochu | 66.08 | 57.03 | 72.31 | 414 | Broncos |
+| 70 | 48 | Josh Uche | 65.73 | 63.72 | 70.21 | 179 | Patriots |
+| 71 | 49 | Ogbo Okoronkwo | 65.34 | 61.10 | 70.64 | 158 | Rams |
+| 72 | 50 | Alex Highsmith | 64.99 | 60.49 | 63.83 | 440 | Steelers |
+| 73 | 51 | Malik Reed | 64.74 | 60.69 | 63.65 | 785 | Broncos |
+| 74 | 52 | Jihad Ward | 64.41 | 56.99 | 68.32 | 271 | Ravens |
+| 75 | 53 | Harold Landry III | 64.15 | 59.67 | 62.97 | 1050 | Titans |
+| 76 | 54 | Aldon Smith | 64.00 | 54.89 | 67.38 | 809 | Cowboys |
+| 77 | 55 | Bruce Irvin | 63.76 | 52.79 | 75.14 | 121 | Seahawks |
+| 78 | 56 | Devon Kennard | 63.74 | 55.68 | 66.72 | 362 | Cardinals |
+| 79 | 57 | Kyler Fackrell | 63.68 | 52.31 | 69.18 | 608 | Giants |
+| 80 | 58 | Derek Rivers | 63.66 | 57.11 | 68.03 | 115 | Rams |
+| 81 | 59 | Justin Hollins | 63.60 | 59.13 | 63.20 | 349 | Rams |
+| 82 | 60 | Vic Beasley Jr. | 63.51 | 56.69 | 67.02 | 199 | Raiders |
+| 83 | 61 | Barkevious Mingo | 63.42 | 51.76 | 69.52 | 391 | Bears |
+| 84 | 62 | Alex Okafor | 63.39 | 54.93 | 69.35 | 283 | Chiefs |
+| 85 | 63 | Jaylon Ferguson | 62.97 | 59.78 | 63.01 | 303 | Ravens |
+| 86 | 64 | Efe Obada | 62.91 | 56.91 | 63.99 | 415 | Panthers |
+| 87 | 65 | Adrian Clayborn | 62.77 | 53.43 | 66.08 | 404 | Browns |
+| 88 | 66 | Carter Coughlin | 62.58 | 58.67 | 67.27 | 193 | Giants |
+| 89 | 67 | Trent Murphy | 62.52 | 56.24 | 66.29 | 343 | Bills |
+| 90 | 68 | Mike Danna | 62.23 | 59.29 | 63.15 | 334 | Chiefs |
+
+### Rotation/backup (50 players)
+
+| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
+|---:|---:|---|---:|---:|---:|---:|---|
+| 91 | 1 | Dion Jordan | 61.92 | 55.69 | 67.00 | 375 | 49ers |
+| 92 | 2 | A.J. Epenesa | 61.90 | 60.24 | 60.93 | 291 | Bills |
+| 93 | 3 | Lorenzo Carter | 61.78 | 60.44 | 64.75 | 234 | Giants |
+| 94 | 4 | John Simon | 61.78 | 50.31 | 66.29 | 702 | Patriots |
+| 95 | 5 | Tarell Basham | 61.44 | 59.47 | 60.26 | 734 | Jets |
+| 96 | 6 | James Vaughters | 61.39 | 57.25 | 62.06 | 243 | Bears |
+| 97 | 7 | Chris Smith | 61.24 | 57.79 | 63.54 | 115 | Raiders |
+| 98 | 8 | Benson Mayowa | 61.16 | 54.76 | 63.34 | 571 | Seahawks |
+| 99 | 9 | Yetur Gross-Matos | 61.12 | 59.34 | 62.30 | 377 | Panthers |
+| 100 | 10 | Oshane Ximines | 60.75 | 59.80 | 65.04 | 110 | Giants |
+| 101 | 11 | Carl Nassib | 60.47 | 58.25 | 59.66 | 463 | Raiders |
+| 102 | 12 | Cassius Marsh | 60.38 | 55.80 | 63.43 | 151 | Steelers |
+| 103 | 13 | Damontre Moore | 59.78 | 59.79 | 66.12 | 184 | Seahawks |
+| 104 | 14 | Dawuane Smoot | 59.72 | 57.00 | 59.04 | 665 | Jaguars |
+| 105 | 15 | Kamalei Correa | 59.40 | 55.95 | 62.08 | 197 | Jaguars |
+| 106 | 16 | Anthony Nelson | 59.10 | 65.54 | 53.38 | 324 | Buccaneers |
+| 107 | 17 | Ryan Anderson | 59.02 | 57.82 | 59.92 | 146 | Commanders |
+| 108 | 18 | Khalid Kareem | 58.81 | 58.04 | 55.15 | 259 | Bengals |
+| 109 | 19 | Anthony Chickillo | 58.79 | 56.11 | 60.58 | 164 | Broncos |
+| 110 | 20 | Charles Harris | 58.77 | 58.96 | 57.71 | 289 | Falcons |
+| 111 | 21 | Bryce Huff | 58.69 | 57.76 | 57.22 | 296 | Jets |
+| 112 | 22 | D.J. Wonnum | 58.56 | 57.12 | 57.44 | 471 | Vikings |
+| 113 | 23 | Ben Banogu | 58.33 | 57.65 | 59.57 | 100 | Colts |
+| 114 | 24 | Al-Quadin Muhammad | 58.06 | 57.88 | 54.21 | 579 | Colts |
+| 115 | 25 | K'Lavon Chaisson | 58.02 | 56.43 | 54.92 | 569 | Jaguars |
+| 116 | 26 | Alex Barrett | 57.78 | 59.34 | 63.44 | 120 | 49ers |
+| 117 | 27 | Dorance Armstrong | 57.46 | 56.13 | 54.69 | 368 | Cowboys |
+| 118 | 28 | Derick Roberson | 57.42 | 57.41 | 63.95 | 248 | Titans |
+| 119 | 29 | Isaac Rochell | 57.12 | 55.72 | 53.89 | 438 | Chargers |
+| 120 | 30 | Stephen Weatherly | 57.08 | 55.35 | 57.72 | 358 | Panthers |
+| 121 | 31 | Arden Key | 57.07 | 59.51 | 55.13 | 435 | Raiders |
+| 122 | 32 | Kyle Phillips | 56.94 | 59.68 | 57.20 | 171 | Jets |
+| 123 | 33 | Darryl Johnson | 56.83 | 56.93 | 53.63 | 225 | Bills |
+| 124 | 34 | Marquis Haynes Sr. | 56.53 | 55.23 | 57.82 | 390 | Panthers |
+| 125 | 35 | Jordan Willis | 56.52 | 59.24 | 56.37 | 229 | 49ers |
+| 126 | 36 | Zach Allen | 56.22 | 54.31 | 55.28 | 505 | Cardinals |
+| 127 | 37 | Porter Gustin | 56.15 | 59.53 | 54.93 | 326 | Browns |
+| 128 | 38 | Tanoh Kpassagnon | 56.00 | 54.40 | 54.36 | 720 | Chiefs |
+| 129 | 39 | Tashawn Bower | 55.56 | 57.54 | 61.32 | 137 | Patriots |
+| 130 | 40 | Jonathan Greenard | 54.60 | 57.21 | 52.86 | 265 | Texans |
+| 131 | 41 | Steven Means | 54.17 | 48.85 | 55.22 | 646 | Falcons |
+| 132 | 42 | Shilique Calhoun | 53.71 | 53.90 | 54.73 | 256 | Patriots |
+| 133 | 43 | Christian Jones | 53.59 | 48.60 | 52.75 | 510 | Lions |
+| 134 | 44 | Amani Bledsoe | 52.44 | 55.40 | 48.38 | 312 | Bengals |
+| 135 | 45 | Adam Gotsis | 52.42 | 46.97 | 51.88 | 579 | Jaguars |
+| 136 | 46 | Austin Larkin | 52.30 | 57.19 | 55.29 | 127 | Panthers |
+| 137 | 47 | Olasunkanmi Adeniyi | 52.05 | 56.75 | 47.88 | 146 | Steelers |
+| 138 | 48 | Austin Bryant | 50.72 | 59.11 | 52.16 | 212 | Lions |
+| 139 | 49 | Kylie Fitts | 49.17 | 56.75 | 48.60 | 140 | Cardinals |
+| 140 | 50 | Jabari Zuniga | 48.17 | 56.53 | 46.77 | 103 | Jets |
 
 ## G — Guard
 
 - **Season used:** `2020`
 - **PFF column (model anchor):** `grades_offense` · **Snap column (volume filter):** `snap_counts_offense`
 
-### Elite (14 players)
+### Elite (13 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 1 | 1 | Zack Martin | 96.00 | 91.30 | 94.97 | 618 | Cowboys |
-| 2 | 2 | Wyatt Teller | 95.25 | 92.70 | 92.78 | 694 | Browns |
-| 3 | 3 | Ali Marpet | 93.44 | 86.70 | 93.77 | 849 | Buccaneers |
+| 1 | 1 | Zack Martin | 94.44 | 87.40 | 94.97 | 618 | Cowboys |
+| 2 | 2 | Wyatt Teller | 93.15 | 87.45 | 92.78 | 694 | Browns |
+| 3 | 3 | Ali Marpet | 92.98 | 85.55 | 93.77 | 849 | Buccaneers |
 | 4 | 4 | Quenton Nelson | 92.29 | 86.20 | 92.18 | 1082 | Colts |
 | 5 | 5 | Joel Bitonio | 90.52 | 84.60 | 90.30 | 1061 | Browns |
-| 6 | 6 | Shaq Mason | 90.48 | 85.40 | 89.70 | 782 | Patriots |
-| 7 | 7 | Brandon Scherff | 89.22 | 84.10 | 88.47 | 857 | Commanders |
+| 6 | 6 | Shaq Mason | 89.82 | 83.74 | 89.70 | 782 | Patriots |
+| 7 | 7 | Brandon Scherff | 88.83 | 83.13 | 88.47 | 857 | Commanders |
 | 8 | 8 | Laken Tomlinson | 85.65 | 78.80 | 86.05 | 1094 | 49ers |
 | 9 | 9 | Chris Lindstrom | 84.49 | 77.10 | 85.25 | 1122 | Falcons |
-| 10 | 10 | Joe Thuney | 81.82 | 74.20 | 82.73 | 980 | Patriots |
-| 11 | 11 | Damien Lewis | 81.63 | 70.20 | 85.09 | 967 | Seahawks |
+| 10 | 10 | Joe Thuney | 81.81 | 74.18 | 82.73 | 980 | Patriots |
+| 11 | 11 | Damien Lewis | 81.60 | 70.11 | 85.09 | 967 | Seahawks |
 | 12 | 12 | Austin Corbett | 80.48 | 70.90 | 82.70 | 1120 | Rams |
 | 13 | 13 | Connor Williams | 80.11 | 71.20 | 81.89 | 1146 | Cowboys |
-| 14 | 14 | Rodger Saffold | 80.02 | 70.20 | 82.40 | 872 | Titans |
 
 ### Good (24 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 15 | 1 | David Edwards | 79.11 | 70.30 | 80.81 | 1006 | Rams |
-| 16 | 2 | Mike Iupati | 79.04 | 67.80 | 82.36 | 498 | Seahawks |
-| 17 | 3 | Nate Davis | 78.75 | 69.70 | 80.62 | 1074 | Titans |
-| 18 | 4 | Graham Glasgow | 78.64 | 68.50 | 81.24 | 764 | Broncos |
-| 19 | 5 | Tom Compton | 78.45 | 68.10 | 81.19 | 148 | 49ers |
-| 20 | 6 | Wes Schweitzer | 77.90 | 69.00 | 79.66 | 990 | Commanders |
-| 21 | 7 | Oday Aboushi | 77.89 | 66.60 | 81.25 | 622 | Lions |
-| 22 | 8 | Elgton Jenkins | 77.60 | 67.70 | 80.04 | 1037 | Packers |
-| 23 | 9 | Alex Cappa | 77.48 | 69.00 | 78.97 | 1070 | Buccaneers |
-| 24 | 10 | A.J. Cann | 77.40 | 69.00 | 78.84 | 919 | Jaguars |
-| 25 | 11 | Nick Allegretti | 77.17 | 66.20 | 80.31 | 694 | Chiefs |
-| 26 | 12 | Alex Lewis | 77.05 | 66.60 | 79.85 | 544 | Jets |
-| 27 | 13 | Mark Glowinski | 76.40 | 67.30 | 78.30 | 1090 | Colts |
-| 28 | 14 | Justin Pugh | 76.33 | 64.80 | 79.85 | 958 | Cardinals |
-| 29 | 15 | Jon Feliciano | 76.20 | 64.60 | 79.77 | 571 | Bills |
-| 30 | 16 | Andrew Norwell | 76.10 | 67.90 | 77.40 | 801 | Jaguars |
-| 31 | 17 | Kevin Zeitler | 75.71 | 65.90 | 78.09 | 1003 | Giants |
-| 32 | 18 | Lucas Patrick | 75.53 | 64.80 | 78.52 | 939 | Packers |
-| 33 | 19 | Germain Ifedi | 75.22 | 65.00 | 77.86 | 1066 | Bears |
-| 34 | 20 | Bradley Bozeman | 74.90 | 64.30 | 77.80 | 1017 | Ravens |
-| 35 | 21 | Kelechi Osemele | 74.74 | 59.80 | 80.53 | 282 | Chiefs |
-| 36 | 22 | Ereck Flowers | 74.68 | 65.90 | 76.36 | 857 | Dolphins |
-| 37 | 23 | Alex Redmond | 74.56 | 61.50 | 79.10 | 448 | Bengals |
-| 38 | 24 | James Daniels | 74.01 | 65.80 | 75.31 | 305 | Bears |
+| 14 | 1 | Rodger Saffold | 79.88 | 69.84 | 82.40 | 872 | Titans |
+| 15 | 2 | David Edwards | 79.11 | 70.30 | 80.81 | 1006 | Rams |
+| 16 | 3 | Nate Davis | 78.75 | 69.70 | 80.62 | 1074 | Titans |
+| 17 | 4 | Mike Iupati | 78.50 | 66.45 | 82.36 | 498 | Seahawks |
+| 18 | 5 | Graham Glasgow | 78.40 | 67.89 | 81.24 | 764 | Broncos |
+| 19 | 6 | Wes Schweitzer | 77.90 | 69.00 | 79.66 | 990 | Commanders |
+| 20 | 7 | Elgton Jenkins | 77.60 | 67.70 | 80.04 | 1037 | Packers |
+| 21 | 8 | Alex Cappa | 77.48 | 69.00 | 78.97 | 1070 | Buccaneers |
+| 22 | 9 | Oday Aboushi | 77.35 | 65.24 | 81.25 | 622 | Lions |
+| 23 | 10 | A.J. Cann | 77.33 | 68.82 | 78.84 | 919 | Jaguars |
+| 24 | 11 | Nick Allegretti | 76.77 | 65.20 | 80.31 | 694 | Chiefs |
+| 25 | 12 | Tom Compton | 76.51 | 63.24 | 81.19 | 148 | 49ers |
+| 26 | 13 | Mark Glowinski | 76.40 | 67.30 | 78.30 | 1090 | Colts |
+| 27 | 14 | Alex Lewis | 76.37 | 64.90 | 79.85 | 544 | Jets |
+| 28 | 15 | Justin Pugh | 76.31 | 64.76 | 79.85 | 958 | Cardinals |
+| 29 | 16 | Andrew Norwell | 75.91 | 67.43 | 77.40 | 801 | Jaguars |
+| 30 | 17 | Jon Feliciano | 75.76 | 63.50 | 79.77 | 571 | Bills |
+| 31 | 18 | Kevin Zeitler | 75.71 | 65.90 | 78.09 | 1003 | Giants |
+| 32 | 19 | Lucas Patrick | 75.49 | 64.69 | 78.52 | 939 | Packers |
+| 33 | 20 | Germain Ifedi | 75.22 | 65.00 | 77.86 | 1066 | Bears |
+| 34 | 21 | Bradley Bozeman | 74.90 | 64.30 | 77.80 | 1017 | Ravens |
+| 35 | 22 | Kelechi Osemele | 74.76 | 59.86 | 80.53 | 282 | Chiefs |
+| 36 | 23 | Ereck Flowers | 74.52 | 65.50 | 76.36 | 857 | Dolphins |
+| 37 | 24 | Alex Redmond | 74.36 | 61.01 | 79.10 | 448 | Bengals |
 
-### Starter (36 players)
-
-| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
-|---:|---:|---|---:|---:|---:|---:|---|
-| 39 | 1 | Gabe Jackson | 73.77 | 63.70 | 76.32 | 1062 | Raiders |
-| 40 | 2 | Ike Boettger | 73.39 | 65.30 | 74.62 | 623 | Bills |
-| 41 | 3 | Connor McGovern | 72.72 | 61.70 | 75.90 | 606 | Cowboys |
-| 42 | 4 | Zach Fulton | 72.59 | 63.00 | 74.81 | 953 | Texans |
-| 43 | 5 | David DeCastro | 72.55 | 64.10 | 74.02 | 845 | Steelers |
-| 44 | 6 | John Miller | 72.38 | 61.20 | 75.66 | 910 | Panthers |
-| 45 | 7 | Andrus Peat | 72.22 | 61.20 | 75.40 | 766 | Saints |
-| 46 | 8 | Stefen Wisniewski | 71.81 | 61.20 | 74.72 | 209 | Chiefs |
-| 47 | 9 | Isaac Seumalo | 71.58 | 62.40 | 73.53 | 588 | Eagles |
-| 48 | 10 | Dalton Risner | 71.25 | 61.30 | 73.72 | 999 | Broncos |
-| 49 | 11 | Joe Dahl | 70.78 | 57.40 | 75.53 | 264 | Lions |
-| 50 | 12 | Kevin Dotson | 70.62 | 66.20 | 69.40 | 358 | Steelers |
-| 51 | 13 | Xavier Su'a-Filo | 70.48 | 59.10 | 73.90 | 293 | Bengals |
-| 52 | 14 | Quinton Spain | 70.47 | 56.70 | 75.48 | 720 | Bengals |
-| 53 | 15 | Jonah Jackson | 70.04 | 57.00 | 74.56 | 1006 | Lions |
-| 54 | 16 | Ryan Groy | 69.96 | 57.70 | 73.96 | 271 | Chargers |
-| 55 | 17 | Michael Jordan | 69.61 | 55.70 | 74.72 | 731 | Bengals |
-| 56 | 18 | Will Hernandez | 69.43 | 58.10 | 72.81 | 525 | Giants |
-| 57 | 19 | Sua Opeta | 69.15 | 57.60 | 72.69 | 170 | Eagles |
-| 58 | 20 | Matt Pryor | 67.99 | 55.40 | 72.21 | 776 | Eagles |
-| 59 | 21 | Brian Winters | 67.77 | 54.60 | 72.39 | 618 | Bills |
-| 60 | 22 | James Carpenter | 67.74 | 56.10 | 71.34 | 826 | Falcons |
-| 61 | 23 | Senio Kelemete | 67.57 | 54.50 | 72.11 | 367 | Texans |
-| 62 | 24 | Ben Bartch | 67.45 | 58.50 | 69.25 | 219 | Jaguars |
-| 63 | 25 | Justin McCray | 67.45 | 54.80 | 71.71 | 156 | Falcons |
-| 64 | 26 | Andrew Wylie | 67.32 | 54.90 | 71.44 | 972 | Chiefs |
-| 65 | 27 | Cesar Ruiz | 67.28 | 58.60 | 68.90 | 744 | Saints |
-| 66 | 28 | Ben Powers | 66.09 | 59.40 | 66.38 | 513 | Ravens |
-| 67 | 29 | J.R. Sweezy | 66.00 | 52.50 | 70.83 | 643 | Cardinals |
-| 68 | 30 | Max Scharping | 65.86 | 52.10 | 70.87 | 454 | Texans |
-| 69 | 31 | Jordan Simmons | 65.14 | 51.60 | 70.00 | 593 | Seahawks |
-| 70 | 32 | Solomon Kindley | 65.05 | 51.30 | 70.05 | 748 | Dolphins |
-| 71 | 33 | Michael Schofield III | 64.94 | 50.30 | 70.54 | 270 | Panthers |
-| 72 | 34 | Forrest Lamp | 64.03 | 49.40 | 69.62 | 1174 | Chargers |
-| 73 | 35 | Pat Elflein | 63.71 | 48.00 | 70.01 | 419 | Jets |
-| 74 | 36 | John Simpson | 62.55 | 45.80 | 69.55 | 252 | Raiders |
-
-### Rotation/backup (10 players)
+### Starter (43 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 75 | 1 | Tyre Phillips | 61.84 | 47.10 | 67.50 | 418 | Ravens |
-| 76 | 2 | Dakota Dozier | 61.64 | 44.70 | 68.77 | 1083 | Vikings |
-| 77 | 3 | Jon Runyan | 61.56 | 53.80 | 62.56 | 160 | Packers |
-| 78 | 4 | Rashaad Coward | 61.53 | 46.20 | 67.59 | 333 | Bears |
-| 79 | 5 | Wes Martin | 60.88 | 44.80 | 67.44 | 339 | Commanders |
-| 80 | 6 | Austin Schlottmann | 58.72 | 39.80 | 67.17 | 269 | Broncos |
-| 81 | 7 | Netane Muti | 57.19 | 37.10 | 66.41 | 122 | Broncos |
-| 82 | 8 | Trai Turner | 56.60 | 34.80 | 66.97 | 536 | Chargers |
-| 83 | 9 | Shane Lemieux | 55.17 | 32.20 | 66.31 | 504 | Giants |
-| 84 | 10 | Dru Samia | 54.89 | 33.10 | 65.25 | 272 | Vikings |
+| 38 | 1 | Gabe Jackson | 73.77 | 63.70 | 76.32 | 1062 | Raiders |
+| 39 | 2 | James Daniels | 72.98 | 63.23 | 75.31 | 305 | Bears |
+| 40 | 3 | Ike Boettger | 72.96 | 64.22 | 74.62 | 623 | Bills |
+| 41 | 4 | Zach Fulton | 72.57 | 62.95 | 74.81 | 953 | Texans |
+| 42 | 5 | Connor McGovern | 72.57 | 61.33 | 75.90 | 606 | Cowboys |
+| 43 | 6 | David DeCastro | 72.48 | 63.92 | 74.02 | 845 | Steelers |
+| 44 | 7 | John Miller | 72.36 | 61.15 | 75.66 | 910 | Panthers |
+| 45 | 8 | Andrus Peat | 72.16 | 61.06 | 75.40 | 766 | Saints |
+| 46 | 9 | Stefen Wisniewski | 71.55 | 60.55 | 74.72 | 209 | Chiefs |
+| 47 | 10 | Isaac Seumalo | 71.36 | 61.85 | 73.53 | 588 | Eagles |
+| 48 | 11 | Joe Dahl | 71.28 | 58.65 | 75.53 | 264 | Lions |
+| 49 | 12 | Dalton Risner | 71.25 | 61.30 | 73.72 | 999 | Broncos |
+| 50 | 13 | Xavier Su'a-Filo | 70.64 | 59.51 | 73.90 | 293 | Bengals |
+| 51 | 14 | Quinton Spain | 70.58 | 56.99 | 75.48 | 720 | Bengals |
+| 52 | 15 | Ryan Groy | 70.39 | 58.79 | 73.96 | 271 | Chargers |
+| 53 | 16 | Jonah Jackson | 70.04 | 57.00 | 74.56 | 1006 | Lions |
+| 54 | 17 | Michael Jordan | 69.85 | 56.30 | 74.72 | 731 | Bengals |
+| 55 | 18 | Sua Opeta | 69.71 | 59.00 | 72.69 | 170 | Eagles |
+| 56 | 19 | Kevin Dotson | 69.64 | 63.74 | 69.40 | 358 | Steelers |
+| 57 | 20 | Will Hernandez | 69.63 | 58.61 | 72.81 | 525 | Giants |
+| 58 | 21 | Justin McCray | 68.69 | 57.92 | 71.71 | 156 | Falcons |
+| 59 | 22 | Senio Kelemete | 68.42 | 56.64 | 72.11 | 367 | Texans |
+| 60 | 23 | Brian Winters | 68.22 | 55.72 | 72.39 | 618 | Bills |
+| 61 | 24 | Matt Pryor | 68.19 | 55.92 | 72.21 | 776 | Eagles |
+| 62 | 25 | James Carpenter | 67.82 | 56.30 | 71.34 | 826 | Falcons |
+| 63 | 26 | Ben Bartch | 67.77 | 59.29 | 69.25 | 219 | Jaguars |
+| 64 | 27 | Cesar Ruiz | 67.35 | 58.78 | 68.90 | 744 | Saints |
+| 65 | 28 | Andrew Wylie | 67.34 | 54.93 | 71.44 | 972 | Chiefs |
+| 66 | 29 | Max Scharping | 66.88 | 54.64 | 70.87 | 454 | Texans |
+| 67 | 30 | Michael Schofield III | 66.79 | 54.92 | 70.54 | 270 | Panthers |
+| 68 | 31 | J.R. Sweezy | 66.34 | 53.36 | 70.83 | 643 | Cardinals |
+| 69 | 32 | Ben Powers | 66.16 | 59.57 | 66.38 | 513 | Ravens |
+| 70 | 33 | Jordan Simmons | 65.89 | 53.48 | 70.00 | 593 | Seahawks |
+| 71 | 34 | Solomon Kindley | 65.50 | 52.42 | 70.05 | 748 | Dolphins |
+| 72 | 35 | Pat Elflein | 65.37 | 52.17 | 70.01 | 419 | Jets |
+| 73 | 36 | John Simpson | 65.36 | 52.82 | 69.55 | 252 | Raiders |
+| 74 | 37 | Forrest Lamp | 64.03 | 49.40 | 69.62 | 1174 | Chargers |
+| 75 | 38 | Rashaad Coward | 63.85 | 51.98 | 67.59 | 333 | Bears |
+| 76 | 39 | Tyre Phillips | 63.64 | 51.60 | 67.50 | 418 | Ravens |
+| 77 | 40 | Wes Martin | 63.40 | 51.08 | 67.44 | 339 | Commanders |
+| 78 | 41 | Jon Runyan | 63.04 | 57.50 | 62.56 | 160 | Packers |
+| 79 | 42 | Netane Muti | 62.68 | 50.84 | 66.41 | 122 | Broncos |
+| 80 | 43 | Austin Schlottmann | 62.58 | 49.44 | 67.17 | 269 | Broncos |
+
+### Rotation/backup (4 players)
+
+| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
+|---:|---:|---|---:|---:|---:|---:|---|
+| 81 | 1 | Dakota Dozier | 61.64 | 44.70 | 68.77 | 1083 | Vikings |
+| 82 | 2 | Dru Samia | 59.99 | 45.86 | 65.25 | 272 | Vikings |
+| 83 | 3 | Trai Turner | 58.68 | 40.00 | 66.97 | 536 | Chargers |
+| 84 | 4 | Shane Lemieux | 58.33 | 40.11 | 66.31 | 504 | Giants |
 
 ## HB — Running Back
 
 - **Season used:** `2020`
 - **PFF column (model anchor):** `grades_offense` · **Snap column (volume filter):** `routes`
 
-### Elite (9 players)
+### Elite (4 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 1 | 1 | Nick Chubb | 87.66 | 86.70 | 84.13 | 158 | Browns |
-| 2 | 2 | Derrick Henry | 86.81 | 92.40 | 78.92 | 223 | Titans |
-| 3 | 3 | Dalvin Cook | 83.66 | 89.00 | 75.93 | 263 | Vikings |
-| 4 | 4 | Alvin Kamara | 83.31 | 82.20 | 79.88 | 345 | Saints |
-| 5 | 5 | Gus Edwards | 81.18 | 85.80 | 73.93 | 104 | Ravens |
-| 6 | 6 | Tony Pollard | 80.40 | 71.70 | 82.04 | 199 | Cowboys |
-| 7 | 7 | Austin Ekeler | 80.37 | 77.00 | 78.45 | 235 | Chargers |
-| 8 | 8 | Jonathan Taylor | 80.35 | 83.90 | 73.81 | 203 | Colts |
-| 9 | 9 | Aaron Jones | 80.21 | 79.40 | 76.58 | 253 | Packers |
+| 1 | 1 | Nick Chubb | 85.38 | 81.01 | 84.13 | 158 | Browns |
+| 2 | 2 | Derrick Henry | 83.78 | 84.82 | 78.92 | 223 | Titans |
+| 3 | 3 | Alvin Kamara | 83.06 | 81.57 | 79.88 | 345 | Saints |
+| 4 | 4 | Dalvin Cook | 82.49 | 86.08 | 75.93 | 263 | Vikings |
 
-### Good (12 players)
+### Good (14 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 10 | 1 | J.K. Dobbins | 79.29 | 71.50 | 80.31 | 217 | Ravens |
-| 11 | 2 | Chris Carson | 78.93 | 78.10 | 75.32 | 207 | Seahawks |
-| 12 | 3 | Kareem Hunt | 78.43 | 74.00 | 77.21 | 252 | Browns |
-| 13 | 4 | Josh Jacobs | 77.61 | 76.30 | 74.32 | 231 | Raiders |
-| 14 | 5 | Antonio Gibson | 77.45 | 80.90 | 70.99 | 182 | Commanders |
-| 15 | 6 | Darrell Henderson | 77.04 | 80.40 | 70.64 | 147 | Rams |
-| 16 | 7 | David Montgomery | 76.73 | 81.80 | 69.19 | 391 | Bears |
-| 17 | 8 | Clyde Edwards-Helaire | 76.50 | 75.30 | 73.14 | 286 | Chiefs |
-| 18 | 9 | James Robinson | 76.10 | 72.90 | 74.07 | 286 | Jaguars |
-| 19 | 10 | Ronald Jones | 74.74 | 73.60 | 71.34 | 190 | Buccaneers |
-| 20 | 11 | Devin Singletary | 74.54 | 66.70 | 75.60 | 318 | Bills |
-| 21 | 12 | Latavius Murray | 74.14 | 82.40 | 64.47 | 133 | Saints |
+| 5 | 1 | Austin Ekeler | 79.50 | 74.82 | 78.45 | 235 | Chargers |
+| 6 | 2 | Aaron Jones | 79.35 | 77.26 | 76.58 | 253 | Packers |
+| 7 | 3 | Tony Pollard | 79.11 | 68.47 | 82.04 | 199 | Cowboys |
+| 8 | 4 | J.K. Dobbins | 78.16 | 68.69 | 80.31 | 217 | Ravens |
+| 9 | 5 | Kareem Hunt | 77.80 | 72.44 | 77.21 | 252 | Browns |
+| 10 | 6 | Chris Carson | 77.80 | 75.26 | 75.32 | 207 | Seahawks |
+| 11 | 7 | Jonathan Taylor | 77.77 | 77.47 | 73.81 | 203 | Colts |
+| 12 | 8 | David Montgomery | 76.73 | 81.80 | 69.19 | 391 | Bears |
+| 13 | 9 | Gus Edwards | 76.26 | 73.50 | 73.93 | 104 | Ravens |
+| 14 | 10 | Josh Jacobs | 76.18 | 72.71 | 74.32 | 231 | Raiders |
+| 15 | 11 | Clyde Edwards-Helaire | 75.69 | 73.27 | 73.14 | 286 | Chiefs |
+| 16 | 12 | James Robinson | 75.42 | 71.19 | 74.07 | 286 | Jaguars |
+| 17 | 13 | Antonio Gibson | 74.88 | 74.46 | 70.99 | 182 | Commanders |
+| 18 | 14 | Devin Singletary | 74.31 | 66.13 | 75.60 | 318 | Bills |
 
-### Starter (43 players)
-
-| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
-|---:|---:|---|---:|---:|---:|---:|---|
-| 22 | 1 | Le'Veon Bell | 73.71 | 73.90 | 69.42 | 153 | Chiefs |
-| 23 | 2 | Nyheim Hines | 73.50 | 81.60 | 63.94 | 264 | Colts |
-| 24 | 3 | Miles Sanders | 73.29 | 63.00 | 75.98 | 295 | Eagles |
-| 25 | 4 | Myles Gaskin | 72.76 | 74.50 | 67.43 | 208 | Dolphins |
-| 26 | 5 | Zack Moss | 72.56 | 72.30 | 68.57 | 173 | Bills |
-| 27 | 6 | Rex Burkhead | 72.38 | 78.20 | 64.33 | 123 | Patriots |
-| 28 | 7 | Melvin Gordon III | 72.14 | 72.50 | 67.73 | 290 | Broncos |
-| 29 | 8 | Wayne Gallman | 71.87 | 71.10 | 68.22 | 160 | Giants |
-| 30 | 9 | Ezekiel Elliott | 71.47 | 65.30 | 71.42 | 387 | Cowboys |
-| 31 | 10 | Duke Johnson Jr. | 71.25 | 62.60 | 72.85 | 204 | Texans |
-| 32 | 11 | James Conner | 71.01 | 68.00 | 68.85 | 269 | Steelers |
-| 33 | 12 | D'Andre Swift | 70.94 | 69.40 | 67.80 | 226 | Lions |
-| 34 | 13 | Jerick McKinnon | 70.81 | 73.70 | 64.72 | 213 | 49ers |
-| 35 | 14 | Boston Scott | 70.37 | 68.20 | 67.65 | 211 | Eagles |
-| 36 | 15 | Devontae Booker | 70.32 | 68.70 | 67.23 | 105 | Raiders |
-| 37 | 16 | Mike Davis | 70.07 | 75.10 | 62.55 | 303 | Panthers |
-| 38 | 17 | Chase Edmonds | 69.99 | 69.20 | 66.35 | 305 | Cardinals |
-| 39 | 18 | Carlos Hyde | 69.91 | 68.10 | 66.95 | 125 | Seahawks |
-| 40 | 19 | Cam Akers | 69.89 | 68.40 | 66.71 | 107 | Rams |
-| 41 | 20 | Jamaal Williams | 69.89 | 73.20 | 63.51 | 201 | Packers |
-| 42 | 21 | Kenyan Drake | 69.71 | 60.90 | 71.41 | 251 | Cardinals |
-| 43 | 22 | Jalen Richard | 69.62 | 57.80 | 73.33 | 123 | Raiders |
-| 44 | 23 | Jeremy McNichols | 69.45 | 58.20 | 72.78 | 152 | Titans |
-| 45 | 24 | Jeff Wilson Jr. | 69.28 | 69.10 | 65.23 | 133 | 49ers |
-| 46 | 25 | Ty Johnson | 68.97 | 69.10 | 64.71 | 100 | Jets |
-| 47 | 26 | Joe Mixon | 68.78 | 65.30 | 66.93 | 128 | Bengals |
-| 48 | 27 | Kerryon Johnson | 68.13 | 61.60 | 68.31 | 159 | Lions |
-| 49 | 28 | J.D. McKissic | 68.03 | 62.70 | 67.41 | 399 | Commanders |
-| 50 | 29 | Adrian Peterson | 67.88 | 59.60 | 69.24 | 110 | Lions |
-| 51 | 30 | Brian Hill | 67.88 | 57.90 | 70.36 | 165 | Falcons |
-| 52 | 31 | Chris Thompson | 66.66 | 54.90 | 70.34 | 127 | Jaguars |
-| 53 | 32 | David Johnson | 66.62 | 62.90 | 64.93 | 333 | Texans |
-| 54 | 33 | Dion Lewis | 66.56 | 54.70 | 70.30 | 201 | Giants |
-| 55 | 34 | Giovani Bernard | 66.36 | 63.40 | 64.17 | 276 | Bengals |
-| 56 | 35 | Leonard Fournette | 65.85 | 59.80 | 65.71 | 216 | Buccaneers |
-| 57 | 36 | James White | 65.56 | 65.50 | 61.43 | 184 | Patriots |
-| 58 | 37 | Todd Gurley II | 65.17 | 54.80 | 67.91 | 229 | Falcons |
-| 59 | 38 | Ito Smith | 64.76 | 59.00 | 64.43 | 139 | Falcons |
-| 60 | 39 | Dare Ogunbowale | 64.54 | 58.80 | 64.20 | 121 | Jaguars |
-| 61 | 40 | Frank Gore | 64.27 | 60.80 | 62.41 | 136 | Jets |
-| 62 | 41 | Malcolm Brown | 62.58 | 57.10 | 62.07 | 276 | Rams |
-| 63 | 42 | Joshua Kelley | 62.58 | 63.10 | 58.07 | 130 | Chargers |
-| 64 | 43 | Kalen Ballage | 62.36 | 62.70 | 57.96 | 143 | Chargers |
-
-### Rotation/backup (1 players)
+### Starter (45 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 65 | 1 | Darrel Williams | 61.05 | 61.00 | 56.92 | 177 | Chiefs |
+| 19 | 1 | Darrell Henderson | 73.96 | 72.69 | 70.64 | 147 | Rams |
+| 20 | 2 | Ronald Jones | 73.15 | 69.62 | 71.34 | 190 | Buccaneers |
+| 21 | 3 | Miles Sanders | 73.14 | 62.64 | 75.98 | 295 | Eagles |
+| 22 | 4 | Le'Veon Bell | 72.49 | 70.85 | 69.42 | 153 | Chiefs |
+| 23 | 5 | Nyheim Hines | 72.06 | 78.00 | 63.94 | 264 | Colts |
+| 24 | 6 | Latavius Murray | 71.95 | 76.91 | 64.47 | 133 | Saints |
+| 25 | 7 | Melvin Gordon III | 71.76 | 71.55 | 67.73 | 290 | Broncos |
+| 26 | 8 | Ezekiel Elliott | 71.47 | 65.30 | 71.42 | 387 | Cowboys |
+| 27 | 9 | Myles Gaskin | 71.25 | 70.73 | 67.43 | 208 | Dolphins |
+| 28 | 10 | Duke Johnson Jr. | 71.08 | 62.18 | 72.85 | 204 | Texans |
+| 29 | 11 | Zack Moss | 70.96 | 68.30 | 68.57 | 173 | Bills |
+| 30 | 12 | James Conner | 70.71 | 67.24 | 68.85 | 269 | Steelers |
+| 31 | 13 | Wayne Gallman | 70.31 | 67.20 | 68.22 | 160 | Giants |
+| 32 | 14 | D'Andre Swift | 70.08 | 67.25 | 67.80 | 226 | Lions |
+| 33 | 15 | Jalen Richard | 70.00 | 58.75 | 73.33 | 123 | Raiders |
+| 34 | 16 | Jerick McKinnon | 69.98 | 71.63 | 64.72 | 213 | 49ers |
+| 35 | 17 | Jeremy McNichols | 69.71 | 58.86 | 72.78 | 152 | Titans |
+| 36 | 18 | Kenyan Drake | 69.67 | 60.80 | 71.41 | 251 | Cardinals |
+| 37 | 19 | Chase Edmonds | 69.61 | 68.24 | 66.35 | 305 | Cardinals |
+| 38 | 20 | Boston Scott | 69.53 | 66.11 | 67.65 | 211 | Eagles |
+| 39 | 21 | Mike Davis | 69.42 | 73.48 | 62.55 | 303 | Panthers |
+| 40 | 22 | Rex Burkhead | 69.24 | 70.35 | 64.33 | 123 | Patriots |
+| 41 | 23 | Devontae Booker | 68.67 | 64.57 | 67.23 | 105 | Raiders |
+| 42 | 24 | Carlos Hyde | 68.53 | 64.65 | 66.95 | 125 | Seahawks |
+| 43 | 25 | Jamaal Williams | 68.45 | 69.60 | 63.51 | 201 | Packers |
+| 44 | 26 | Cam Akers | 68.31 | 64.46 | 66.71 | 107 | Rams |
+| 45 | 27 | Joe Mixon | 68.25 | 63.97 | 66.93 | 128 | Bengals |
+| 46 | 28 | Brian Hill | 68.16 | 58.62 | 70.36 | 165 | Falcons |
+| 47 | 29 | J.D. McKissic | 68.03 | 62.70 | 67.41 | 399 | Commanders |
+| 48 | 30 | Adrian Peterson | 67.93 | 59.71 | 69.24 | 110 | Lions |
+| 49 | 31 | Kerryon Johnson | 67.90 | 61.03 | 68.31 | 159 | Lions |
+| 50 | 32 | Jeff Wilson Jr. | 67.79 | 65.38 | 65.23 | 133 | 49ers |
+| 51 | 33 | Chris Thompson | 67.52 | 57.05 | 70.34 | 127 | Jaguars |
+| 52 | 34 | Ty Johnson | 67.19 | 64.67 | 64.71 | 100 | Jets |
+| 53 | 35 | Dion Lewis | 66.91 | 55.57 | 70.30 | 201 | Giants |
+| 54 | 36 | David Johnson | 66.57 | 62.79 | 64.93 | 333 | Texans |
+| 55 | 37 | Giovani Bernard | 66.24 | 63.10 | 64.17 | 276 | Bengals |
+| 56 | 38 | Leonard Fournette | 65.87 | 59.85 | 65.71 | 216 | Buccaneers |
+| 57 | 39 | Todd Gurley II | 65.45 | 55.50 | 67.91 | 229 | Falcons |
+| 58 | 40 | James White | 65.16 | 64.50 | 61.43 | 184 | Patriots |
+| 59 | 41 | Ito Smith | 64.92 | 59.40 | 64.43 | 139 | Falcons |
+| 60 | 42 | Dare Ogunbowale | 64.75 | 59.32 | 64.20 | 121 | Jaguars |
+| 61 | 43 | Frank Gore | 64.19 | 60.61 | 62.41 | 136 | Jets |
+| 62 | 44 | Malcolm Brown | 62.75 | 57.53 | 62.07 | 276 | Rams |
+| 63 | 45 | Joshua Kelley | 62.07 | 61.81 | 58.07 | 130 | Chargers |
+
+### Rotation/backup (2 players)
+
+| rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
+|---:|---:|---|---:|---:|---:|---:|---|
+| 64 | 1 | Kalen Ballage | 61.94 | 61.66 | 57.96 | 143 | Chargers |
+| 65 | 2 | Darrel Williams | 60.92 | 60.68 | 56.92 | 177 | Chiefs |
 
 ## LB — Linebacker
 
@@ -815,132 +815,132 @@
 | 2 | 2 | Bobby Wagner | 81.84 | 83.20 | 76.97 | 1141 | Seahawks |
 | 3 | 3 | Lavonte David | 80.25 | 81.50 | 75.67 | 1058 | Buccaneers |
 
-### Good (5 players)
+### Good (4 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 4 | 1 | Denzel Perryman | 79.48 | 83.30 | 77.04 | 317 | Chargers |
-| 5 | 2 | Eric Kendricks | 78.51 | 82.60 | 74.95 | 754 | Vikings |
-| 6 | 3 | Demario Davis | 77.43 | 78.10 | 72.82 | 1032 | Saints |
-| 7 | 4 | Blake Martinez | 77.16 | 75.90 | 73.84 | 1063 | Giants |
-| 8 | 5 | Mykal Walker | 74.75 | 74.00 | 71.09 | 387 | Falcons |
+| 4 | 1 | Eric Kendricks | 78.29 | 82.04 | 74.95 | 754 | Vikings |
+| 5 | 2 | Demario Davis | 77.43 | 78.10 | 72.82 | 1032 | Saints |
+| 6 | 3 | Blake Martinez | 77.16 | 75.90 | 73.84 | 1063 | Giants |
+| 7 | 4 | Denzel Perryman | 75.96 | 74.49 | 77.04 | 317 | Chargers |
 
-### Starter (33 players)
+### Starter (34 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 9 | 1 | K.J. Wright | 73.41 | 75.30 | 70.26 | 990 | Seahawks |
-| 10 | 2 | Myles Jack | 70.85 | 69.10 | 70.45 | 931 | Jaguars |
-| 11 | 3 | Cole Holcomb | 70.82 | 72.00 | 69.77 | 555 | Commanders |
-| 12 | 4 | Roquan Smith | 70.62 | 67.20 | 69.99 | 1016 | Bears |
-| 13 | 5 | Sione Takitaki | 70.10 | 71.20 | 68.99 | 435 | Browns |
-| 14 | 6 | Willie Gay | 70.03 | 68.10 | 68.19 | 269 | Chiefs |
-| 15 | 7 | Josey Jewell | 69.75 | 68.10 | 68.25 | 1011 | Broncos |
-| 16 | 8 | L.J. Fort | 69.41 | 69.40 | 68.69 | 381 | Ravens |
-| 17 | 9 | Kamal Martin | 69.02 | 73.30 | 68.25 | 190 | Packers |
-| 18 | 10 | Deion Jones | 68.84 | 68.70 | 66.85 | 1040 | Falcons |
-| 19 | 11 | Malcolm Smith | 68.31 | 70.80 | 68.22 | 559 | Browns |
-| 20 | 12 | B.J. Goodson | 68.28 | 65.40 | 67.91 | 848 | Browns |
-| 21 | 13 | Isaiah Simmons | 66.98 | 59.90 | 67.53 | 376 | Cardinals |
-| 22 | 14 | Nick Kwiatkoski | 66.78 | 67.10 | 67.40 | 651 | Raiders |
-| 23 | 15 | Nicholas Morrow | 66.37 | 63.70 | 65.45 | 723 | Raiders |
-| 24 | 16 | Kevin Pierre-Louis | 66.24 | 67.70 | 68.08 | 506 | Commanders |
-| 25 | 17 | Jayon Brown | 66.21 | 66.30 | 65.73 | 653 | Titans |
-| 26 | 18 | Jamie Collins Sr. | 66.18 | 64.20 | 64.36 | 829 | Lions |
-| 27 | 19 | Jermaine Carter | 66.16 | 66.50 | 66.86 | 284 | Panthers |
-| 28 | 20 | T.J. Edwards | 66.01 | 66.50 | 65.69 | 492 | Eagles |
-| 29 | 21 | Joe Giles-Harris | 65.94 | 75.60 | 66.66 | 205 | Jaguars |
-| 30 | 22 | Zach Cunningham | 64.85 | 60.90 | 63.74 | 944 | Texans |
-| 31 | 23 | Dre Greenlaw | 64.33 | 59.80 | 65.13 | 700 | 49ers |
-| 32 | 24 | Jarrad Davis | 63.91 | 62.20 | 63.48 | 329 | Lions |
-| 33 | 25 | Nick Vigil | 63.82 | 60.60 | 64.93 | 312 | Chargers |
-| 34 | 26 | Robert Spillane | 63.04 | 66.30 | 65.30 | 379 | Steelers |
-| 35 | 27 | Rashaan Evans | 62.90 | 53.70 | 65.29 | 895 | Titans |
-| 36 | 28 | Alex Singleton | 62.85 | 58.90 | 61.96 | 750 | Eagles |
-| 37 | 29 | Neville Hewitt | 62.68 | 59.30 | 63.47 | 1130 | Jets |
-| 38 | 30 | Jaylon Smith | 62.50 | 54.20 | 63.87 | 1083 | Cowboys |
-| 39 | 31 | Avery Williamson | 62.40 | 51.70 | 65.88 | 665 | Steelers |
-| 40 | 32 | Kyle Van Noy | 62.19 | 61.60 | 59.45 | 811 | Dolphins |
-| 41 | 33 | Alex Anzalone | 62.04 | 60.90 | 63.53 | 525 | Saints |
+| 8 | 1 | K.J. Wright | 73.41 | 75.30 | 70.26 | 990 | Seahawks |
+| 9 | 2 | Mykal Walker | 73.00 | 69.62 | 71.09 | 387 | Falcons |
+| 10 | 3 | Myles Jack | 70.85 | 69.10 | 70.45 | 931 | Jaguars |
+| 11 | 4 | Roquan Smith | 70.62 | 67.20 | 69.99 | 1016 | Bears |
+| 12 | 5 | Cole Holcomb | 69.97 | 69.87 | 69.77 | 555 | Commanders |
+| 13 | 6 | Josey Jewell | 69.75 | 68.10 | 68.25 | 1011 | Broncos |
+| 14 | 7 | Sione Takitaki | 68.89 | 68.16 | 68.99 | 435 | Browns |
+| 15 | 8 | Deion Jones | 68.84 | 68.70 | 66.85 | 1040 | Falcons |
+| 16 | 9 | Willie Gay | 68.65 | 64.64 | 68.19 | 269 | Chiefs |
+| 17 | 10 | B.J. Goodson | 68.28 | 65.40 | 67.91 | 848 | Browns |
+| 18 | 11 | L.J. Fort | 68.22 | 66.41 | 68.69 | 381 | Ravens |
+| 19 | 12 | Malcolm Smith | 67.86 | 69.67 | 68.22 | 559 | Browns |
+| 20 | 13 | Isaiah Simmons | 66.99 | 59.93 | 67.53 | 376 | Cardinals |
+| 21 | 14 | Nick Kwiatkoski | 66.60 | 66.64 | 67.40 | 651 | Raiders |
+| 22 | 15 | Nicholas Morrow | 66.28 | 63.47 | 65.45 | 723 | Raiders |
+| 23 | 16 | Kamal Martin | 66.26 | 66.40 | 68.25 | 190 | Packers |
+| 24 | 17 | Jamie Collins Sr. | 66.18 | 64.20 | 64.36 | 829 | Lions |
+| 25 | 18 | Jayon Brown | 66.04 | 65.89 | 65.73 | 653 | Titans |
+| 26 | 19 | Kevin Pierre-Louis | 65.58 | 66.05 | 68.08 | 506 | Commanders |
+| 27 | 20 | T.J. Edwards | 65.43 | 65.03 | 65.69 | 492 | Eagles |
+| 28 | 21 | Jermaine Carter | 65.09 | 63.83 | 66.86 | 284 | Panthers |
+| 29 | 22 | Zach Cunningham | 64.85 | 60.90 | 63.74 | 944 | Texans |
+| 30 | 23 | Dre Greenlaw | 64.34 | 59.82 | 65.13 | 700 | 49ers |
+| 31 | 24 | Nick Vigil | 63.73 | 60.37 | 64.93 | 312 | Chargers |
+| 32 | 25 | Jarrad Davis | 63.58 | 61.39 | 63.48 | 329 | Lions |
+| 33 | 26 | Rashaan Evans | 62.90 | 53.70 | 65.29 | 895 | Titans |
+| 34 | 27 | Alex Singleton | 62.87 | 58.95 | 61.96 | 750 | Eagles |
+| 35 | 28 | Joe Giles-Harris | 62.82 | 67.80 | 66.66 | 205 | Jaguars |
+| 36 | 29 | Neville Hewitt | 62.68 | 59.30 | 63.47 | 1130 | Jets |
+| 37 | 30 | Avery Williamson | 62.60 | 52.20 | 65.88 | 665 | Steelers |
+| 38 | 31 | Jaylon Smith | 62.50 | 54.20 | 63.87 | 1083 | Cowboys |
+| 39 | 32 | Robert Spillane | 62.23 | 64.28 | 65.30 | 379 | Steelers |
+| 40 | 33 | Kyle Van Noy | 62.19 | 61.59 | 59.45 | 811 | Dolphins |
+| 41 | 34 | Malik Harrison | 62.16 | 55.91 | 62.16 | 265 | Ravens |
 
 ### Rotation/backup (74 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 42 | 1 | Azeez Al-Shaair | 61.97 | 61.00 | 62.75 | 305 | 49ers |
-| 43 | 2 | Foyesade Oluokun | 61.50 | 56.60 | 61.11 | 895 | Falcons |
-| 44 | 3 | Jerome Baker | 61.42 | 55.20 | 61.40 | 868 | Dolphins |
-| 45 | 4 | Todd Davis | 61.29 | 60.60 | 62.36 | 281 | Vikings |
-| 46 | 5 | Kenneth Murray Jr. | 61.08 | 54.40 | 61.36 | 959 | Chargers |
-| 47 | 6 | Malik Harrison | 60.92 | 52.80 | 62.16 | 265 | Ravens |
-| 48 | 7 | Troy Reeder | 60.54 | 60.40 | 62.20 | 423 | Rams |
-| 49 | 8 | Jon Bostic | 60.41 | 52.70 | 61.38 | 966 | Commanders |
-| 50 | 9 | Eric Wilson | 60.24 | 53.50 | 60.99 | 1034 | Vikings |
-| 51 | 10 | Devin Bush | 60.15 | 59.70 | 63.45 | 278 | Steelers |
-| 52 | 11 | Thomas Davis Sr. | 60.04 | 54.80 | 64.89 | 137 | Commanders |
-| 53 | 12 | Joe Schobert | 59.96 | 54.20 | 60.26 | 1110 | Jaguars |
-| 54 | 13 | Anfernee Jennings | 59.84 | 54.60 | 62.30 | 293 | Patriots |
-| 55 | 14 | Brennan Scarlett | 59.58 | 55.70 | 62.79 | 286 | Texans |
-| 56 | 15 | Damien Wilson | 59.29 | 51.80 | 61.69 | 531 | Chiefs |
-| 57 | 16 | Ja'Whaun Bentley | 59.24 | 53.20 | 63.36 | 608 | Patriots |
-| 58 | 17 | Jordan Hicks | 59.23 | 50.40 | 61.79 | 1024 | Cardinals |
-| 59 | 18 | Benardrick McKinney | 58.99 | 57.80 | 62.48 | 234 | Texans |
-| 60 | 19 | Josh Bynes | 58.75 | 52.50 | 61.03 | 761 | Bengals |
-| 61 | 20 | Kwon Alexander | 58.74 | 58.60 | 61.34 | 668 | Saints |
-| 62 | 21 | Anthony Walker Jr. | 58.59 | 48.00 | 61.68 | 697 | Colts |
-| 63 | 22 | Anthony Hitchens | 58.42 | 50.50 | 61.10 | 603 | Chiefs |
-| 64 | 23 | Logan Wilson | 58.34 | 54.70 | 60.77 | 343 | Bengals |
-| 65 | 24 | Duke Riley | 58.06 | 55.10 | 60.35 | 571 | Eagles |
-| 66 | 25 | Jordyn Brooks | 57.95 | 47.60 | 62.76 | 367 | Seahawks |
-| 67 | 26 | Shaq Thompson | 57.89 | 49.80 | 60.15 | 1031 | Panthers |
-| 68 | 27 | De'Vondre Campbell | 57.82 | 49.00 | 59.54 | 880 | Cardinals |
-| 69 | 28 | Matt Milano | 57.75 | 55.80 | 58.95 | 335 | Bills |
-| 70 | 29 | Bobby Okereke | 57.21 | 49.60 | 59.42 | 685 | Colts |
-| 71 | 30 | Tremaine Edmunds | 57.17 | 47.90 | 59.92 | 911 | Bills |
-| 72 | 31 | Reggie Ragland | 56.99 | 48.00 | 59.45 | 562 | Lions |
-| 73 | 32 | Terez Hall | 56.30 | 51.80 | 63.46 | 259 | Patriots |
-| 74 | 33 | Kyzir White | 55.89 | 51.50 | 59.97 | 538 | Chargers |
-| 75 | 34 | Cody Barton | 55.84 | 54.30 | 61.04 | 115 | Seahawks |
-| 76 | 35 | Vince Williams | 55.82 | 50.60 | 57.22 | 672 | Steelers |
-| 77 | 36 | David Long Jr. | 55.82 | 54.20 | 60.15 | 379 | Titans |
-| 78 | 37 | Leighton Vander Esch | 55.67 | 50.60 | 60.20 | 460 | Cowboys |
-| 79 | 38 | Germaine Pratt | 55.40 | 41.50 | 60.89 | 686 | Bengals |
-| 80 | 39 | David Mayo | 55.36 | 48.60 | 59.97 | 194 | Giants |
-| 81 | 40 | Will Compton | 55.16 | 50.40 | 62.40 | 124 | Titans |
-| 82 | 41 | A.J. Klein | 55.00 | 46.10 | 57.09 | 652 | Bills |
-| 83 | 42 | Joe Thomas | 54.95 | 47.70 | 60.94 | 410 | Cowboys |
-| 84 | 43 | Chris Board | 54.94 | 51.40 | 58.04 | 263 | Ravens |
-| 85 | 44 | Danny Trevathan | 54.76 | 44.10 | 59.89 | 832 | Bears |
-| 86 | 45 | Cory Littleton | 54.31 | 46.30 | 56.51 | 849 | Raiders |
-| 87 | 46 | Devante Downs | 54.17 | 46.20 | 59.48 | 233 | Giants |
-| 88 | 47 | Kamu Grugier-Hill | 54.14 | 50.40 | 56.43 | 207 | Dolphins |
-| 89 | 48 | Ben Niemann | 53.98 | 46.50 | 57.72 | 468 | Chiefs |
-| 90 | 49 | Nathan Gerry | 53.56 | 45.70 | 60.56 | 479 | Eagles |
-| 91 | 50 | Krys Barnes | 53.30 | 43.70 | 59.70 | 421 | Packers |
-| 92 | 51 | Devin White | 53.24 | 43.40 | 57.45 | 993 | Buccaneers |
-| 93 | 52 | Jacob Phillips | 52.53 | 45.30 | 60.49 | 169 | Browns |
-| 94 | 53 | Akeem Davis-Gaither | 52.45 | 40.70 | 56.11 | 314 | Bengals |
-| 95 | 54 | Ty Summers | 52.42 | 44.80 | 60.70 | 176 | Packers |
-| 96 | 55 | Adarius Taylor | 52.25 | 45.50 | 57.90 | 111 | Panthers |
-| 97 | 56 | Kenny Young | 51.87 | 41.60 | 58.30 | 472 | Rams |
-| 98 | 57 | Tyrell Adams | 50.99 | 43.50 | 56.92 | 812 | Texans |
-| 99 | 58 | Micah Kiser | 49.34 | 40.00 | 58.16 | 559 | Rams |
-| 100 | 59 | Christian Kirksey | 49.11 | 43.80 | 57.34 | 548 | Packers |
-| 101 | 60 | Tyrel Dodson | 48.69 | 52.30 | 58.08 | 172 | Bills |
-| 102 | 61 | Mack Wilson Sr. | 48.67 | 36.20 | 55.17 | 372 | Browns |
-| 103 | 62 | Jahlani Tavai | 48.60 | 32.10 | 55.81 | 624 | Lions |
-| 104 | 63 | Tahir Whitehead | 48.27 | 31.90 | 56.05 | 398 | Panthers |
-| 105 | 64 | Sean Lee | 47.93 | 34.80 | 58.04 | 180 | Cowboys |
-| 106 | 65 | Raekwon McMillan | 47.43 | 30.30 | 57.70 | 170 | Raiders |
-| 107 | 66 | Harvey Langi | 47.19 | 34.90 | 55.38 | 513 | Jets |
-| 108 | 67 | Elandon Roberts | 47.03 | 29.30 | 56.86 | 402 | Dolphins |
-| 109 | 68 | Patrick Queen | 46.96 | 29.70 | 54.30 | 858 | Ravens |
-| 110 | 69 | Tae Crowder | 46.48 | 36.40 | 55.29 | 403 | Giants |
-| 111 | 70 | Troy Dye | 45.00 | 28.80 | 55.04 | 201 | Vikings |
-| 112 | 71 | Bryce Hager | 45.00 | 30.20 | 54.64 | 138 | Jets |
-| 113 | 72 | Darius Harris | 45.00 | 28.80 | 55.67 | 126 | Chiefs |
-| 114 | 73 | Hardy Nickerson | 45.00 | 29.90 | 58.81 | 102 | Vikings |
-| 115 | 74 | Dakota Allen | 45.00 | 29.50 | 57.92 | 103 | Jaguars |
+| 42 | 1 | Alex Anzalone | 61.97 | 60.72 | 63.53 | 525 | Saints |
+| 43 | 2 | Azeez Al-Shaair | 61.81 | 60.61 | 62.75 | 305 | 49ers |
+| 44 | 3 | Foyesade Oluokun | 61.50 | 56.60 | 61.11 | 895 | Falcons |
+| 45 | 4 | Jerome Baker | 61.42 | 55.20 | 61.40 | 868 | Dolphins |
+| 46 | 5 | Todd Davis | 61.19 | 60.35 | 62.36 | 281 | Vikings |
+| 47 | 6 | Kenneth Murray Jr. | 61.08 | 54.40 | 61.36 | 959 | Chargers |
+| 48 | 7 | Thomas Davis Sr. | 60.78 | 56.64 | 64.89 | 137 | Commanders |
+| 49 | 8 | Anfernee Jennings | 60.71 | 56.77 | 62.30 | 293 | Patriots |
+| 50 | 9 | Troy Reeder | 60.50 | 60.29 | 62.20 | 423 | Rams |
+| 51 | 10 | Jon Bostic | 60.41 | 52.70 | 61.38 | 966 | Commanders |
+| 52 | 11 | Brennan Scarlett | 60.29 | 57.46 | 62.79 | 286 | Texans |
+| 53 | 12 | Eric Wilson | 60.24 | 53.50 | 60.99 | 1034 | Vikings |
+| 54 | 13 | Devin Bush | 60.20 | 59.83 | 63.45 | 278 | Steelers |
+| 55 | 14 | Joe Schobert | 59.96 | 54.20 | 60.26 | 1110 | Jaguars |
+| 56 | 15 | Damien Wilson | 59.93 | 53.40 | 61.69 | 531 | Chiefs |
+| 57 | 16 | Ja'Whaun Bentley | 59.61 | 54.14 | 63.36 | 608 | Patriots |
+| 58 | 17 | Jordyn Brooks | 59.59 | 51.70 | 62.76 | 367 | Seahawks |
+| 59 | 18 | Jordan Hicks | 59.23 | 50.40 | 61.79 | 1024 | Cardinals |
+| 60 | 19 | Benardrick McKinney | 59.23 | 58.41 | 62.48 | 234 | Texans |
+| 61 | 20 | Logan Wilson | 59.09 | 56.57 | 60.77 | 343 | Bengals |
+| 62 | 21 | Anthony Walker Jr. | 58.96 | 48.94 | 61.68 | 697 | Colts |
+| 63 | 22 | Josh Bynes | 58.81 | 52.66 | 61.03 | 761 | Bengals |
+| 64 | 23 | Kwon Alexander | 58.80 | 58.74 | 61.34 | 668 | Saints |
+| 65 | 24 | Anthony Hitchens | 58.74 | 51.31 | 61.10 | 603 | Chiefs |
+| 66 | 25 | Duke Riley | 58.38 | 55.91 | 60.35 | 571 | Eagles |
+| 67 | 26 | Matt Milano | 58.11 | 56.71 | 58.95 | 335 | Bills |
+| 68 | 27 | Shaq Thompson | 57.89 | 49.80 | 60.15 | 1031 | Panthers |
+| 69 | 28 | Reggie Ragland | 57.82 | 50.07 | 59.45 | 562 | Lions |
+| 70 | 29 | De'Vondre Campbell | 57.82 | 49.00 | 59.54 | 880 | Cardinals |
+| 71 | 30 | Terez Hall | 57.73 | 55.39 | 63.46 | 259 | Patriots |
+| 72 | 31 | Bobby Okereke | 57.57 | 50.49 | 59.42 | 685 | Colts |
+| 73 | 32 | Will Compton | 57.46 | 56.16 | 62.40 | 124 | Titans |
+| 74 | 33 | Cody Barton | 57.21 | 57.72 | 61.04 | 115 | Seahawks |
+| 75 | 34 | Tremaine Edmunds | 57.17 | 47.90 | 59.92 | 911 | Bills |
+| 76 | 35 | David Mayo | 56.77 | 52.11 | 59.97 | 194 | Giants |
+| 77 | 36 | Devante Downs | 56.74 | 52.64 | 59.48 | 233 | Giants |
+| 78 | 37 | David Long Jr. | 56.56 | 56.06 | 60.15 | 379 | Titans |
+| 79 | 38 | Kyzir White | 56.54 | 53.12 | 59.97 | 538 | Chargers |
+| 80 | 39 | Chris Board | 56.44 | 55.13 | 58.04 | 263 | Ravens |
+| 81 | 40 | Joe Thomas | 56.39 | 51.30 | 60.94 | 410 | Cowboys |
+| 82 | 41 | Leighton Vander Esch | 56.24 | 52.02 | 60.20 | 460 | Cowboys |
+| 83 | 42 | Vince Williams | 56.18 | 51.49 | 57.22 | 672 | Steelers |
+| 84 | 43 | Kamu Grugier-Hill | 56.05 | 55.18 | 56.43 | 207 | Dolphins |
+| 85 | 44 | Germaine Pratt | 56.04 | 43.08 | 60.89 | 686 | Bengals |
+| 86 | 45 | Jacob Phillips | 55.75 | 53.33 | 60.49 | 169 | Browns |
+| 87 | 46 | Adarius Taylor | 55.73 | 54.20 | 57.90 | 111 | Panthers |
+| 88 | 47 | Ty Summers | 55.68 | 52.96 | 60.70 | 176 | Packers |
+| 89 | 48 | A.J. Klein | 55.61 | 47.61 | 57.09 | 652 | Bills |
+| 90 | 49 | Akeem Davis-Gaither | 55.39 | 48.06 | 56.11 | 314 | Bengals |
+| 91 | 50 | Ben Niemann | 55.30 | 49.80 | 57.72 | 468 | Chiefs |
+| 92 | 51 | Krys Barnes | 55.15 | 48.32 | 59.70 | 421 | Packers |
+| 93 | 52 | Nathan Gerry | 54.90 | 49.07 | 60.56 | 479 | Eagles |
+| 94 | 53 | Danny Trevathan | 54.76 | 44.10 | 59.89 | 832 | Bears |
+| 95 | 54 | Cory Littleton | 54.31 | 46.30 | 56.51 | 849 | Raiders |
+| 96 | 55 | Raekwon McMillan | 53.90 | 46.48 | 57.70 | 170 | Raiders |
+| 97 | 56 | Kenny Young | 53.65 | 46.04 | 58.30 | 472 | Rams |
+| 98 | 57 | Devin White | 53.24 | 43.40 | 57.45 | 993 | Buccaneers |
+| 99 | 58 | Mack Wilson Sr. | 51.78 | 43.97 | 55.17 | 372 | Browns |
+| 100 | 59 | Jahlani Tavai | 51.76 | 40.00 | 55.81 | 624 | Lions |
+| 101 | 60 | Tahir Whitehead | 51.68 | 40.42 | 56.05 | 398 | Panthers |
+| 102 | 61 | Hardy Nickerson | 51.66 | 47.96 | 58.81 | 102 | Vikings |
+| 103 | 62 | Elandon Roberts | 51.31 | 40.00 | 56.86 | 402 | Dolphins |
+| 104 | 63 | Sean Lee | 51.15 | 42.84 | 58.04 | 180 | Cowboys |
+| 105 | 64 | Patrick Queen | 51.08 | 40.00 | 54.30 | 858 | Ravens |
+| 106 | 65 | Tyrell Adams | 51.02 | 43.58 | 56.92 | 812 | Texans |
+| 107 | 66 | Micah Kiser | 50.73 | 43.49 | 58.16 | 559 | Rams |
+| 108 | 67 | Tyrel Dodson | 50.36 | 56.47 | 58.08 | 172 | Bills |
+| 109 | 68 | Christian Kirksey | 50.30 | 46.76 | 57.34 | 548 | Packers |
+| 110 | 69 | Troy Dye | 49.59 | 44.55 | 55.04 | 201 | Vikings |
+| 111 | 70 | Dakota Allen | 49.37 | 47.80 | 57.92 | 103 | Jaguars |
+| 112 | 71 | Tae Crowder | 49.31 | 43.46 | 55.29 | 403 | Giants |
+| 113 | 72 | Harvey Langi | 49.29 | 40.15 | 55.38 | 513 | Jets |
+| 114 | 73 | Bryce Hager | 46.95 | 47.77 | 54.64 | 138 | Jets |
+| 115 | 74 | Darius Harris | 45.00 | 47.52 | 55.67 | 126 | Chiefs |
 
 ## QB — Quarterback
 
@@ -959,7 +959,7 @@
 | 6 | 6 | Derek Carr | 81.81 | 81.95 | 78.35 | 604 | Raiders |
 | 7 | 7 | Kirk Cousins | 81.47 | 81.57 | 78.49 | 613 | Vikings |
 | 8 | 8 | Josh Allen | 81.07 | 81.14 | 77.58 | 677 | Bills |
-| 9 | 9 | Ryan Tannehill | 80.49 | 83.29 | 78.10 | 557 | Titans |
+| 9 | 9 | Ryan Tannehill | 80.31 | 82.89 | 78.10 | 557 | Titans |
 
 ### Good (8 players)
 
@@ -968,48 +968,48 @@
 | 10 | 1 | Matt Ryan | 78.28 | 80.09 | 72.25 | 721 | Falcons |
 | 11 | 2 | Philip Rivers | 78.16 | 76.56 | 75.98 | 600 | Colts |
 | 12 | 3 | Matthew Stafford | 78.14 | 78.83 | 75.67 | 626 | Lions |
-| 13 | 4 | Baker Mayfield | 77.45 | 79.07 | 73.29 | 568 | Browns |
-| 14 | 5 | Drew Brees | 77.24 | 78.19 | 77.79 | 421 | Saints |
-| 15 | 6 | Dak Prescott | 75.96 | 77.65 | 77.18 | 247 | Cowboys |
-| 16 | 7 | Lamar Jackson | 75.64 | 78.33 | 74.10 | 478 | Ravens |
-| 17 | 8 | Kyler Murray | 74.37 | 72.78 | 71.13 | 674 | Cardinals |
+| 13 | 4 | Baker Mayfield | 77.35 | 78.84 | 73.29 | 568 | Browns |
+| 14 | 5 | Drew Brees | 76.50 | 76.55 | 77.79 | 421 | Saints |
+| 15 | 6 | Lamar Jackson | 75.17 | 77.27 | 74.10 | 478 | Ravens |
+| 16 | 7 | Kyler Murray | 74.37 | 72.78 | 71.13 | 674 | Cardinals |
+| 17 | 8 | Dak Prescott | 74.32 | 74.00 | 77.18 | 247 | Cowboys |
 
-### Starter (15 players)
+### Starter (14 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
 | 18 | 1 | Jared Goff | 73.56 | 73.30 | 69.45 | 617 | Rams |
 | 19 | 2 | Justin Herbert | 73.52 | 78.40 | 74.27 | 689 | Chargers |
-| 20 | 3 | Ryan Fitzpatrick | 72.01 | 73.54 | 73.40 | 316 | Dolphins |
+| 20 | 3 | Ryan Fitzpatrick | 71.03 | 71.35 | 73.40 | 316 | Dolphins |
 | 21 | 4 | Ben Roethlisberger | 69.07 | 68.59 | 68.97 | 672 | Steelers |
-| 22 | 5 | Daniel Jones | 68.51 | 71.76 | 63.97 | 552 | Giants |
-| 23 | 6 | Gardner Minshew | 68.39 | 67.53 | 69.94 | 396 | Jaguars |
-| 24 | 7 | Teddy Bridgewater | 68.14 | 67.07 | 71.70 | 594 | Panthers |
-| 25 | 8 | Jimmy Garoppolo | 67.48 | 70.76 | 73.09 | 159 | 49ers |
-| 26 | 9 | Andy Dalton | 66.43 | 69.44 | 64.81 | 393 | Cowboys |
-| 27 | 10 | Joe Burrow | 65.06 | 74.30 | 66.69 | 472 | Bengals |
-| 28 | 11 | Cam Newton | 64.52 | 67.16 | 65.53 | 444 | Patriots |
-| 29 | 12 | Carson Wentz | 63.97 | 66.29 | 59.92 | 544 | Eagles |
-| 30 | 13 | Mitch Trubisky | 63.76 | 60.21 | 68.00 | 340 | Bears |
-| 31 | 14 | Taysom Hill | 63.26 | 69.78 | 74.28 | 161 | Saints |
-| 32 | 15 | C.J. Beathard | 62.10 | 64.85 | 73.59 | 123 | 49ers |
+| 22 | 5 | Daniel Jones | 68.30 | 71.28 | 63.97 | 552 | Giants |
+| 23 | 6 | Teddy Bridgewater | 68.14 | 67.07 | 71.70 | 594 | Panthers |
+| 24 | 7 | Gardner Minshew | 67.79 | 66.19 | 69.94 | 396 | Jaguars |
+| 25 | 8 | Jimmy Garoppolo | 66.27 | 67.70 | 73.09 | 159 | 49ers |
+| 26 | 9 | Andy Dalton | 65.97 | 68.42 | 64.81 | 393 | Cowboys |
+| 27 | 10 | Joe Burrow | 64.74 | 72.86 | 66.69 | 472 | Bengals |
+| 28 | 11 | Cam Newton | 64.26 | 66.58 | 65.53 | 444 | Patriots |
+| 29 | 12 | Carson Wentz | 63.89 | 66.12 | 59.92 | 544 | Eagles |
+| 30 | 13 | Mitch Trubisky | 63.73 | 60.16 | 68.00 | 340 | Bears |
+| 31 | 14 | Taysom Hill | 62.32 | 65.13 | 74.28 | 161 | Saints |
 
-### Rotation/backup (12 players)
+### Rotation/backup (13 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 33 | 1 | Nick Foles | 61.80 | 66.97 | 64.25 | 350 | Bears |
-| 34 | 2 | Drew Lock | 61.44 | 62.67 | 63.19 | 510 | Broncos |
-| 35 | 3 | Tua Tagovailoa | 60.64 | 63.90 | 63.29 | 347 | Dolphins |
-| 36 | 4 | Alex Smith | 60.47 | 67.18 | 62.15 | 289 | Commanders |
-| 37 | 5 | Mike Glennon | 60.42 | 68.87 | 63.54 | 198 | Jaguars |
-| 38 | 6 | Nick Mullens | 60.01 | 57.79 | 67.54 | 365 | 49ers |
-| 39 | 7 | Kyle Allen | 59.76 | 56.16 | 70.04 | 107 | Commanders |
-| 40 | 8 | Joe Flacco | 58.84 | 61.72 | 63.73 | 160 | Jets |
-| 41 | 9 | Jalen Hurts | 58.37 | 57.50 | 63.58 | 197 | Eagles |
-| 42 | 10 | Sam Darnold | 57.25 | 56.93 | 57.90 | 449 | Jets |
-| 43 | 11 | Brandon Allen | 57.08 | 53.96 | 62.24 | 167 | Bengals |
-| 44 | 12 | Jake Luton | 52.13 | 37.70 | 55.56 | 123 | Jaguars |
+| 32 | 1 | C.J. Beathard | 61.56 | 62.19 | 73.59 | 123 | 49ers |
+| 33 | 2 | Nick Foles | 61.49 | 66.02 | 64.25 | 350 | Bears |
+| 34 | 3 | Drew Lock | 61.38 | 62.48 | 63.19 | 510 | Broncos |
+| 35 | 4 | Kyle Allen | 60.53 | 58.39 | 70.04 | 107 | Commanders |
+| 36 | 5 | Tua Tagovailoa | 60.45 | 62.98 | 63.29 | 347 | Dolphins |
+| 37 | 6 | Nick Mullens | 60.16 | 58.26 | 67.54 | 365 | 49ers |
+| 38 | 7 | Alex Smith | 60.05 | 65.91 | 62.15 | 289 | Commanders |
+| 39 | 8 | Mike Glennon | 59.68 | 65.19 | 63.54 | 198 | Jaguars |
+| 40 | 9 | Joe Flacco | 58.63 | 61.21 | 63.73 | 160 | Jets |
+| 41 | 10 | Jalen Hurts | 58.59 | 58.56 | 63.58 | 197 | Eagles |
+| 42 | 11 | Brandon Allen | 57.66 | 56.82 | 62.24 | 167 | Bengals |
+| 43 | 12 | Sam Darnold | 57.43 | 57.32 | 57.90 | 449 | Jets |
+| 44 | 13 | Jake Luton | 54.58 | 49.76 | 55.56 | 123 | Jaguars |
 
 ## S — Safety
 
@@ -1030,7 +1030,7 @@
 | 8 | 8 | Jordan Poyer | 80.66 | 76.40 | 79.34 | 1010 | Bills |
 | 9 | 9 | Harrison Smith | 80.55 | 76.70 | 79.26 | 1030 | Vikings |
 
-### Good (13 players)
+### Good (10 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
@@ -1038,217 +1038,217 @@
 | 11 | 2 | Darnell Savage | 77.74 | 76.70 | 75.70 | 876 | Packers |
 | 12 | 3 | Terrell Edmunds | 77.61 | 76.00 | 75.03 | 865 | Steelers |
 | 13 | 4 | Jimmie Ward | 76.65 | 72.50 | 78.69 | 851 | 49ers |
-| 14 | 5 | Ronnie Harrison | 76.26 | 74.40 | 76.99 | 325 | Browns |
-| 15 | 6 | Jeff Heath | 76.08 | 72.80 | 76.60 | 415 | Raiders |
-| 16 | 7 | Mike Edwards | 75.94 | 77.20 | 73.93 | 189 | Buccaneers |
-| 17 | 8 | Marcus Epps | 75.82 | 74.80 | 77.02 | 365 | Eagles |
-| 18 | 9 | Jeremy Reaves | 75.64 | 76.90 | 81.47 | 263 | Commanders |
-| 19 | 10 | Chuck Clark | 75.50 | 69.50 | 76.06 | 1063 | Ravens |
-| 20 | 11 | Rodney McLeod | 75.33 | 77.30 | 74.11 | 873 | Eagles |
-| 21 | 12 | Budda Baker | 74.47 | 68.90 | 74.53 | 1005 | Cardinals |
-| 22 | 13 | Khari Willis | 74.07 | 69.10 | 75.30 | 842 | Colts |
+| 14 | 5 | Chuck Clark | 75.50 | 69.50 | 76.06 | 1063 | Ravens |
+| 15 | 6 | Rodney McLeod | 75.33 | 77.30 | 74.11 | 873 | Eagles |
+| 16 | 7 | Jeff Heath | 75.19 | 70.57 | 76.60 | 415 | Raiders |
+| 17 | 8 | Budda Baker | 74.47 | 68.90 | 74.53 | 1005 | Cardinals |
+| 18 | 9 | Ronnie Harrison | 74.12 | 69.04 | 76.99 | 325 | Browns |
+| 19 | 10 | Khari Willis | 74.07 | 69.10 | 75.30 | 842 | Colts |
 
-### Starter (44 players)
+### Starter (47 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 23 | 1 | Kevin Byard | 73.48 | 63.90 | 75.70 | 1103 | Titans |
-| 24 | 2 | Andrew Wingard | 72.81 | 69.80 | 75.60 | 461 | Jaguars |
-| 25 | 3 | Amani Hooker | 72.60 | 70.80 | 69.63 | 470 | Titans |
-| 26 | 4 | Vonn Bell | 72.09 | 64.60 | 73.85 | 1061 | Bengals |
-| 27 | 5 | Micah Hyde | 71.54 | 66.80 | 71.26 | 938 | Bills |
-| 28 | 6 | Tashaun Gipson Sr. | 71.18 | 64.70 | 71.97 | 1054 | Bears |
-| 29 | 7 | Anthony Harris | 70.73 | 63.60 | 72.99 | 1074 | Vikings |
-| 30 | 8 | Donovan Wilson | 70.57 | 70.50 | 74.79 | 673 | Cowboys |
-| 31 | 9 | Taylor Rapp | 70.36 | 69.10 | 71.99 | 365 | Rams |
-| 32 | 10 | Devin McCourty | 70.35 | 64.30 | 70.21 | 960 | Patriots |
-| 33 | 11 | Rayshawn Jenkins | 70.18 | 70.00 | 67.90 | 860 | Chargers |
-| 34 | 12 | Duron Harmon | 69.43 | 64.40 | 68.61 | 1102 | Lions |
-| 35 | 13 | Eric Rowe | 69.26 | 64.10 | 68.54 | 919 | Dolphins |
-| 36 | 14 | Jalen Mills | 69.20 | 66.90 | 67.09 | 1014 | Eagles |
-| 37 | 15 | Jarrod Wilson | 68.81 | 64.70 | 70.30 | 765 | Jaguars |
-| 38 | 16 | Jordan Whitehead | 68.71 | 63.70 | 68.71 | 920 | Buccaneers |
-| 39 | 17 | Justin Reid | 68.69 | 67.20 | 67.40 | 888 | Texans |
-| 40 | 18 | Tavon Wilson | 68.22 | 64.20 | 70.28 | 219 | Colts |
-| 41 | 19 | Adrian Phillips | 68.15 | 62.20 | 70.76 | 747 | Patriots |
-| 42 | 20 | DeShon Elliott | 68.07 | 66.20 | 68.90 | 1044 | Ravens |
-| 43 | 21 | Jalen Thompson | 68.02 | 68.40 | 72.31 | 232 | Cardinals |
-| 44 | 22 | Quandre Diggs | 67.70 | 58.60 | 71.48 | 1075 | Seahawks |
-| 45 | 23 | Tyrann Mathieu | 67.49 | 60.40 | 68.57 | 982 | Chiefs |
-| 46 | 24 | Xavier Woods | 67.28 | 62.50 | 67.55 | 990 | Cowboys |
-| 47 | 25 | Xavier McKinney | 66.95 | 69.20 | 74.70 | 211 | Giants |
-| 48 | 26 | Bobby McCain | 66.95 | 63.10 | 68.09 | 923 | Dolphins |
-| 49 | 27 | Chris Banjo | 66.76 | 63.60 | 72.30 | 436 | Cardinals |
-| 50 | 28 | Keanu Neal | 66.65 | 66.20 | 70.49 | 917 | Falcons |
-| 51 | 29 | Jeremy Chinn | 66.44 | 64.40 | 64.66 | 967 | Panthers |
-| 52 | 30 | Ricardo Allen | 65.34 | 60.10 | 69.45 | 604 | Falcons |
-| 53 | 31 | Jaquiski Tartt | 65.04 | 63.50 | 69.50 | 374 | 49ers |
-| 54 | 32 | Antoine Winfield Jr. | 65.04 | 55.00 | 67.57 | 1034 | Buccaneers |
-| 55 | 33 | Kenny Vaccaro | 64.56 | 63.60 | 63.21 | 871 | Titans |
-| 56 | 34 | Brandon Jones | 64.43 | 59.20 | 63.75 | 385 | Dolphins |
-| 57 | 35 | Jordan Fuller | 64.35 | 58.60 | 68.19 | 708 | Rams |
-| 58 | 36 | D.J. Swearinger Sr. | 64.06 | 60.80 | 68.12 | 124 | Saints |
-| 59 | 37 | Damontae Kazee | 63.68 | 61.70 | 68.65 | 241 | Falcons |
-| 60 | 38 | Malcolm Jenkins | 63.51 | 52.00 | 67.01 | 1036 | Saints |
-| 61 | 39 | Sharrod Neasman | 63.32 | 59.40 | 66.66 | 292 | Falcons |
-| 62 | 40 | Eddie Jackson | 63.32 | 55.80 | 64.58 | 1059 | Bears |
-| 63 | 41 | Jabrill Peppers | 63.06 | 57.20 | 64.88 | 912 | Giants |
-| 64 | 42 | Nick Scott | 62.43 | 59.70 | 70.11 | 193 | Rams |
-| 65 | 43 | Erik Harris | 62.36 | 57.90 | 62.74 | 724 | Raiders |
-| 66 | 44 | Julian Love | 62.02 | 54.90 | 63.63 | 722 | Giants |
+| 20 | 1 | Marcus Epps | 73.84 | 69.84 | 77.02 | 365 | Eagles |
+| 21 | 2 | Kevin Byard | 73.48 | 63.90 | 75.70 | 1103 | Titans |
+| 22 | 3 | Jeremy Reaves | 72.70 | 69.54 | 81.47 | 263 | Commanders |
+| 23 | 4 | Mike Edwards | 72.35 | 68.23 | 73.93 | 189 | Buccaneers |
+| 24 | 5 | Vonn Bell | 72.09 | 64.60 | 73.85 | 1061 | Bengals |
+| 25 | 6 | Andrew Wingard | 71.82 | 67.33 | 75.60 | 461 | Jaguars |
+| 26 | 7 | Amani Hooker | 71.54 | 68.15 | 69.63 | 470 | Titans |
+| 27 | 8 | Micah Hyde | 71.54 | 66.80 | 71.26 | 938 | Bills |
+| 28 | 9 | Tashaun Gipson Sr. | 71.18 | 64.70 | 71.97 | 1054 | Bears |
+| 29 | 10 | Anthony Harris | 70.73 | 63.60 | 72.99 | 1074 | Vikings |
+| 30 | 11 | Devin McCourty | 70.35 | 64.30 | 70.21 | 960 | Patriots |
+| 31 | 12 | Rayshawn Jenkins | 70.18 | 70.00 | 67.90 | 860 | Chargers |
+| 32 | 13 | Donovan Wilson | 70.17 | 69.48 | 74.79 | 673 | Cowboys |
+| 33 | 14 | Duron Harmon | 69.43 | 64.40 | 68.61 | 1102 | Lions |
+| 34 | 15 | Eric Rowe | 69.26 | 64.10 | 68.54 | 919 | Dolphins |
+| 35 | 16 | Jalen Mills | 69.20 | 66.90 | 67.09 | 1014 | Eagles |
+| 36 | 17 | Taylor Rapp | 69.14 | 66.05 | 71.99 | 365 | Rams |
+| 37 | 18 | Jarrod Wilson | 68.77 | 64.60 | 70.30 | 765 | Jaguars |
+| 38 | 19 | Jordan Whitehead | 68.71 | 63.70 | 68.71 | 920 | Buccaneers |
+| 39 | 20 | Justin Reid | 68.69 | 67.20 | 67.40 | 888 | Texans |
+| 40 | 21 | Adrian Phillips | 68.10 | 62.09 | 70.76 | 747 | Patriots |
+| 41 | 22 | DeShon Elliott | 68.07 | 66.20 | 68.90 | 1044 | Ravens |
+| 42 | 23 | Tavon Wilson | 67.73 | 62.98 | 70.28 | 219 | Colts |
+| 43 | 24 | Quandre Diggs | 67.70 | 58.60 | 71.48 | 1075 | Seahawks |
+| 44 | 25 | Tyrann Mathieu | 67.49 | 60.40 | 68.57 | 982 | Chiefs |
+| 45 | 26 | Xavier Woods | 67.28 | 62.50 | 67.55 | 990 | Cowboys |
+| 46 | 27 | Bobby McCain | 66.95 | 63.10 | 68.09 | 923 | Dolphins |
+| 47 | 28 | Keanu Neal | 66.65 | 66.20 | 70.49 | 917 | Falcons |
+| 48 | 29 | Jeremy Chinn | 66.44 | 64.40 | 64.66 | 967 | Panthers |
+| 49 | 30 | Jalen Thompson | 66.44 | 64.45 | 72.31 | 232 | Cardinals |
+| 50 | 31 | Chris Banjo | 66.37 | 62.62 | 72.30 | 436 | Cardinals |
+| 51 | 32 | Ricardo Allen | 65.34 | 60.09 | 69.45 | 604 | Falcons |
+| 52 | 33 | Xavier McKinney | 65.13 | 64.65 | 74.70 | 211 | Giants |
+| 53 | 34 | Antoine Winfield Jr. | 65.04 | 55.00 | 67.57 | 1034 | Buccaneers |
+| 54 | 35 | Jaquiski Tartt | 64.76 | 62.81 | 69.50 | 374 | 49ers |
+| 55 | 36 | Kenny Vaccaro | 64.56 | 63.60 | 63.21 | 871 | Titans |
+| 56 | 37 | Brandon Jones | 64.53 | 59.45 | 63.75 | 385 | Dolphins |
+| 57 | 38 | Jordan Fuller | 64.39 | 58.70 | 68.19 | 708 | Rams |
+| 58 | 39 | D.J. Swearinger Sr. | 63.95 | 60.51 | 68.12 | 124 | Saints |
+| 59 | 40 | Malcolm Jenkins | 63.51 | 52.00 | 67.01 | 1036 | Saints |
+| 60 | 41 | Damontae Kazee | 63.49 | 61.23 | 68.65 | 241 | Falcons |
+| 61 | 42 | Sharrod Neasman | 63.41 | 59.64 | 66.66 | 292 | Falcons |
+| 62 | 43 | Eddie Jackson | 63.32 | 55.80 | 64.58 | 1059 | Bears |
+| 63 | 44 | Jabrill Peppers | 63.06 | 57.20 | 64.88 | 912 | Giants |
+| 64 | 45 | Nick Scott | 62.49 | 59.85 | 70.11 | 193 | Rams |
+| 65 | 46 | Erik Harris | 62.40 | 57.98 | 62.74 | 724 | Raiders |
+| 66 | 47 | Julian Love | 62.15 | 55.23 | 63.63 | 722 | Giants |
 
 ### Rotation/backup (36 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 67 | 1 | Juan Thornhill | 61.92 | 55.50 | 62.04 | 765 | Chiefs |
-| 68 | 2 | Julian Blackmon | 61.83 | 54.50 | 63.59 | 916 | Colts |
-| 69 | 3 | Troy Apke | 61.75 | 58.00 | 65.40 | 441 | Commanders |
-| 70 | 4 | Deshazor Everett | 61.25 | 59.30 | 64.84 | 357 | Commanders |
-| 71 | 5 | Will Redmond | 61.08 | 62.50 | 60.65 | 340 | Packers |
-| 72 | 6 | Tarvarius Moore | 61.01 | 56.10 | 63.04 | 541 | 49ers |
-| 73 | 7 | Jamal Adams | 60.63 | 53.10 | 64.19 | 784 | Seahawks |
-| 74 | 8 | Will Harris | 60.22 | 55.50 | 59.20 | 312 | Lions |
-| 75 | 9 | Jahleel Addae | 60.15 | 56.70 | 61.42 | 211 | Chargers |
-| 76 | 10 | Adrian Colbert | 60.11 | 60.00 | 67.49 | 104 | Giants |
-| 77 | 11 | Kyle Dugger | 59.92 | 55.40 | 60.85 | 520 | Patriots |
-| 78 | 12 | Juston Burris | 59.62 | 59.50 | 58.67 | 790 | Panthers |
+| 67 | 1 | Troy Apke | 61.97 | 58.54 | 65.40 | 441 | Commanders |
+| 68 | 2 | Juan Thornhill | 61.96 | 55.60 | 62.04 | 765 | Chiefs |
+| 69 | 3 | Julian Blackmon | 61.83 | 54.50 | 63.59 | 916 | Colts |
+| 70 | 4 | Deshazor Everett | 61.35 | 59.54 | 64.84 | 357 | Commanders |
+| 71 | 5 | Tarvarius Moore | 61.31 | 56.84 | 63.04 | 541 | 49ers |
+| 72 | 6 | Will Harris | 60.91 | 57.23 | 59.20 | 312 | Lions |
+| 73 | 7 | Will Redmond | 60.72 | 61.60 | 60.65 | 340 | Packers |
+| 74 | 8 | Jamal Adams | 60.67 | 53.20 | 64.19 | 784 | Seahawks |
+| 75 | 9 | Jahleel Addae | 60.54 | 57.68 | 61.42 | 211 | Chargers |
+| 76 | 10 | Kyle Dugger | 60.30 | 56.35 | 60.85 | 520 | Patriots |
+| 77 | 11 | Adrian Colbert | 60.11 | 60.00 | 67.49 | 104 | Giants |
+| 78 | 12 | Juston Burris | 59.63 | 59.51 | 58.67 | 790 | Panthers |
 | 79 | 13 | Daniel Sorensen | 59.52 | 58.50 | 58.44 | 883 | Chiefs |
 | 80 | 14 | Tre Boston | 58.57 | 49.90 | 60.60 | 1037 | Panthers |
-| 81 | 15 | Raven Greene | 58.07 | 60.10 | 62.75 | 324 | Packers |
-| 82 | 16 | Daniel Thomas | 58.01 | 62.40 | 64.34 | 162 | Jaguars |
-| 83 | 17 | Landon Collins | 57.91 | 56.10 | 60.79 | 398 | Commanders |
-| 84 | 18 | Eric Murray | 57.84 | 50.40 | 59.89 | 941 | Texans |
-| 85 | 19 | Armani Watts | 57.28 | 59.70 | 62.44 | 102 | Chiefs |
-| 86 | 20 | Matthias Farley | 57.14 | 60.50 | 62.09 | 201 | Jets |
-| 87 | 21 | Deionte Thompson | 56.20 | 55.00 | 59.46 | 332 | Cardinals |
-| 88 | 22 | Karl Joseph | 55.63 | 48.40 | 60.65 | 660 | Browns |
-| 89 | 23 | Sam Franklin Jr. | 55.34 | 51.60 | 60.96 | 251 | Panthers |
-| 90 | 24 | Dean Marlowe | 54.26 | 52.10 | 59.04 | 230 | Bills |
-| 91 | 25 | K'Von Wallace | 54.19 | 54.00 | 54.31 | 203 | Eagles |
-| 92 | 26 | Darian Thompson | 54.11 | 51.30 | 57.13 | 479 | Cowboys |
-| 93 | 27 | Ashtyn Davis | 53.49 | 45.10 | 63.25 | 402 | Jets |
-| 94 | 28 | Sheldrick Redwine | 53.14 | 51.50 | 57.10 | 276 | Browns |
-| 95 | 29 | Terrence Brooks | 52.66 | 47.30 | 56.65 | 254 | Patriots |
-| 96 | 30 | Tracy Walker III | 52.17 | 40.80 | 57.05 | 755 | Lions |
-| 97 | 31 | Bradley McDougald | 52.11 | 42.80 | 59.15 | 432 | Jets |
+| 81 | 15 | Landon Collins | 58.20 | 56.81 | 60.79 | 398 | Commanders |
+| 82 | 16 | Raven Greene | 58.05 | 60.06 | 62.75 | 324 | Packers |
+| 83 | 17 | Eric Murray | 57.84 | 50.40 | 59.89 | 941 | Texans |
+| 84 | 18 | Daniel Thomas | 57.48 | 61.06 | 64.34 | 162 | Jaguars |
+| 85 | 19 | Armani Watts | 57.36 | 59.88 | 62.44 | 102 | Chiefs |
+| 86 | 20 | Matthias Farley | 57.04 | 60.25 | 62.09 | 201 | Jets |
+| 87 | 21 | Deionte Thompson | 56.93 | 56.83 | 59.46 | 332 | Cardinals |
+| 88 | 22 | Sam Franklin Jr. | 56.84 | 55.37 | 60.96 | 251 | Panthers |
+| 89 | 23 | Karl Joseph | 56.12 | 49.62 | 60.65 | 660 | Browns |
+| 90 | 24 | Dean Marlowe | 55.76 | 55.83 | 59.04 | 230 | Bills |
+| 91 | 25 | K'Von Wallace | 55.39 | 57.02 | 54.31 | 203 | Eagles |
+| 92 | 26 | Ashtyn Davis | 55.29 | 49.60 | 63.25 | 402 | Jets |
+| 93 | 27 | Darian Thompson | 54.94 | 53.37 | 57.13 | 479 | Cowboys |
+| 94 | 28 | Terrence Brooks | 54.92 | 52.95 | 56.65 | 254 | Patriots |
+| 95 | 29 | Sheldrick Redwine | 54.57 | 55.08 | 57.10 | 276 | Browns |
+| 96 | 30 | Bradley McDougald | 53.25 | 45.65 | 59.15 | 432 | Jets |
+| 97 | 31 | Tracy Walker III | 52.37 | 41.30 | 57.05 | 755 | Lions |
 | 98 | 32 | Nasir Adderley | 51.80 | 42.50 | 59.95 | 886 | Chargers |
-| 99 | 33 | Josh Jones | 50.87 | 39.20 | 57.81 | 700 | Jaguars |
-| 100 | 34 | Andrew Sendejo | 49.98 | 40.90 | 56.14 | 918 | Browns |
-| 101 | 35 | Marcell Harris | 47.33 | 36.60 | 56.77 | 348 | 49ers |
-| 102 | 36 | Johnathan Abram | 45.00 | 30.30 | 56.88 | 856 | Raiders |
+| 99 | 33 | Josh Jones | 51.52 | 40.84 | 57.81 | 700 | Jaguars |
+| 100 | 34 | Marcell Harris | 50.61 | 44.80 | 56.77 | 348 | 49ers |
+| 101 | 35 | Andrew Sendejo | 49.98 | 40.90 | 56.14 | 918 | Browns |
+| 102 | 36 | Johnathan Abram | 47.94 | 40.00 | 56.88 | 856 | Raiders |
 
 ## T — Tackle
 
 - **Season used:** `2020`
 - **PFF column (model anchor):** `grades_offense` · **Snap column (volume filter):** `snap_counts_offense`
 
-### Elite (42 players)
+### Elite (36 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 1 | 1 | David Bakhtiari | 96.69 | 91.80 | 95.78 | 758 | Packers |
-| 2 | 2 | Trent Williams | 96.30 | 91.90 | 95.06 | 957 | 49ers |
-| 3 | 3 | Garett Bolles | 96.02 | 90.60 | 95.47 | 1015 | Broncos |
-| 4 | 4 | Andrew Whitworth | 94.69 | 88.70 | 94.52 | 600 | Rams |
-| 5 | 5 | D.J. Humphries | 94.18 | 88.30 | 93.94 | 1129 | Cardinals |
+| 1 | 1 | Trent Williams | 96.19 | 91.63 | 95.06 | 957 | 49ers |
+| 2 | 2 | Garett Bolles | 96.02 | 90.60 | 95.47 | 1015 | Broncos |
+| 3 | 3 | David Bakhtiari | 95.75 | 89.46 | 95.78 | 758 | Packers |
+| 4 | 4 | D.J. Humphries | 94.18 | 88.30 | 93.94 | 1129 | Cardinals |
+| 5 | 5 | Andrew Whitworth | 93.18 | 84.92 | 94.52 | 600 | Rams |
 | 6 | 6 | Duane Brown | 91.56 | 87.30 | 90.24 | 1048 | Seahawks |
-| 7 | 7 | Terron Armstead | 91.12 | 86.30 | 90.17 | 857 | Saints |
+| 7 | 7 | Terron Armstead | 90.70 | 85.24 | 90.17 | 857 | Saints |
 | 8 | 8 | Jack Conklin | 90.32 | 84.30 | 90.17 | 999 | Browns |
 | 9 | 9 | Ryan Ramczyk | 88.61 | 81.50 | 89.19 | 1038 | Saints |
-| 10 | 10 | Isaiah Wynn | 88.59 | 82.60 | 88.42 | 641 | Patriots |
-| 11 | 11 | Tristan Wirfs | 88.18 | 81.80 | 88.26 | 1073 | Buccaneers |
-| 12 | 12 | Morgan Moses | 88.17 | 80.60 | 89.05 | 1065 | Commanders |
-| 13 | 13 | Taylor Moton | 88.07 | 81.60 | 88.22 | 1032 | Panthers |
-| 14 | 14 | Taylor Decker | 87.94 | 82.00 | 87.73 | 1048 | Lions |
-| 15 | 15 | Mike McGlinchey | 87.81 | 79.60 | 89.12 | 1091 | 49ers |
-| 16 | 16 | Rob Havenstein | 87.76 | 80.20 | 88.64 | 1117 | Rams |
-| 17 | 17 | Ronnie Stanley | 87.36 | 79.90 | 88.16 | 312 | Ravens |
-| 18 | 18 | Braden Smith | 87.35 | 80.10 | 88.02 | 937 | Colts |
-| 19 | 19 | Brian O'Neill | 86.91 | 78.00 | 88.68 | 1070 | Vikings |
-| 20 | 20 | Eric Fisher | 85.79 | 80.00 | 85.49 | 1049 | Chiefs |
+| 10 | 10 | Tristan Wirfs | 88.18 | 81.80 | 88.26 | 1073 | Buccaneers |
+| 11 | 11 | Morgan Moses | 88.17 | 80.60 | 89.05 | 1065 | Commanders |
+| 12 | 12 | Taylor Moton | 88.07 | 81.60 | 88.22 | 1032 | Panthers |
+| 13 | 13 | Taylor Decker | 87.94 | 82.00 | 87.73 | 1048 | Lions |
+| 14 | 14 | Mike McGlinchey | 87.81 | 79.60 | 89.12 | 1091 | 49ers |
+| 15 | 15 | Rob Havenstein | 87.76 | 80.20 | 88.64 | 1117 | Rams |
+| 16 | 16 | Braden Smith | 87.23 | 79.80 | 88.02 | 937 | Colts |
+| 17 | 17 | Brian O'Neill | 86.91 | 78.00 | 88.68 | 1070 | Vikings |
+| 18 | 18 | Isaiah Wynn | 86.84 | 78.23 | 88.42 | 641 | Patriots |
+| 19 | 19 | Eric Fisher | 85.79 | 80.00 | 85.49 | 1049 | Chiefs |
+| 20 | 20 | Ronnie Stanley | 85.27 | 74.68 | 88.16 | 312 | Ravens |
 | 21 | 21 | Dion Dawkins | 84.96 | 78.10 | 85.36 | 1034 | Bills |
 | 22 | 22 | Orlando Brown Jr. | 84.26 | 76.50 | 85.26 | 1027 | Ravens |
-| 23 | 23 | Rick Wagner | 84.20 | 77.00 | 84.84 | 610 | Packers |
-| 24 | 24 | Cornelius Lucas | 83.86 | 78.20 | 83.47 | 536 | Commanders |
-| 25 | 25 | Laremy Tunsil | 83.20 | 75.40 | 84.24 | 817 | Texans |
-| 26 | 26 | Mekhi Becton | 83.19 | 74.40 | 84.88 | 691 | Jets |
-| 27 | 27 | Charles Leno Jr. | 82.91 | 74.60 | 84.28 | 1066 | Bears |
-| 28 | 28 | Kendall Lamm | 82.65 | 76.80 | 82.39 | 113 | Browns |
-| 29 | 29 | Mitchell Schwartz | 82.28 | 74.70 | 83.16 | 357 | Chiefs |
-| 30 | 30 | Jake Matthews | 81.97 | 75.50 | 82.11 | 1113 | Falcons |
-| 31 | 31 | Lane Johnson | 81.72 | 71.90 | 84.10 | 405 | Eagles |
-| 32 | 32 | Russell Okung | 81.66 | 73.00 | 83.27 | 406 | Panthers |
-| 33 | 33 | Donovan Smith | 81.66 | 71.80 | 84.07 | 962 | Buccaneers |
-| 34 | 34 | James Hurst | 81.31 | 70.10 | 84.62 | 377 | Saints |
-| 35 | 35 | Brandon Shell | 81.05 | 72.70 | 82.45 | 673 | Seahawks |
-| 36 | 36 | Alejandro Villanueva | 80.87 | 74.60 | 80.88 | 1098 | Steelers |
-| 37 | 37 | Rashod Hill | 80.87 | 72.20 | 82.49 | 121 | Vikings |
-| 38 | 38 | Anthony Castonzo | 80.86 | 73.40 | 81.66 | 749 | Colts |
-| 39 | 39 | Demar Dotson | 80.79 | 70.80 | 83.29 | 451 | Broncos |
-| 40 | 40 | Bobby Massie | 80.38 | 72.60 | 81.40 | 470 | Bears |
-| 41 | 41 | Riley Reiff | 80.15 | 71.30 | 81.89 | 1003 | Vikings |
-| 42 | 42 | Mike Remmers | 80.05 | 70.10 | 82.52 | 709 | Chiefs |
+| 23 | 23 | Rick Wagner | 83.34 | 74.83 | 84.84 | 610 | Packers |
+| 24 | 24 | Charles Leno Jr. | 82.91 | 74.60 | 84.28 | 1066 | Bears |
+| 25 | 25 | Laremy Tunsil | 82.88 | 74.58 | 84.24 | 817 | Texans |
+| 26 | 26 | Mekhi Becton | 82.25 | 72.06 | 84.88 | 691 | Jets |
+| 27 | 27 | Jake Matthews | 81.97 | 75.50 | 82.11 | 1113 | Falcons |
+| 28 | 28 | Cornelius Lucas | 81.95 | 73.43 | 83.47 | 536 | Commanders |
+| 29 | 29 | Donovan Smith | 81.61 | 71.66 | 84.07 | 962 | Buccaneers |
+| 30 | 30 | Mitchell Schwartz | 80.87 | 71.19 | 83.16 | 357 | Chiefs |
+| 31 | 31 | Alejandro Villanueva | 80.87 | 74.60 | 80.88 | 1098 | Steelers |
+| 32 | 32 | Lane Johnson | 80.70 | 69.34 | 84.10 | 405 | Eagles |
+| 33 | 33 | Russell Okung | 80.55 | 70.21 | 83.27 | 406 | Panthers |
+| 34 | 34 | Anthony Castonzo | 80.44 | 72.37 | 81.66 | 749 | Colts |
+| 35 | 35 | Brandon Shell | 80.17 | 70.50 | 82.45 | 673 | Seahawks |
+| 36 | 36 | Riley Reiff | 80.15 | 71.30 | 81.89 | 1003 | Vikings |
 
-### Good (21 players)
+### Good (25 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 43 | 1 | Kolton Miller | 79.76 | 73.00 | 80.10 | 961 | Raiders |
-| 44 | 2 | Jordan Mailata | 79.49 | 70.40 | 81.39 | 733 | Eagles |
-| 45 | 3 | Trent Brown | 79.49 | 68.90 | 82.38 | 282 | Raiders |
-| 46 | 4 | Matt Peart | 79.30 | 69.70 | 81.53 | 150 | Giants |
-| 47 | 5 | Kelvin Beachum | 78.98 | 69.00 | 81.47 | 1126 | Cardinals |
-| 48 | 6 | Tyron Smith | 77.82 | 67.80 | 80.33 | 154 | Cowboys |
-| 49 | 7 | Jonah Williams | 77.75 | 70.10 | 78.69 | 634 | Bengals |
-| 50 | 8 | Roderick Johnson | 77.61 | 64.50 | 82.18 | 245 | Texans |
-| 51 | 9 | Dennis Kelly | 77.52 | 65.90 | 81.10 | 1049 | Titans |
-| 52 | 10 | Bobby Hart | 77.06 | 66.30 | 80.06 | 872 | Bengals |
-| 53 | 11 | Ty Sambrailo | 76.93 | 65.60 | 80.31 | 415 | Titans |
-| 54 | 12 | Cedric Ogbuehi | 76.92 | 65.50 | 80.36 | 277 | Seahawks |
-| 55 | 13 | Jason Peters | 76.42 | 67.60 | 78.14 | 509 | Eagles |
-| 56 | 14 | Chuma Edoga | 76.20 | 61.30 | 81.96 | 235 | Jets |
-| 57 | 15 | Kaleb McGary | 76.11 | 64.30 | 79.82 | 890 | Falcons |
-| 58 | 16 | Tyrell Crosby | 75.12 | 64.20 | 78.23 | 657 | Lions |
-| 59 | 17 | Tytus Howard | 74.81 | 62.10 | 79.11 | 811 | Texans |
-| 60 | 18 | Jesse Davis | 74.51 | 62.60 | 78.28 | 1055 | Dolphins |
-| 61 | 19 | Josh Wells | 74.44 | 65.10 | 76.50 | 111 | Buccaneers |
-| 62 | 20 | Jedrick Wills Jr. | 74.34 | 61.50 | 78.73 | 957 | Browns |
-| 63 | 21 | Justin Herron | 74.13 | 63.40 | 77.11 | 352 | Patriots |
+| 37 | 1 | Demar Dotson | 79.95 | 68.70 | 83.29 | 451 | Broncos |
+| 38 | 2 | James Hurst | 79.77 | 66.25 | 84.62 | 377 | Saints |
+| 39 | 3 | Kolton Miller | 79.70 | 72.84 | 80.10 | 961 | Raiders |
+| 40 | 4 | Mike Remmers | 79.44 | 68.57 | 82.52 | 709 | Chiefs |
+| 41 | 5 | Kelvin Beachum | 78.98 | 69.00 | 81.47 | 1126 | Cardinals |
+| 42 | 6 | Jordan Mailata | 78.92 | 68.97 | 81.39 | 733 | Eagles |
+| 43 | 7 | Bobby Massie | 78.82 | 68.70 | 81.40 | 470 | Bears |
+| 44 | 8 | Kendall Lamm | 78.62 | 66.72 | 82.39 | 113 | Browns |
+| 45 | 9 | Trent Brown | 78.50 | 66.42 | 82.38 | 282 | Raiders |
+| 46 | 10 | Rashod Hill | 77.95 | 64.88 | 82.49 | 121 | Vikings |
+| 47 | 11 | Dennis Kelly | 77.52 | 65.90 | 81.10 | 1049 | Titans |
+| 48 | 12 | Matt Peart | 76.97 | 63.88 | 81.53 | 150 | Giants |
+| 49 | 13 | Jonah Williams | 76.95 | 68.10 | 78.69 | 634 | Bengals |
+| 50 | 14 | Bobby Hart | 76.91 | 65.93 | 80.06 | 872 | Bengals |
+| 51 | 15 | Roderick Johnson | 76.70 | 62.24 | 82.18 | 245 | Texans |
+| 52 | 16 | Tyron Smith | 76.69 | 64.99 | 80.33 | 154 | Cowboys |
+| 53 | 17 | Ty Sambrailo | 76.14 | 63.63 | 80.31 | 415 | Titans |
+| 54 | 18 | Kaleb McGary | 76.03 | 64.09 | 79.82 | 890 | Falcons |
+| 55 | 19 | Chuma Edoga | 75.93 | 60.63 | 81.96 | 235 | Jets |
+| 56 | 20 | Jason Peters | 75.91 | 66.32 | 78.14 | 509 | Eagles |
+| 57 | 21 | Cedric Ogbuehi | 75.88 | 62.92 | 80.36 | 277 | Seahawks |
+| 58 | 22 | Tyrell Crosby | 74.81 | 63.43 | 78.23 | 657 | Lions |
+| 59 | 23 | Tytus Howard | 74.73 | 61.91 | 79.11 | 811 | Texans |
+| 60 | 24 | Jesse Davis | 74.51 | 62.60 | 78.28 | 1055 | Dolphins |
+| 61 | 25 | Jedrick Wills Jr. | 74.33 | 61.48 | 78.73 | 957 | Browns |
 
-### Starter (29 players)
+### Starter (31 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 64 | 1 | Taylor Lewan | 73.79 | 61.80 | 77.61 | 239 | Titans |
-| 65 | 2 | Chaz Green | 73.72 | 61.90 | 77.43 | 209 | Colts |
-| 66 | 3 | David Quessenberry | 73.41 | 61.70 | 77.05 | 437 | Titans |
-| 67 | 4 | Bryan Bulaga | 73.23 | 61.60 | 76.81 | 444 | Chargers |
-| 68 | 5 | Andrew Thomas | 73.16 | 62.40 | 76.16 | 978 | Giants |
-| 69 | 6 | George Fant | 73.15 | 61.60 | 76.69 | 829 | Jets |
-| 70 | 7 | Cam Robinson | 73.10 | 61.70 | 76.54 | 973 | Jaguars |
-| 71 | 8 | Geron Christian | 73.00 | 62.30 | 75.96 | 398 | Commanders |
-| 72 | 9 | Trent Scott | 72.91 | 60.20 | 77.21 | 347 | Panthers |
-| 73 | 10 | Sam Young | 72.38 | 59.00 | 77.14 | 382 | Raiders |
-| 74 | 11 | Cam Fleming | 72.38 | 58.40 | 77.54 | 913 | Giants |
-| 75 | 12 | Chukwuma Okorafor | 71.05 | 57.50 | 75.91 | 1033 | Steelers |
-| 76 | 13 | Jawaan Taylor | 70.69 | 56.50 | 75.99 | 1037 | Jaguars |
-| 77 | 14 | Conor McDermott | 69.55 | 54.20 | 75.62 | 247 | Jets |
-| 78 | 15 | Matt Gono | 69.40 | 54.90 | 74.90 | 336 | Falcons |
-| 79 | 16 | Trey Pipkins III | 69.34 | 54.80 | 74.87 | 571 | Chargers |
-| 80 | 17 | Sam Tevi | 68.05 | 52.90 | 73.98 | 1024 | Chargers |
-| 81 | 18 | Matt Nelson | 67.50 | 55.80 | 71.14 | 242 | Lions |
-| 82 | 19 | Austin Jackson | 67.07 | 52.50 | 72.61 | 848 | Dolphins |
-| 83 | 20 | David Sharpe | 67.04 | 50.90 | 73.63 | 184 | Commanders |
-| 84 | 21 | Hakeem Adeniji | 66.89 | 51.60 | 72.92 | 233 | Bengals |
-| 85 | 22 | Greg Little | 66.56 | 44.10 | 77.36 | 134 | Panthers |
-| 86 | 23 | Terence Steele | 66.17 | 50.30 | 72.58 | 970 | Cowboys |
-| 87 | 24 | Brandon Parker | 65.81 | 48.90 | 72.91 | 345 | Raiders |
-| 88 | 25 | Fred Johnson | 65.11 | 48.40 | 72.08 | 491 | Bengals |
-| 89 | 26 | Brandon Knight | 65.07 | 48.50 | 71.95 | 774 | Cowboys |
-| 90 | 27 | Le'Raven Clark | 64.96 | 49.10 | 71.36 | 148 | Colts |
-| 91 | 28 | Calvin Anderson | 64.39 | 55.10 | 66.42 | 132 | Broncos |
-| 92 | 29 | Justin Skule | 64.00 | 45.40 | 72.23 | 255 | 49ers |
+| 62 | 1 | Justin Herron | 73.58 | 62.03 | 77.11 | 352 | Patriots |
+| 63 | 2 | Taylor Lewan | 73.57 | 61.25 | 77.61 | 239 | Titans |
+| 64 | 3 | Chaz Green | 73.31 | 60.88 | 77.43 | 209 | Colts |
+| 65 | 4 | Josh Wells | 73.22 | 62.04 | 76.50 | 111 | Buccaneers |
+| 66 | 5 | David Quessenberry | 73.18 | 61.13 | 77.05 | 437 | Titans |
+| 67 | 6 | Andrew Thomas | 73.15 | 62.39 | 76.16 | 978 | Giants |
+| 68 | 7 | Bryan Bulaga | 73.10 | 61.28 | 76.81 | 444 | Chargers |
+| 69 | 8 | Cam Robinson | 73.10 | 61.69 | 76.54 | 973 | Jaguars |
+| 70 | 9 | George Fant | 73.10 | 61.47 | 76.69 | 829 | Jets |
+| 71 | 10 | Trent Scott | 72.87 | 60.12 | 77.21 | 347 | Panthers |
+| 72 | 11 | Geron Christian | 72.66 | 61.46 | 75.96 | 398 | Commanders |
+| 73 | 12 | Sam Young | 72.54 | 59.38 | 77.14 | 382 | Raiders |
+| 74 | 13 | Cam Fleming | 72.41 | 58.46 | 77.54 | 913 | Giants |
+| 75 | 14 | Chukwuma Okorafor | 71.05 | 57.50 | 75.91 | 1033 | Steelers |
+| 76 | 15 | Conor McDermott | 70.71 | 57.10 | 75.62 | 247 | Jets |
+| 77 | 16 | Jawaan Taylor | 70.69 | 56.50 | 75.99 | 1037 | Jaguars |
+| 78 | 17 | Greg Little | 70.37 | 53.64 | 77.36 | 134 | Panthers |
+| 79 | 18 | Matt Gono | 70.25 | 57.02 | 74.90 | 336 | Falcons |
+| 80 | 19 | Trey Pipkins III | 69.84 | 56.04 | 74.87 | 571 | Chargers |
+| 81 | 20 | David Sharpe | 69.11 | 56.07 | 73.63 | 184 | Commanders |
+| 82 | 21 | Hakeem Adeniji | 68.62 | 55.91 | 72.92 | 233 | Bengals |
+| 83 | 22 | Matt Nelson | 68.35 | 57.92 | 71.14 | 242 | Lions |
+| 84 | 23 | Sam Tevi | 68.05 | 52.90 | 73.98 | 1024 | Chargers |
+| 85 | 24 | Brandon Parker | 67.62 | 53.43 | 72.91 | 345 | Raiders |
+| 86 | 25 | Le'Raven Clark | 67.57 | 55.64 | 71.36 | 148 | Colts |
+| 87 | 26 | Austin Jackson | 67.28 | 53.04 | 72.61 | 848 | Dolphins |
+| 88 | 27 | Justin Skule | 66.87 | 52.57 | 72.23 | 255 | 49ers |
+| 89 | 28 | Fred Johnson | 66.47 | 51.81 | 72.08 | 491 | Bengals |
+| 90 | 29 | Terence Steele | 66.20 | 50.37 | 72.58 | 970 | Cowboys |
+| 91 | 30 | Brandon Knight | 65.59 | 49.81 | 71.95 | 774 | Cowboys |
+| 92 | 31 | Calvin Anderson | 65.57 | 58.04 | 66.42 | 132 | Broncos |
 
 ### Rotation/backup (0 players)
 
@@ -1259,273 +1259,273 @@ _None._
 - **Season used:** `2020`
 - **PFF column (model anchor):** `grades_offense` · **Snap column (volume filter):** `total_snaps`
 
-### Elite (6 players)
+### Elite (4 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 1 | 1 | George Kittle | 85.30 | 84.90 | 81.40 | 262 | 49ers |
-| 2 | 2 | Travis Kelce | 83.96 | 93.50 | 73.43 | 635 | Chiefs |
-| 3 | 3 | Mark Andrews | 83.35 | 81.80 | 80.21 | 364 | Ravens |
-| 4 | 4 | Mo Alie-Cox | 82.15 | 78.20 | 80.62 | 226 | Colts |
-| 5 | 5 | Darren Waller | 82.03 | 86.50 | 74.89 | 620 | Raiders |
-| 6 | 6 | Pharaoh Brown | 80.69 | 81.30 | 76.12 | 126 | Texans |
+| 1 | 1 | Travis Kelce | 83.81 | 93.12 | 73.43 | 635 | Chiefs |
+| 2 | 2 | George Kittle | 83.09 | 79.37 | 81.40 | 262 | 49ers |
+| 3 | 3 | Mark Andrews | 82.00 | 78.43 | 80.21 | 364 | Ravens |
+| 4 | 4 | Darren Waller | 81.84 | 86.01 | 74.89 | 620 | Raiders |
 
-### Good (11 players)
+### Good (5 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 7 | 1 | Rob Gronkowski | 79.27 | 72.10 | 79.89 | 498 | Buccaneers |
-| 8 | 2 | Richard Rodgers | 78.43 | 88.60 | 67.48 | 174 | Eagles |
-| 9 | 3 | Adam Trautman | 77.12 | 79.40 | 71.44 | 172 | Saints |
-| 10 | 4 | Dallas Goedert | 76.35 | 79.60 | 70.01 | 390 | Eagles |
-| 11 | 5 | Anthony Firkser | 75.69 | 77.10 | 70.59 | 250 | Titans |
-| 12 | 6 | Donald Parham Jr. | 75.59 | 64.50 | 78.82 | 136 | Chargers |
-| 13 | 7 | Foster Moreau | 74.76 | 67.20 | 75.64 | 117 | Raiders |
-| 14 | 8 | Will Dissly | 74.68 | 66.10 | 76.23 | 308 | Seahawks |
-| 15 | 9 | Jordan Reed | 74.51 | 66.20 | 75.88 | 190 | 49ers |
-| 16 | 10 | Mike Gesicki | 74.23 | 78.10 | 67.48 | 473 | Dolphins |
-| 17 | 11 | Dan Arnold | 74.12 | 61.70 | 78.24 | 312 | Cardinals |
+| 5 | 1 | Mo Alie-Cox | 79.13 | 70.65 | 80.62 | 226 | Colts |
+| 6 | 2 | Rob Gronkowski | 78.89 | 71.15 | 79.89 | 498 | Buccaneers |
+| 7 | 3 | Pharaoh Brown | 75.90 | 69.31 | 76.12 | 126 | Texans |
+| 8 | 4 | Dallas Goedert | 75.26 | 76.88 | 70.01 | 390 | Eagles |
+| 9 | 5 | Donald Parham Jr. | 74.61 | 62.04 | 78.82 | 136 | Chargers |
 
-### Starter (55 players)
+### Starter (64 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 18 | 1 | T.J. Hockenson | 73.24 | 75.50 | 67.56 | 538 | Lions |
-| 19 | 2 | Darren Fells | 73.06 | 69.50 | 71.27 | 313 | Texans |
-| 20 | 3 | Hunter Henry | 72.78 | 69.30 | 70.94 | 586 | Chargers |
-| 21 | 4 | Tyler Higbee | 72.61 | 69.20 | 70.71 | 424 | Rams |
-| 22 | 5 | David Njoku | 72.60 | 66.90 | 72.23 | 216 | Browns |
-| 23 | 6 | Jonnu Smith | 72.57 | 75.20 | 66.65 | 353 | Titans |
-| 24 | 7 | Robert Tonyan | 72.43 | 68.00 | 71.21 | 426 | Packers |
-| 25 | 8 | Jared Cook | 72.16 | 71.90 | 68.16 | 338 | Saints |
-| 26 | 9 | Noah Fant | 72.13 | 71.20 | 68.58 | 466 | Broncos |
-| 27 | 10 | Kyle Rudolph | 72.02 | 66.50 | 71.53 | 296 | Vikings |
-| 28 | 11 | Trey Burton | 71.97 | 66.70 | 71.31 | 242 | Colts |
-| 29 | 12 | Marcedes Lewis | 71.89 | 68.00 | 70.31 | 191 | Packers |
-| 30 | 13 | Jack Doyle | 71.80 | 67.00 | 70.83 | 244 | Colts |
-| 31 | 14 | Greg Olsen | 71.79 | 62.00 | 74.15 | 316 | Seahawks |
-| 32 | 15 | Jordan Akins | 71.23 | 71.80 | 66.68 | 301 | Texans |
-| 33 | 16 | Austin Hooper | 70.96 | 68.30 | 68.56 | 366 | Browns |
-| 34 | 17 | Blake Bell | 70.38 | 63.10 | 71.07 | 154 | Cowboys |
-| 35 | 18 | Adam Shaheen | 70.34 | 66.00 | 69.06 | 160 | Dolphins |
-| 36 | 19 | Tyler Kroft | 70.13 | 64.30 | 69.85 | 135 | Bills |
-| 37 | 20 | Durham Smythe | 69.88 | 68.70 | 66.50 | 207 | Dolphins |
-| 38 | 21 | Jimmy Graham | 69.87 | 62.70 | 70.49 | 445 | Bears |
-| 39 | 22 | Cameron Brate | 69.81 | 67.80 | 66.99 | 198 | Buccaneers |
-| 40 | 23 | Zach Ertz | 69.80 | 57.30 | 73.97 | 424 | Eagles |
-| 41 | 24 | Nick Boyle | 69.71 | 70.60 | 64.95 | 151 | Ravens |
-| 42 | 25 | Irv Smith Jr. | 69.07 | 70.00 | 64.29 | 322 | Vikings |
-| 43 | 26 | Chris Herndon | 68.81 | 57.60 | 72.11 | 438 | Jets |
-| 44 | 27 | Gerald Everett | 68.47 | 62.80 | 68.09 | 353 | Rams |
-| 45 | 28 | Dawson Knox | 68.47 | 61.40 | 69.02 | 249 | Bills |
-| 46 | 29 | Evan Engram | 68.34 | 60.60 | 69.34 | 567 | Giants |
-| 47 | 30 | Jesse James | 68.33 | 61.20 | 68.92 | 237 | Lions |
-| 48 | 31 | Maxx Williams | 68.17 | 67.70 | 64.32 | 122 | Cardinals |
-| 49 | 32 | Tyler Eifert | 67.48 | 62.20 | 66.84 | 417 | Jaguars |
-| 50 | 33 | Harrison Bryant | 67.40 | 60.70 | 67.70 | 294 | Browns |
-| 51 | 34 | Jason Witten | 67.15 | 60.80 | 67.21 | 179 | Raiders |
-| 52 | 35 | Kaden Smith | 66.84 | 66.90 | 62.64 | 203 | Giants |
-| 53 | 36 | Drew Sample | 66.67 | 61.40 | 66.02 | 513 | Bengals |
-| 54 | 37 | Ross Dwelley | 66.43 | 61.30 | 65.69 | 234 | 49ers |
-| 55 | 38 | Eric Ebron | 66.38 | 55.70 | 69.33 | 536 | Steelers |
-| 56 | 39 | Dalton Schultz | 66.32 | 63.90 | 63.76 | 620 | Cowboys |
-| 57 | 40 | Logan Thomas | 66.31 | 64.50 | 63.35 | 661 | Commanders |
-| 58 | 41 | Darrell Daniels | 66.20 | 59.10 | 66.76 | 117 | Cardinals |
-| 59 | 42 | James O'Shaughnessy | 66.00 | 57.70 | 67.37 | 264 | Jaguars |
-| 60 | 43 | Hayden Hurst | 65.88 | 58.90 | 66.37 | 588 | Falcons |
-| 61 | 44 | Geoff Swaim | 65.66 | 62.20 | 63.80 | 126 | Titans |
-| 62 | 45 | Cole Kmet | 65.65 | 58.70 | 66.12 | 326 | Bears |
-| 63 | 46 | Josh Hill | 65.43 | 62.70 | 63.08 | 141 | Saints |
-| 64 | 47 | Jacob Hollister | 64.98 | 62.50 | 62.47 | 220 | Seahawks |
-| 65 | 48 | Nick Vannett | 64.73 | 57.20 | 65.58 | 154 | Broncos |
-| 66 | 49 | Devin Asiasi | 64.65 | 51.60 | 69.19 | 109 | Patriots |
-| 67 | 50 | Chris Manhertz | 64.40 | 58.10 | 64.43 | 220 | Panthers |
-| 68 | 51 | Ryan Izzo | 64.29 | 52.10 | 68.25 | 292 | Patriots |
-| 69 | 52 | Demetrius Harris | 64.28 | 58.50 | 63.97 | 109 | Bears |
-| 70 | 53 | Ryan Griffin | 64.10 | 56.10 | 65.26 | 157 | Jets |
-| 71 | 54 | Levine Toilolo | 63.89 | 56.50 | 64.65 | 102 | Giants |
-| 72 | 55 | Tyler Conklin | 62.55 | 52.60 | 65.01 | 257 | Vikings |
+| 10 | 1 | Will Dissly | 73.91 | 64.17 | 76.23 | 308 | Seahawks |
+| 11 | 2 | Dan Arnold | 73.91 | 61.17 | 78.24 | 312 | Cardinals |
+| 12 | 3 | Jordan Reed | 73.82 | 64.48 | 75.88 | 190 | 49ers |
+| 13 | 4 | Adam Trautman | 73.32 | 69.90 | 71.44 | 172 | Saints |
+| 14 | 5 | Mike Gesicki | 73.12 | 75.32 | 67.48 | 473 | Dolphins |
+| 15 | 6 | Foster Moreau | 73.10 | 63.03 | 75.64 | 117 | Raiders |
+| 16 | 7 | Anthony Firkser | 73.06 | 70.52 | 70.59 | 250 | Titans |
+| 17 | 8 | Richard Rodgers | 72.86 | 74.68 | 67.48 | 174 | Eagles |
+| 18 | 9 | Hunter Henry | 72.66 | 68.98 | 70.94 | 586 | Chargers |
+| 19 | 10 | T.J. Hockenson | 72.63 | 73.99 | 67.56 | 538 | Lions |
+| 20 | 11 | Tyler Higbee | 72.17 | 68.10 | 70.71 | 424 | Rams |
+| 21 | 12 | Darren Fells | 71.88 | 66.54 | 71.27 | 313 | Texans |
+| 22 | 13 | Robert Tonyan | 71.80 | 66.43 | 71.21 | 426 | Packers |
+| 23 | 14 | Greg Olsen | 71.64 | 61.63 | 74.15 | 316 | Seahawks |
+| 24 | 15 | Kyle Rudolph | 71.50 | 65.21 | 71.53 | 296 | Vikings |
+| 25 | 16 | David Njoku | 71.42 | 63.95 | 72.23 | 216 | Browns |
+| 26 | 17 | Noah Fant | 71.41 | 69.41 | 68.58 | 466 | Broncos |
+| 27 | 18 | Jared Cook | 71.34 | 69.87 | 68.16 | 338 | Saints |
+| 28 | 19 | Jack Doyle | 71.14 | 65.35 | 70.83 | 244 | Colts |
+| 29 | 20 | Marcedes Lewis | 71.00 | 65.78 | 70.31 | 191 | Packers |
+| 30 | 21 | Jonnu Smith | 70.94 | 71.12 | 66.65 | 353 | Titans |
+| 31 | 22 | Trey Burton | 70.91 | 64.06 | 71.31 | 242 | Colts |
+| 32 | 23 | Austin Hooper | 70.45 | 67.03 | 68.56 | 366 | Browns |
+| 33 | 24 | Zach Ertz | 69.93 | 57.62 | 73.97 | 424 | Eagles |
+| 34 | 25 | Jimmy Graham | 69.76 | 62.41 | 70.49 | 445 | Bears |
+| 35 | 26 | Blake Bell | 69.74 | 61.50 | 71.07 | 154 | Cowboys |
+| 36 | 27 | Jordan Akins | 69.70 | 67.97 | 66.68 | 301 | Texans |
+| 37 | 28 | Tyler Kroft | 69.19 | 61.94 | 69.85 | 135 | Bills |
+| 38 | 29 | Adam Shaheen | 69.12 | 62.95 | 69.06 | 160 | Dolphins |
+| 39 | 30 | Chris Herndon | 68.98 | 58.04 | 72.11 | 438 | Jets |
+| 40 | 31 | Cameron Brate | 68.97 | 65.68 | 66.99 | 198 | Buccaneers |
+| 41 | 32 | Durham Smythe | 68.35 | 64.87 | 66.50 | 207 | Dolphins |
+| 42 | 33 | Evan Engram | 68.33 | 60.56 | 69.34 | 567 | Giants |
+| 43 | 34 | Dawson Knox | 68.26 | 60.86 | 69.02 | 249 | Bills |
+| 44 | 35 | Gerald Everett | 68.17 | 62.05 | 68.09 | 353 | Rams |
+| 45 | 36 | Jesse James | 68.14 | 60.72 | 68.92 | 237 | Lions |
+| 46 | 37 | Irv Smith Jr. | 67.87 | 66.98 | 64.29 | 322 | Vikings |
+| 47 | 38 | Nick Boyle | 67.50 | 65.07 | 64.95 | 151 | Ravens |
+| 48 | 39 | Tyler Eifert | 67.38 | 61.93 | 66.84 | 417 | Jaguars |
+| 49 | 40 | Harrison Bryant | 67.31 | 60.47 | 67.70 | 294 | Browns |
+| 50 | 41 | Jason Witten | 67.05 | 60.57 | 67.21 | 179 | Raiders |
+| 51 | 42 | Devin Asiasi | 66.65 | 56.59 | 69.19 | 109 | Patriots |
+| 52 | 43 | Drew Sample | 66.60 | 61.23 | 66.02 | 513 | Bengals |
+| 53 | 44 | Eric Ebron | 66.55 | 56.12 | 69.33 | 536 | Steelers |
+| 54 | 45 | Maxx Williams | 66.42 | 63.31 | 64.32 | 122 | Cardinals |
+| 55 | 46 | Darrell Daniels | 66.40 | 59.62 | 66.76 | 117 | Cardinals |
+| 56 | 47 | James O'Shaughnessy | 66.34 | 58.55 | 67.37 | 264 | Jaguars |
+| 57 | 48 | Logan Thomas | 66.31 | 64.50 | 63.35 | 661 | Commanders |
+| 58 | 49 | Dalton Schultz | 66.27 | 63.78 | 63.76 | 620 | Cowboys |
+| 59 | 50 | Ross Dwelley | 66.22 | 60.77 | 65.69 | 234 | 49ers |
+| 60 | 51 | Hayden Hurst | 65.91 | 58.96 | 66.37 | 588 | Falcons |
+| 61 | 52 | Cole Kmet | 65.81 | 59.09 | 66.12 | 326 | Bears |
+| 62 | 53 | Kaden Smith | 65.62 | 63.83 | 62.64 | 203 | Giants |
+| 63 | 54 | Ryan Izzo | 65.35 | 54.75 | 68.25 | 292 | Patriots |
+| 64 | 55 | Nick Vannett | 65.31 | 58.65 | 65.58 | 154 | Broncos |
+| 65 | 56 | Geoff Swaim | 65.16 | 60.96 | 63.80 | 126 | Titans |
+| 66 | 57 | Ryan Griffin | 64.90 | 58.10 | 65.26 | 157 | Jets |
+| 67 | 58 | Josh Hill | 64.85 | 61.25 | 63.08 | 141 | Saints |
+| 68 | 59 | Levine Toilolo | 64.73 | 58.60 | 64.65 | 102 | Giants |
+| 69 | 60 | Chris Manhertz | 64.72 | 58.90 | 64.43 | 220 | Panthers |
+| 70 | 61 | Demetrius Harris | 64.64 | 59.39 | 63.97 | 109 | Bears |
+| 71 | 62 | Jacob Hollister | 64.56 | 61.44 | 62.47 | 220 | Seahawks |
+| 72 | 63 | Tyler Conklin | 63.66 | 55.38 | 65.01 | 257 | Vikings |
+| 73 | 64 | Nick Keizer | 62.76 | 54.52 | 64.09 | 127 | Chiefs |
 
-### Rotation/backup (4 players)
+### Rotation/backup (3 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 73 | 1 | Nick Keizer | 59.95 | 47.50 | 64.09 | 127 | Chiefs |
-| 74 | 2 | Ian Thomas | 59.60 | 42.80 | 66.64 | 501 | Panthers |
-| 75 | 3 | Vance McDonald | 59.24 | 45.60 | 64.16 | 239 | Steelers |
-| 76 | 4 | Luke Stocker | 57.43 | 48.10 | 59.49 | 212 | Falcons |
+| 74 | 1 | Vance McDonald | 61.53 | 51.33 | 64.16 | 239 | Steelers |
+| 75 | 2 | Ian Thomas | 60.49 | 45.01 | 66.64 | 501 | Panthers |
+| 76 | 3 | Luke Stocker | 59.50 | 53.26 | 59.49 | 212 | Falcons |
 
 ## WR — Wide Receiver
 
 - **Season used:** `2020`
 - **PFF column (model anchor):** `grades_offense` · **Snap column (volume filter):** `total_snaps`
 
-### Elite (28 players)
+### Elite (24 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 1 | 1 | Justin Jefferson | 89.40 | 90.40 | 84.57 | 563 | Vikings |
-| 2 | 2 | A.J. Brown | 89.25 | 90.10 | 84.51 | 429 | Titans |
-| 3 | 3 | Davante Adams | 87.56 | 92.20 | 80.30 | 489 | Packers |
-| 4 | 4 | Julio Jones | 86.06 | 86.30 | 81.74 | 314 | Falcons |
-| 5 | 5 | Will Fuller V | 85.72 | 86.20 | 81.24 | 406 | Texans |
-| 6 | 6 | Stefon Diggs | 85.38 | 89.40 | 78.53 | 658 | Bills |
-| 7 | 7 | Antonio Brown | 85.22 | 85.80 | 80.66 | 249 | Buccaneers |
-| 8 | 8 | DeAndre Hopkins | 84.75 | 87.10 | 79.01 | 663 | Cardinals |
-| 9 | 9 | Corey Davis | 84.68 | 86.90 | 79.03 | 398 | Titans |
-| 10 | 10 | Tyreek Hill | 84.06 | 83.20 | 80.46 | 621 | Chiefs |
-| 11 | 11 | Michael Thomas | 84.05 | 85.20 | 79.11 | 215 | Saints |
-| 12 | 12 | Kenny Golladay | 83.76 | 81.60 | 81.04 | 150 | Lions |
-| 13 | 13 | Allen Robinson II | 83.69 | 88.40 | 76.38 | 625 | Bears |
-| 14 | 14 | Chris Godwin | 83.27 | 80.30 | 81.09 | 462 | Buccaneers |
-| 15 | 15 | Calvin Ridley | 82.85 | 84.90 | 77.32 | 593 | Falcons |
-| 16 | 16 | Adam Thielen | 82.54 | 87.40 | 75.14 | 536 | Vikings |
-| 17 | 17 | DJ Moore | 82.39 | 79.10 | 80.41 | 568 | Panthers |
-| 18 | 18 | Keenan Allen | 81.87 | 84.90 | 75.68 | 554 | Chargers |
-| 19 | 19 | Jarvis Landry | 81.84 | 84.20 | 76.10 | 428 | Browns |
-| 20 | 20 | D.K. Metcalf | 81.73 | 82.70 | 76.91 | 667 | Seahawks |
-| 21 | 21 | Donovan Peoples-Jones | 81.61 | 71.80 | 83.99 | 138 | Browns |
-| 22 | 22 | Brandin Cooks | 81.51 | 81.10 | 77.61 | 583 | Texans |
-| 23 | 23 | Cole Beasley | 81.36 | 84.90 | 74.83 | 497 | Bills |
-| 24 | 24 | Cooper Kupp | 80.67 | 80.80 | 76.42 | 542 | Rams |
-| 25 | 25 | T.Y. Hilton | 80.61 | 77.70 | 78.38 | 465 | Colts |
-| 26 | 26 | Terry McLaurin | 80.48 | 78.00 | 77.96 | 624 | Commanders |
-| 27 | 27 | Deebo Samuel | 80.21 | 79.80 | 76.31 | 177 | 49ers |
-| 28 | 28 | Chase Claypool | 80.19 | 75.60 | 79.08 | 474 | Steelers |
+| 1 | 1 | Justin Jefferson | 88.47 | 88.08 | 84.57 | 563 | Vikings |
+| 2 | 2 | A.J. Brown | 87.85 | 86.60 | 84.51 | 429 | Titans |
+| 3 | 3 | Davante Adams | 86.48 | 89.51 | 80.30 | 489 | Packers |
+| 4 | 4 | Stefon Diggs | 85.37 | 89.37 | 78.53 | 658 | Bills |
+| 5 | 5 | DeAndre Hopkins | 84.75 | 87.10 | 79.01 | 663 | Cardinals |
+| 6 | 6 | Julio Jones | 84.10 | 81.40 | 81.74 | 314 | Falcons |
+| 7 | 7 | Tyreek Hill | 83.89 | 82.78 | 80.46 | 621 | Chiefs |
+| 8 | 8 | Allen Robinson II | 83.50 | 87.94 | 76.38 | 625 | Bears |
+| 9 | 9 | Will Fuller V | 83.46 | 80.55 | 81.24 | 406 | Texans |
+| 10 | 10 | Corey Davis | 83.23 | 83.29 | 79.03 | 398 | Titans |
+| 11 | 11 | Antonio Brown | 82.83 | 79.83 | 80.66 | 249 | Buccaneers |
+| 12 | 12 | Calvin Ridley | 82.54 | 84.12 | 77.32 | 593 | Falcons |
+| 13 | 13 | Chris Godwin | 82.48 | 78.31 | 81.09 | 462 | Buccaneers |
+| 14 | 14 | DJ Moore | 82.05 | 78.27 | 80.41 | 568 | Panthers |
+| 15 | 15 | Adam Thielen | 81.90 | 85.78 | 75.14 | 536 | Vikings |
+| 16 | 16 | D.K. Metcalf | 81.73 | 82.70 | 76.91 | 667 | Seahawks |
+| 17 | 17 | Michael Thomas | 81.45 | 78.71 | 79.11 | 215 | Saints |
+| 18 | 18 | Keenan Allen | 81.37 | 83.65 | 75.68 | 554 | Chargers |
+| 19 | 19 | Brandin Cooks | 81.20 | 80.34 | 77.61 | 583 | Texans |
+| 20 | 20 | Kenny Golladay | 81.05 | 74.82 | 81.04 | 150 | Lions |
+| 21 | 21 | Jarvis Landry | 80.71 | 81.37 | 76.10 | 428 | Browns |
+| 22 | 22 | Cole Beasley | 80.57 | 82.92 | 74.83 | 497 | Bills |
+| 23 | 23 | Terry McLaurin | 80.36 | 77.70 | 77.96 | 624 | Commanders |
+| 24 | 24 | Cooper Kupp | 80.20 | 79.63 | 76.42 | 542 | Rams |
 
-### Good (45 players)
+### Good (38 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 29 | 1 | Rashard Higgins | 79.97 | 77.40 | 77.52 | 306 | Browns |
-| 30 | 2 | Bryan Edwards | 79.57 | 69.50 | 82.12 | 143 | Raiders |
-| 31 | 3 | Jakobi Meyers | 79.25 | 78.60 | 75.52 | 346 | Patriots |
-| 32 | 4 | Mike Evans | 79.07 | 74.10 | 78.21 | 599 | Buccaneers |
-| 33 | 5 | Odell Beckham Jr. | 79.02 | 75.30 | 77.34 | 189 | Browns |
-| 34 | 6 | Tim Patrick | 79.01 | 74.50 | 77.85 | 455 | Broncos |
-| 35 | 7 | Brandon Aiyuk | 78.98 | 80.10 | 74.07 | 455 | 49ers |
-| 36 | 8 | Amari Cooper | 78.95 | 75.90 | 76.82 | 638 | Cowboys |
-| 37 | 9 | Tee Higgins | 78.62 | 75.90 | 76.26 | 527 | Bengals |
-| 38 | 10 | DeSean Jackson | 78.50 | 66.80 | 82.13 | 134 | Eagles |
-| 39 | 11 | Mike Williams | 78.36 | 72.70 | 77.96 | 514 | Chargers |
-| 40 | 12 | DeVante Parker | 78.20 | 76.40 | 75.23 | 484 | Dolphins |
-| 41 | 13 | Hunter Renfrow | 77.88 | 74.80 | 75.77 | 401 | Raiders |
-| 42 | 14 | Collin Johnson | 77.75 | 73.40 | 76.49 | 180 | Jaguars |
-| 43 | 15 | Emmanuel Sanders | 77.57 | 74.60 | 75.39 | 378 | Saints |
-| 44 | 16 | Tyler Boyd | 77.24 | 75.80 | 74.04 | 537 | Bengals |
-| 45 | 17 | Tyler Lockett | 77.18 | 76.40 | 73.53 | 660 | Seahawks |
-| 46 | 18 | Sterling Shepard | 76.92 | 79.60 | 70.97 | 395 | Giants |
-| 47 | 19 | Robert Woods | 76.73 | 71.30 | 76.18 | 612 | Rams |
-| 48 | 20 | Jamison Crowder | 76.67 | 75.30 | 73.41 | 411 | Jets |
-| 49 | 21 | Denzel Mims | 76.64 | 69.40 | 77.30 | 264 | Jets |
-| 50 | 22 | John Brown | 76.60 | 70.30 | 76.63 | 306 | Bills |
-| 51 | 23 | Mecole Hardman Jr. | 76.54 | 69.80 | 76.86 | 361 | Chiefs |
-| 52 | 24 | Danny Amendola | 76.34 | 74.90 | 73.14 | 352 | Lions |
-| 53 | 25 | Nelson Agholor | 76.22 | 73.80 | 73.66 | 465 | Raiders |
-| 54 | 26 | Braxton Berrios | 75.90 | 72.40 | 74.07 | 189 | Jets |
-| 55 | 27 | Marvin Jones Jr. | 75.61 | 73.60 | 72.78 | 667 | Lions |
-| 56 | 28 | DJ Chark Jr. | 75.47 | 71.30 | 74.09 | 497 | Jaguars |
-| 57 | 29 | KhaDarel Hodge | 75.43 | 70.30 | 74.68 | 140 | Browns |
-| 58 | 30 | Richie James | 75.37 | 64.50 | 78.45 | 247 | 49ers |
-| 59 | 31 | Curtis Samuel | 75.33 | 77.10 | 69.99 | 435 | Panthers |
-| 60 | 32 | Allen Lazard | 75.32 | 71.70 | 73.56 | 277 | Packers |
-| 61 | 33 | Scott Miller | 75.11 | 66.90 | 76.41 | 336 | Buccaneers |
-| 62 | 34 | Breshad Perriman | 75.08 | 63.60 | 78.56 | 393 | Jets |
-| 63 | 35 | David Moore | 75.07 | 67.70 | 75.82 | 314 | Seahawks |
-| 64 | 36 | Marquise Brown | 75.04 | 70.10 | 74.16 | 466 | Ravens |
-| 65 | 37 | Randall Cobb | 74.96 | 71.60 | 73.03 | 277 | Texans |
-| 66 | 38 | Auden Tate | 74.92 | 73.40 | 71.77 | 101 | Bengals |
-| 67 | 39 | CeeDee Lamb | 74.75 | 71.60 | 72.68 | 539 | Cowboys |
-| 68 | 40 | Quintez Cephus | 74.73 | 64.80 | 77.19 | 231 | Lions |
-| 69 | 41 | Olamide Zaccheaus | 74.71 | 68.60 | 74.61 | 184 | Falcons |
-| 70 | 42 | Kendrick Bourne | 74.40 | 72.00 | 71.84 | 476 | 49ers |
-| 71 | 43 | Russell Gage | 74.30 | 76.40 | 68.74 | 548 | Falcons |
-| 72 | 44 | Darius Slayton | 74.06 | 67.80 | 74.06 | 583 | Giants |
-| 73 | 45 | Laviska Shenault Jr. | 74.01 | 71.50 | 71.51 | 392 | Jaguars |
+| 25 | 1 | T.Y. Hilton | 79.92 | 75.99 | 78.38 | 465 | Colts |
+| 26 | 2 | Chase Claypool | 79.24 | 73.22 | 79.08 | 474 | Steelers |
+| 27 | 3 | Donovan Peoples-Jones | 79.05 | 65.40 | 83.99 | 138 | Browns |
+| 28 | 4 | Mike Evans | 78.91 | 73.70 | 78.21 | 599 | Buccaneers |
+| 29 | 5 | Amari Cooper | 78.89 | 75.74 | 76.82 | 638 | Cowboys |
+| 30 | 6 | Tim Patrick | 78.03 | 72.04 | 77.85 | 455 | Broncos |
+| 31 | 7 | Mike Williams | 78.00 | 71.80 | 77.96 | 514 | Chargers |
+| 32 | 8 | Tee Higgins | 77.94 | 74.21 | 76.26 | 527 | Bengals |
+| 33 | 9 | Deebo Samuel | 77.91 | 74.07 | 76.31 | 177 | 49ers |
+| 34 | 10 | Rashard Higgins | 77.75 | 71.85 | 77.52 | 306 | Browns |
+| 35 | 11 | DeVante Parker | 77.63 | 74.99 | 75.23 | 484 | Dolphins |
+| 36 | 12 | Brandon Aiyuk | 77.62 | 76.69 | 74.07 | 455 | 49ers |
+| 37 | 13 | DeSean Jackson | 77.60 | 64.56 | 82.13 | 134 | Eagles |
+| 38 | 14 | Bryan Edwards | 77.54 | 64.42 | 82.12 | 143 | Raiders |
+| 39 | 15 | Odell Beckham Jr. | 77.32 | 71.03 | 77.34 | 189 | Browns |
+| 40 | 16 | Jakobi Meyers | 77.20 | 73.47 | 75.52 | 346 | Patriots |
+| 41 | 17 | Tyler Lockett | 77.18 | 76.40 | 73.53 | 660 | Seahawks |
+| 42 | 18 | Tyler Boyd | 76.87 | 74.87 | 74.04 | 537 | Bengals |
+| 43 | 19 | Emmanuel Sanders | 76.72 | 72.47 | 75.39 | 378 | Saints |
+| 44 | 20 | Robert Woods | 76.63 | 71.05 | 76.18 | 612 | Rams |
+| 45 | 21 | Hunter Renfrow | 76.58 | 71.54 | 75.77 | 401 | Raiders |
+| 46 | 22 | Jamison Crowder | 75.89 | 73.36 | 73.41 | 411 | Jets |
+| 47 | 23 | Sterling Shepard | 75.86 | 76.94 | 70.97 | 395 | Giants |
+| 48 | 24 | John Brown | 75.81 | 68.33 | 76.63 | 306 | Bills |
+| 49 | 25 | Nelson Agholor | 75.68 | 72.47 | 73.66 | 465 | Raiders |
+| 50 | 26 | Marvin Jones Jr. | 75.61 | 73.60 | 72.78 | 667 | Lions |
+| 51 | 27 | Mecole Hardman Jr. | 75.52 | 67.25 | 76.86 | 361 | Chiefs |
+| 52 | 28 | Danny Amendola | 75.38 | 72.49 | 73.14 | 352 | Lions |
+| 53 | 29 | Denzel Mims | 75.26 | 65.95 | 77.30 | 264 | Jets |
+| 54 | 30 | Collin Johnson | 75.19 | 67.00 | 76.49 | 180 | Jaguars |
+| 55 | 31 | DJ Chark Jr. | 75.11 | 70.40 | 74.09 | 497 | Jaguars |
+| 56 | 32 | Breshad Perriman | 74.88 | 63.11 | 78.56 | 393 | Jets |
+| 57 | 33 | Richie James | 74.67 | 62.75 | 78.45 | 247 | 49ers |
+| 58 | 34 | Marquise Brown | 74.39 | 68.49 | 74.16 | 466 | Ravens |
+| 59 | 35 | Scott Miller | 74.31 | 64.92 | 76.41 | 336 | Buccaneers |
+| 60 | 36 | CeeDee Lamb | 74.30 | 70.48 | 72.68 | 539 | Cowboys |
+| 61 | 37 | David Moore | 74.12 | 65.31 | 75.82 | 314 | Seahawks |
+| 62 | 38 | Curtis Samuel | 74.05 | 73.88 | 69.99 | 435 | Panthers |
 
-### Starter (74 players)
+### Starter (87 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 74 | 1 | Willie Snead IV | 73.77 | 71.60 | 71.05 | 296 | Ravens |
-| 75 | 2 | Isaiah McKenzie | 73.70 | 72.10 | 70.60 | 149 | Bills |
-| 76 | 3 | Travis Fulgham | 73.56 | 71.20 | 70.96 | 387 | Eagles |
-| 77 | 4 | Jerry Jeudy | 73.47 | 65.20 | 74.82 | 545 | Broncos |
-| 78 | 5 | Equanimeous St. Brown | 73.44 | 60.40 | 77.97 | 107 | Packers |
-| 79 | 6 | Michael Gallup | 73.43 | 66.30 | 74.02 | 655 | Cowboys |
-| 80 | 7 | Adam Humphries | 73.19 | 69.90 | 71.21 | 168 | Titans |
-| 81 | 8 | Gabe Davis | 73.16 | 64.90 | 74.50 | 508 | Bills |
-| 82 | 9 | Marquez Callaway | 73.15 | 69.10 | 71.69 | 150 | Saints |
-| 83 | 10 | Deonte Harty | 73.12 | 71.60 | 69.96 | 125 | Saints |
-| 84 | 11 | Julian Edelman | 73.03 | 68.80 | 71.68 | 175 | Patriots |
-| 85 | 12 | Jalen Reagor | 72.99 | 64.00 | 74.82 | 321 | Eagles |
-| 86 | 13 | Zach Pascal | 72.90 | 64.20 | 74.53 | 501 | Colts |
-| 87 | 14 | Keke Coutee | 72.90 | 68.20 | 71.87 | 228 | Texans |
-| 88 | 15 | Chris Conley | 72.83 | 70.10 | 70.48 | 315 | Jaguars |
-| 89 | 16 | Josh Reynolds | 72.70 | 65.70 | 73.20 | 511 | Rams |
-| 90 | 17 | JuJu Smith-Schuster | 72.60 | 68.20 | 71.36 | 687 | Steelers |
-| 91 | 18 | Jakeem Grant Sr. | 72.54 | 70.90 | 69.46 | 247 | Dolphins |
-| 92 | 19 | Golden Tate | 72.53 | 66.00 | 72.71 | 318 | Giants |
-| 93 | 20 | A.J. Green | 72.52 | 66.30 | 72.50 | 538 | Bengals |
-| 94 | 21 | Byron Pringle | 72.43 | 64.60 | 73.49 | 163 | Chiefs |
-| 95 | 22 | Diontae Johnson | 72.28 | 69.40 | 70.04 | 557 | Steelers |
-| 96 | 23 | Darnell Mooney | 72.14 | 68.70 | 70.27 | 537 | Bears |
-| 97 | 24 | Cam Sims | 71.88 | 61.30 | 74.76 | 410 | Commanders |
-| 98 | 25 | Preston Williams | 71.79 | 65.50 | 71.81 | 221 | Dolphins |
-| 99 | 26 | Sammy Watkins | 71.78 | 64.40 | 72.53 | 361 | Chiefs |
-| 100 | 27 | Marquez Valdes-Scantling | 71.68 | 57.70 | 76.84 | 497 | Packers |
-| 101 | 28 | Michael Pittman Jr. | 71.61 | 62.60 | 73.45 | 385 | Colts |
-| 102 | 29 | Miles Boykin | 71.61 | 62.50 | 73.51 | 272 | Ravens |
-| 103 | 30 | Christian Kirk | 70.84 | 62.30 | 72.36 | 540 | Cardinals |
-| 104 | 31 | James Washington | 70.83 | 60.90 | 73.29 | 322 | Steelers |
-| 105 | 32 | Van Jefferson | 70.22 | 67.10 | 68.14 | 159 | Rams |
-| 106 | 33 | Noah Brown | 70.19 | 66.70 | 68.35 | 143 | Cowboys |
-| 107 | 34 | Olabisi Johnson | 70.18 | 67.00 | 68.13 | 148 | Vikings |
-| 108 | 35 | Mohamed Sanu | 70.02 | 65.50 | 68.86 | 197 | Lions |
-| 109 | 36 | Marvin Hall | 69.70 | 57.40 | 73.74 | 258 | Browns |
-| 110 | 37 | Henry Ruggs III | 69.68 | 54.00 | 75.96 | 366 | Raiders |
-| 111 | 38 | Tyler Johnson | 69.46 | 58.90 | 72.33 | 171 | Buccaneers |
-| 112 | 39 | Keelan Cole Sr. | 69.42 | 64.40 | 68.60 | 601 | Jaguars |
-| 113 | 40 | Damiere Byrd | 69.18 | 61.40 | 70.20 | 496 | Patriots |
-| 114 | 41 | Demarcus Robinson | 69.05 | 62.90 | 68.98 | 523 | Chiefs |
-| 115 | 42 | Tre'Quan Smith | 68.62 | 59.90 | 70.26 | 425 | Saints |
-| 116 | 43 | Cedrick Wilson Jr. | 68.57 | 61.10 | 69.39 | 159 | Cowboys |
-| 117 | 44 | Freddie Swain | 68.29 | 53.40 | 74.05 | 241 | Seahawks |
-| 118 | 45 | Larry Fitzgerald | 68.14 | 59.60 | 69.66 | 473 | Cardinals |
-| 119 | 46 | Kalif Raymond | 68.08 | 53.50 | 73.64 | 129 | Titans |
-| 120 | 47 | Devin Duvernay | 67.87 | 60.50 | 68.61 | 202 | Ravens |
-| 121 | 48 | Ray-Ray McCloud III | 67.74 | 70.20 | 61.94 | 105 | Steelers |
-| 122 | 49 | Zay Jones | 67.72 | 62.90 | 66.77 | 170 | Raiders |
-| 123 | 50 | Anthony Miller | 67.31 | 58.50 | 69.01 | 447 | Bears |
-| 124 | 51 | Andy Isabella | 67.07 | 56.80 | 69.75 | 221 | Cardinals |
-| 125 | 52 | C.J. Board | 66.93 | 67.40 | 62.45 | 116 | Giants |
-| 126 | 53 | Jalen Guyton | 66.88 | 52.20 | 72.50 | 617 | Chargers |
-| 127 | 54 | Chad Hansen | 66.82 | 60.70 | 66.74 | 209 | Texans |
-| 128 | 55 | Isaiah Ford | 66.67 | 61.10 | 66.21 | 274 | Dolphins |
-| 129 | 56 | Isaiah Wright | 66.59 | 59.00 | 67.49 | 247 | Commanders |
-| 130 | 57 | Alex Erickson | 66.45 | 53.40 | 70.99 | 116 | Bengals |
-| 131 | 58 | Chad Beebe | 66.37 | 57.20 | 68.32 | 233 | Vikings |
-| 132 | 59 | Cameron Batson | 66.31 | 58.10 | 67.62 | 157 | Titans |
-| 133 | 60 | Alshon Jeffery | 65.87 | 51.30 | 71.41 | 153 | Eagles |
-| 134 | 61 | KeeSean Johnson | 65.74 | 61.20 | 64.60 | 145 | Cardinals |
-| 135 | 62 | Dontrelle Inman | 65.72 | 61.50 | 64.36 | 240 | Commanders |
-| 136 | 63 | Brandon Powell | 65.39 | 56.70 | 67.01 | 136 | Falcons |
-| 137 | 64 | DaeSean Hamilton | 65.30 | 58.40 | 65.74 | 325 | Broncos |
-| 138 | 65 | KJ Hamler | 64.72 | 55.90 | 66.44 | 351 | Broncos |
-| 139 | 66 | N'Keal Harry | 64.60 | 57.80 | 64.96 | 332 | Patriots |
-| 140 | 67 | Mike Thomas | 64.50 | 55.20 | 66.53 | 142 | Bengals |
-| 141 | 68 | Mack Hollins | 64.43 | 58.20 | 64.41 | 162 | Dolphins |
-| 142 | 69 | John Hightower | 64.32 | 50.50 | 69.37 | 250 | Eagles |
-| 143 | 70 | Greg Ward | 64.27 | 58.80 | 63.75 | 543 | Eagles |
-| 144 | 71 | Jamal Agnew | 64.07 | 56.70 | 64.82 | 128 | Lions |
-| 145 | 72 | Steven Sims | 63.75 | 56.70 | 64.29 | 286 | Commanders |
-| 146 | 73 | Trent Taylor | 63.34 | 53.90 | 65.46 | 154 | 49ers |
-| 147 | 74 | K.J. Hill | 62.31 | 55.00 | 63.01 | 100 | Chargers |
+| 63 | 1 | Randall Cobb | 73.98 | 69.15 | 73.03 | 277 | Texans |
+| 64 | 2 | Quintez Cephus | 73.95 | 62.84 | 77.19 | 231 | Lions |
+| 65 | 3 | Darius Slayton | 73.87 | 67.33 | 74.06 | 583 | Giants |
+| 66 | 4 | Russell Gage | 73.72 | 74.94 | 68.74 | 548 | Falcons |
+| 67 | 5 | Kendrick Bourne | 73.68 | 70.19 | 71.84 | 476 | 49ers |
+| 68 | 6 | Allen Lazard | 73.67 | 67.58 | 73.56 | 277 | Packers |
+| 69 | 7 | Braxton Berrios | 73.60 | 66.64 | 74.07 | 189 | Jets |
+| 70 | 8 | Michael Gallup | 73.43 | 66.29 | 74.02 | 655 | Cowboys |
+| 71 | 9 | Equanimeous St. Brown | 73.35 | 60.16 | 77.97 | 107 | Packers |
+| 72 | 10 | Jerry Jeudy | 73.28 | 64.73 | 74.82 | 545 | Broncos |
+| 73 | 11 | KhaDarel Hodge | 73.20 | 64.74 | 74.68 | 140 | Browns |
+| 74 | 12 | Olamide Zaccheaus | 73.08 | 64.54 | 74.61 | 184 | Falcons |
+| 75 | 13 | Laviska Shenault Jr. | 72.95 | 68.86 | 71.51 | 392 | Jaguars |
+| 76 | 14 | Gabe Davis | 72.92 | 64.30 | 74.50 | 508 | Bills |
+| 77 | 15 | Willie Snead IV | 72.85 | 69.30 | 71.05 | 296 | Ravens |
+| 78 | 16 | Zach Pascal | 72.77 | 63.88 | 74.53 | 501 | Colts |
+| 79 | 17 | JuJu Smith-Schuster | 72.60 | 68.20 | 71.36 | 687 | Steelers |
+| 80 | 18 | Jalen Reagor | 72.51 | 62.79 | 74.82 | 321 | Eagles |
+| 81 | 19 | Travis Fulgham | 72.51 | 68.58 | 70.96 | 387 | Eagles |
+| 82 | 20 | Josh Reynolds | 72.43 | 65.02 | 73.20 | 511 | Rams |
+| 83 | 21 | A.J. Green | 72.37 | 65.93 | 72.50 | 538 | Bengals |
+| 84 | 22 | Golden Tate | 72.09 | 64.90 | 72.71 | 318 | Giants |
+| 85 | 23 | Adam Humphries | 72.01 | 66.96 | 71.21 | 168 | Titans |
+| 86 | 24 | Julian Edelman | 72.00 | 66.24 | 71.68 | 175 | Patriots |
+| 87 | 25 | Diontae Johnson | 71.98 | 68.64 | 70.04 | 557 | Steelers |
+| 88 | 26 | Marquez Valdes-Scantling | 71.80 | 58.00 | 76.84 | 497 | Packers |
+| 89 | 27 | Darnell Mooney | 71.80 | 67.85 | 70.27 | 537 | Bears |
+| 90 | 28 | Cam Sims | 71.76 | 61.02 | 74.76 | 410 | Commanders |
+| 91 | 29 | Auden Tate | 71.71 | 65.36 | 71.77 | 101 | Bengals |
+| 92 | 30 | Chris Conley | 71.58 | 66.98 | 70.48 | 315 | Jaguars |
+| 93 | 31 | Keke Coutee | 71.55 | 64.82 | 71.87 | 228 | Texans |
+| 94 | 32 | Byron Pringle | 71.51 | 62.29 | 73.49 | 163 | Chiefs |
+| 95 | 33 | Sammy Watkins | 71.50 | 63.71 | 72.53 | 361 | Chiefs |
+| 96 | 34 | Michael Pittman Jr. | 71.37 | 61.99 | 73.45 | 385 | Colts |
+| 97 | 35 | Marquez Callaway | 71.25 | 64.34 | 71.69 | 150 | Saints |
+| 98 | 36 | Miles Boykin | 71.25 | 61.60 | 73.51 | 272 | Ravens |
+| 99 | 37 | Isaiah McKenzie | 71.16 | 65.75 | 70.60 | 149 | Bills |
+| 100 | 38 | Preston Williams | 70.86 | 63.18 | 71.81 | 221 | Dolphins |
+| 101 | 39 | Jakeem Grant Sr. | 70.84 | 66.67 | 69.46 | 247 | Dolphins |
+| 102 | 40 | Christian Kirk | 70.75 | 62.08 | 72.36 | 540 | Cardinals |
+| 103 | 41 | James Washington | 70.73 | 60.63 | 73.29 | 322 | Steelers |
+| 104 | 42 | Deonte Harty | 70.50 | 65.05 | 69.96 | 125 | Saints |
+| 105 | 43 | Henry Ruggs III | 70.29 | 55.53 | 75.96 | 366 | Raiders |
+| 106 | 44 | Marvin Hall | 70.09 | 58.37 | 73.74 | 258 | Browns |
+| 107 | 45 | Tyler Johnson | 69.67 | 59.44 | 72.33 | 171 | Buccaneers |
+| 108 | 46 | Kalif Raymond | 69.54 | 57.13 | 73.64 | 129 | Titans |
+| 109 | 47 | Mohamed Sanu | 69.42 | 64.00 | 68.86 | 197 | Lions |
+| 110 | 48 | Keelan Cole Sr. | 69.37 | 64.28 | 68.60 | 601 | Jaguars |
+| 111 | 49 | Freddie Swain | 69.33 | 56.01 | 74.05 | 241 | Seahawks |
+| 112 | 50 | Damiere Byrd | 69.10 | 61.21 | 70.20 | 496 | Patriots |
+| 113 | 51 | Demarcus Robinson | 68.92 | 62.58 | 68.98 | 523 | Chiefs |
+| 114 | 52 | Van Jefferson | 68.78 | 63.48 | 68.14 | 159 | Rams |
+| 115 | 53 | Noah Brown | 68.76 | 63.12 | 68.35 | 143 | Cowboys |
+| 116 | 54 | Olabisi Johnson | 68.70 | 63.31 | 68.13 | 148 | Vikings |
+| 117 | 55 | Tre'Quan Smith | 68.62 | 59.92 | 70.26 | 425 | Saints |
+| 118 | 56 | Cedrick Wilson Jr. | 68.35 | 60.54 | 69.39 | 159 | Cowboys |
+| 119 | 57 | Larry Fitzgerald | 68.15 | 59.64 | 69.66 | 473 | Cardinals |
+| 120 | 58 | Alex Erickson | 67.99 | 57.23 | 70.99 | 116 | Bengals |
+| 121 | 59 | Devin Duvernay | 67.78 | 60.28 | 68.61 | 202 | Ravens |
+| 122 | 60 | Andy Isabella | 67.61 | 58.15 | 69.75 | 221 | Cardinals |
+| 123 | 61 | Anthony Miller | 67.41 | 58.77 | 69.01 | 447 | Bears |
+| 124 | 62 | Zay Jones | 67.15 | 61.47 | 66.77 | 170 | Raiders |
+| 125 | 63 | Jalen Guyton | 66.98 | 52.46 | 72.50 | 617 | Chargers |
+| 126 | 64 | Alshon Jeffery | 66.95 | 54.01 | 71.41 | 153 | Eagles |
+| 127 | 65 | Chad Beebe | 66.83 | 58.34 | 68.32 | 233 | Vikings |
+| 128 | 66 | Isaiah Wright | 66.75 | 59.39 | 67.49 | 247 | Commanders |
+| 129 | 67 | Cameron Batson | 66.70 | 59.07 | 67.62 | 157 | Titans |
+| 130 | 68 | Chad Hansen | 66.70 | 60.39 | 66.74 | 209 | Texans |
+| 131 | 69 | Isaiah Ford | 66.51 | 60.71 | 66.21 | 274 | Dolphins |
+| 132 | 70 | Brandon Powell | 66.11 | 58.50 | 67.01 | 136 | Falcons |
+| 133 | 71 | John Hightower | 65.78 | 54.15 | 69.37 | 250 | Eagles |
+| 134 | 72 | Dontrelle Inman | 65.57 | 61.14 | 64.36 | 240 | Commanders |
+| 135 | 73 | DaeSean Hamilton | 65.50 | 58.88 | 65.74 | 325 | Broncos |
+| 136 | 74 | KeeSean Johnson | 65.48 | 60.56 | 64.60 | 145 | Cardinals |
+| 137 | 75 | Ray-Ray McCloud III | 65.30 | 64.08 | 61.94 | 105 | Steelers |
+| 138 | 76 | C.J. Board | 65.21 | 63.10 | 62.45 | 116 | Giants |
+| 139 | 77 | KJ Hamler | 65.17 | 57.01 | 66.44 | 351 | Broncos |
+| 140 | 78 | Mike Thomas | 65.11 | 56.74 | 66.53 | 142 | Bengals |
+| 141 | 79 | N'Keal Harry | 64.85 | 58.44 | 64.96 | 332 | Patriots |
+| 142 | 80 | Jamal Agnew | 64.81 | 58.55 | 64.82 | 128 | Lions |
+| 143 | 81 | Mack Hollins | 64.79 | 59.11 | 64.41 | 162 | Dolphins |
+| 144 | 82 | Trent Taylor | 64.60 | 57.05 | 65.46 | 154 | 49ers |
+| 145 | 83 | Greg Ward | 64.31 | 58.91 | 63.75 | 543 | Eagles |
+| 146 | 84 | Steven Sims | 64.21 | 57.83 | 64.29 | 286 | Commanders |
+| 147 | 85 | Christian Blake | 63.63 | 55.77 | 64.70 | 156 | Falcons |
+| 148 | 86 | K.J. Hill | 63.51 | 58.00 | 63.01 | 100 | Chargers |
+| 149 | 87 | Jeff Smith | 62.23 | 55.43 | 62.60 | 221 | Jets |
 
-### Rotation/backup (3 players)
+### Rotation/backup (1 players)
 
 | rank_pos | rank_in_tier | player | composite | model | stats | snaps | primary_team |
 |---:|---:|---|---:|---:|---:|---:|---|
-| 148 | 1 | Christian Blake | 61.84 | 51.30 | 64.70 | 156 | Falcons |
-| 149 | 2 | Jeff Smith | 60.90 | 52.10 | 62.60 | 221 | Jets |
-| 150 | 3 | Javon Wims | 60.53 | 53.90 | 60.79 | 153 | Bears |
+| 150 | 1 | Javon Wims | 61.80 | 57.06 | 60.79 | 153 | Bears |
