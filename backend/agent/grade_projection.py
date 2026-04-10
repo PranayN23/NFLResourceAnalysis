@@ -150,9 +150,11 @@ def projection_trend_multiplier(
     # (develop_end_age, prime_end_age, max_growth_boost, max_decline_penalty)
     profiles = {
         "QB": (27, 33, 0.18, 0.14),
-        "HB": (24, 27, 0.22, 0.20),
-        "RB": (24, 27, 0.22, 0.20),
-        "WR": (25, 29, 0.20, 0.16),
+        # Skill RBs: hotter youth ramp; decline still meaningful for RB aging.
+        "HB": (24, 27, 0.30, 0.18),
+        "RB": (24, 27, 0.30, 0.18),
+        # WRs: extend development window slightly + stronger trend-to-production lift.
+        "WR": (26, 29, 0.28, 0.16),
         "TE": (26, 30, 0.16, 0.14),
         "T": (25, 31, 0.15, 0.13),
         "G": (25, 31, 0.14, 0.12),
@@ -160,11 +162,14 @@ def projection_trend_multiplier(
         "ED": (25, 29, 0.18, 0.18),
         "DI": (25, 30, 0.16, 0.18),
         "LB": (24, 28, 0.18, 0.18),
-        "CB": (24, 28, 0.19, 0.19),
-        "S": (25, 30, 0.15, 0.16),
+        # Secondaries: noisy year-to-year grades — softer decline pull on counting stats.
+        "CB": (24, 28, 0.19, 0.10),
+        "S": (25, 30, 0.15, 0.09),
     }
     develop_end, prime_end, boost_cap, decline_cap = profiles.get(pos, (25, 29, 0.14, 0.12))
     age_f = float(age)
+    skill_youth = pos in {"WR", "HB", "RB"}
+    secondary_soft_decline = pos in {"CB", "S"}
 
     if yoy >= 0:
         if age_f >= prime_end + 3:
@@ -176,8 +181,14 @@ def projection_trend_multiplier(
             age_weight = max(0.55, 1.0 - 0.12 * (age_f - develop_end))
         else:
             age_weight = max(0.25, 0.55 - 0.10 * (age_f - prime_end))
-        year_weight = max(0.85, min(1.25, 0.9 + 0.08 * float(year_idx)))
+        # WR/RB: allow a bit more year-over-year build inside the contract.
+        yw_hi = 1.34 if skill_youth else 1.25
+        yw_lo = 0.86 if skill_youth else 0.85
+        yw_slope = 0.095 if skill_youth else 0.08
+        year_weight = max(yw_lo, min(yw_hi, 0.88 + yw_slope * float(year_idx)))
         lift = min(boost_cap, (yoy / 10.0) * boost_cap * age_weight * year_weight)
+        if skill_youth and age_f <= prime_end + 1:
+            lift *= 1.07
         return 1.0 + max(0.0, lift)
 
     # Negative trend: amplify only after prime.
@@ -185,6 +196,12 @@ def projection_trend_multiplier(
         age_weight = max(0.25, 0.35 + 0.06 * max(0.0, age_f - develop_end))
     else:
         age_weight = min(1.0, 0.65 + 0.10 * (age_f - prime_end))
-    year_weight = max(0.9, min(1.35, 0.95 + 0.08 * float(year_idx)))
+    # CB/S: dampen compounding of late-contract + negative YoY (coverage volatility).
+    yw_hi = 1.22 if secondary_soft_decline else 1.35
+    yw_slope = 0.05 if secondary_soft_decline else 0.08
+    year_weight = max(0.92, min(yw_hi, 0.97 + yw_slope * float(year_idx)))
     hit = min(decline_cap, (abs(yoy) / 8.0) * decline_cap * age_weight * year_weight)
-    return max(0.70, 1.0 - max(0.0, hit))
+    if secondary_soft_decline:
+        hit *= 0.58
+    floor_mult = 0.78 if secondary_soft_decline else 0.70
+    return max(floor_mult, 1.0 - max(0.0, hit))
