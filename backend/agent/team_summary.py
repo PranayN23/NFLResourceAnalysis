@@ -247,7 +247,8 @@ def _team_season_stats(team: str, year: int) -> dict[str, Any]:
         season_data["nfelo"] = pd.to_numeric(season_data["nfelo"], errors="coerce")
         ranked = season_data.dropna(subset=["nfelo"]).sort_values("nfelo", ascending=False)
         team_pos = ranked[ranked["Team"] == abbr]
-        league_rank = int(team_pos.index.get_loc(team_pos.index[0])) + 1 if not team_pos.empty else None
+        # Compute rank against the full sorted league table (not the 1-row filtered subset).
+        league_rank = int(ranked.index.get_loc(team_pos.index[0])) + 1 if not team_pos.empty else None
     else:
         league_rank = None
 

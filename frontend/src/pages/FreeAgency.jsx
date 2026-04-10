@@ -948,23 +948,42 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   useEffect(() => {
     setFetchingPlayers(true);
     setError('');
-    fetch(`${directoryApiBase}${directoryCfg.playersPath}`)
-      .then((r) => r.json())
-      .then((data) => {
-        const minYr = Number(data.analysis_year_min);
-        setAnalysisYearMin(Number.isFinite(minYr) ? minYr : 2010);
-      })
-      .catch(() =>
-        setError(`Could not load player list. Start the ${directoryCfg.chatTitle} API (port ${directoryCfg.port}): uvicorn backend.agent…`)
-      )
-      .finally(() => setFetchingPlayers(false));
+    const loadPlayers = async () => {
+      let minYearSet = false;
+      try {
+        const listResp = await fetch(`${directoryApiBase}${directoryCfg.playersPath}`);
+        if (listResp.ok) {
+          const listData = await listResp.json();
+          const minYr = Number(listData?.analysis_year_min);
+          if (Number.isFinite(minYr)) {
+            setAnalysisYearMin(minYr);
+            minYearSet = true;
+          }
+        }
+      } catch {
+        // Fallback below uses player-directory, so we only surface an error if that also fails.
+      }
 
-    fetch(`${directoryApiBase}/player-directory?analysis_year=${encodeURIComponent(analysisYear)}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setPlayerDirectory(data.players || []);
-      })
-      .catch(() => setPlayerDirectory([]));
+      try {
+        const directoryResp = await fetch(
+          `${directoryApiBase}/player-directory?analysis_year=${encodeURIComponent(analysisYear)}`
+        );
+        if (!directoryResp.ok) throw new Error('directory failed');
+        const directoryData = await directoryResp.json();
+        setPlayerDirectory(directoryData?.players || []);
+
+        if (!minYearSet) {
+          const minYr = Number(directoryData?.analysis_year_min);
+          setAnalysisYearMin(Number.isFinite(minYr) ? minYr : 2010);
+        }
+      } catch {
+        setPlayerDirectory([]);
+        setError(`Could not load player list. Start the ${directoryCfg.chatTitle} API (port ${directoryCfg.port}): uvicorn backend.agent…`);
+      } finally {
+        setFetchingPlayers(false);
+      }
+    };
+    loadPlayers();
 
     fetch(`${directoryApiBase}/teams?analysis_year=${encodeURIComponent(analysisYear)}`)
       .then((r) => r.json())
