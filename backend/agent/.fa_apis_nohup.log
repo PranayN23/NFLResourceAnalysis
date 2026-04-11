@@ -86,3 +86,257 @@ INFO:     127.0.0.1:53379 - "GET /qb-players HTTP/1.1" 200 OK
 INFO:     127.0.0.1:53381 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:53379 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:53375 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59329 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59330 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59329 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59331 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59330 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59332 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59331 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59333 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59335 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59336 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59337 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59333 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59336 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59335 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59338 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59331 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59339 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59336 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59664 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59665 - "GET /teams?analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59664 - "GET /player-directory?analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59664 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59668 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+[C API] Loaded 1045 rows
+INFO:     127.0.0.1:59680 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+[G API] Loaded 2073 rows
+INFO:     127.0.0.1:59678 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59665 - "GET /team-summary?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+[S API] Loaded 2595 rows
+INFO:     127.0.0.1:59689 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+[T API] Loaded 2220 rows
+INFO:     127.0.0.1:59676 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+[HB API] Loaded 2225 rows
+INFO:     127.0.0.1:59670 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+[TE API] Loaded 1972 rows
+INFO:     127.0.0.1:59675 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+[CB API] Loaded 3344 rows
+INFO:     127.0.0.1:59688 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+[LB API] Loaded 4079 rows
+INFO:     127.0.0.1:59686 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59673 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+INFO:     127.0.0.1:59682 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+Using device: cpu
+[DI API] Loaded player database: 4431 rows
+INFO:     127.0.0.1:59684 - "GET /team-roster?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59665 - "GET /team-summary?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59692 - "GET /team-rankings?team=49ers&analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59708 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59709 - "GET /teams?analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59725 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59708 - "GET /team-summary?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59734 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59719 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59731 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59733 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59723 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59717 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59715 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59721 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59710 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59709 - "GET /player-directory?analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59713 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59726 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59728 - "GET /team-roster?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59709 - "GET /team-summary?team=49ers&analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59739 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59740 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59759 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59739 - "GET /team-summary?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59752 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59751 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59756 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59758 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59745 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59749 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59747 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59764 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59765 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59762 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59743 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59740 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59753 - "GET /team-roster?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59740 - "GET /team-summary?team=49ers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59768 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59769 - "GET /teams?analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59787 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59785 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59783 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59791 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59780 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59794 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59775 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59770 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59793 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59777 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59789 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59768 - "GET /team-summary?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59781 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59769 - "GET /player-directory?analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59772 - "GET /team-roster?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59768 - "GET /team-summary?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59768 - "GET /team-rankings?team=49ers&analysis_year=2013 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59824 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59825 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59826 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59824 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59824 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59827 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59826 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59828 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59827 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59829 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59828 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59830 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59829 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59831 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59830 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59833 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59831 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59830 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60268 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60269 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60268 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60270 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60271 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60272 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60270 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60273 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60274 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60272 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60275 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60270 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60274 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60277 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60272 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60278 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60270 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60272 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60754 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60767 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60765 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60758 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60776 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60772 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60769 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60779 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60777 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60764 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60756 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60762 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60771 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60778 - "GET /team-summary?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60778 - "GET /team-summary?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60852 - "GET /team-roster?team=Rams&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60852 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60852 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60924 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60912 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60920 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60916 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60925 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60910 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60932 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60918 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60907 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60928 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60930 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60927 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60914 - "GET /team-roster?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60931 - "GET /team-summary?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60907 - "GET /team-summary?team=Giants&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60938 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60982 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60984 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60993 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60989 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60991 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61003 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60987 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60978 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61001 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60999 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60997 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60996 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60985 - "GET /team-roster?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61002 - "GET /team-summary?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60978 - "GET /team-summary?team=Bills&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61018 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61086 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61091 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61093 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61098 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61096 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61107 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61088 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61099 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61105 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61104 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61082 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61101 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61089 - "GET /team-roster?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61106 - "GET /team-summary?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61082 - "GET /team-summary?team=Saints&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61117 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65637]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65636]
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65639]
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65638]
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65640]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65642]
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65641]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65644]
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65643]
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65646]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65645]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65647]
