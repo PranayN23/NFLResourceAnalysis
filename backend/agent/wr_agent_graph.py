@@ -67,7 +67,7 @@ def _stats_grade(yprr, yards_per_rec, drop_rate, epa_per_target, yac_per_rec):
 
 
 def _composite_grade(model_grade, stats_gr):
-    return round(0.40 * model_grade + 0.60 * stats_gr, 2)
+    return round(0.35 * model_grade + 0.65 * stats_gr, 2)
 
 
 def _grade_to_tier(grade):
@@ -125,6 +125,7 @@ def extract_career_stats(history: pd.DataFrame) -> List[dict]:
             "receptions":      round(recs),
             "targets":         round(tgts),
             "yards":           round(_safe_float(row.get("yards"))),
+            "touchdowns":      round(_safe_float(row.get("touchdowns"))),
             "yards_per_rec":   round(_safe_float(row.get("yards_per_reception")), 2),
             "yac_per_rec":     round(_safe_float(row.get("yards_after_catch_per_reception")), 2),
             "yprr":            round(_safe_float(row.get("yprr")), 3),
@@ -167,7 +168,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     weights = [w / w_sum for w in weights]
 
     w_yards = w_recs = w_tgts = w_drops = w_routes = w_yac = w_epa = 0.0
-    w_tgts_pg = w_recs_pg = 0.0
+    w_tgts_pg = w_recs_pg = w_tds_pg = 0.0
     for (w, (_, r)) in zip(weights, recent.iterrows()):
         yr_g = 17.0 if int(_safe_float(r.get("Year"), 2024)) >= 2021 else 16.0
         g = max(1.0, min(yr_g, _safe_float(r.get("player_game_count"), yr_g)))
@@ -178,6 +179,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         routes = _safe_float(r.get("routes"))
         yac = _safe_float(r.get("yards_after_catch"))
         epa = _safe_float(r.get("Net EPA"))
+        tds = _safe_float(r.get("touchdowns"))
 
         w_yards += w * yards
         w_recs += w * recs
@@ -188,6 +190,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         w_epa += w * epa
         w_tgts_pg += w * (tgts / g)
         w_recs_pg += w * (recs / g)
+        w_tds_pg += w * (tds / g)
 
     w_tgts = max(w_tgts, 1.0)
     w_recs = max(w_recs, 1.0)
@@ -222,6 +225,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         "recs_17g":       proj_recs_17g,
         "tgts_17g":       proj_tgts_17g,
         "proj_recs_17g":  proj_recs_17g,
+        "tds_17g":        round(w_tds_pg * 17, 1),
     }
 
 
@@ -261,14 +265,20 @@ def project_stats(
         base_scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
         trend_mult = projection_trend_multiplier("WR", age, yr, player_yoy)
         scale = max(0.25, min(1.85, base_scale * trend_mult))
+        proj_recs  = round(min(130, last_stats["recs_17g"] * scale))
+        proj_yards = round(min(2000, last_stats["yards_17g"] * scale))
+        proj_ypr   = round(proj_yards / max(proj_recs, 1), 2)
+        # drop_rate stays close to career baseline — slight uptick only when performance drops sharply
+        proj_drop  = round(max(0, last_stats["drop_rate"] * (1.0 + max(0.0, 1.0 - scale) * 0.25)), 4)
         projections.append({
             "year": yr, "age": age, "projected_grade": round(grade, 1),
-            "receptions":   round(min(130, last_stats["recs_17g"] * scale)),
-            "yards":        round(min(2000, last_stats["yards_17g"] * scale)),
-            "yprr":         round(min(5, last_stats["yprr"] * scale), 3),
-            "yards_per_rec":round(min(22, last_stats["yards_per_rec"] * scale), 2),
-            "drop_rate":    round(max(0, last_stats["drop_rate"] / max(scale, 0.5)), 4),
-            "route_grade":  round(min(99, last_stats["route_grade"] * scale), 1),
+            "receptions":    proj_recs,
+            "yards":         proj_yards,
+            "touchdowns":    round(min(20, last_stats["tds_17g"] * scale), 1),
+            "yards_per_rec": proj_ypr,
+            "yprr":          round(min(5, last_stats["yprr"] * scale), 3),
+            "drop_rate":     proj_drop,
+            "route_grade":   round(min(99, last_stats["route_grade"] * scale), 1),
         })
     return projections
 
@@ -420,7 +430,13 @@ def assess_team_fit(state: WRAgentState):
 
 def make_decision(state: WRAgentState):
     ask = state["salary_ask"]; val = state["valuation"]; burden = state["effective_cap_burden"]
-    tier = state["predicted_tier"]; cg = state["composite_grade"]
+    cg = state["composite_grade"]
+    _yb = state.get("year_breakdown") or []
+    if _yb:
+        _avg_pg = sum(y.get("projected_grade", cg) for y in _yb) / len(_yb)
+        tier = _grade_to_tier(_avg_pg)
+    else:
+        tier = state["predicted_tier"]
     mg = state["confidence"].get("model_grade", cg); sg = state["stats_score"]
     age = state["current_age"]; years = state["contract_years"]; total = state["total_nominal_value"]
     health_adj = state["confidence"].get("health_factor", 0)
@@ -463,7 +479,7 @@ def make_decision(state: WRAgentState):
             roster=state.get("current_roster", []), player_name=state["player_name"],
         )
         decision = adjusted_decision; reason = reason + " " + team_reason
-    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary}
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "predicted_tier": tier}
 
 
 _workflow = StateGraph(WRAgentState)

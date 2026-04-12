@@ -84,7 +84,7 @@ def _stats_grade(passer_rating, ypa, btt_rate, cmp_pct, epa_per_db):
 
 
 def _composite_grade(model_grade, stats_gr):
-    return round(0.45 * model_grade + 0.55 * stats_gr, 2)
+    return round(0.40 * model_grade + 0.60 * stats_gr, 2)
 
 
 def _grade_to_tier(grade):
@@ -790,8 +790,13 @@ def make_decision(state: QBAgentState):
     ask    = state["salary_ask"]
     val    = state["valuation"]
     burden = state["effective_cap_burden"]
-    tier   = state["predicted_tier"]
     cg     = state["composite_grade"]
+    _yb = state.get("year_breakdown") or []
+    if _yb:
+        _avg_pg = sum(y.get("projected_grade", cg) for y in _yb) / len(_yb)
+        tier = _grade_to_tier(_avg_pg)
+    else:
+        tier = state["predicted_tier"]
     mg     = state["confidence"].get("model_grade", cg)
     sg     = state["stats_score"]
     age    = state["current_age"]
@@ -864,7 +869,7 @@ def make_decision(state: QBAgentState):
         decision = adjusted_decision
         reason = reason + " " + team_reason
 
-    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary}
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "predicted_tier": tier}
 
 
 _workflow = StateGraph(QBAgentState)

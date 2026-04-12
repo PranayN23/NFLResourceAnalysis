@@ -93,7 +93,7 @@ def _stats_grade(pbe, pbg, rbg, sa_rate, hit_rate, hu_rate, pass_weight=0.50):
 
 
 def _composite_grade(model_grade, stats_gr):
-    return round(0.40 * model_grade + 0.60 * stats_gr, 2)
+    return round(0.58 * model_grade + 0.42 * stats_gr, 2)
 
 
 def _grade_to_tier(grade):
@@ -439,7 +439,13 @@ _POS_LABEL = {"T": "offensive tackle", "G": "guard", "C": "center"}
 
 def make_decision(state: OLAgentState):
     ask = state["salary_ask"]; val = state["valuation"]; burden = state["effective_cap_burden"]
-    tier = state["predicted_tier"]; cg = state["composite_grade"]
+    cg = state["composite_grade"]
+    _yb = state.get("year_breakdown") or []
+    if _yb:
+        _avg_pg = sum(y.get("projected_grade", cg) for y in _yb) / len(_yb)
+        tier = _grade_to_tier(_avg_pg)
+    else:
+        tier = state["predicted_tier"]
     mg = state["confidence"].get("model_grade", cg); sg = state["stats_score"]
     age = state["current_age"]; years = state["contract_years"]; total = state["total_nominal_value"]
     position = state.get("ol_position", "G")
@@ -485,7 +491,7 @@ def make_decision(state: OLAgentState):
             roster=state.get("current_roster", []), player_name=state["player_name"],
         )
         decision = adjusted_decision; reason = reason + " " + team_reason
-    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary}
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "predicted_tier": tier}
 
 
 _workflow = StateGraph(OLAgentState)

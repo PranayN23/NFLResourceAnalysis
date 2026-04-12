@@ -65,7 +65,7 @@ def _stats_grade(yco_attempt, ypc, elusive_rating, rec_per_game, epa_per_touch):
 
 
 def _composite_grade(model_grade, stats_gr):
-    return round(0.40 * model_grade + 0.60 * stats_gr, 2)
+    return round(0.45 * model_grade + 0.55 * stats_gr, 2)
 
 
 def _grade_to_tier(grade):
@@ -203,6 +203,8 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         "rec_17g":        proj_rec_17g,
         "rec_yards_17g":  round(c_rec_yds / c_games * 17),
         "proj_att_17g":   proj_att_17g,
+        "btts_17g":       round(c_btts / c_games * 17, 1),
+        "epa_17g":        round(c_epa / c_games * 17, 2),
     }
 
 
@@ -247,12 +249,17 @@ def project_stats(
             "age":            age,
             "projected_grade": round(grade, 1),
             "yards":          round(min(2500, last_stats["yards_17g"] * scale)),
+            "attempts":       round(min(350, last_stats["proj_att_17g"] * scale)),
             "touchdowns":     round(min(25, last_stats["tds_17g"] * scale), 1),
             "receptions":     round(min(100, last_stats["rec_17g"] * scale)),
             "rec_yards":      round(min(1200, last_stats["rec_yards_17g"] * scale)),
             "ypc":            round(min(8, last_stats["ypc"] * scale), 2),
+            "yco_attempt":    round(min(6, last_stats["yco_attempt"]), 2),
             "elusive_rating": round(min(100, last_stats["elusive_rating"] * scale), 1),
+            "broken_tackles": round(min(60, last_stats["btts_17g"] * scale), 1),
+            "epa":            round(last_stats["epa_17g"] * scale, 2),
             "run_grade":      round(min(99, last_stats["run_grade"] * scale), 1),
+            "overall_grade":  round(min(99, grade), 1),
         })
     return projections
 
@@ -418,7 +425,13 @@ def assess_team_fit(state: HBAgentState):
 
 def make_decision(state: HBAgentState):
     ask = state["salary_ask"]; val = state["valuation"]; burden = state["effective_cap_burden"]
-    tier = state["predicted_tier"]; cg = state["composite_grade"]
+    cg = state["composite_grade"]
+    _yb = state.get("year_breakdown") or []
+    if _yb:
+        _avg_pg = sum(y.get("projected_grade", cg) for y in _yb) / len(_yb)
+        tier = _grade_to_tier(_avg_pg)
+    else:
+        tier = state["predicted_tier"]
     mg = state["confidence"].get("model_grade", cg); sg = state["stats_score"]
     age = state["current_age"]; years = state["contract_years"]; total = state["total_nominal_value"]
     health_adj = state["confidence"].get("health_factor", 0)
@@ -463,7 +476,7 @@ def make_decision(state: HBAgentState):
             roster=state.get("current_roster", []), player_name=state["player_name"],
         )
         decision = adjusted_decision; reason = reason + " " + team_reason
-    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary}
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "predicted_tier": tier}
 
 
 _workflow = StateGraph(HBAgentState)

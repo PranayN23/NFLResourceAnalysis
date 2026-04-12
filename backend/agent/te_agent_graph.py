@@ -67,7 +67,7 @@ def _stats_grade(pass_block_grade, yprr, yards_per_rec, epa_per_target, drop_rat
 
 
 def _composite_grade(model_grade, stats_gr):
-    return round(0.40 * model_grade + 0.60 * stats_gr, 2)
+    return round(0.47 * model_grade + 0.53 * stats_gr, 2)
 
 
 def _grade_to_tier(grade):
@@ -120,6 +120,7 @@ def extract_career_stats(history: pd.DataFrame) -> List[dict]:
             "max_games":       int(max_g),
             "receptions":      round(recs),
             "yards":           round(_safe_float(row.get("yards"))),
+            "touchdowns":      round(_safe_float(row.get("touchdowns"))),
             "yards_per_rec":   round(_safe_float(row.get("yards_per_reception")), 2),
             "yprr":            round(_safe_float(row.get("yprr")), 3),
             "drop_rate":       round(_safe_float(row.get("drop_rate")), 4),
@@ -142,7 +143,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     games = max(1.0, min(max_g, _safe_float(row.get("player_game_count"), max_g)))
     avail = round(games / max_g, 3)
 
-    c_yards = c_recs = c_tgts = c_drops = c_routes = c_epa = c_games = 0.0
+    c_yards = c_recs = c_tgts = c_drops = c_routes = c_epa = c_games = c_tds = 0.0
     for _, r in valid_rows.iterrows():
         yr_g = 17.0 if int(_safe_float(r.get("Year"), 2024)) >= 2021 else 16.0
         g = max(1.0, min(yr_g, _safe_float(r.get("player_game_count"), yr_g)))
@@ -152,6 +153,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         c_drops  += _safe_float(r.get("drops"))
         c_routes += _safe_float(r.get("routes"))
         c_epa    += _safe_float(r.get("Net EPA"))
+        c_tds    += _safe_float(r.get("touchdowns"))
         c_games  += g
 
     c_recs  = max(c_recs, 1.0); c_tgts = max(c_tgts, 1.0)
@@ -177,6 +179,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         "yards_17g":       round((c_yards / c_recs) * proj_recs_17g),
         "recs_17g":        proj_recs_17g,
         "proj_recs_17g":   proj_recs_17g,
+        "tds_17g":         round(c_tds / c_games * 17, 1),
     }
 
 
@@ -215,14 +218,19 @@ def project_stats(
         base_scale = max(0.25, min(1.5, grade / composite_gr)) if composite_gr > 0 else 1.0
         trend_mult = projection_trend_multiplier("TE", age, yr, player_yoy)
         scale = max(0.25, min(1.8, base_scale * trend_mult))
+        proj_recs  = round(min(120, last_stats["recs_17g"] * scale))
+        proj_yards = round(min(1700, last_stats["yards_17g"] * scale))
+        proj_ypr   = round(proj_yards / max(proj_recs, 1), 2)
+        proj_drop  = round(max(0, last_stats["drop_rate"] * (1.0 + max(0.0, 1.0 - scale) * 0.25)), 4)
         projections.append({
             "year": yr, "age": age, "projected_grade": round(grade, 1),
-            "receptions":      round(min(120, last_stats["recs_17g"] * scale)),
-            "yards":           round(min(1700, last_stats["yards_17g"] * scale)),
+            "receptions":      proj_recs,
+            "yards":           proj_yards,
+            "touchdowns":      round(min(15, last_stats["tds_17g"] * scale), 1),
+            "yards_per_rec":   proj_ypr,
             "yprr":            round(min(4, last_stats["yprr"] * scale), 3),
-            "yards_per_rec":   round(min(20, last_stats["yards_per_rec"] * scale), 2),
             "pass_block_grade":round(min(99, last_stats["pass_block_grade"] * scale), 1),
-            "drop_rate":       round(max(0, last_stats["drop_rate"] / max(scale, 0.5)), 4),
+            "drop_rate":       proj_drop,
         })
     return projections
 
@@ -373,7 +381,13 @@ def assess_team_fit(state: TEAgentState):
 
 def make_decision(state: TEAgentState):
     ask = state["salary_ask"]; val = state["valuation"]; burden = state["effective_cap_burden"]
-    tier = state["predicted_tier"]; cg = state["composite_grade"]
+    cg = state["composite_grade"]
+    _yb = state.get("year_breakdown") or []
+    if _yb:
+        _avg_pg = sum(y.get("projected_grade", cg) for y in _yb) / len(_yb)
+        tier = _grade_to_tier(_avg_pg)
+    else:
+        tier = state["predicted_tier"]
     mg = state["confidence"].get("model_grade", cg); sg = state["stats_score"]
     age = state["current_age"]; years = state["contract_years"]; total = state["total_nominal_value"]
     health_adj = state["confidence"].get("health_factor", 0)
@@ -414,7 +428,7 @@ def make_decision(state: TEAgentState):
             roster=state.get("current_roster", []), player_name=state["player_name"],
         )
         decision = adjusted_decision; reason = reason + " " + team_reason
-    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary}
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "predicted_tier": tier}
 
 
 _workflow = StateGraph(TEAgentState)
