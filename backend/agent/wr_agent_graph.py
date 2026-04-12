@@ -431,10 +431,9 @@ def assess_team_fit(state: WRAgentState):
 def make_decision(state: WRAgentState):
     ask = state["salary_ask"]; val = state["valuation"]; burden = state["effective_cap_burden"]
     cg = state["composite_grade"]
-    _yb = state.get("year_breakdown") or []
-    if _yb:
-        _avg_pg = sum(y.get("projected_grade", cg) for y in _yb) / len(_yb)
-        tier = _grade_to_tier(_avg_pg)
+    _ps = state.get("projected_stats") or []
+    if _ps:
+        tier = _grade_to_tier(_ps[0].get("projected_grade", cg))
     else:
         tier = state["predicted_tier"]
     mg = state["confidence"].get("model_grade", cg); sg = state["stats_score"]

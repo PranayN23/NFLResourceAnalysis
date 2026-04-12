@@ -367,7 +367,7 @@ def _compute_league_percentiles(
     composite (starter drives the number); other positions use the mean
     of the top-2 composites (typical two-starter / rotation roles).
     """
-    max_year = _roster_year_from_df(position_df, reference_year, "Year")
+    max_year = _effective_year_from_df(position_df, reference_year, "Year")
     if max_year is None:
         return pd.DataFrame()
     latest = position_df[position_df["Year"] == max_year].copy()
@@ -472,7 +472,7 @@ def _recompute_team_row(
     if prod_stat_cols is None:
         prod_stat_cols = _PROD_STATS_DEF
 
-    max_year = _roster_year_from_df(position_df, reference_year, "Year")
+    max_year = _effective_year_from_df(position_df, reference_year, "Year")
     if max_year is None:
         return None
     team_rows = position_df[
