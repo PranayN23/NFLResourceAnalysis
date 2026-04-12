@@ -876,8 +876,13 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
 function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   const [resolvedPositionKey, setResolvedPositionKey] = useState(positionKey);
   const cfg = POSITION_FREE_AGENCY[resolvedPositionKey];
-  const apiBase = `http://127.0.0.1:${cfg.port}`;
-  const directoryApiBase = `http://127.0.0.1:${POSITION_FREE_AGENCY[FA_POSITION_ORDER[0]].port}`;
+  // Match page hostname (localhost vs 127.0.0.1) so browser + CORS/Private Network Access stay consistent.
+  const envHost = typeof import.meta !== 'undefined' ? import.meta.env?.VITE_FA_API_HOST : '';
+  const faApiHost =
+    (typeof envHost === 'string' && envHost.trim() !== '' ? envHost.trim() : null) ||
+    (typeof window !== 'undefined' ? window.location.hostname : '127.0.0.1');
+  const apiBase = `http://${faApiHost}:${cfg.port}`;
+  const directoryApiBase = `http://${faApiHost}:${POSITION_FREE_AGENCY[FA_POSITION_ORDER[0]].port}`;
   const contractMax = 7;
   const analysisYearMax = 2025;
   const defaultAnalysisYear = 2025;
@@ -1028,10 +1033,9 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       setFullTeamRosterForDepartures([]);
       return;
     }
-    const host = window.location.hostname || 'localhost';
     const posEntries = Object.entries(POSITION_FREE_AGENCY);
     const reqs = posEntries.map(([, pcfg]) =>
-      fetch(`http://${host}:${pcfg.port}/team-roster?team=${encodeURIComponent(selectedTeam)}&analysis_year=${encodeURIComponent(analysisYear)}`)
+      fetch(`http://${faApiHost}:${pcfg.port}/team-roster?team=${encodeURIComponent(selectedTeam)}&analysis_year=${encodeURIComponent(analysisYear)}`)
         .then((r) => (r.ok ? r.json() : null))
         .catch(() => null)
     );
@@ -1059,7 +1063,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         );
       })
       .catch(() => setFullTeamRosterForDepartures([]));
-  }, [selectedTeam, teamMode, analysisYear]);
+  }, [selectedTeam, teamMode, analysisYear, faApiHost]);
 
   useEffect(() => {
     if (!selectedTeam || !teamMode) { setTeamBannerData(null); return; }
@@ -1558,8 +1562,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     try {
       const cfgForPos = POSITION_FREE_AGENCY[row.positionKey];
       if (!cfgForPos) throw new Error('No API config for that position.');
-      const host = window.location.hostname || 'localhost';
-      const url = `http://${host}:${cfgForPos.port}/evaluate`;
+      const url = `http://${faApiHost}:${cfgForPos.port}/evaluate`;
       const body = {
         player_name: row.playerName,
         salary_ask: Number(row.ask),
@@ -1647,7 +1650,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       if (!isNaN(capValM) && capValM > 0) {
         body.cap_available_pct = (capValM / leagueCapForUi) * 100;
       }
-      const resp = await fetch(`http://127.0.0.1:${posCfg.port}/evaluate`, {
+      const resp = await fetch(`http://${faApiHost}:${posCfg.port}/evaluate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

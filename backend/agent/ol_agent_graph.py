@@ -72,21 +72,29 @@ _HU_RATE_ANCHORS  = [0.15, 0.12,  0.08,  0.05,  0.025, 0.0]
 _STAT_GRD_SCALE = [45.0, 55.0, 65.0, 75.0, 85.0, 99.0]
 
 
-def _pass_block_grade(pbe, pbg, sa_rate, hit_rate, hu_rate):
-    p  = float(np.interp(pbe,      _PBE_ANCHORS,    _STAT_GRD_SCALE))
-    g  = float(np.interp(pbg,      _PBG_ANCHORS,    _STAT_GRD_SCALE))
-    sa = float(np.interp(sa_rate,  _SA_RATE_ANCHORS, _STAT_GRD_SCALE))
-    h  = float(np.interp(hit_rate, _HIT_RATE_ANCHORS,_STAT_GRD_SCALE))
-    hu = float(np.interp(hu_rate,  _HU_RATE_ANCHORS, _STAT_GRD_SCALE))
-    return round(0.25 * p + 0.25 * g + 0.20 * sa + 0.15 * h + 0.15 * hu, 2)
+def _pass_block_grade(pbe, pbg, sa_rate, hit_rate, hu_rate, position="G"):
+    p  = float(np.interp(pbe,      _PBE_ANCHORS,     _STAT_GRD_SCALE))
+    g  = float(np.interp(pbg,      _PBG_ANCHORS,     _STAT_GRD_SCALE))
+    sa = float(np.interp(sa_rate,  _SA_RATE_ANCHORS,  _STAT_GRD_SCALE))
+    h  = float(np.interp(hit_rate, _HIT_RATE_ANCHORS, _STAT_GRD_SCALE))
+    hu = float(np.interp(hu_rate,  _HU_RATE_ANCHORS,  _STAT_GRD_SCALE))
+    if position == "T":
+        # Tackles: sacks allowed is a meaningful, well-attributed stat
+        return round(0.25 * p + 0.25 * g + 0.20 * sa + 0.15 * h + 0.15 * hu, 2)
+    elif position == "G":
+        # Guards: sacks are rarely attributed; reduce sa_rate weight, shift to PBE/PBG
+        return round(0.30 * p + 0.30 * g + 0.10 * sa + 0.15 * h + 0.15 * hu, 2)
+    else:
+        # Center: sacks almost never attributed — drop sa_rate entirely
+        return round(0.35 * p + 0.35 * g + 0.15 * h + 0.15 * hu, 2)
 
 
 def _run_block_grade_score(rbg):
     return float(np.interp(rbg, _RBG_ANCHORS, _STAT_GRD_SCALE))
 
 
-def _stats_grade(pbe, pbg, rbg, sa_rate, hit_rate, hu_rate, pass_weight=0.50):
-    pb = _pass_block_grade(pbe, pbg, sa_rate, hit_rate, hu_rate)
+def _stats_grade(pbe, pbg, rbg, sa_rate, hit_rate, hu_rate, pass_weight=0.50, position="G"):
+    pb = _pass_block_grade(pbe, pbg, sa_rate, hit_rate, hu_rate, position=position)
     rb = _run_block_grade_score(rbg)
     run_weight = 1.0 - pass_weight
     return round(pass_weight * pb + run_weight * rb, 2)
@@ -371,7 +379,7 @@ def predict_performance(state: OLAgentState):
     sg = _stats_grade(
         last_stats["pbe"], last_stats["pass_block_grade"], last_stats["run_block_grade"],
         last_stats["sa_rate"], last_stats["hit_rate"], last_stats["hurry_rate"],
-        pass_weight=pass_weight,
+        pass_weight=pass_weight, position=position,
     )
     raw_cg = _composite_grade(model_grade, sg)
     cg = round(max(45.0, min(99.0, raw_cg + health_adj + inactivity_adj)), 2)
