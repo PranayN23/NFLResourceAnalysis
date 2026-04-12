@@ -172,7 +172,7 @@ async def evaluate_player(req: EvaluationRequest):
             "analysis_year": effective_year,
         "player_history": player_data,
         "player_history_full": player_full,
-        "predicted_tier": "", "confidence": {}, "current_age": 28,
+        "predicted_tier": "", "projected_tier": "", "confidence": {}, "current_age": 28,
         "last_season_stats": {}, "career_stats": [], "stats_score": 0.0,
         "composite_grade": 0.0, "valuation": 0.0, "effective_cap_burden": 0.0,
         "total_nominal_value": 0.0,         "year_breakdown": [], "projected_stats": [],

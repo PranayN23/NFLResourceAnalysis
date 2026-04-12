@@ -163,7 +163,7 @@ async def evaluate_player(req: EvaluationRequest):
         "player_history": player_data,
         "player_history_full": player_full,
         "ol_position": "G",
-        "predicted_tier": "", "confidence": {}, "current_age": 28,
+        "predicted_tier": "", "projected_tier": "", "confidence": {}, "current_age": 28,
         "last_season_stats": {}, "career_stats": [], "stats_score": 0.0,
         "composite_grade": 0.0, "valuation": 0.0, "effective_cap_burden": 0.0,
         "total_nominal_value": 0.0, "year_breakdown": [], "projected_stats": [],
@@ -179,7 +179,7 @@ async def evaluate_player(req: EvaluationRequest):
         "player": req.player_name, "decision": final_state["decision"],
         "reasoning": final_state["reasoning"],
         "data": {
-            "predicted_tier": final_state["predicted_tier"], "current_age": final_state["current_age"],
+            "predicted_tier": final_state["predicted_tier"], "projected_tier": final_state.get("projected_tier", final_state["predicted_tier"]), "current_age": final_state["current_age"],
             "contract_years": req.contract_years,
             "analysis_year": analysis_year, "effective_year": effective_year,
             "is_extension": req.is_extension, "extension_start_year": effective_year if req.is_extension else None,

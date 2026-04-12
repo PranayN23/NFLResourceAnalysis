@@ -447,6 +447,7 @@ class EDAgentState(TypedDict):
 
     # Populated by predict_performance
     predicted_tier:    str
+    projected_tier:     str
     confidence:        Dict[str, float]
     current_age:       int
     last_season_stats: dict
@@ -714,7 +715,7 @@ def make_decision(state: EDAgentState):
         decision = adjusted_decision
         reason = reason + " " + team_reason
 
-    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "predicted_tier": tier}
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "projected_tier": tier}
 
 
 # ─────────────────────────────────────────────

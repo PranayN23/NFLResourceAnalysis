@@ -121,3 +121,121 @@ INFO:     127.0.0.1:56957 - "GET /team-roster?team=Chargers&analysis_year=2025 H
 INFO:     127.0.0.1:56961 - "OPTIONS /evaluate HTTP/1.1" 200 OK
 [HB Agent] Predicting for Najee Harris...
 INFO:     127.0.0.1:56961 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57039 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57027 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57037 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57035 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57034 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57047 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57045 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57027 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57029 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57049 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57032 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57041 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57048 - "GET /team-roster?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57050 - "GET /team-summary?team=Cowboys&analysis_year=2025 HTTP/1.1" 200 OK
+[HB Agent] Predicting for Javonte Williams...
+INFO:     127.0.0.1:57027 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70322]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70312]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70316]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70323]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70314]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70313]
+INFO:     Waiting for application shutdown.
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70320]
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70315]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70319]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70317]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70321]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70318]
+INFO:     Started server process [79828]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8006 (Press CTRL+C to quit)
+INFO:     Started server process [79824]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8002 (Press CTRL+C to quit)
+INFO:     Started server process [79825]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [79829]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8003 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8007 (Press CTRL+C to quit)
+INFO:     Started server process [79835]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8012 (Press CTRL+C to quit)
+INFO:     Started server process [79831]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8008 (Press CTRL+C to quit)
+INFO:     Started server process [79823]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     Started server process [79833]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [79834]
+INFO:     Waiting for application startup.
+INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+INFO:     Started server process [79826]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8004 (Press CTRL+C to quit)
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [79827]
+INFO:     Started server process [79832]
+INFO:     Waiting for application startup.
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8009 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8005 (Press CTRL+C to quit)

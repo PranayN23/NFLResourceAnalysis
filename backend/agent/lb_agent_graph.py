@@ -291,7 +291,7 @@ def compute_contract_value(
 class LBAgentState(TypedDict):
     player_name: str; salary_ask: float; contract_years: int; player_history: pd.DataFrame
     player_history_full: pd.DataFrame; analysis_year: int
-    predicted_tier: str; confidence: Dict[str, float]; current_age: int
+    predicted_tier: str; projected_tier: str; confidence: Dict[str, float]; current_age: int
     last_season_stats: dict; career_stats: List[dict]; stats_score: float; composite_grade: float
     valuation: float; effective_cap_burden: float; total_nominal_value: float
     year_breakdown: List[dict]; projected_stats: List[dict]
@@ -434,7 +434,7 @@ def make_decision(state: LBAgentState):
             roster=state.get("current_roster", []), player_name=state["player_name"],
         )
         decision = adjusted_decision; reason = reason + " " + team_reason
-    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "predicted_tier": tier}
+    return {"decision": decision, "reasoning": reason, "team_fit_summary": fit_summary, "projected_tier": tier}
 
 
 _workflow = StateGraph(LBAgentState)

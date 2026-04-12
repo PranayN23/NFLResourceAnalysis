@@ -225,6 +225,7 @@ async def evaluate_player(req: EvaluationRequest):
         "player_history": player_data,
         "player_history_full": player_full,
         "predicted_tier":    "",
+        "projected_tier":    "",
         "confidence":        {},
         "current_age":       28,
         "last_season_stats": {},
@@ -255,6 +256,7 @@ async def evaluate_player(req: EvaluationRequest):
         "reasoning":      final_state["reasoning"],
         "data": {
             "predicted_tier":       final_state["predicted_tier"],
+            "projected_tier":       final_state.get("projected_tier", final_state["predicted_tier"]),
             "current_age":          final_state["current_age"],
             "contract_years":       req.contract_years,
             "analysis_year":        analysis_year,

@@ -781,7 +781,7 @@ function tierFromFairAav(positionKey, fairAav) {
 function buildStructuredFreeAgent(result, ask, years, positionKey) {
   const { decision, reasoning, data, team_context } = result;
   const {
-    predicted_tier, current_age, effective_fair_aav, effective_cap_burden,
+    predicted_tier, projected_tier, current_age, effective_fair_aav, effective_cap_burden,
     total_nominal_value, total_ask, confidence, year_breakdown,
     projected_stats, career_stats,
     is_extension, extension_start_year, years_remaining, current_aav,
@@ -790,14 +790,19 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
     transformer_grade, xgb_grade, age_adjustment } = confidence || {};
 
   const salaryAlignedTier = tierFromFairAav(positionKey, Number(effective_fair_aav));
-  const displayedTier = salaryAlignedTier || predicted_tier;
+  const displayedProjectedTier = projected_tier || salaryAlignedTier || predicted_tier;
 
   const statRows = [
     { divider: true, title: 'Player Profile' },
     {
+      label: 'Current Tier',
+      value: predicted_tier || 'N/A',
+      tierBadgeClass: predictedTierToBadgeClass(predicted_tier),
+    },
+    {
       label: 'Projected Tier',
-      value: displayedTier || 'N/A',
-      tierBadgeClass: predictedTierToBadgeClass(displayedTier),
+      value: displayedProjectedTier || 'N/A',
+      tierBadgeClass: predictedTierToBadgeClass(displayedProjectedTier),
     },
     { label: is_extension ? 'Age at Ext. Start' : 'Current Age', value: current_age },
     { divider: true, title: 'Grade Breakdown' },
