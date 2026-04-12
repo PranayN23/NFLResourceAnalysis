@@ -743,6 +743,15 @@ const DECISION_CLASS = {
   'Exceeds Cap':                    'exceeds-cap',
 };
 
+/** Maps a decision string to its tier color hex (for borders, glows, etc). */
+const _TIER_COLOR_BY_KEY = Object.fromEntries(
+  [...TIER_LADDER_TEAM, ...TIER_LADDER_BASE].map((t) => [t.key, t.color])
+);
+function decisionTierColor(decision) {
+  const key = DECISION_CLASS[decision];
+  return key ? (_TIER_COLOR_BY_KEY[key] || null) : null;
+}
+
 /** Maps agent `predicted_tier` to sidebar legend `.tier-badge.*` classes. */
 function predictedTierToBadgeClass(tier) {
   if (tier == null || tier === '') return null;
@@ -2617,12 +2626,20 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                   </button>
                 </div>
                 <div className="fa-rankings-grid">
-                  {classGradeSummary.rows.map((r) => (
+                  {classGradeSummary.rows.map((r) => {
+                    const _tierColor = decisionTierColor(r.decision);
+                    return (
                     <button
                       key={r.key}
                       type="button"
                       className="fa-ranking-card"
-                      style={{ textAlign: 'left', cursor: 'pointer' }}
+                      style={{
+                        textAlign: 'left', cursor: 'pointer',
+                        ...(_tierColor ? {
+                          border: `1.5px solid ${_tierColor}`,
+                          boxShadow: `0 0 8px ${_tierColor}33`,
+                        } : {}),
+                      }}
                       onClick={() => handleOpenClassSigningEvaluation(r)}
                       title="Open full evaluation"
                     >
@@ -2645,7 +2662,8 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                         )}
                       </div>
                     </button>
-                  ))}
+                  );
+                  })}
                 </div>
                 <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   <button

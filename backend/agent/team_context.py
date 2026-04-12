@@ -110,6 +110,25 @@ def _effective_year_from_df(df: pd.DataFrame, requested_year: int | None, col: s
     return int(elig.max()) if not elig.empty else int(years.min())
 
 
+def _roster_year_from_df(df: pd.DataFrame, requested_year: int | None, col: str) -> int | None:
+    """Pick the latest available year STRICTLY BEFORE requested_year for roster context.
+
+    Free agency and signings happen before the season starts, so when evaluating
+    players for analysis_year N, the 'current roster' should reflect who was on
+    the team at the END of season N-1 — not the current-season stats, which would
+    already show players as signed.
+    """
+    if col not in df.columns:
+        return None
+    years = pd.to_numeric(df[col], errors="coerce").dropna().astype(int)
+    if years.empty:
+        return None
+    if requested_year is None:
+        return int(years.max())
+    elig = years[years < int(requested_year)]
+    return int(elig.max()) if not elig.empty else int(years.min())
+
+
 def _coerce_numeric_inplace(df: pd.DataFrame, cols: list[str]) -> None:
     """
     Coerce messy numeric columns (often read as strings) into floats.
@@ -136,14 +155,17 @@ def get_team_roster(
     reference_year: int | None = None,
 ) -> List[dict]:
     """
-    Return the team's players at this position from the most recent year
-    in the dataframe, sorted by snap count descending.
+    Return the team's players at this position from the season BEFORE
+    reference_year, sorted by snap count descending.
+
+    Using the prior season's data correctly reflects the roster state at
+    the start of free agency (before any new signings in reference_year).
 
     If *exclude_player* is provided, that player is omitted from the
     roster — used for re-signing scenarios where we need to see what
     the roster looks like WITHOUT the player.
     """
-    max_year = _effective_year_from_df(position_df, reference_year, "Year")
+    max_year = _roster_year_from_df(position_df, reference_year, "Year")
     if max_year is None:
         return []
     team_df = position_df[
@@ -205,8 +227,12 @@ def is_player_on_team(
     position_df: pd.DataFrame,
     reference_year: int | None = None,
 ) -> bool:
-    """Check if a player is currently on the team's roster."""
-    max_year = _effective_year_from_df(position_df, reference_year, "Year")
+    """Check if a player was on the team's roster at the END of the prior season.
+
+    Uses the season before reference_year so that free agency signings in
+    reference_year don't incorrectly appear as re-signings.
+    """
+    max_year = _roster_year_from_df(position_df, reference_year, "Year")
     if max_year is None:
         return False
     team_df = position_df[
@@ -341,7 +367,7 @@ def _compute_league_percentiles(
     composite (starter drives the number); other positions use the mean
     of the top-2 composites (typical two-starter / rotation roles).
     """
-    max_year = _effective_year_from_df(position_df, reference_year, "Year")
+    max_year = _roster_year_from_df(position_df, reference_year, "Year")
     if max_year is None:
         return pd.DataFrame()
     latest = position_df[position_df["Year"] == max_year].copy()
@@ -446,7 +472,7 @@ def _recompute_team_row(
     if prod_stat_cols is None:
         prod_stat_cols = _PROD_STATS_DEF
 
-    max_year = _effective_year_from_df(position_df, reference_year, "Year")
+    max_year = _roster_year_from_df(position_df, reference_year, "Year")
     if max_year is None:
         return None
     team_rows = position_df[
