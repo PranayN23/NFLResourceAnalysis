@@ -897,7 +897,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     (typeof window !== 'undefined' ? window.location.hostname : '127.0.0.1');
   const apiBase = `http://${faApiHost}:${cfg.port}`;
   const directoryApiBase = `http://${faApiHost}:${POSITION_FREE_AGENCY[FA_POSITION_ORDER[0]].port}`;
-  const contractMax = 7;
+  const contractMax = 10;
   const analysisYearMax = 2025;
   const defaultAnalysisYear = 2025;
 
@@ -1633,8 +1633,8 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       return;
     }
     const years = Number(classQuickYears);
-    if (!Number.isFinite(years) || years < 1 || years > 7) {
-      setError('Contract years must be 1-7.');
+    if (!Number.isFinite(years) || years < 1 || years > contractMax) {
+      setError(`Contract years must be 1-${contractMax}.`);
       return;
     }
     const hit = playerDirectory.find((p) => p.player === classSearchPlayer);
@@ -1794,14 +1794,14 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
               <input
                 type="range"
                 min="1"
-                max="7"
+                max={contractMax}
                 step="1"
                 className="fa-slider"
                 value={yearsRemaining}
                 onChange={(e) => setYearsRemaining(Number(e.target.value))}
               />
               <div className="fa-slider-ticks">
-                {[1,2,3,4,5,6,7].map((n) => (
+                {ticks.map((n) => (
                   <span
                     key={n}
                     className={n === yearsRemaining ? 'fa-tick fa-tick--active' : 'fa-tick'}
@@ -2415,7 +2415,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                     value={classQuickYears}
                     onChange={(e) => setClassQuickYears(Number(e.target.value))}
                   >
-                    {[1, 2, 3, 4, 5, 6, 7].map((y) => (
+                    {ticks.map((y) => (
                       <option key={y} value={y}>{y}</option>
                     ))}
                   </select>
@@ -2607,7 +2607,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                     value={classQuickYears}
                     onChange={(e) => setClassQuickYears(Number(e.target.value))}
                   >
-                    {[1, 2, 3, 4, 5, 6, 7].map((y) => (
+                    {ticks.map((y) => (
                       <option key={y} value={y}>{y}</option>
                     ))}
                   </select>

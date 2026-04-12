@@ -90,7 +90,7 @@ async def team_roster(team: str = Query(...), analysis_year: int = Query(2025)):
 class EvaluationRequest(BaseModel):
     player_name:    str
     salary_ask:     float
-    contract_years: int = Field(default=1, ge=1, le=7)
+    contract_years: int = Field(default=1, ge=1, le=10)
     team:              str   = ""
     cap_available_pct: float = 0.0
     analysis_year:    int = Field(default=2025, ge=1900, le=2025)
