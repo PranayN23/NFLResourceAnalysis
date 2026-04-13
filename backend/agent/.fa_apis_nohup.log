@@ -1404,3 +1404,15 @@ INFO:     127.0.0.1:62759 - "OPTIONS /evaluate HTTP/1.1" 200 OK
 INFO:     127.0.0.1:62759 - "POST /evaluate HTTP/1.1" 200 OK
 [QB Agent] Predicting for Jared Goff...
 INFO:     127.0.0.1:62774 - "POST /evaluate HTTP/1.1" 200 OK
+backend/agent/run_all_free_agency_apis.sh: line 41: 55299 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55300 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55301 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55302 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55303 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55304 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55305 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55306 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55307 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55308 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55309 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 55310 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
