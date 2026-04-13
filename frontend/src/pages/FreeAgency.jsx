@@ -22,6 +22,38 @@ const FA_FMT = {
   sacks_rate: (v) => `${(Number(v) * 100).toFixed(2)}%`,
 };
 
+/**
+ * Cap room % sent to /evaluate in team mode: editable cap or roster baseline,
+ * plus cap freed by modeled departures, minus yr1% already committed to other
+ * signings in the Free Agency class. When re-evaluating one class row, pass
+ * excludeSigningKey so that row's yr1 is not treated as already spent.
+ */
+function effectiveCapAvailablePctForClass({
+  capOverrideRaw,
+  leagueCapM,
+  teamRosterAvailablePct,
+  departuresOn,
+  classDepartures,
+  classSignings,
+  excludeSigningKey = null,
+}) {
+  const capValM = parseFloat(capOverrideRaw);
+  let basePct;
+  if (!Number.isNaN(capValM) && capValM >= 0) {
+    basePct = (capValM / leagueCapM) * 100;
+  } else {
+    basePct = Number(teamRosterAvailablePct || 0);
+  }
+  const freed = departuresOn
+    ? classDepartures.reduce((a, d) => a + Number(d.freedCapPct || 0), 0)
+    : 0;
+  const used = classSignings.reduce((a, s) => {
+    if (excludeSigningKey != null && s.key === excludeSigningKey) return a;
+    return a + Number(s.yr1CapPct || 0);
+  }, 0);
+  return Math.max(0, basePct + freed - used);
+}
+
 /* ─── Searchable Select (combobox) ─── */
 function SearchableSelect({ options, value, onChange, placeholder = 'Search…' }) {
   const [query, setQuery] = useState('');
@@ -892,6 +924,109 @@ function buildStructuredFreeAgent(result, ask, years, positionKey, analysisYear)
   };
 }
 
+/** variant signingDialog = Explain signing class modal; rosterNet = copy inside Explain roster net modal */
+function FaSigningClassExplainHighlights({ highlights, variant = 'signingDialog' }) {
+  if (!highlights?.bestRows?.length) return null;
+  const { bestRows, worstRows, maxImpactScore, minImpactScore } = highlights;
+  const bestNames = bestRows.map((r) => r.playerName).join(', ');
+  const worstNames = worstRows.map((r) => r.playerName).join(', ');
+  const sameOnly =
+    bestRows.length === 1 && worstRows.length === 1 && bestRows[0].key === worstRows[0].key;
+  const roster = variant === 'rosterNet';
+  const g0 = Math.round(Number(bestRows[0]?.adjustedSigningGrade) || 0);
+  const footnote = (
+    <p className="fa-class-explain-impact-footnote">
+      Impact index = adjusted grade × position importance × AAV scaling — same construction as the weighted class grade, so a
+      premium QB contract moves the needle more than a similar grade on a cheaper or lower-importance spot.
+    </p>
+  );
+  const block = sameOnly ? (
+    <>
+      <p>
+        {roster ? (
+          <>
+            <strong>Signing class highlight:</strong> only deal is <strong>{bestNames}</strong> — impact index ≈{' '}
+            <strong>{maxImpactScore}</strong>, adjusted grade <strong>{g0}</strong>.
+          </>
+        ) : (
+          <>
+            <strong>Only signing in this class:</strong> {bestNames} — impact index ≈ <strong>{maxImpactScore}</strong>, adjusted
+            grade <strong>{g0}</strong>.
+          </>
+        )}
+      </p>
+      {footnote}
+    </>
+  ) : (
+    <>
+      <p>
+        <strong>Most impactful signings</strong> (largest weighted pull on the class): <strong>{bestNames}</strong> — impact
+        index ≈ <strong>{maxImpactScore}</strong>.
+      </p>
+      <p>
+        <strong>Least impactful signings</strong> (smallest weighted pull): <strong>{worstNames}</strong> — impact index ≈{' '}
+        <strong>{minImpactScore}</strong>.
+      </p>
+      {footnote}
+    </>
+  );
+  if (roster) return block;
+  return <div className="fa-class-explain-callouts">{block}</div>;
+}
+
+function FaRosterNetExplainHighlights({ rosterSummary, signingHighlights }) {
+  const hasSh = signingHighlights?.bestRows?.length > 0;
+  const hasDep = rosterSummary?.hasDepartures;
+  if (!hasSh && !hasDep) return null;
+  return (
+    <div className="fa-class-explain-callouts fa-class-explain-callouts--tight">
+      {hasSh && <FaSigningClassExplainHighlights highlights={signingHighlights} variant="rosterNet" />}
+      {hasDep && (
+        <>
+          {rosterSummary.biggestUnaccountedDeparture ? (
+            <p>
+              <strong>Largest departure without a same-position FA in this class:</strong>{' '}
+              <strong>{rosterSummary.biggestUnaccountedDeparture.playerName}</strong> (
+              {rosterSummary.biggestUnaccountedDeparture.positionKey}, ~grade{' '}
+              {rosterSummary.biggestUnaccountedDeparture.grade}, frees{' '}
+              {rosterSummary.biggestUnaccountedDeparture.freedCapPct.toFixed(1)}% cap). Positions with no FA add here still
+              count as unaccounted holes in roster net.
+            </p>
+          ) : (
+            <p>
+              <strong>Departure coverage:</strong> every modeled departure position has at least one FA signing in this class —
+              no “orphan” position left without an incoming deal.
+            </p>
+          )}
+          {rosterSummary.hasSignings ? (
+            rosterSummary.bestReplacementSigning ? (
+              <p>
+                <strong>Strongest replacement move (same position as a departure):</strong>{' '}
+                <strong>{rosterSummary.bestReplacementSigning.playerName}</strong> (
+                {rosterSummary.bestReplacementSigning.positionKey}, impact index ≈{' '}
+                {Math.round(Number(rosterSummary.bestReplacementSigning.weightedScore) * 10) / 10},{' '}
+                adjusted grade{' '}
+                <strong>{Math.round(Number(rosterSummary.bestReplacementSigning.adjustedSigningGrade) || 0)}</strong>
+                ).
+              </p>
+            ) : (
+              <p>
+                <strong>Replacement vs departures:</strong> no FA signing matches a modeled departure’s position — the class
+                isn’t directly replacing those losses at the same spot on the depth chart.
+              </p>
+            )
+          ) : (
+            <p>
+              <strong>No FA signings modeled</strong> — every departure remains unaccounted for in this builder until you add
+              incoming deals.
+            </p>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   const [resolvedPositionKey, setResolvedPositionKey] = useState(positionKey);
   const cfg = POSITION_FREE_AGENCY[resolvedPositionKey];
@@ -1130,10 +1265,14 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       };
       if (teamMode && selectedTeam) {
         body.team = selectedTeam;
-        const capValM = parseFloat(capOverride);
-        if (!isNaN(capValM) && capValM > 0) {
-          body.cap_available_pct = (capValM / leagueCapForUi) * 100;
-        }
+        body.cap_available_pct = effectiveCapAvailablePctForClass({
+          capOverrideRaw: capOverride,
+          leagueCapM: leagueCapForUi,
+          teamRosterAvailablePct: teamRoster?.available_cap_pct,
+          departuresOn,
+          classDepartures,
+          classSignings,
+        });
       }
 
       // In extension mode, run a second call to get projections for the remaining deal years
@@ -1254,7 +1393,24 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       };
     });
     const grade = den > 0 ? Math.round(num / den) : 0;
-    return { grade, letter: gradeLetter(grade), rows };
+    // Impact = adjusted grade × position importance × AAV profile weight (same as numerator of weighted class grade).
+    const impact = (r) => Number(r.weightedScore) || 0;
+    const maxI = rows.length ? Math.max(...rows.map(impact)) : 0;
+    const minI = rows.length ? Math.min(...rows.map(impact)) : 0;
+    const bestRows = rows.filter((r) => impact(r) === maxI);
+    const worstRows = rows.filter((r) => impact(r) === minI);
+    const roundImp = (x) => Math.round(x * 10) / 10;
+    return {
+      grade,
+      letter: gradeLetter(grade),
+      rows,
+      signingHighlights: {
+        bestRows,
+        worstRows,
+        maxImpactScore: roundImp(maxI),
+        minImpactScore: roundImp(minI),
+      },
+    };
   }, [classSignings, classDepartures, departuresOn]);
 
   /** Signings-only grade is in classGradeSummary. Net roster score penalizes losing higher-grade / higher-cap departures (weighted by position). */
@@ -1280,6 +1436,8 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         signingEmphasis: 1,
         adjustedSigningBaseline: sg,
         replacementCoveragePct: null,
+        biggestUnaccountedDeparture: null,
+        bestReplacementSigning: null,
         explanation:
           'Roster net equals signing class until you model departures. Turn on “Account for Departures” and add players to estimate talent (and cap) walking out the door.',
       };
@@ -1368,6 +1526,36 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       );
     }
 
+    const signingRows = classGradeSummary?.rows || [];
+    const signingPosSet = new Set(classSignings.map((s) => s.positionKey));
+    const depPosSet = new Set(classDepartures.map((d) => d.positionKey));
+    const unaccountedDeps = classDepartures.filter((d) => !signingPosSet.has(d.positionKey));
+    let biggestUnaccountedDeparture = null;
+    if (unaccountedDeps.length) {
+      biggestUnaccountedDeparture = unaccountedDeps.reduce((best, d) => {
+        const posW = POS_IMPORTANCE[d.positionKey] || 1;
+        const capW = Math.max(0.5, Math.min(1.8, 0.5 + Number(d.freedCapPct || 0) / 25));
+        const w = posW * capW;
+        const impact = w * (Number(d.grade) || 60);
+        if (!best || impact > best.lossImpact) {
+          return {
+            playerName: d.playerName,
+            positionKey: d.positionKey,
+            grade: Math.round(Number(d.grade) || 60),
+            freedCapPct: Number(d.freedCapPct) || 0,
+            lossImpact: impact,
+          };
+        }
+        return best;
+      }, null);
+    }
+    const replacementCandidates = signingRows.filter((r) => depPosSet.has(r.positionKey));
+    let bestReplacementSigning = null;
+    if (replacementCandidates.length) {
+      bestReplacementSigning = replacementCandidates.reduce((a, b) =>
+        (Number(b.weightedScore) > Number(a.weightedScore) ? b : a));
+    }
+
     return {
       grade: net,
       letter: gradeLetter(net),
@@ -1383,6 +1571,8 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       adjustedSigningBaseline: hasSignings ? round1(adjustedSigningBaseline) : null,
       replacementCoveragePct: lossDen > 0 ? Math.min(100, replacementCoveragePct) : null,
       explanation: parts.join(' '),
+      biggestUnaccountedDeparture,
+      bestReplacementSigning,
     };
   }, [classSignings, classDepartures, departuresOn, classGradeSummary]);
   const classUsedCapPct = useMemo(
@@ -1523,6 +1713,9 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       try { localStorage.removeItem(classStorageKey); } catch { /* ignore */ }
     }
   }, [classStorageKey]);
+  const handleRemoveClassSigning = useCallback((key) => {
+    setClassSignings((prev) => prev.filter((s) => s.key !== key));
+  }, []);
   const handleAddDeparture = useCallback(() => {
     if (!departuresOn || !selectedDeparturePlayer) return;
     const roster = fullTeamRosterForDepartures || [];
@@ -1588,6 +1781,15 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         contract_years: Number(row.years),
         analysis_year: Number(row.analysisYear),
         team: row.team,
+        cap_available_pct: effectiveCapAvailablePctForClass({
+          capOverrideRaw: capOverride,
+          leagueCapM: leagueCapForUi,
+          teamRosterAvailablePct: teamRoster?.available_cap_pct,
+          departuresOn,
+          classDepartures,
+          classSignings,
+          excludeSigningKey: row.key,
+        }),
       };
       const resp = await fetch(url, {
         method: 'POST',
@@ -1612,7 +1814,16 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
     } catch (e) {
       setError(e.message || `Could not load full evaluation for ${row.playerName}.`);
     }
-  }, [messages]);
+  }, [
+    messages,
+    capOverride,
+    leagueCapForUi,
+    teamRoster?.available_cap_pct,
+    departuresOn,
+    classDepartures,
+    classSignings,
+    faApiHost,
+  ]);
   const classSearchOptions = useMemo(
     () => playerDirectory.map((p) => p.player),
     [playerDirectory]
@@ -1670,11 +1881,15 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         contract_years: years,
         analysis_year: analysisYear,
         team: selectedTeam,
+        cap_available_pct: effectiveCapAvailablePctForClass({
+          capOverrideRaw: capOverride,
+          leagueCapM: leagueCapForUi,
+          teamRosterAvailablePct: teamRoster?.available_cap_pct,
+          departuresOn,
+          classDepartures,
+          classSignings,
+        }),
       };
-      const capValM = parseFloat(capOverride);
-      if (!isNaN(capValM) && capValM > 0) {
-        body.cap_available_pct = (capValM / leagueCapForUi) * 100;
-      }
       const resp = await fetch(`http://${faApiHost}:${posCfg.port}/evaluate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1706,6 +1921,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
   }, [
     classSearchPlayer, classQuickAsk, classQuickYears, playerDirectory,
     selectedTeam, analysisYear, capOverride, handleAddToClass, leagueCapForUi,
+    teamRoster?.available_cap_pct, departuresOn, classDepartures, classSignings,
   ]);
 
   useEffect(() => {
@@ -2640,39 +2856,53 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                   {classGradeSummary.rows.map((r) => {
                     const _tierColor = decisionTierColor(r.decision);
                     return (
-                    <button
-                      key={r.key}
-                      type="button"
-                      className="fa-ranking-card"
-                      style={{
-                        textAlign: 'left', cursor: 'pointer',
-                        ...(_tierColor ? {
-                          border: `1.5px solid ${_tierColor}`,
-                          boxShadow: `0 0 8px ${_tierColor}33`,
-                        } : {}),
-                      }}
-                      onClick={() => handleOpenClassSigningEvaluation(r)}
-                      title="Open full evaluation"
-                    >
-                      <div className="fa-ranking-row">
-                        <span className="fa-ranking-pos">{r.positionKey} — {r.playerName}</span>
-                        <span
-                          className="fa-ranking-badge"
-                          style={classGradeBadgeStyle(r.adjustedSigningGrade ?? r.signingGrade)}
-                        >
-                          {Math.round(r.adjustedSigningGrade ?? r.signingGrade)}
-                        </span>
-                      </div>
-                      <div className="fa-hint">
-                        ${r.ask}M x {r.years}y · Yr1 cap ${pctToDollarsNum(Number(r.yr1CapPct || 0), leagueCapForUi).toFixed(1)}M · weight {r.weight.toFixed(2)}
-                        {Number(r.departureBoost) > 0 && (
-                          <span>
-                            {' '}
-                            · base {Math.round(r.baseSigningGrade ?? r.signingGrade)} +{Number(r.departureBoost).toFixed(1)} dep need
+                    <div key={r.key} className="fa-class-signing-card-wrap">
+                      <button
+                        type="button"
+                        className="fa-ranking-card fa-class-signing-card-btn"
+                        style={{
+                          textAlign: 'left', cursor: 'pointer', width: '100%',
+                          ...(_tierColor ? {
+                            border: `1.5px solid ${_tierColor}`,
+                            boxShadow: `0 0 8px ${_tierColor}33`,
+                          } : {}),
+                        }}
+                        onClick={() => handleOpenClassSigningEvaluation(r)}
+                        title="Open full evaluation"
+                      >
+                        <div className="fa-ranking-row">
+                          <span className="fa-ranking-pos">{r.positionKey} — {r.playerName}</span>
+                          <span
+                            className="fa-ranking-badge"
+                            style={classGradeBadgeStyle(r.adjustedSigningGrade ?? r.signingGrade)}
+                          >
+                            {Math.round(r.adjustedSigningGrade ?? r.signingGrade)}
                           </span>
-                        )}
-                      </div>
-                    </button>
+                        </div>
+                        <div className="fa-hint">
+                          ${r.ask}M x {r.years}y · Yr1 cap ${pctToDollarsNum(Number(r.yr1CapPct || 0), leagueCapForUi).toFixed(1)}M · weight {r.weight.toFixed(2)}
+                          {Number(r.departureBoost) > 0 && (
+                            <span>
+                              {' '}
+                              · base {Math.round(r.baseSigningGrade ?? r.signingGrade)} +{Number(r.departureBoost).toFixed(1)} dep need
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        className="fa-class-remove-signing"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleRemoveClassSigning(r.key);
+                        }}
+                        aria-label={`Remove ${r.playerName} from class`}
+                        title="Remove from class"
+                      >
+                        Remove from class
+                      </button>
+                    </div>
                   );
                   })}
                 </div>
@@ -2718,12 +2948,17 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
                 />
               </div>
               <ul className="fa-class-explain-bullets">
-                <li>Each signing’s grade is weighted by <strong>position importance</strong> and <strong>contract size</strong> (AAV).</li>
+                <li>
+                  The ring uses <strong>position importance</strong> (e.g. QB vs interior DL), <strong>AAV</strong> (contract
+                  size), and <strong>adjusted signing grade</strong>. The highlights below rank by that same{' '}
+                  <strong>impact index</strong>, not raw grade alone.
+                </li>
                 <li>
                   With <strong>Account for Departures</strong> on, each signing gets an extra bump when it addresses the same position (and a smaller bump from general roster churn) so the class score reflects <strong>replacement value</strong>.
                 </li>
                 <li>Use <strong>Roster net impact</strong> for the full picture: boosted signing quality minus talent walking out and coverage gaps.</li>
               </ul>
+              <FaSigningClassExplainHighlights highlights={classGradeSummary.signingHighlights} />
             </div>
           </div>
         </div>
@@ -2799,6 +3034,10 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
             <p className="fa-class-explain-narrative">
               {classRosterNetSummary.explanation}
             </p>
+            <FaRosterNetExplainHighlights
+              rosterSummary={classRosterNetSummary}
+              signingHighlights={classGradeSummary?.signingHighlights}
+            />
           </div>
         </div>
       )}

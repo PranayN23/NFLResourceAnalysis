@@ -435,6 +435,54 @@ html, body {
   color: #a58bff;
 }
 
+/* Free Agency class: signing row — remove control on hover */
+.fa-class-signing-card-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.fa-class-signing-card-btn {
+  padding-right: 36px;
+}
+
+.fa-class-remove-signing {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.2;
+  color: #ffb4b4;
+  background: rgba(224, 85, 85, 0.18);
+  border: 1px solid rgba(224, 85, 85, 0.45);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  white-space: nowrap;
+}
+
+.fa-class-signing-card-wrap:hover .fa-class-remove-signing,
+.fa-class-remove-signing:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fa-class-remove-signing:hover {
+  background: rgba(224, 85, 85, 0.32);
+  color: #ffd0d0;
+}
+
+.fa-class-remove-signing:focus-visible {
+  outline: 2px solid rgba(126, 106, 255, 0.8);
+  outline-offset: 2px;
+}
+
 /* ── Tier legend ── */
 .fa-legend {
   background: #222;
@@ -1745,6 +1793,32 @@ html, body {
   color: #eee;
   font-variant-numeric: tabular-nums;
 }
+.fa-class-explain-callouts {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  line-height: 1.55;
+  color: #c8c4dc;
+}
+.fa-class-explain-callouts p {
+  margin: 0 0 10px;
+}
+.fa-class-explain-callouts p:last-child {
+  margin-bottom: 0;
+}
+.fa-class-explain-callouts--tight {
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.fa-class-explain-impact-footnote {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #8a8698;
+}
+
 .fa-class-explain-narrative {
   margin-top: 14px;
   padding-top: 12px;
