@@ -311,6 +311,11 @@ def main() -> None:
             f.write(md)
         if not df.empty:
             df.to_csv(out_csv, index=False)
+            qb_only = df[df["position_key"] == "QB"].copy() if "position_key" in df.columns else pd.DataFrame()
+            if not qb_only.empty:
+                qb_csv = os.path.join(REPORTS_DIR, f"fa_tier_rankings_qb_only_year_{clamp_analysis_year(y)}.csv")
+                qb_only.to_csv(qb_csv, index=False)
+                print(f"Wrote {qb_csv}")
         print(f"Wrote {out_md}")
         if not df.empty:
             print(f"Wrote {out_csv}")
