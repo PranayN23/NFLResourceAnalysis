@@ -17,7 +17,6 @@ from backend.agent.team_context import (
     assess_team_fit as _assess_team_fit_logic,
     aav_to_cap_pcts,
     decision_fair_aav_with_replacement,
-    cap_scale_for_year,
 )
 from backend.agent.grade_projection import (
     grade_to_tier_universal,
@@ -38,26 +37,16 @@ import numpy as np
 import os, datetime
 
 from backend.agent.api_year_utils import resolve_player_age_for_evaluation
+from backend.agent.market_value_curves import fair_market_aav_millions, grade_to_market_value as _gtmv_cal
 
 _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 T_CSV_PATH = os.path.join(_BASE, "ML", "T.csv")
 G_CSV_PATH = os.path.join(_BASE, "ML", "G.csv")
 C_CSV_PATH = os.path.join(_BASE, "ML", "C.csv")
 
-# Market value anchors per sub-position
-_GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_T_VALUE       = [1.23, 3.07, 7.36, 13.49, 18.39, 23.30, 26.97, 30.65, 33.10, 34.33, 35.57, 36.78]
-_G_VALUE       = [0.75, 1.50, 3.25, 5.50, 8.50, 11.5, 14.5, 18.0, 20.5, 23.5, 27.0, 30.0]
-_C_VALUE       = [0.75, 1.50, 3.07, 4.91, 6.13, 7.98, 10.43, 13.49, 15.34, 17.79, 20.84, 23.69]
-MARKET_CALIBRATION_FACTOR = 0.88
-
-_VALUE_TABLE = {"T": _T_VALUE, "G": _G_VALUE, "C": _C_VALUE}
-
 
 def grade_to_market_value(grade: float, position: str = "G") -> float:
-    grade = max(45.0, min(100.0, float(grade)))
-    value_anchors = _VALUE_TABLE.get(position, _G_VALUE)
-    return round(float(np.interp(grade, _GRADE_ANCHORS, value_anchors)) * MARKET_CALIBRATION_FACTOR, 2)
+    return _gtmv_cal(grade, position)
 
 
 # Stats anchors for OL — PBE, pass block grade, run block grade
@@ -302,7 +291,6 @@ def compute_contract_value(
     grade = float(composite_gr)
     player_yoy = player_recent_grade_yoy(history, grade_col)
     snap_rel, _ = snap_value_reliability_factor(history)
-    cap_scale = cap_scale_for_year(analysis_year)
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
@@ -314,7 +302,7 @@ def compute_contract_value(
             )
         cap_factor = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
         time_discount = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
-        base_value = grade_to_market_value(grade, position) * snap_rel * cap_scale
+        base_value = fair_market_aav_millions(grade, position, analysis_year) * snap_rel
         nominal_value = base_value * cap_factor
         cap_adj_ask = salary_ask / cap_factor
         front_weight = 1.0 / float(yr)
@@ -465,9 +453,9 @@ def make_decision(state: OLAgentState):
     val_dec = val
     rep_note = ""
     if team_nm and roster:
-        _scale = cap_scale_for_year(int(state.get("analysis_year") or 2026))
+        _yr = int(state.get("analysis_year") or 2026)
         def _gtmv(g):
-            return grade_to_market_value(g, position) * _scale
+            return fair_market_aav_millions(g, position, _yr)
         val_dec, rep_note = decision_fair_aav_with_replacement(
             val, _gtmv, cg, roster, position,
         )

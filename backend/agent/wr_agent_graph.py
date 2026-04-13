@@ -12,7 +12,6 @@ from backend.agent.team_context import (
     assess_team_fit as _assess_team_fit_logic,
     aav_to_cap_pcts,
     decision_fair_aav_with_replacement,
-    cap_scale_for_year,
 )
 from backend.agent.grade_projection import (
     grade_to_tier_universal,
@@ -33,18 +32,14 @@ import numpy as np
 import os, datetime
 
 from backend.agent.api_year_utils import resolve_player_age_for_evaluation
+from backend.agent.market_value_curves import fair_market_aav_millions, grade_to_market_value as _gtmv_cal
 
 _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 WR_CSV_PATH = os.path.join(_BASE, "ML", "WR.csv")
 
-_GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [1.23, 3.07, 6.14, 9.81, 14.71, 20.84, 26.97, 33.10, 39.24, 44.16, 49.03, 52.70]
-MARKET_CALIBRATION_FACTOR = 0.88
-
 
 def grade_to_market_value(grade: float) -> float:
-    grade = max(45.0, min(100.0, float(grade)))
-    return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)) * MARKET_CALIBRATION_FACTOR, 2)
+    return _gtmv_cal(grade, "WR")
 
 
 # Stats anchors (empirical, per-season / rate basis)
@@ -300,15 +295,20 @@ def compute_contract_value(
     weighted_fair_num = weighted_burden_num = weight_den = 0.0
     grade = float(composite_gr)
     player_yoy = player_recent_grade_yoy(history, grade_col)
-    snap_rel, _ = snap_value_reliability_factor(history)
-    cap_scale = cap_scale_for_year(analysis_year)
+    # Prefer route/target workload for valuation (total_snaps alone can understate WR usage vs 700 baseline).
+    # Higher floor avoids ~0.55× fair AAV when history is missing in an edge path (reads as “elite grade, $19M fair”).
+    snap_rel, _ = snap_value_reliability_factor(
+        history,
+        floor=0.85,
+        column_priority=("routes", "targets", "total_snaps", "snap_counts_offense"),
+    )
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
             grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
         cap_factor    = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
         time_discount = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
-        base_value    = grade_to_market_value(grade) * snap_rel * cap_scale
+        base_value    = fair_market_aav_millions(grade, "WR", analysis_year) * snap_rel
         nominal_value = base_value * cap_factor
         disc_value    = nominal_value * time_discount
         cap_adj_ask   = salary_ask / cap_factor
@@ -447,9 +447,9 @@ def make_decision(state: WRAgentState):
     val_dec = val
     rep_note = ""
     if team_nm and roster:
-        _scale = cap_scale_for_year(int(state.get("analysis_year") or 2026))
+        _yr = int(state.get("analysis_year") or 2026)
         val_dec, rep_note = decision_fair_aav_with_replacement(
-            val, lambda g: grade_to_market_value(g) * _scale, cg, roster, "WR",
+            val, lambda g: fair_market_aav_millions(g, "WR", _yr), cg, roster, "WR",
         )
     surplus = round(val - burden, 2)
     surplus_pct = (val - burden) / max(val, 0.01) * 100

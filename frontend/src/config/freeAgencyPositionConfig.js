@@ -2,14 +2,14 @@
  * Free Agency evaluator: API routes, copy, market legend, and stats table columns per position.
  * Backend ports must match backend/agent/*_main_api.py
  *
- * Market tier bands are NOT hand-tuned: they use the same grade→AAV curve as each
- * `*_agent_graph.py` (`grade_to_market_value`: np.interp on GRADE_ANCHORS / VALUE_ANCHORS,
- * grade clamped to [45, 100], result rounded to 2 decimals). Tier thresholds match
- * `_grade_to_tier`: Elite ≥80, Good ≥74, Starter ≥62, else Rotation/backup.
+ * Market tier bands use the same grade→AAV curve as `backend/agent/market_value_curves.py`
+ * (piecewise power law between FA_GRADE_ANCHORS with FA_SEGMENT_POWERS[pos],
+ * FA_CAP_EXPONENT[pos] on league cap vs calibration year, grade clamped to [45, 100]).
+ * Tier thresholds match `_grade_to_tier`: Elite ≥80, Good ≥74, Starter ≥62, else Rotation/backup.
  */
 
 export const NOTE_STD =
-  'Calibrated to 2026 OTC-style contracts. Age curve from position season data where applicable. Future years discounted at 8%/yr.';
+  'Fair AAV uses veteran-market knots (not rookie-scale), piecewise grade segments, and position-specific cap-year growth (e.g. EDGE vs WR). Age curve from position data where applicable; contract PV uses 8%/yr discount.';
 
 /** Keep in sync with `backend/agent/team_context.py` (`_LEAGUE_CAP_BY_YEAR`, `CAP_GROWTH_RATE`). */
 export const FA_LEAGUE_CAP_GROWTH_RATE = 0.065;
@@ -54,40 +54,74 @@ export function leagueCapMillions(year) {
 /** Keep legend ranges exactly aligned with backend valuation curve. */
 export const FA_LEGEND_AAV_DISPLAY_FACTOR = 1.0;
 
-/** Same as all backend `*_agent_graph.py` files */
-export const FA_GRADE_ANCHORS = [45, 55, 60, 65, 70, 75, 80, 85, 88, 92, 96, 100];
-export const FA_MARKET_CALIBRATION_FACTOR = 0.88;
-
 /**
- * `_VALUE_ANCHORS` per position — keep in sync with:
- * agent_graph (QB), rb_agent_graph (HB), wr, te, ol_agent_graph (T/G/C), ed, di, lb, cb, s
+ * Elite tier is grades ≥80 in the agent; the legend's **upper** $ endpoint is display-only.
+ * WR composites essentially never sit at grade 100, so showing m(100) inflates the Elite band.
+ * Other positions keep 100 — adjust here only when the same issue shows up.
  */
-export const FA_VALUE_ANCHORS = {
-  QB: [1.14, 4.55, 26.14, 31.82, 38.64, 47.73, 62.5, 65.91, 68.18, 70.45, 72.73, 75.0],
-  HB: [1.14, 2.27, 5.52, 7.36, 9.20, 11.03, 14.71, 17.16, 18.38, 20.85, 23.29, 25.74],
-  WR: [1.23, 3.07, 6.14, 9.81, 14.71, 20.84, 26.97, 33.10, 39.24, 44.16, 49.03, 52.70],
-  TE: [1.72, 3.68, 8.58, 11.65, 12.87, 14.10, 19.62, 21.46, 22.07, 22.68, 23.30, 23.66],
-  T: [1.23, 3.07, 7.36, 13.49, 18.39, 23.30, 26.97, 30.65, 33.10, 34.33, 35.57, 36.78],
-  G: [0.75, 1.5, 3.25, 5.5, 8.5, 11.5, 14.5, 18.0, 20.5, 23.5, 27.0, 30.0],
-  C: [0.75, 1.50, 3.07, 4.91, 6.13, 7.98, 10.43, 13.49, 15.34, 17.79, 20.84, 23.69],
-  ED: [1.23, 3.07, 6.13, 9.81, 15.95, 22.07, 28.19, 33.10, 38.01, 44.13, 49.03, 52.70],
-  DI: [1.23, 3.07, 7.36, 13.49, 18.39, 23.30, 28.20, 33.10, 34.94, 36.78, 40.46, 42.92],
-  LB: [0.92, 1.84, 3.68, 6.13, 8.58, 11.03, 13.49, 16.56, 20.84, 24.51, 26.97, 29.43],
-  CB: [1.23, 2.45, 6.13, 9.81, 13.49, 18.39, 23.30, 28.20, 30.65, 33.10, 35.57, 38.01],
-  S: [0.98, 1.84, 3.68, 6.13, 8.58, 11.03, 14.71, 17.79, 22.07, 25.74, 28.19, 30.64],
+export const FA_LEGEND_ELITE_DISPLAY_MAX_GRADE_BY_POSITION = {
+  WR: 92,
 };
 
-function interp(x, xs, ys) {
-  if (x <= xs[0]) return ys[0];
-  if (x >= xs[xs.length - 1]) return ys[ys.length - 1];
-  for (let i = 1; i < xs.length; i += 1) {
-    if (x <= xs[i]) {
-      const t = (x - xs[i - 1]) / (xs[i] - xs[i - 1]);
-      return ys[i - 1] + t * (ys[i] - ys[i - 1]);
-    }
-  }
-  return ys[ys.length - 1];
+function legendEliteUpperGrade(positionKey) {
+  const g = FA_LEGEND_ELITE_DISPLAY_MAX_GRADE_BY_POSITION[positionKey];
+  return typeof g === 'number' && Number.isFinite(g) ? g : 100;
 }
+
+/** Same as all backend `*_agent_graph.py` files */
+export const FA_GRADE_ANCHORS = [45, 55, 60, 65, 70, 75, 80, 85, 88, 92, 96, 100];
+/** Keep in sync with `backend/agent/market_value_curves.py` (anchors embed calibration; no extra haircut). */
+export const FA_MARKET_CALIBRATION_FACTOR = 1.0;
+
+/**
+ * `_VALUE_ANCHORS` per position — keep in sync with `backend/agent/market_value_curves.py` VALUE_BY_POSITION.
+ */
+export const FA_VALUE_ANCHORS = {
+  QB: [0.91, 3.64, 20.93, 25.48, 30.94, 38.22, 50.05, 52.78, 54.6, 56.42, 58.24, 60.06],
+  HB: [1.2, 2.4, 5.83, 7.77, 9.72, 11.65, 15.53, 18.12, 19.41, 22.02, 24.59, 27.18],
+  WR: [1.49, 3.73, 7.46, 13.0, 20.0, 31.0, 42.5, 48.2, 51.8, 54.5, 56.5, 58.2],
+  TE: [1.94, 4.15, 9.66, 13.12, 14.5, 15.88, 22.1, 24.17, 24.86, 25.55, 26.25, 26.65],
+  T: [1.21, 3.03, 7.25, 13.3, 18.13, 22.96, 26.58, 30.21, 32.62, 33.84, 35.06, 36.25],
+  G: [0.74, 1.48, 3.2, 5.42, 8.38, 11.33, 14.29, 17.74, 20.2, 23.16, 26.61, 29.57],
+  C: [0.74, 1.48, 3.03, 4.84, 6.04, 7.87, 10.28, 13.3, 15.12, 17.53, 20.54, 23.35],
+  ED: [1.32, 3.3, 6.58, 10.53, 17.12, 23.69, 30.26, 35.54, 40.81, 47.38, 52.64, 56.58],
+  DI: [1.28, 3.19, 7.64, 14.01, 19.1, 24.19, 29.28, 34.37, 36.28, 38.19, 42.01, 44.57],
+  LB: [0.93, 1.86, 3.72, 6.2, 8.68, 11.16, 13.65, 16.76, 21.09, 24.8, 27.29, 29.78],
+  CB: [1.24, 2.48, 6.2, 9.93, 13.65, 18.61, 23.58, 28.54, 31.02, 33.5, 36.0, 38.47],
+  S: [0.99, 1.86, 3.72, 6.2, 8.68, 11.16, 14.89, 18.0, 22.33, 26.05, 28.53, 31.01],
+};
+
+/** Per-segment grade exponents — keep in sync with `SEGMENT_POWER_BY_POSITION` in market_value_curves.py */
+export const FA_SEGMENT_POWERS = {
+  QB: [0.95, 1.0, 1.0, 1.0, 1.02, 1.05, 1.1, 1.15, 1.28, 1.42, 1.55],
+  HB: [1.0, 1.0, 1.0, 1.0, 1.0, 1.02, 1.05, 1.08, 1.12, 1.18, 1.22],
+  WR: [0.98, 1.0, 1.0, 1.0, 1.0, 1.0, 1.03, 1.08, 1.22, 1.38, 1.5],
+  TE: [1.0, 1.0, 1.0, 1.0, 1.0, 1.03, 1.08, 1.12, 1.22, 1.32, 1.38],
+  T: [1.0, 1.0, 1.0, 1.0, 1.02, 1.04, 1.06, 1.1, 1.18, 1.22, 1.26],
+  G: [1.0, 1.0, 1.0, 1.0, 1.02, 1.04, 1.06, 1.1, 1.15, 1.2, 1.24],
+  C: [1.0, 1.0, 1.0, 1.0, 1.02, 1.04, 1.06, 1.1, 1.15, 1.2, 1.24],
+  ED: [0.98, 1.0, 1.0, 1.0, 1.02, 1.05, 1.1, 1.15, 1.3, 1.48, 1.62],
+  DI: [1.0, 1.0, 1.0, 1.02, 1.04, 1.06, 1.1, 1.14, 1.22, 1.3, 1.36],
+  LB: [1.0, 1.0, 1.0, 1.0, 1.02, 1.04, 1.08, 1.12, 1.2, 1.26, 1.3],
+  CB: [0.98, 1.0, 1.0, 1.0, 1.02, 1.05, 1.1, 1.14, 1.26, 1.4, 1.52],
+  S: [1.0, 1.0, 1.0, 1.0, 1.02, 1.04, 1.08, 1.12, 1.18, 1.24, 1.28],
+};
+
+/** Cap-year scaling exponent — keep in sync with `CAP_EXPONENT_BY_POSITION` in market_value_curves.py */
+export const FA_CAP_EXPONENT = {
+  QB: 1.04,
+  WR: 1.0,
+  HB: 0.96,
+  TE: 1.02,
+  T: 1.05,
+  G: 1.04,
+  C: 1.04,
+  ED: 1.12,
+  DI: 1.07,
+  LB: 1.03,
+  CB: 1.08,
+  S: 1.02,
+};
 
 export const FA_VALUE_ANCHOR_CALIBRATION_YEAR = 2026;
 
@@ -99,11 +133,46 @@ export function capScaleForYear(year) {
   return leagueCapMillions(year) / leagueCapMillions(FA_VALUE_ANCHOR_CALIBRATION_YEAR);
 }
 
-/** Mirrors Python `grade_to_market_value`, with optional year-based cap scaling. */
-export function gradeToMarketAav(grade, valueAnchors, analysisYear = FA_VALUE_ANCHOR_CALIBRATION_YEAR) {
+function piecewiseAavCalibrationYear(grade, valueAnchors, segmentPowers) {
+  const xs = FA_GRADE_ANCHORS;
   const g = Math.max(45, Math.min(100, Number(grade)));
-  const base = Math.round(interp(g, FA_GRADE_ANCHORS, valueAnchors) * FA_MARKET_CALIBRATION_FACTOR * 100) / 100;
-  return Math.round(base * capScaleForYear(analysisYear) * 100) / 100;
+  if (!Number.isFinite(g)) return valueAnchors[0];
+  if (g <= xs[0]) return valueAnchors[0];
+  if (g >= xs[xs.length - 1]) return valueAnchors[xs.length - 1];
+  let i = 0;
+  for (let k = 1; k < xs.length; k += 1) {
+    if (g <= xs[k]) {
+      i = k - 1;
+      break;
+    }
+  }
+  const g0 = xs[i];
+  const g1 = xs[i + 1];
+  const v0 = valueAnchors[i];
+  const v1 = valueAnchors[i + 1];
+  const p = segmentPowers[i] ?? 1;
+  const t = (g - g0) / (g1 - g0);
+  const w = t ** p;
+  return v0 + (v1 - v0) * w;
+}
+
+/**
+ * Fair AAV ($M) for ``analysisYear`` — piecewise power-law between grade knots
+ * (same as backend `fair_market_aav_millions`).
+ */
+export function gradeToMarketAav(grade, positionKey, analysisYear = FA_VALUE_ANCHOR_CALIBRATION_YEAR) {
+  const pk = positionKey && FA_VALUE_ANCHORS[positionKey] ? positionKey : 'WR';
+  const anchors = FA_VALUE_ANCHORS[pk];
+  const powers = FA_SEGMENT_POWERS[pk] || FA_SEGMENT_POWERS.WR;
+  const base =
+    Math.round(
+      piecewiseAavCalibrationYear(grade, anchors, powers) * FA_MARKET_CALIBRATION_FACTOR * 100,
+    ) / 100;
+  const exp = FA_CAP_EXPONENT[pk] ?? 1;
+  const capY = leagueCapMillions(analysisYear);
+  const capR = leagueCapMillions(FA_VALUE_ANCHOR_CALIBRATION_YEAR);
+  const factor = (capY / capR) ** exp;
+  return Math.round(base * factor * 100) / 100;
 }
 
 function fmtM(v) {
@@ -116,28 +185,32 @@ function fmtM(v) {
 
 /**
  * Fair AAV bands by agent tier (same thresholds as `_grade_to_tier` in Python).
- * - Elite: 80–100 → m(80)–m(100)
+ * - Elite: 80–100 → m(80)–m(legend max); WR uses grade 92 for the upper $ (not 100).
  * - Good: 74–80 → m(74)–m(80)
  * - Starter: 62–74 → m(62)–m(74)
  * - Rotation/backup: &lt;62 → below fair AAV at grade 62
  */
-export function buildMarketTierLegend(abbr, valueAnchors, extraNote = '') {
-  const raw = (g) => gradeToMarketAav(g, valueAnchors);
+export function buildMarketTierLegend(positionKey, extraNote = '') {
+  const raw = (g) => gradeToMarketAav(g, positionKey);
   const m = (g) =>
     Math.round(raw(g) * FA_LEGEND_AAV_DISPLAY_FACTOR * 100) / 100;
   const m62 = m(62);
   const m74 = m(74);
   const m80 = m(80);
-  const m100 = m(100);
+  const eliteTopG = legendEliteUpperGrade(positionKey);
+  const mEliteTop = m(eliteTopG);
 
   const tierNote =
     'Tier cutoffs match the backend agent (<code>_grade_to_tier</code>: Elite ≥80, Good ≥74, Starter ≥62; Rotation/backup &lt;62). ' +
-    'Dollar amounts are the same OTC-interpolated fair AAV curve used by the backend at grades 62 / 74 / 80 / 100.';
+    'Dollar amounts use the same piecewise grade→AAV curve and cap-year exponent as the backend (<code>market_value_curves.py</code>). ' +
+    (eliteTopG < 100
+      ? `Elite fair AAV in this legend runs from grade 80 to ${eliteTopG} (not 100 — realistic composite ceiling for ${positionKey}). `
+      : 'Reference grades for the bands are 62 / 74 / 80 / 100. ');
 
   return {
-    title: `2026 Fair AAV by Tier (${abbr})`,
+    title: `${FA_VALUE_ANCHOR_CALIBRATION_YEAR} Fair AAV by Tier (${positionKey})`,
     tiers: [
-      { cls: 'elite', label: 'Elite', range: `$${fmtM(m80)}–${fmtM(m100)}M` },
+      { cls: 'elite', label: 'Elite', range: `$${fmtM(m80)}–${fmtM(mEliteTop)}M` },
       { cls: 'good', label: 'Good', range: `$${fmtM(m74)}–${fmtM(m80)}M` },
       { cls: 'starter', label: 'Starter', range: `$${fmtM(m62)}–${fmtM(m74)}M` },
       { cls: 'rotation', label: 'Rotation / backup', range: `<$${fmtM(m62)}M` },
@@ -188,10 +261,11 @@ export function fairAavTierBandsForAllPositions(analysisYear = FA_VALUE_ANCHOR_C
       return { pos: pk, elite: '—', good: '—', starter: '—', rotation: '—' };
     }
     const m = (g) =>
-      Math.round(gradeToMarketAav(g, va, analysisYear) * FA_LEGEND_AAV_DISPLAY_FACTOR * 100) / 100;
+      Math.round(gradeToMarketAav(g, pk, analysisYear) * FA_LEGEND_AAV_DISPLAY_FACTOR * 100) / 100;
+    const eliteTopG = legendEliteUpperGrade(pk);
     return {
       pos: pk,
-      elite: `$${fmtM(m(80))}–${fmtM(m(100))}M`,
+      elite: `$${fmtM(m(80))}–${fmtM(m(eliteTopG))}M`,
       good: `$${fmtM(m(74))}–${fmtM(m(80))}M`,
       starter: `$${fmtM(m(62))}–${fmtM(m(74))}M`,
       rotation: `<$${fmtM(m(62))}M`,
@@ -209,7 +283,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Quarterback',
     welcome:
       'Welcome to the Quarterback Free Agency Evaluator. Select a player, set contract AAV and length, then Analyze. Toggle Team Simulation Mode to factor roster strength, positional need, and cap space.',
-    legend: buildMarketTierLegend('QB', FA_VALUE_ANCHORS.QB, 'Composite: 45% model pass grade + 55% stats (rating, YPA, BTT%, comp%, EPA/db), with extra weight on rating and YPA.'),
+    legend: buildMarketTierLegend('QB', 'Composite: 45% model pass grade + 55% stats (rating, YPA, BTT%, comp%, EPA/db), with extra weight on rating and YPA.'),
     statRows: [
       { key: 'yards', label: 'Pass Yards' },
       { key: 'touchdowns', label: 'Pass TDs' },
@@ -233,7 +307,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Running Back',
     welcome:
       'Welcome to the Running Back Free Agency Evaluator. Select a player, set contract AAV and length, then Analyze. Toggle Team Simulation Mode for team-specific need and cap context.',
-    legend: buildMarketTierLegend('HB', FA_VALUE_ANCHORS.HB),
+    legend: buildMarketTierLegend('HB'),
     statRows: [
       { key: 'yards', label: 'Rush Yards' },
       { key: 'attempts', label: 'Attempts' },
@@ -256,7 +330,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Wide Receiver',
     welcome:
       'Welcome to the Wide Receiver Free Agency Evaluator. Select a player, set contract AAV and length, then Analyze. Toggle Team Simulation Mode for roster and cap context.',
-    legend: buildMarketTierLegend('WR', FA_VALUE_ANCHORS.WR),
+    legend: buildMarketTierLegend('WR'),
     statRows: [
       { key: 'receptions', label: 'Rec' },
       { key: 'targets', label: 'Targets' },
@@ -279,7 +353,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Tight End',
     welcome:
       'Welcome to the Tight End Free Agency Evaluator. Select a player, set contract AAV and length, then Analyze. Toggle Team Simulation Mode for roster and cap context.',
-    legend: buildMarketTierLegend('TE', FA_VALUE_ANCHORS.TE),
+    legend: buildMarketTierLegend('TE'),
     statRows: [
       { key: 'receptions', label: 'Rec' },
       { key: 'yards', label: 'Yards' },
@@ -300,7 +374,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Tackle',
     welcome:
       'Welcome to the Tackle Free Agency Evaluator. Pass protection is weighted heavily. Use Team Simulation Mode for OL depth and cap.',
-    legend: buildMarketTierLegend('T', FA_VALUE_ANCHORS.T, 'Tackle market curve (pass-block premium) from <code>ol_agent_graph</code>.'),
+    legend: buildMarketTierLegend('T', 'Tackle market curve (pass-block premium) from <code>ol_agent_graph</code>.'),
     statRows: [
       { key: 'sacks_allowed', label: 'Sacks Allowed' },
       { key: 'hits_allowed', label: 'Hits Allowed' },
@@ -322,7 +396,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Guard',
     welcome:
       'Welcome to the Guard Free Agency Evaluator. Select a player, set contract AAV and length, then Analyze. Toggle Team Simulation Mode for OL room and cap.',
-    legend: buildMarketTierLegend('G', FA_VALUE_ANCHORS.G),
+    legend: buildMarketTierLegend('G'),
     statRows: [
       { key: 'sacks_allowed', label: 'Sacks Allowed' },
       { key: 'hits_allowed', label: 'Hits Allowed' },
@@ -344,7 +418,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Center',
     welcome:
       'Welcome to the Center Free Agency Evaluator. Select a player, set contract AAV and length, then Analyze. Toggle Team Simulation Mode for OL room and cap.',
-    legend: buildMarketTierLegend('C', FA_VALUE_ANCHORS.C),
+    legend: buildMarketTierLegend('C'),
     statRows: [
       { key: 'sacks_allowed', label: 'Sacks Allowed' },
       { key: 'hits_allowed', label: 'Hits Allowed' },
@@ -368,7 +442,6 @@ export const POSITION_FREE_AGENCY = {
       'Welcome to the Edge Defender Free Agency Evaluator. Select a player, set the contract AAV and length, then click Analyze for a recommendation. Toggle Team Simulation Mode to evaluate signings from a specific team\'s perspective — factoring in roster strength, positional need, and cap space.',
     legend: buildMarketTierLegend(
       'ED',
-      FA_VALUE_ANCHORS.ED,
       'Composite = 40% model PFF grade + 60% stats (pressure %, sack rate, stops).'
     ),
     statRows: [
@@ -394,7 +467,6 @@ export const POSITION_FREE_AGENCY = {
       'Welcome to the Defensive Interior Free Agency Evaluator. Run-stopping is the primary value driver. Select a player, set the contract AAV and length, then click Analyze for a recommendation. Toggle Team Simulation Mode to evaluate signings from a specific team\'s perspective — factoring in roster strength, positional need, and cap space.',
     legend: buildMarketTierLegend(
       'DI',
-      FA_VALUE_ANCHORS.DI,
       'Stop rate weighted heavily in stats grade.'
     ),
     statRows: [
@@ -419,7 +491,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Linebacker',
     welcome:
       'Welcome to the Linebacker Free Agency Evaluator. Coverage, run D, and tackle production drive the model. Use Team Simulation Mode for depth chart and cap.',
-    legend: buildMarketTierLegend('LB', FA_VALUE_ANCHORS.LB),
+    legend: buildMarketTierLegend('LB'),
     statRows: [
       { key: 'tackles', label: 'Tackles' },
       { key: 'assists', label: 'Assists' },
@@ -444,7 +516,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Cornerback',
     welcome:
       'Welcome to the Cornerback Free Agency Evaluator. Coverage and ball production drive value. Use Team Simulation Mode for CB room strength and cap.',
-    legend: buildMarketTierLegend('CB', FA_VALUE_ANCHORS.CB),
+    legend: buildMarketTierLegend('CB'),
     statRows: [
       { key: 'interceptions', label: 'INTs' },
       { key: 'pass_breakups', label: 'PBUs' },
@@ -466,7 +538,7 @@ export const POSITION_FREE_AGENCY = {
     positionLabel: 'Safety',
     welcome:
       'Welcome to the Safety Free Agency Evaluator. Coverage, tackling, and ball skills drive the model. Use Team Simulation Mode for depth and cap.',
-    legend: buildMarketTierLegend('S', FA_VALUE_ANCHORS.S),
+    legend: buildMarketTierLegend('S'),
     statRows: [
       { key: 'interceptions', label: 'INTs' },
       { key: 'pass_breakups', label: 'PBUs' },

@@ -8,6 +8,7 @@ import {
   fairAavTierBandsForAllPositions,
   gradeToMarketAav,
   leagueCapMillions,
+  FA_VALUE_ANCHOR_CALIBRATION_YEAR,
 } from '../config/freeAgencyPositionConfig';
 
 const UNIFIED_WELCOME =
@@ -774,20 +775,22 @@ function rosterGradeTierClass(grade) {
   return 'reserve';
 }
 
-function tierFromFairAav(positionKey, fairAav) {
+function tierFromFairAav(positionKey, fairAav, analysisYear) {
   const anchors = FA_VALUE_ANCHORS[positionKey];
   if (!anchors || fairAav == null || !Number.isFinite(Number(fairAav))) return null;
+  const y = Number(analysisYear);
+  const year = Number.isFinite(y) ? y : FA_VALUE_ANCHOR_CALIBRATION_YEAR;
   const a = Number(fairAav);
-  const t62 = gradeToMarketAav(62, anchors);
-  const t74 = gradeToMarketAav(74, anchors);
-  const t80 = gradeToMarketAav(80, anchors);
+  const t62 = gradeToMarketAav(62, positionKey, year);
+  const t74 = gradeToMarketAav(74, positionKey, year);
+  const t80 = gradeToMarketAav(80, positionKey, year);
   if (a >= t80) return 'Elite';
   if (a >= t74) return 'Good';
   if (a >= t62) return 'Starter';
   return 'Rotation/backup';
 }
 
-function buildStructuredFreeAgent(result, ask, years, positionKey) {
+function buildStructuredFreeAgent(result, ask, years, positionKey, analysisYear) {
   const { decision, reasoning, data, team_context } = result;
   const {
     predicted_tier, projected_tier, current_age, effective_fair_aav, effective_cap_burden,
@@ -798,7 +801,9 @@ function buildStructuredFreeAgent(result, ask, years, positionKey) {
   const { model_grade, stats_grade, composite_grade, health_factor, avg_availability,
     transformer_grade, xgb_grade, age_adjustment } = confidence || {};
 
-  const salaryAlignedTier = tierFromFairAav(positionKey, Number(effective_fair_aav));
+  const ay = Number(analysisYear);
+  const salaryYear = Number.isFinite(ay) ? ay : FA_VALUE_ANCHOR_CALIBRATION_YEAR;
+  const salaryAlignedTier = tierFromFairAav(positionKey, Number(effective_fair_aav), salaryYear);
   const displayedProjectedTier = projected_tier || salaryAlignedTier || predicted_tier;
 
   const statRows = [
@@ -1189,7 +1194,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         {
           role: 'assistant',
           content: null,
-          structured: buildStructuredFreeAgent(result, ask, contractYears, resolvedPositionKey),
+          structured: buildStructuredFreeAgent(result, ask, contractYears, resolvedPositionKey, analysisYear),
         },
       ]);
     } catch (e) {
@@ -1591,7 +1596,13 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
       });
       if (!resp.ok) throw new Error(`Failed to evaluate ${row.playerName}.`);
       const result = await resp.json();
-      const structured = buildStructuredFreeAgent(result, Number(row.ask), Number(row.years), row.positionKey);
+      const structured = buildStructuredFreeAgent(
+        result,
+        Number(row.ask),
+        Number(row.years),
+        row.positionKey,
+        Number(row.analysisYear),
+      );
       setClassSignings((prev) => prev.map((x) => (x.key === row.key ? { ...x, fullEvaluation: structured } : x)));
       setMessages((prev) => [
         ...prev,
@@ -1678,7 +1689,7 @@ function PositionEvaluator({ positionKey, pendingPick, clearPendingPick }) {
         throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
       }
       const result = await resp.json();
-      const structured = buildStructuredFreeAgent(result, ask, years, hit.position_key);
+      const structured = buildStructuredFreeAgent(result, ask, years, hit.position_key, analysisYear);
       handleAddToClass(structured);
       setMessages((prev) => [
         ...prev,

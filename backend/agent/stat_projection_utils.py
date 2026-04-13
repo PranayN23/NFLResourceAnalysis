@@ -5,6 +5,8 @@ or make turnover stats meaningless. Used by position agent_graph modules.
 from __future__ import annotations
 import datetime
 import math
+from collections.abc import Sequence
+
 import pandas as pd
 
 
@@ -250,17 +252,21 @@ def inactivity_projection_scale(inactivity_penalty: float) -> float:
 def snap_value_reliability_factor(
     history,
     floor: float = 0.55,
+    column_priority: Sequence[str] | None = None,
 ) -> tuple[float, dict]:
     """
     Convert recent snap volume into a valuation reliability scalar.
     Lower-volume players receive discounted fair-value estimates so "small sample + cheap ask"
     does not look like elite value by default.
+
+    ``column_priority``: try these workload columns first (e.g. WR should prefer ``routes`` /
+    ``targets`` over ``total_snaps`` so full-time receivers are not scaled like part-time OL snaps).
     """
     if history is None or len(history) == 0:
         return floor, {"source_col": None, "recent_weighted": 0.0, "peak": 0.0}
 
     df = history.copy()
-    snap_candidates = [
+    base_candidates = [
         "dropbacks",
         "passing_snaps",
         "pass_block_snaps",
@@ -271,6 +277,12 @@ def snap_value_reliability_factor(
         "targets",
         "attempts",
     ]
+    if column_priority:
+        snap_candidates = list(
+            dict.fromkeys(list(column_priority) + [c for c in base_candidates if c not in column_priority])
+        )
+    else:
+        snap_candidates = base_candidates
     snap_col = next((c for c in snap_candidates if c in df.columns), None)
     if snap_col is None:
         return 1.0, {"source_col": None, "recent_weighted": 0.0, "peak": 0.0}

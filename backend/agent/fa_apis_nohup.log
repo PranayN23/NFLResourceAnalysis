@@ -1200,3 +1200,81 @@ INFO:     Finished server process [9280]
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
 INFO:     Finished server process [9291]
+INFO:     127.0.0.1:52304 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52305 - "GET /teams?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52304 - "GET /player-directory?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52366 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52367 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52370 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52371 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52372 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52375 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52410 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52411 - "GET /teams?analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52410 - "GET /player-directory?analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53127 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53128 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53127 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53136 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:53136 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53838 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53846 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53847 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53850 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53851 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53852 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53855 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53879 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53880 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53879 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53880 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53882 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53879 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53879 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53882 - "GET /teams?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53882 - "GET /player-directory?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54012 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54013 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54015 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54012 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54012 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54015 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54033 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54034 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54037 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54038 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54039 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54042 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54051 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54052 - "GET /teams?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54051 - "GET /player-directory?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54091 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+[QB Agent] Predicting for Josh Allen...
+INFO:     127.0.0.1:54091 - "POST /evaluate HTTP/1.1" 200 OK
+[QB Agent] Predicting for Josh Allen...
+INFO:     127.0.0.1:54095 - "POST /evaluate HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:54100 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54103 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54105 - "GET /teams?analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54103 - "GET /player-directory?analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54103 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54105 - "GET /teams?analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54103 - "GET /player-directory?analysis_year=2024 HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:54103 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54125 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54126 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54125 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:54125 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54212 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54213 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54216 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54217 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54218 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54221 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54262 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54263 - "GET /teams?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54263 - "GET /player-directory?analysis_year=2022 HTTP/1.1" 200 OK

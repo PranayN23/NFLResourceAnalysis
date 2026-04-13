@@ -15,7 +15,6 @@ from backend.agent.team_context import (
     assess_team_fit as _assess_team_fit_logic,
     aav_to_cap_pcts,
     decision_fair_aav_with_replacement,
-    cap_scale_for_year,
 )
 from backend.agent.grade_projection import (
     grade_to_tier_universal,
@@ -40,21 +39,14 @@ import numpy as np
 import os, datetime
 
 from backend.agent.api_year_utils import resolve_player_age_for_evaluation
+from backend.agent.market_value_curves import fair_market_aav_millions, grade_to_market_value as _gtmv_cal
 
 _BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 QB_CSV_PATH = os.path.join(_BASE, "ML", "QB.csv")
 
-# ─────────────────────────────────────────────
-# Grade → Market Value (2026 OTC calibrated — QBs command highest AAV)
-# ─────────────────────────────────────────────
-_GRADE_ANCHORS = [45,   55,   60,   65,   70,   75,   80,   85,   88,   92,   96,   100]
-_VALUE_ANCHORS = [1.14, 4.55, 26.14, 31.82, 38.64, 47.73, 62.50, 65.91, 68.18, 70.45, 72.73, 75.00]
-MARKET_CALIBRATION_FACTOR = 0.88
-
 
 def grade_to_market_value(grade: float) -> float:
-    grade = max(45.0, min(100.0, float(grade)))
-    return round(float(np.interp(grade, _GRADE_ANCHORS, _VALUE_ANCHORS)) * MARKET_CALIBRATION_FACTOR, 2)
+    return _gtmv_cal(grade, "QB")
 
 
 # ─────────────────────────────────────────────
@@ -539,14 +531,13 @@ def compute_contract_value(
     grade = float(composite_gr)
     player_yoy = player_recent_grade_yoy(history, grade_col)
     snap_rel, _ = snap_value_reliability_factor(history)
-    cap_scale = cap_scale_for_year(analysis_year)
     for yr in range(1, contract_years + 1):
         age = current_age + yr - 1
         if yr > 1:
             grade = apply_yearly_grade_step(grade, age - 1, player_yoy, _annual_grade_delta)
         cap_factor    = (1.0 + CAP_GROWTH_RATE) ** (yr - 1)
         time_discount = 1.0 / ((1.0 + DISCOUNT_RATE) ** (yr - 1))
-        base_value    = grade_to_market_value(grade) * snap_rel * cap_scale
+        base_value    = fair_market_aav_millions(grade, "QB", analysis_year) * snap_rel
         nominal_value = base_value * cap_factor
         disc_value    = nominal_value * time_discount
         cap_adj_ask   = salary_ask / cap_factor
@@ -826,9 +817,9 @@ def make_decision(state: QBAgentState):
     val_for_decision = val
     rep_note = ""
     if team_nm and roster:
-        _scale = cap_scale_for_year(int(state.get("analysis_year") or 2026))
+        _yr = int(state.get("analysis_year") or 2026)
         val_for_decision, rep_note = decision_fair_aav_with_replacement(
-            val, lambda g: grade_to_market_value(g) * _scale, cg, roster, "QB",
+            val, lambda g: fair_market_aav_millions(g, "QB", _yr), cg, roster, "QB",
         )
 
     surplus = round(val - burden, 2)

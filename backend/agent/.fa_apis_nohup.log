@@ -373,3 +373,611 @@ INFO:     Started server process [73327]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8002 (Press CTRL+C to quit)
+[WR API] Loaded 3602 rows
+INFO:     127.0.0.1:52312 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52312 - "POST /evaluate HTTP/1.1" 200 OK
+[FA APIs] Starting backend.agent.ed_main_api on port 8002
+[FA APIs] Starting backend.agent.di_main_api on port 8003
+[FA APIs] Starting backend.agent.qb_main_api on port 8004
+[FA APIs] Starting backend.agent.hb_main_api on port 8005
+[FA APIs] Starting backend.agent.wr_main_api on port 8006
+[FA APIs] Starting backend.agent.te_main_api on port 8007
+[FA APIs] Starting backend.agent.t_main_api on port 8008
+[FA APIs] Starting backend.agent.g_main_api on port 8009
+[FA APIs] Starting backend.agent.c_main_api on port 8010
+[FA APIs] Starting backend.agent.lb_main_api on port 8011
+[FA APIs] Starting backend.agent.cb_main_api on port 8012
+[FA APIs] Starting backend.agent.s_main_api on port 8013
+[FA APIs] 12 servers running. Ctrl+C to stop all.
+INFO:     Started server process [78529]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8008): address already in use
+INFO:     Started server process [78526]
+INFO:     Waiting for application shutdown.
+INFO:     Waiting for application startup.
+INFO:     Started server process [78530]
+INFO:     Waiting for application startup.
+INFO:     Application shutdown complete.
+INFO:     Application startup complete.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8009): address already in use
+INFO:     Waiting for application shutdown.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8005): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [78532]
+[T API] Loaded 2220 rows
+INFO:     Waiting for application startup.
+INFO:     Application shutdown complete.
+INFO:     Application startup complete.
+[G API] Loaded 2073 rows
+[HB API] Loaded 2225 rows
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8011): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[LB API] Loaded 4079 rows
+INFO:     Started server process [78525]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [78531]
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8004): address already in use
+INFO:     Waiting for application startup.
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Application startup complete.
+[QB API] Loaded 1435 rows
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8010): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Started server process [78533]
+INFO:     Application shutdown complete.
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[C API] Loaded 1045 rows
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8012): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[CB API] Loaded 3344 rows
+INFO:     Started server process [78534]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8013): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[S API] Loaded 2595 rows
+INFO:     Started server process [78527]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8006): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[WR API] Loaded 3602 rows
+INFO:     Started server process [78528]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8007): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[TE API] Loaded 1972 rows
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [78523]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8002): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [78524]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8003): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+Using device: cpu
+[DI API] Loaded player database: 4431 rows
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+INFO:     127.0.0.1:52362 - "GET /docs HTTP/1.1" 200 OK
+[HB API] Loaded 2225 rows
+INFO:     127.0.0.1:52363 - "GET /docs HTTP/1.1" 200 OK
+[S API] Loaded 2595 rows
+INFO:     127.0.0.1:52364 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52365 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52368 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52369 - "GET /docs HTTP/1.1" 200 OK
+[C API] Loaded 1045 rows
+INFO:     127.0.0.1:52373 - "GET /docs HTTP/1.1" 200 OK
+[LB API] Loaded 4079 rows
+INFO:     127.0.0.1:52374 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52376 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52384 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52413 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52426 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53131 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53131 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53142 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53146 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53155 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53163 - "POST /evaluate HTTP/1.1" 200 OK
+[FA APIs] Starting backend.agent.ed_main_api on port 8002
+[FA APIs] Starting backend.agent.di_main_api on port 8003
+[FA APIs] Starting backend.agent.qb_main_api on port 8004
+[FA APIs] Starting backend.agent.hb_main_api on port 8005
+[FA APIs] Starting backend.agent.wr_main_api on port 8006
+[FA APIs] Starting backend.agent.te_main_api on port 8007
+[FA APIs] Starting backend.agent.t_main_api on port 8008
+[FA APIs] Starting backend.agent.g_main_api on port 8009
+[FA APIs] Starting backend.agent.c_main_api on port 8010
+[FA APIs] Starting backend.agent.lb_main_api on port 8011
+[FA APIs] Starting backend.agent.cb_main_api on port 8012
+[FA APIs] Starting backend.agent.s_main_api on port 8013
+[FA APIs] 12 servers running. Ctrl+C to stop all.
+INFO:     Started server process [14649]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8008): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[T API] Loaded 2220 rows
+INFO:     Started server process [14645]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8004): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[QB API] Loaded 1435 rows
+INFO:     Started server process [14652]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8011): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[LB API] Loaded 4079 rows
+INFO:     Started server process [14651]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8010): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Started server process [14653]
+INFO:     Application shutdown complete.
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[C API] Loaded 1045 rows
+INFO:     Started server process [14646]
+INFO:     Waiting for application startup.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8012): address already in use
+INFO:     Application startup complete.
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8005): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[CB API] Loaded 3344 rows
+[HB API] Loaded 2225 rows
+INFO:     Started server process [14648]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8007): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [14650]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[TE API] Loaded 1972 rows
+INFO:     Started server process [14654]
+INFO:     Waiting for application startup.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8009): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Application startup complete.
+[G API] Loaded 2073 rows
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8013): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[S API] Loaded 2595 rows
+INFO:     Started server process [14647]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8006): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[WR API] Loaded 3602 rows
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [14644]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8003): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+Using device: cpu
+[DI API] Loaded player database: 4431 rows
+INFO:     Started server process [14643]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8002): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+INFO:     127.0.0.1:53837 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53839 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53840 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53845 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53848 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53849 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53853 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53854 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53856 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53891 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53891 - "POST /evaluate HTTP/1.1" 200 OK
+[FA APIs] Starting backend.agent.ed_main_api on port 8002
+[FA APIs] Starting backend.agent.di_main_api on port 8003
+[FA APIs] Starting backend.agent.qb_main_api on port 8004
+[FA APIs] Starting backend.agent.hb_main_api on port 8005
+[FA APIs] Starting backend.agent.wr_main_api on port 8006
+[FA APIs] Starting backend.agent.te_main_api on port 8007
+[FA APIs] Starting backend.agent.t_main_api on port 8008
+[FA APIs] Starting backend.agent.g_main_api on port 8009
+[FA APIs] Starting backend.agent.c_main_api on port 8010
+[FA APIs] Starting backend.agent.lb_main_api on port 8011
+[FA APIs] Starting backend.agent.cb_main_api on port 8012
+[FA APIs] Starting backend.agent.s_main_api on port 8013
+[FA APIs] 12 servers running. Ctrl+C to stop all.
+INFO:     Started server process [17668]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8008): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[T API] Loaded 2220 rows
+INFO:     Started server process [17665]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8005): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[HB API] Loaded 2225 rows
+INFO:     Started server process [17669]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8009): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[G API] Loaded 2073 rows
+INFO:     Started server process [17671]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8011): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Started server process [17667]
+INFO:     Waiting for application startup.
+INFO:     Application shutdown complete.
+INFO:     Application startup complete.
+[LB API] Loaded 4079 rows
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8007): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[TE API] Loaded 1972 rows
+INFO:     Started server process [17664]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8004): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[QB API] Loaded 1435 rows
+INFO:     Started server process [17666]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8006): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[WR API] Loaded 3602 rows
+INFO:     Started server process [17673]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8013): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [17672]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[S API] Loaded 2595 rows
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8012): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[CB API] Loaded 3344 rows
+INFO:     Started server process [17670]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8010): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[C API] Loaded 1045 rows
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [17662]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8002): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+INFO:     Started server process [17663]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8003): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+Using device: cpu
+[DI API] Loaded player database: 4431 rows
+INFO:     127.0.0.1:54032 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54035 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54036 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54040 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54041 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54043 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54055 - "POST /evaluate HTTP/1.1" 200 OK
+[FA APIs] Starting backend.agent.ed_main_api on port 8002
+[FA APIs] Starting backend.agent.di_main_api on port 8003
+[FA APIs] Starting backend.agent.qb_main_api on port 8004
+[FA APIs] Starting backend.agent.hb_main_api on port 8005
+[FA APIs] Starting backend.agent.wr_main_api on port 8006
+[FA APIs] Starting backend.agent.te_main_api on port 8007
+[FA APIs] Starting backend.agent.t_main_api on port 8008
+[FA APIs] Starting backend.agent.g_main_api on port 8009
+[FA APIs] Starting backend.agent.c_main_api on port 8010
+[FA APIs] Starting backend.agent.lb_main_api on port 8011
+[FA APIs] Starting backend.agent.cb_main_api on port 8012
+[FA APIs] Starting backend.agent.s_main_api on port 8013
+[FA APIs] 12 servers running. Ctrl+C to stop all.
+INFO:     Started server process [21029]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8009): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [21030]
+INFO:     Waiting for application startup.
+INFO:     Started server process [21028]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[G API] Loaded 2073 rows
+INFO:     Application startup complete.
+INFO:     Started server process [21024]
+INFO:     Waiting for application startup.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8010): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8008): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Application shutdown complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8004): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[T API] Loaded 2220 rows
+[C API] Loaded 1045 rows
+[QB API] Loaded 1435 rows
+INFO:     Started server process [21031]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [21027]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8011): address already in use
+INFO:     Waiting for application shutdown.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8007): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Application shutdown complete.
+[TE API] Loaded 1972 rows
+[LB API] Loaded 4079 rows
+INFO:     Started server process [21033]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8013): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[S API] Loaded 2595 rows
+INFO:     Started server process [21025]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8005): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[HB API] Loaded 2225 rows
+INFO:     Started server process [21032]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8012): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[CB API] Loaded 3344 rows
+INFO:     Started server process [21026]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8006): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+[WR API] Loaded 3602 rows
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [21022]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8002): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Started server process [21023]
+INFO:     Application shutdown complete.
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8003): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+Using device: cpu
+[DI API] Loaded player database: 4431 rows
+INFO:     127.0.0.1:54211 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54214 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54215 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54219 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54220 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54222 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54267 - "POST /evaluate HTTP/1.1" 200 OK
+[FA APIs] Starting backend.agent.ed_main_api on port 8002
+[FA APIs] Starting backend.agent.di_main_api on port 8003
+[FA APIs] Starting backend.agent.qb_main_api on port 8004
+[FA APIs] Starting backend.agent.hb_main_api on port 8005
+[FA APIs] Starting backend.agent.wr_main_api on port 8006
+[FA APIs] Starting backend.agent.te_main_api on port 8007
+[FA APIs] Starting backend.agent.t_main_api on port 8008
+[FA APIs] Starting backend.agent.g_main_api on port 8009
+[FA APIs] Starting backend.agent.c_main_api on port 8010
+[FA APIs] Starting backend.agent.lb_main_api on port 8011
+[FA APIs] Starting backend.agent.cb_main_api on port 8012
+[FA APIs] Starting backend.agent.s_main_api on port 8013
+[FA APIs] 12 servers running. Ctrl+C to stop all.
+INFO:     Started server process [25548]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [25545]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [25541]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8012 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8009 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8005 (Press CTRL+C to quit)
+INFO:     Started server process [25546]
+INFO:     Started server process [25547]
+INFO:     Waiting for application startup.
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+INFO:     Started server process [25549]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8013 (Press CTRL+C to quit)
+INFO:     Started server process [25540]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8004 (Press CTRL+C to quit)
+INFO:     Started server process [25544]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8008 (Press CTRL+C to quit)
+INFO:     Started server process [25542]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [25543]
+INFO:     Waiting for application startup.
+INFO:     Uvicorn running on http://127.0.0.1:8006 (Press CTRL+C to quit)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8007 (Press CTRL+C to quit)
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [25538]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [25539]
+INFO:     Waiting for application startup.
+INFO:     Uvicorn running on http://127.0.0.1:8002 (Press CTRL+C to quit)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8003 (Press CTRL+C to quit)
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+INFO:     127.0.0.1:54439 - "GET /docs HTTP/1.1" 200 OK
+[WR API] Loaded 3602 rows
+INFO:     127.0.0.1:54440 - "GET /docs HTTP/1.1" 200 OK
+[S API] Loaded 2595 rows
+INFO:     127.0.0.1:54441 - "GET /docs HTTP/1.1" 200 OK
+[QB API] Loaded 1435 rows
+INFO:     127.0.0.1:54459 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54460 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54459 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54462 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54460 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54459 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54494 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54495 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54497 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54494 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54497 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54494 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54502 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54504 - "GET /teams?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54502 - "GET /player-directory?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54511 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54511 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54529 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:54529 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54543 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54544 - "GET /teams?analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54544 - "GET /player-directory?analysis_year=2023 HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:54544 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54562 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54572 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54573 - "GET /teams?analysis_year=2021 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54573 - "GET /player-directory?analysis_year=2021 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54576 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54607 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54609 - "GET /teams?analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54607 - "GET /player-directory?analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54612 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55220 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55221 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55220 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55221 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55223 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55220 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55233 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55234 - "GET /teams?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55234 - "GET /player-directory?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55458 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55459 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55458 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55459 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55461 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55458 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55805 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55807 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55805 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55809 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55811 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55807 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55809 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55811 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55807 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55805 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55813 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55811 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
