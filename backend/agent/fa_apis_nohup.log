@@ -1014,3 +1014,189 @@ INFO:     127.0.0.1:59508 - "GET /team-roster?team=Buccaneers&analysis_year=2021
 INFO:     127.0.0.1:59532 - "GET /team-summary?team=Buccaneers&analysis_year=2021 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:59508 - "GET /team-summary?team=Buccaneers&analysis_year=2021 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:59534 - "GET /team-rankings?team=Buccaneers&analysis_year=2021 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61413 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61414 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61416 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61413 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61417 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61416 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61419 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61417 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61413 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61420 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61419 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61422 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61420 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61424 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61425 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61424 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61425 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61422 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62061 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62063 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62061 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62064 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62063 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62065 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62064 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62067 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62070 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62071 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62067 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62074 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62064 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62075 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62074 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62075 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62077 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62074 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62169 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62170 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62169 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62173 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62174 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62173 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62175 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62174 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62176 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62179 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62180 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62182 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62179 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62180 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62176 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62174 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62186 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62180 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62299 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62300 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62299 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62300 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62302 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62307 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62308 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62309 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62307 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62310 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62308 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62309 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62312 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62315 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62308 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62299 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62316 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62309 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49580 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49581 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49582 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49580 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49581 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49583 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49582 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49585 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49583 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49586 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49589 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49590 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49595 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49589 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49589 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49585 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49586 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49595 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49656 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49657 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49658 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49656 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49661 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49662 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49656 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49665 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49661 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49658 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49665 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49668 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49670 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49668 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49665 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49661 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49791 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49792 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49791 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49796 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49797 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49796 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49798 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49797 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49799 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49802 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49803 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49805 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49802 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49803 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49799 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49797 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49809 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49809 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51282 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51283 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51282 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51286 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51287 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51288 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51286 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51287 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51289 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51288 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51292 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51293 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51292 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51295 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51297 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51295 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51297 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51292 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51492 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51493 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51492 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51493 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51494 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51498 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51499 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51501 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51499 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51493 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51498 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51506 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51507 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51499 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51506 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51507 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51509 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51506 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9289]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9281]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9287]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9285]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9280]
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9291]

@@ -340,3 +340,36 @@ INFO:     Finished server process [65645]
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
 INFO:     Finished server process [65647]
+/Users/achintiii/NFLResourceAnalysis/backend/venv/bin/python: No module named uvicorn
+/Users/achintiii/NFLResourceAnalysis/backend/venv/bin/python: No module named uvicorn
+/Users/achintiii/NFLResourceAnalysis/backend/venv/bin/python: No module named uvicorn
+/Users/achintiii/NFLResourceAnalysis/backend/venv/bin/python: No module named uvicorn
+/Users/achintiii/NFLResourceAnalysis/backend/venv/bin/python: No module named uvicorn
+/Users/achintiii/NFLResourceAnalysis/backend/venv/bin/python: No module named uvicorn
+INFO:     Started server process [73330]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+INFO:     Started server process [73326]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [73328]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8006 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+INFO:     Started server process [73329]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8013 (Press CTRL+C to quit)
+INFO:     Started server process [73325]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8005 (Press CTRL+C to quit)
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [73327]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8002 (Press CTRL+C to quit)
