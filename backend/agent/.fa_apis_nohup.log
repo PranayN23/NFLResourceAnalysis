@@ -981,3 +981,227 @@ INFO:     127.0.0.1:55807 - "GET /qb-players HTTP/1.1" 200 OK
 INFO:     127.0.0.1:55805 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:55813 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:55811 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56007 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56008 - "GET /teams?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56007 - "GET /player-directory?analysis_year=2022 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56007 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56008 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56008 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56021 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56022 - "GET /teams?analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56021 - "GET /player-directory?analysis_year=2023 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56037 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56038 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:56038 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56037 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56048 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56049 - "GET /teams?analysis_year=2024 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56049 - "GET /player-directory?analysis_year=2024 HTTP/1.1" 200 OK
+[QB Agent] Predicting for Jared Goff...
+[QB Agent] Predicting for Jared Goff...
+INFO:     127.0.0.1:56134 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56135 - "POST /evaluate HTTP/1.1" 200 OK
+backend/agent/run_all_free_agency_apis.sh: line 41: 25538 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25539 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25540 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25541 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25542 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25543 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25544 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25545 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25546 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25547 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25548 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+backend/agent/run_all_free_agency_apis.sh: line 41: 25549 Killed: 9               uvicorn "${module}:app" --host 127.0.0.1 --port "${port}"
+[FA APIs] Starting backend.agent.ed_main_api on port 8002
+[FA APIs] Starting backend.agent.di_main_api on port 8003
+[FA APIs] Starting backend.agent.qb_main_api on port 8004
+[FA APIs] Starting backend.agent.hb_main_api on port 8005
+[FA APIs] Starting backend.agent.wr_main_api on port 8006
+[FA APIs] Starting backend.agent.te_main_api on port 8007
+[FA APIs] Starting backend.agent.t_main_api on port 8008
+[FA APIs] Starting backend.agent.g_main_api on port 8009
+[FA APIs] Starting backend.agent.c_main_api on port 8010
+[FA APIs] Starting backend.agent.lb_main_api on port 8011
+[FA APIs] Starting backend.agent.cb_main_api on port 8012
+[FA APIs] Starting backend.agent.s_main_api on port 8013
+[FA APIs] 12 servers running. Ctrl+C to stop all.
+INFO:     Started server process [55310]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8013 (Press CTRL+C to quit)
+INFO:     Started server process [55309]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8012 (Press CTRL+C to quit)
+INFO:     Started server process [55306]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8009 (Press CTRL+C to quit)
+INFO:     Started server process [55305]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [55307]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8008 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+INFO:     Started server process [55308]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+INFO:     Started server process [55302]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8005 (Press CTRL+C to quit)
+INFO:     Started server process [55303]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8006 (Press CTRL+C to quit)
+INFO:     Started server process [55304]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8007 (Press CTRL+C to quit)
+INFO:     Started server process [55301]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8004 (Press CTRL+C to quit)
+[WR API] Loaded 3602 rows
+INFO:     127.0.0.1:56460 - "GET /docs HTTP/1.1" 200 OK
+[S API] Loaded 2595 rows
+INFO:     127.0.0.1:56461 - "GET /docs HTTP/1.1" 200 OK
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py:380: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.6.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+INFO:     Started server process [55299]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8002 (Press CTRL+C to quit)
+INFO:     Started server process [55300]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8003 (Press CTRL+C to quit)
+Using device: cpu
+[ED API] Loaded player database: 4137 rows
+INFO:     127.0.0.1:56469 - "GET /docs HTTP/1.1" 200 OK
+Using device: cpu
+[DI API] Loaded player database: 4431 rows
+INFO:     127.0.0.1:56470 - "GET /docs HTTP/1.1" 200 OK
+[QB API] Loaded 1435 rows
+INFO:     127.0.0.1:56471 - "GET /docs HTTP/1.1" 200 OK
+[HB API] Loaded 2225 rows
+INFO:     127.0.0.1:56472 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56473 - "GET /docs HTTP/1.1" 200 OK
+[TE API] Loaded 1972 rows
+INFO:     127.0.0.1:56474 - "GET /docs HTTP/1.1" 200 OK
+[T API] Loaded 2220 rows
+INFO:     127.0.0.1:56475 - "GET /docs HTTP/1.1" 200 OK
+[G API] Loaded 2073 rows
+INFO:     127.0.0.1:56476 - "GET /docs HTTP/1.1" 200 OK
+[C API] Loaded 1045 rows
+INFO:     127.0.0.1:56477 - "GET /docs HTTP/1.1" 200 OK
+[LB API] Loaded 4079 rows
+INFO:     127.0.0.1:56478 - "GET /docs HTTP/1.1" 200 OK
+[CB API] Loaded 3344 rows
+INFO:     127.0.0.1:56479 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56480 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56527 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56529 - "GET /teams?analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56527 - "GET /player-directory?analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56534 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56535 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56535 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56534 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56550 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56583 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56581 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56597 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56581 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56600 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56604 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56605 - "GET /team-summary?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56592 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56598 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56601 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56590 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56589 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56587 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56614 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56706 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56748 - "GET /team-roster?team=Dolphins&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56753 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56773 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56766 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56753 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56754 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56763 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56765 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56775 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56760 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56762 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56756 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56771 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56768 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56776 - "GET /team-summary?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56753 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+[ED Agent] Predicting performance for Robert Quinn...
+INFO:     127.0.0.1:56753 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56789 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+[ED Agent] Predicting performance for Robert Quinn...
+INFO:     127.0.0.1:56793 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56862 - "GET /team-roster?team=Bears&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56869 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56869 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56879 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56876 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56872 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56875 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56870 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56881 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56886 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56889 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56873 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56888 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56883 - "GET /team-roster?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56890 - "GET /team-summary?team=Broncos&analysis_year=2020 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56897 - "OPTIONS /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56897 - "POST /evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57879 - "GET /qb-players HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57881 - "GET /teams?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57902 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57893 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57891 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57906 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57892 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57885 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57897 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57899 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57879 - "GET /player-directory?analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57886 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57904 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57886 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57887 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57908 - "GET /team-summary?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57900 - "GET /team-roster?team=Broncos&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57934 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57922 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57920 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57933 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57931 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57923 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57941 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57940 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57920 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57938 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57926 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57936 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57937 - "GET /team-roster?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57942 - "GET /team-summary?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57920 - "GET /team-summary?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57959 - "GET /team-rankings?team=Buccaneers&analysis_year=2025 HTTP/1.1" 200 OK

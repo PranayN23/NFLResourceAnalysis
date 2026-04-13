@@ -33,9 +33,9 @@ VALUE_BY_POSITION: dict[str, list[float]] = {
     "QB": [0.91, 3.64, 20.93, 25.48, 30.94, 38.22, 50.05, 52.78, 54.60, 56.42, 58.24, 60.06],
     "HB": [1.20, 2.40, 5.83, 7.77, 9.72, 11.65, 15.53, 18.12, 19.41, 22.02, 24.59, 27.18],
     # WR: fair AAV is (piecewise grade curve) × cap-year × snap reliability, then a multi-year
-    # front-weighted average. Keep 65–75 knots strong for true #1 money; trim 75+ slightly so
-    # elite legend / top-of-curve stays below QB and slot/WR3 profiles do not inherit WR1 caps.
-    "WR": [1.49, 3.73, 7.46, 13.0, 20.0, 31.0, 42.5, 48.2, 51.8, 54.5, 56.5, 58.2],
+    # front-weighted average. Top of real WR veteran AAV is ~$45–47M; grade-100 knot sits in that
+    # band (below QB). Mid knots (70–80) still support #1 money without implying $50M+ WR deals.
+    "WR": [1.49, 3.73, 7.46, 13.0, 20.0, 31.0, 39.5, 42.5, 44.0, 45.0, 46.0, 46.5],
     "TE": [1.94, 4.15, 9.66, 13.12, 14.50, 15.88, 22.10, 24.17, 24.86, 25.55, 26.25, 26.65],
     "T": [1.21, 3.03, 7.25, 13.30, 18.13, 22.96, 26.58, 30.21, 32.62, 33.84, 35.06, 36.25],
     "G": [0.74, 1.48, 3.20, 5.42, 8.38, 11.33, 14.29, 17.74, 20.20, 23.16, 26.61, 29.57],
