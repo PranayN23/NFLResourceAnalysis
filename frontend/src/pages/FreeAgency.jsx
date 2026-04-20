@@ -3,6 +3,7 @@ import './FreeAgency.css';
 
 const ED_API = 'http://127.0.0.1:8002';
 const DI_API = 'http://127.0.0.1:8003';
+const RB_API = 'http://127.0.0.1:8004';
 
 /* ─── Searchable Select (combobox) ─── */
 function SearchableSelect({ options, value, onChange, placeholder = 'Search…' }) {
@@ -76,7 +77,7 @@ function SearchableSelect({ options, value, onChange, placeholder = 'Search…' 
 
 const POSITIONS = [
   { label: 'QB',  name: 'Quarterback',       available: false },
-  { label: 'HB',  name: 'Running Back',       available: false },
+  { label: 'HB',  name: 'Running Back',       available: true  },
   { label: 'WR',  name: 'Wide Receiver',      available: false },
   { label: 'TE',  name: 'Tight End',          available: false },
   { label: 'T',   name: 'Tackle',             available: false },
@@ -1357,6 +1358,329 @@ function DIEvaluator({ onBack }) {
   );
 }
 
+/* ─── RB Evaluator ─── */
+const RB_STAT_ROWS = [
+  { key: 'attempts',        label: 'Attempts' },
+  { key: 'yards',           label: 'Rushing Yards' },
+  { key: 'yards_per_touch', label: 'Yds / Touch' },
+  { key: 'yco_per_attempt', label: 'YCO / Att' },
+  { key: 'touchdowns',      label: 'Touchdowns' },
+  { key: 'receptions',      label: 'Receptions' },
+  { key: 'rec_yards',       label: 'Rec Yards' },
+  { key: 'elusive_rating',  label: 'Elusive Rating' },
+  { key: 'breakaway_pct',   label: 'Breakaway %',  fmt: v => `${v}%` },
+  { key: 'run_grade',       label: 'Run Grade' },
+  { key: 'overall_grade',   label: 'Overall Grade' },
+];
+
+function RBStatsPanel({ careerStats, projectedStats }) {
+  const lastCareer = careerStats[careerStats.length - 1];
+  return (
+    <div className="fa-stats-panel">
+      <p className="fa-stats-panel-title">Career Stats + Projection</p>
+      <div className="fa-stats-scroll">
+        <table className="fa-stats-tbl">
+          <thead>
+            <tr>
+              <th className="fa-stats-row-hdr">Stat</th>
+              {careerStats.map(s => (
+                <th key={s.season} className="fa-stats-col-career">
+                  <div className="fa-stats-col-hdr">{s.season}</div>
+                  <div className="fa-stats-col-sub">{s.total_touches} touch</div>
+                </th>
+              ))}
+              {projectedStats.map(yr => (
+                <th key={`proj-${yr.year}`} className="fa-stats-col-proj">
+                  <div className="fa-stats-col-hdr">Yr {yr.year}</div>
+                  <div className="fa-stats-col-sub">Age {yr.age}</div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {RB_STAT_ROWS.map(({ key, label, fmt }) => (
+              <tr key={key}>
+                <td className="fa-stats-row-hdr">{label}</td>
+                {careerStats.map(s => (
+                  <td key={s.season} className="fa-stats-career-cell">
+                    {s[key] != null ? (fmt ? fmt(s[key]) : s[key]) : '—'}
+                  </td>
+                ))}
+                {projectedStats.map(yr => {
+                  const val = key === 'overall_grade' ? (yr[key] ?? yr['projected_grade']) : yr[key];
+                  const last = lastCareer?.[key];
+                  const delta = (val != null && last != null && last !== 0 && key !== 'overall_grade')
+                    ? (val - last) : null;
+                  return (
+                    <td key={yr.year} className={
+                      delta == null ? '' : delta > 0.05 ? 'fa-stat-up' : delta < -0.05 ? 'fa-stat-down' : ''
+                    }>
+                      {val != null ? (fmt ? fmt(val) : val) : '—'}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="fa-breakdown-note">
+        Career columns show actual per-season totals. Projected years scale counting stats by the composite grade trajectory.
+        Composite = 40% model PFF grade + 60% stats-based grade (yards/touch, YCO/att, elusive rating, breakaway %).
+        RB age curve declines sharply after 28 — projections reflect this.
+      </p>
+    </div>
+  );
+}
+
+function RBEvaluator({ onBack }) {
+  const [players, setPlayers] = useState([]);
+  const [selectedPlayer, setSelectedPlayer] = useState('');
+  const [salaryAsk, setSalaryAsk] = useState('');
+  const [contractYears, setContractYears] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [fetchingPlayers, setFetchingPlayers] = useState(true);
+  const [messages, setMessages] = useState([{
+    role: 'assistant',
+    content:
+      'Welcome to the Running Back Free Agency Evaluator. RBs are the most age-sensitive position in football — the decline starts at 27 and accelerates hard after 29. Select a player, set the contract AAV and length, then click Analyze for a recommendation.',
+  }]);
+  const [error, setError] = useState('');
+  const [statsOpen, setStatsOpen] = useState({});
+
+  const chatEndRef = useRef(null);
+
+  const toggleStats = useCallback((i) => {
+    setStatsOpen(prev => ({ ...prev, [i]: !prev[i] }));
+  }, []);
+
+  useEffect(() => {
+    fetch(`${RB_API}/rb-players`)
+      .then(r => r.json())
+      .then(data => {
+        setPlayers(data.players || []);
+        setSelectedPlayer(data.players?.[0] || '');
+      })
+      .catch(() => setError('Could not load player list. Make sure the RB API is running on port 8004.'))
+      .finally(() => setFetchingPlayers(false));
+  }, []);
+
+  useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+
+  const buildStructured = (result, ask, years) => {
+    const { decision, reasoning, data } = result;
+    const {
+      predicted_tier, current_age, effective_fair_aav, effective_cap_burden,
+      total_nominal_value, total_ask, confidence, year_breakdown,
+      last_season_stats, projected_stats, career_stats,
+    } = data;
+    const { model_grade, stats_grade, composite_grade,
+            transformer_grade, xgb_grade, age_adjustment, volatility_index } = confidence || {};
+
+    const statRows = [
+      { divider: true, title: 'Player Profile' },
+      { label: 'Projected Tier',        value: predicted_tier },
+      { label: 'Current Age',           value: current_age },
+      { divider: true, title: 'Grade Breakdown' },
+      { label: 'Model Grade',           value: model_grade != null ? `${Number(model_grade).toFixed(1)} / 100` : 'N/A' },
+      { label: 'Stats Grade',           value: stats_grade != null ? `${Number(stats_grade).toFixed(1)} / 100` : 'N/A' },
+      { label: 'Composite Grade',       value: composite_grade != null ? `${Number(composite_grade).toFixed(1)} / 100` : 'N/A' },
+    ];
+    if (transformer_grade != null)
+      statRows.push({ label: 'Transformer Grade', value: Number(transformer_grade).toFixed(1) });
+    if (xgb_grade != null)
+      statRows.push({ label: 'XGBoost Grade', value: Number(xgb_grade).toFixed(1) });
+    if (age_adjustment != null && age_adjustment !== 0)
+      statRows.push({ label: 'Age Penalty (applied)', value: `-${Number(age_adjustment).toFixed(1)} pts` });
+    if (volatility_index != null)
+      statRows.push({ label: 'Volatility Index', value: Number(volatility_index).toFixed(2) });
+
+    statRows.push(
+      { divider: true, title: 'Contract Valuation' },
+      { label: 'Contract',              value: `$${ask}M/yr × ${years} yr  =  $${total_ask}M total` },
+      { label: 'Fair AAV (cap-adj PV)', value: `$${effective_fair_aav}M / yr` },
+      { label: 'Real Cap Burden (PV)',  value: `$${effective_cap_burden}M / yr` },
+      { label: 'Total Nominal Value',   value: `$${total_nominal_value}M` },
+    );
+
+    return {
+      decision,
+      highlight: DECISION_CLASS[decision] || 'fair',
+      signing_grade: signingGradeFromData(effective_fair_aav, effective_cap_burden, null),
+      tier_description: TIER_DESCRIPTION[decision] || '',
+      stats: statRows,
+      reasoning,
+      year_breakdown,
+      last_season_stats,
+      projected_stats,
+      career_stats: career_stats || [],
+    };
+  };
+
+  const handleAnalyze = async () => {
+    if (!selectedPlayer) return;
+    const ask = parseFloat(salaryAsk);
+    if (isNaN(ask) || ask <= 0) { setError('Please enter a valid salary (positive number in $M).'); return; }
+    setError('');
+
+    setMessages(prev => [...prev, {
+      role: 'user',
+      content: `Evaluate ${selectedPlayer} — $${ask}M/yr × ${contractYears} yr contract.`,
+    }]);
+    setLoading(true);
+    try {
+      const resp = await fetch(`${RB_API}/evaluate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          player_name: selectedPlayer,
+          salary_ask: ask,
+          contract_years: contractYears,
+        }),
+      });
+      if (!resp.ok) { const err = await resp.json(); throw new Error(err.detail || 'Evaluation failed.'); }
+      const result = await resp.json();
+      setMessages(prev => [...prev, {
+        role: 'assistant', content: null,
+        structured: buildStructured(result, ask, contractYears),
+      }]);
+    } catch (e) {
+      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${e.message}` }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fa-page">
+      <div className="fa-panel">
+        <button className="fa-back-btn" onClick={onBack}>← Change Position</button>
+        <h2 className="fa-panel-title">Running Back Scout</h2>
+
+        <div className="fa-field">
+          <label className="fa-label">Player</label>
+          {fetchingPlayers ? <p className="fa-hint">Loading players…</p> : (
+            <SearchableSelect
+              options={players}
+              value={selectedPlayer}
+              onChange={setSelectedPlayer}
+              placeholder="Search players…"
+            />
+          )}
+        </div>
+
+        <div className="fa-field">
+          <label className="fa-label">Contract AAV ($M / yr)</label>
+          <div className="fa-price-row">
+            <span className="fa-dollar">$</span>
+            <input type="number" min="0" step="0.5" className="fa-input" placeholder="e.g. 10.0"
+              value={salaryAsk} onChange={e => setSalaryAsk(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAnalyze()} />
+            <span className="fa-million">M</span>
+          </div>
+        </div>
+
+        <div className="fa-field">
+          <label className="fa-label">Contract Length — {contractYears} yr</label>
+          <input type="range" min="1" max="7" step="1" className="fa-slider"
+            value={contractYears} onChange={e => setContractYears(Number(e.target.value))} />
+          <div className="fa-slider-ticks">
+            {[1,2,3,4,5,6,7].map(n => (
+              <span key={n} className={n === contractYears ? 'fa-tick fa-tick--active' : 'fa-tick'}
+                onClick={() => setContractYears(n)}>{n}</span>
+            ))}
+          </div>
+        </div>
+
+        {error && <p className="fa-error">{error}</p>}
+
+        <button className="fa-btn" onClick={handleAnalyze}
+          disabled={loading || fetchingPlayers || !selectedPlayer}>
+          {loading ? 'Analyzing…' : 'Analyze Player'}
+        </button>
+
+        <div className="fa-legend">
+          <p className="fa-legend-title">2026 Market Ranges (RB)</p>
+          <div className="fa-legend-row"><span className="tier-badge elite">Elite</span><span>$14–22M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge starter">Starter</span><span>$6–14M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge rotation">Rotation</span><span>$2–6M</span></div>
+          <div className="fa-legend-row"><span className="tier-badge reserve">Reserve</span><span>&lt;$2M</span></div>
+          <p className="fa-legend-note">
+            RBs are the most age-sensitive position — decline accelerates after 28.<br/>
+            Composite blends 40% model PFF grade + 60% efficiency stats.<br/>
+            Future years discounted at 8%/yr.
+          </p>
+        </div>
+
+        <DecisionTierLegend teamMode={false} />
+      </div>
+
+      <div className="fa-chat">
+        <div className="fa-chat-header">GM Decision Feed — Running Back</div>
+        <div className="fa-chat-body">
+          {messages.map((msg, i) => (
+            <div key={i} className={`fa-msg fa-msg--${msg.role}`}>
+              <div className="fa-msg-label">{msg.role === 'user' ? 'You' : 'GM Agent'}</div>
+              {msg.content != null ? (
+                <div className="fa-msg-text">{msg.content}</div>
+              ) : (
+                <div className="fa-msg-card">
+                  <div className={`fa-decision-badge ${msg.structured.highlight}`}>
+                    {msg.structured.decision}
+                  </div>
+                  <SigningGrade grade={msg.structured.signing_grade} />
+                  {msg.structured.tier_description && (
+                    <div className="fa-tier-desc">{msg.structured.tier_description}</div>
+                  )}
+                  <div className="fa-stats-grid">
+                    {msg.structured.stats.map((s, j) =>
+                      s.divider ? (
+                        <div key={j} className="fa-stat-section-hdr">{s.title}</div>
+                      ) : (
+                        <div key={j} className="fa-stat-row">
+                          <span className="fa-stat-label">{s.label}</span>
+                          <span className="fa-stat-value">{s.value}</span>
+                        </div>
+                      )
+                    )}
+                  </div>
+                  {msg.structured.projected_stats?.length > 0 && (
+                    <div className="fa-stats-toggle-row">
+                      <button className="fa-stats-toggle-btn" onClick={() => toggleStats(i)}>
+                        {statsOpen[i] ? '▲ Hide Stats Projection' : '▼ View Stats Projection'}
+                      </button>
+                    </div>
+                  )}
+                  {statsOpen[i] && msg.structured.career_stats?.length > 0 && (
+                    <RBStatsPanel
+                      careerStats={msg.structured.career_stats}
+                      projectedStats={msg.structured.projected_stats}
+                    />
+                  )}
+                  {msg.structured.year_breakdown?.length > 0 && (
+                    <YearBreakdown rows={msg.structured.year_breakdown} />
+                  )}
+                  <div className="fa-reasoning">
+                    <p className="fa-reasoning-title">Reasoning</p>
+                    <p className="fa-reasoning-text">{msg.structured.reasoning}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+          {loading && (
+            <div className="fa-msg fa-msg--assistant">
+              <div className="fa-msg-label">GM Agent</div>
+              <div className="fa-typing"><span /><span /><span /></div>
+            </div>
+          )}
+          <div ref={chatEndRef} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Root ─── */
 function FreeAgency() {
   const [selectedPosition, setSelectedPosition] = useState(null);
@@ -1366,6 +1690,9 @@ function FreeAgency() {
   }
   if (selectedPosition === 'DI') {
     return <DIEvaluator onBack={() => setSelectedPosition(null)} />;
+  }
+  if (selectedPosition === 'HB') {
+    return <RBEvaluator onBack={() => setSelectedPosition(null)} />;
   }
   return <EDEvaluator onBack={() => setSelectedPosition(null)} />;
 }
