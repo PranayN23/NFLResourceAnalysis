@@ -5,3 +5,12 @@ venv/
 .idea/
 frontend/node_modules/
 
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+__pycache__/
+*.py[cod]
+backend/agent/__pycache__
+backend/ML/__pycache__
