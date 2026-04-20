@@ -1,0 +1,1186 @@
+player,grade,model_grade,stats_grade,snaps,primary_team,teams,rank_overall,tier,rank_in_tier,position_key,position_label,season_year
+Alex Mack,96.01,90.8,95.31,1204.0,Falcons,Falcons,1,Elite,1,C,Center,2016
+Matt Paradis,95.69,90.2,95.19,1073.0,Broncos,Broncos,2,Elite,2,C,Center,2016
+Travis Frederick,93.56,86.3,94.23,1126.0,Cowboys,Cowboys,3,Elite,3,C,Center,2016
+Rodney Hudson,91.62,83.7,92.73,1180.0,Raiders,Raiders,4,Elite,4,C,Center,2016
+Brandon Linder,88.27,80.94,88.99,909.0,Jaguars,Jaguars,5,Elite,5,C,Center,2016
+Maurkice Pouncey,85.42,78.1,86.13,1151.0,Steelers,Steelers,6,Elite,6,C,Center,2016
+Weston Richburg,85.31,77.6,86.28,1110.0,Giants,Giants,7,Elite,7,C,Center,2016
+J.C. Tretter,84.26,72.81,87.73,488.0,Packers,Packers,8,Elite,8,C,Center,2016
+Corey Linsley,83.65,75.44,84.96,802.0,Packers,Packers,9,Elite,9,C,Center,2016
+Greg Mancz,83.55,75.7,84.61,1261.0,Texans,Texans,10,Elite,10,C,Center,2016
+Max Unger,83.26,75.1,84.53,1091.0,Saints,Saints,11,Elite,11,C,Center,2016
+Mitch Morse,82.93,74.6,84.31,1075.0,Chiefs,Chiefs,12,Elite,12,C,Center,2016
+Justin Britt,82.8,81.6,79.43,1121.0,Seahawks,Seahawks,13,Elite,13,C,Center,2016
+Ben Jones,81.87,72.9,83.69,1061.0,Titans,Titans,14,Elite,14,C,Center,2016
+Jason Kelce,81.74,71.4,84.46,1132.0,Eagles,Eagles,15,Elite,15,C,Center,2016
+Travis Swanson,81.72,72.88,83.44,766.0,Lions,Lions,16,Elite,16,C,Center,2016
+A.Q. Shipley,81.24,71.9,83.3,1148.0,Cardinals,Cardinals,17,Elite,17,C,Center,2016
+Jeremy Zuttah,81.03,73.2,82.08,1109.0,Ravens,Ravens,18,Elite,18,C,Center,2016
+Joe Hawley,80.42,71.3,82.34,1956.0,Buccaneers,Buccaneers,19,Elite,19,C,Center,2016
+Ryan Kalil,80.37,69.87,83.21,504.0,Panthers,Panthers,20,Elite,20,C,Center,2016
+David Andrews,80.26,71.0,82.26,1355.0,Patriots,Patriots,21,Elite,21,C,Center,2016
+Kory Lichtensteiger,80.03,64.1,86.48,159.0,Commanders,Commanders,22,Elite,22,C,Center,2016
+Spencer Long,79.3,69.94,81.37,804.0,Commanders,Commanders,23,Good,1,C,Center,2016
+Russell Bodine,78.79,69.5,80.82,1060.0,Bengals,Bengals,24,Good,2,C,Center,2016
+Ryan Kelly,78.16,72.4,77.84,1018.0,Colts,Colts,25,Good,3,C,Center,2016
+Evan Smith,78.09,66.81,81.44,177.0,Buccaneers,Buccaneers,26,Good,4,C,Center,2016
+Daniel Kilgore,76.6,65.75,79.66,794.0,49ers,49ers,27,Good,5,C,Center,2016
+Nick Mangold,76.29,65.35,79.42,433.0,Jets,Jets,28,Good,6,C,Center,2016
+Tim Barnes,75.24,64.8,78.04,1004.0,Rams,Rams,29,Good,7,C,Center,2016
+Mike Pouncey,74.92,64.17,77.92,301.0,Dolphins,Dolphins,30,Good,8,C,Center,2016
+Wesley Johnson,74.28,62.7,77.83,657.0,Jets,Jets,31,Good,9,C,Center,2016
+Gino Gradkowski,72.54,60.34,76.5,235.0,Panthers,Panthers,32,Starter,1,C,Center,2016
+Eric Wood,72.17,61.28,75.27,570.0,Bills,Bills,33,Starter,2,C,Center,2016
+Nick Easton,65.31,57.67,66.24,414.0,Vikings,Vikings,34,Starter,3,C,Center,2016
+Chris Harris Jr.,92.18,90.6,89.06,1092.0,Broncos,Broncos,1,Elite,1,CB,Cornerback,2016
+Dominique Rodgers-Cromartie,91.94,89.58,89.66,736.0,Giants,Giants,2,Elite,2,CB,Cornerback,2016
+A.J. Bouye,91.71,89.9,90.1,859.0,Texans,Texans,3,Elite,3,CB,Cornerback,2016
+Brent Grimes,91.52,87.4,90.42,998.0,Buccaneers,Buccaneers,4,Elite,4,CB,Cornerback,2016
+Aqib Talib,91.31,89.8,89.72,870.0,Broncos,Broncos,5,Elite,5,CB,Cornerback,2016
+Malcolm Butler,89.62,86.9,88.73,1192.0,Patriots,Patriots,6,Elite,6,CB,Cornerback,2016
+Casey Hayward Jr.,88.15,83.6,87.02,988.0,Chargers,Chargers,7,Elite,7,CB,Cornerback,2016
+Janoris Jenkins,85.92,83.2,84.3,1028.0,Giants,Giants,8,Elite,8,CB,Cornerback,2016
+Marcus Peters,85.58,79.2,85.67,1073.0,Chiefs,Chiefs,9,Elite,9,CB,Cornerback,2016
+Terence Newman,85.18,82.39,83.8,754.0,Vikings,Vikings,10,Elite,10,CB,Cornerback,2016
+Richard Sherman,84.56,76.9,85.5,1175.0,Seahawks,Seahawks,11,Elite,11,CB,Cornerback,2016
+Darius Slay,84.08,80.02,83.66,801.0,Lions,Lions,12,Elite,12,CB,Cornerback,2016
+Logan Ryan,83.42,76.2,84.07,1081.0,Patriots,Patriots,13,Elite,13,CB,Cornerback,2016
+Patrick Peterson,83.28,80.1,81.24,1035.0,Cardinals,Cardinals,14,Elite,14,CB,Cornerback,2016
+Josh Norman,82.84,76.6,83.03,1059.0,Commanders,Commanders,15,Elite,15,CB,Cornerback,2016
+William Gay,81.68,79.2,79.16,971.0,Steelers,Steelers,16,Elite,16,CB,Cornerback,2016
+Byron Maxwell,80.41,74.5,82.58,846.0,Dolphins,Dolphins,17,Elite,17,CB,Cornerback,2016
+Jalen Ramsey,79.82,73.1,80.13,1061.0,Jaguars,Jaguars,18,Good,1,CB,Cornerback,2016
+Sean Smith,79.62,74.3,79.32,958.0,Raiders,Raiders,19,Good,2,CB,Cornerback,2016
+Xavier Rhodes,79.39,72.7,80.72,787.0,Vikings,Vikings,20,Good,3,CB,Cornerback,2016
+Tavon Young,79.13,75.6,77.32,833.0,Ravens,Ravens,21,Good,4,CB,Cornerback,2016
+Nickell Robey-Coleman,77.91,72.6,77.29,573.0,Bills,Bills,22,Good,5,CB,Cornerback,2016
+Trumaine Johnson,77.7,73.9,79.2,954.0,Rams,Rams,23,Good,6,CB,Cornerback,2016
+Kevin Johnson,76.93,72.33,82.34,287.0,Texans,Texans,24,Good,7,CB,Cornerback,2016
+Kareem Jackson,76.65,71.69,77.36,822.0,Texans,Texans,25,Good,8,CB,Cornerback,2016
+Adam Jones,76.64,72.0,75.88,1058.0,Bengals,Bengals,26,Good,9,CB,Cornerback,2016
+Ross Cockrell,76.25,70.1,79.1,1217.0,Steelers,Steelers,27,Good,10,CB,Cornerback,2016
+Terrance Mitchell,76.05,68.79,85.37,295.0,Chiefs,Chiefs,28,Good,11,CB,Cornerback,2016
+Artie Burns,75.8,69.2,76.03,991.0,Steelers,Steelers,29,Good,12,CB,Cornerback,2016
+Dre Kirkpatrick,75.63,71.0,75.48,978.0,Bengals,Bengals,30,Good,13,CB,Cornerback,2016
+James Bradberry,75.3,70.04,77.78,799.0,Panthers,Panthers,31,Good,14,CB,Cornerback,2016
+Robert Alford,75.25,67.2,78.02,1297.0,Falcons,Falcons,32,Good,15,CB,Cornerback,2016
+Jalen Collins,75.01,72.03,79.08,636.0,Falcons,Falcons,33,Good,16,CB,Cornerback,2016
+Morris Claiborne,74.85,72.81,80.28,432.0,Cowboys,Cowboys,34,Good,17,CB,Cornerback,2016
+Orlando Scandrick,74.57,69.45,75.39,704.0,Cowboys,Cowboys,35,Good,18,CB,Cornerback,2016
+Jamar Taylor,74.42,77.7,70.66,921.0,Browns,Browns,36,Good,19,CB,Cornerback,2016
+Tramaine Brock Sr.,74.41,67.7,77.73,1099.0,49ers,49ers,37,Good,20,CB,Cornerback,2016
+Desmond Trufant,73.84,64.54,79.53,591.0,Falcons,Falcons,38,Starter,1,CB,Cornerback,2016
+Cre'Von LeBlanc,73.76,65.42,78.28,696.0,Bears,Bears,39,Starter,2,CB,Cornerback,2016
+Johnathan Joseph,73.62,64.06,76.35,737.0,Texans,Texans,40,Starter,3,CB,Cornerback,2016
+Captain Munnerlyn,73.3,65.84,74.62,636.0,Vikings,Vikings,41,Starter,4,CB,Cornerback,2016
+David Amerson,72.96,65.1,74.55,1031.0,Raiders,Raiders,42,Starter,5,CB,Cornerback,2016
+Brice McCain,72.46,65.8,73.77,844.0,Titans,Titans,43,Starter,6,CB,Cornerback,2016
+Deji Olatoye,72.39,66.28,83.23,125.0,Falcons,Falcons,44,Starter,7,CB,Cornerback,2016
+Anthony Brown,72.37,64.46,73.48,742.0,Cowboys,Cowboys,45,Starter,8,CB,Cornerback,2016
+Daryl Worley,72.32,63.5,75.06,865.0,Panthers,Panthers,46,Starter,9,CB,Cornerback,2016
+Brandon Carr,71.97,63.7,73.31,1077.0,Cowboys,Cowboys,47,Starter,10,CB,Cornerback,2016
+Leon Hall,71.95,64.57,74.58,455.0,Giants,Giants,48,Starter,11,CB,Cornerback,2016
+Ronald Darby,71.65,61.3,76.09,822.0,Bills,Bills,49,Starter,12,CB,Cornerback,2016
+Darrelle Revis,71.6,62.3,74.79,922.0,Jets,Jets,50,Starter,13,CB,Cornerback,2016
+Jimmy Smith,71.59,65.06,76.05,583.0,Ravens,Ravens,51,Starter,14,CB,Cornerback,2016
+Alterraun Verner,71.58,64.35,77.14,241.0,Buccaneers,Buccaneers,52,Starter,15,CB,Cornerback,2016
+T.J. Carrie,71.5,63.99,74.0,378.0,Raiders,Raiders,53,Starter,16,CB,Cornerback,2016
+Briean Boddy-Calhoun,71.41,60.58,76.54,571.0,Browns,Browns,54,Starter,17,CB,Cornerback,2016
+Tramon Williams,71.2,63.41,74.63,625.0,Browns,Browns,55,Starter,18,CB,Cornerback,2016
+Jason McCourty,71.19,63.49,76.94,814.0,Titans,Titans,56,Starter,19,CB,Cornerback,2016
+Harlan Miller,71.16,67.54,90.91,140.0,Cardinals,Cardinals,57,Starter,20,CB,Cornerback,2016
+Bradley Roby,71.04,62.93,72.28,684.0,Broncos,Broncos,58,Starter,21,CB,Cornerback,2016
+Sterling Moore,71.01,63.65,73.31,805.0,Saints,Saints,59,Starter,22,CB,Cornerback,2016
+Kevon Seymour,70.89,59.94,75.05,286.0,Bills,Bills,60,Starter,23,CB,Cornerback,2016
+Bobby McCain,70.89,64.53,73.32,650.0,Dolphins,Dolphins,61,Starter,24,CB,Cornerback,2016
+Rashard Robinson,70.73,60.65,75.37,543.0,49ers,49ers,62,Starter,25,CB,Cornerback,2016
+Nevin Lawson,70.71,67.8,72.96,994.0,Lions,Lions,63,Starter,26,CB,Cornerback,2016
+Prince Amukamara,70.44,63.8,74.97,873.0,Jaguars,Jaguars,64,Starter,27,CB,Cornerback,2016
+Trae Waynes,70.29,59.66,75.81,581.0,Vikings,Vikings,65,Starter,28,CB,Cornerback,2016
+Aaron Colvin,70.22,66.66,73.62,292.0,Jaguars,Jaguars,66,Starter,29,CB,Cornerback,2016
+Bashaud Breeland,70.16,60.48,73.48,766.0,Commanders,Commanders,67,Starter,30,CB,Cornerback,2016
+Eric Rowe,69.95,62.36,75.8,587.0,Patriots,Patriots,68,Starter,31,CB,Cornerback,2016
+Stephon Gilmore,69.75,61.5,73.26,982.0,Bills,Bills,69,Starter,32,CB,Cornerback,2016
+Nolan Carroll,69.72,61.5,72.6,912.0,Eagles,Eagles,70,Starter,33,CB,Cornerback,2016
+Juston Burris,69.58,61.9,78.86,187.0,Jets,Jets,71,Starter,34,CB,Cornerback,2016
+Brandon Flowers,69.51,64.43,75.91,352.0,Chargers,Chargers,72,Starter,35,CB,Cornerback,2016
+Justin Bethel,69.51,61.26,76.26,270.0,Cardinals,Cardinals,73,Starter,36,CB,Cornerback,2016
+Tony Lippett,69.41,63.0,75.12,917.0,Dolphins,Dolphins,74,Starter,37,CB,Cornerback,2016
+Quinton Dunbar,69.09,59.46,76.67,301.0,Commanders,Commanders,75,Starter,38,CB,Cornerback,2016
+Dontae Johnson,68.9,60.04,74.61,101.0,49ers,49ers,76,Starter,39,CB,Cornerback,2016
+Marcus Williams,68.88,59.85,75.42,455.0,Jets,Jets,77,Starter,40,CB,Cornerback,2016
+Josh Shaw,68.78,64.93,69.91,618.0,Bengals,Bengals,78,Starter,41,CB,Cornerback,2016
+Cyrus Jones,68.76,62.7,75.94,147.0,Patriots,Patriots,79,Starter,42,CB,Cornerback,2016
+Jerraud Powers,68.69,60.52,71.85,510.0,Ravens,Ravens,80,Starter,43,CB,Cornerback,2016
+Steven Nelson,68.56,61.9,71.96,1077.0,Chiefs,Chiefs,81,Starter,44,CB,Cornerback,2016
+Leodis McKelvin,67.93,61.45,73.09,586.0,Eagles,Eagles,82,Starter,45,CB,Cornerback,2016
+Joe Haden,67.86,60.0,74.13,854.0,Browns,Browns,83,Starter,46,CB,Cornerback,2016
+Josh Johnson,67.54,64.23,81.54,134.0,Jaguars,Jaguars,84,Starter,47,CB,Cornerback,2016
+Darryl Morris,67.51,62.44,74.42,359.0,Colts,Colts,85,Starter,48,CB,Cornerback,2016
+Rashaan Melvin,67.42,63.21,70.54,655.0,Colts,Colts,86,Starter,49,CB,Cornerback,2016
+Quinten Rollins,67.41,56.73,72.45,722.0,Packers,Packers,87,Starter,50,CB,Cornerback,2016
+Bryce Callahan,66.86,61.31,72.77,489.0,Bears,Bears,88,Starter,51,CB,Cornerback,2016
+Eli Apple,66.81,59.81,68.34,772.0,Giants,Giants,89,Starter,52,CB,Cornerback,2016
+Xavien Howard,66.34,60.67,74.29,582.0,Dolphins,Dolphins,90,Starter,53,CB,Cornerback,2016
+Johnson Bademosi,66.16,63.57,72.68,283.0,Lions,Lions,91,Starter,54,CB,Cornerback,2016
+Trovon Reed,65.77,65.2,80.48,123.0,Chargers,Chargers,92,Starter,55,CB,Cornerback,2016
+Buster Skrine,65.57,56.02,68.81,816.0,Jets,Jets,93,Starter,56,CB,Cornerback,2016
+Keith Reaser,65.51,59.67,68.62,351.0,49ers,49ers,94,Starter,57,CB,Cornerback,2016
+Darqueze Dennard,65.39,58.92,69.6,330.0,Bengals,Bengals,95,Starter,58,CB,Cornerback,2016
+Vernon Hargreaves III,65.37,56.4,67.18,1038.0,Buccaneers,Buccaneers,96,Starter,59,CB,Cornerback,2016
+Jason Verrett,65.3,60.81,73.1,260.0,Chargers,Chargers,97,Starter,60,CB,Cornerback,2016
+Vontae Davis,65.29,52.81,70.47,822.0,Colts,Colts,98,Starter,61,CB,Cornerback,2016
+Shareece Wright,65.24,59.82,68.76,673.0,Ravens,Ravens,99,Starter,62,CB,Cornerback,2016
+Corey White,65.13,61.48,69.65,412.0,Bills,Bills,100,Starter,63,CB,Cornerback,2016
+Valentino Blake,64.48,55.86,70.22,367.0,Titans,Titans,101,Starter,64,CB,Cornerback,2016
+Patrick Robinson,64.46,56.23,70.88,402.0,Colts,Colts,102,Starter,65,CB,Cornerback,2016
+Justin Coleman,64.44,60.21,70.91,225.0,Patriots,Patriots,103,Starter,66,CB,Cornerback,2016
+Marcus Cooper,63.95,55.6,71.09,827.0,Cardinals,Cardinals,104,Starter,67,CB,Cornerback,2016
+Kenneth Acker,63.87,59.49,70.57,147.0,Chiefs,Chiefs,105,Starter,68,CB,Cornerback,2016
+Darryl Roberts,63.66,57.41,71.99,286.0,Jets,Jets,106,Starter,69,CB,Cornerback,2016
+D.J. Hayden,63.2,54.3,68.81,476.0,Raiders,Raiders,107,Starter,70,CB,Cornerback,2016
+Davon House,63.17,50.35,69.95,272.0,Jaguars,Jaguars,108,Starter,71,CB,Cornerback,2016
+Johnthan Banks,62.84,60.12,68.51,133.0,Bears,Bears,109,Starter,72,CB,Cornerback,2016
+Ken Crawley,62.81,53.75,67.81,503.0,Saints,Saints,110,Starter,73,CB,Cornerback,2016
+Neiko Thorpe,62.71,58.6,68.59,105.0,Seahawks,Seahawks,111,Starter,74,CB,Cornerback,2016
+Robert Nelson,62.37,57.86,70.98,196.0,Texans,Texans,112,Starter,75,CB,Cornerback,2016
+Coty Sensabaugh,62.26,54.47,67.03,257.0,Giants,Giants,113,Starter,76,CB,Cornerback,2016
+Greg Toler,62.25,55.43,67.11,256.0,Commanders,Commanders,114,Starter,77,CB,Cornerback,2016
+Jeremy Lane,62.18,54.6,67.24,871.0,Seahawks,Seahawks,115,Starter,78,CB,Cornerback,2016
+Trevin Wade,61.9,53.44,66.5,393.0,Giants,Giants,116,Rotation/backup,1,CB,Cornerback,2016
+Delvin Breaux Sr.,61.32,50.2,71.08,296.0,Saints,Saints,117,Rotation/backup,2,CB,Cornerback,2016
+LaDarius Gunter,61.12,50.3,68.47,1055.0,Packers,Packers,118,Rotation/backup,3,CB,Cornerback,2016
+De'Vante Harris,59.36,60.68,70.28,108.0,Saints,Saints,119,Rotation/backup,4,CB,Cornerback,2016
+E.J. Gaines,59.14,45.59,67.65,614.0,Rams,Rams,120,Rotation/backup,5,CB,Cornerback,2016
+Trevor Williams,58.91,53.0,65.99,389.0,Chargers,Chargers,121,Rotation/backup,6,CB,Cornerback,2016
+B.W. Webb,58.67,55.36,62.96,588.0,Saints,Saints,122,Rotation/backup,7,CB,Cornerback,2016
+LeShaun Sims,58.62,57.49,66.08,236.0,Titans,Titans,123,Rotation/backup,8,CB,Cornerback,2016
+Tracy Porter,58.5,46.0,66.0,944.0,Bears,Bears,124,Rotation/backup,9,CB,Cornerback,2016
+Robert McClain,57.17,50.28,63.84,327.0,Chargers,Chargers,125,Rotation/backup,10,CB,Cornerback,2016
+Leonard Johnson,57.12,50.69,64.1,436.0,Panthers,Panthers,126,Rotation/backup,11,CB,Cornerback,2016
+Kendall Fuller,56.82,56.13,57.28,476.0,Commanders,Commanders,127,Rotation/backup,12,CB,Cornerback,2016
+Charles James II,56.43,48.94,65.08,164.0,Colts,Colts,128,Rotation/backup,13,CB,Cornerback,2016
+Ron Brooks,56.32,54.93,63.18,235.0,Eagles,Eagles,129,Rotation/backup,14,CB,Cornerback,2016
+Jude Adjei-Barimah,56.27,58.28,56.5,290.0,Buccaneers,Buccaneers,130,Rotation/backup,15,CB,Cornerback,2016
+Phillip Gaines,55.78,46.5,66.14,449.0,Chiefs,Chiefs,131,Rotation/backup,16,CB,Cornerback,2016
+Demetri Goodson,55.34,54.65,59.86,182.0,Packers,Packers,132,Rotation/backup,17,CB,Cornerback,2016
+Chris Milton,55.29,59.16,67.04,106.0,Colts,Colts,133,Rotation/backup,18,CB,Cornerback,2016
+D.J. White,54.38,55.5,60.34,138.0,Chiefs,Chiefs,134,Rotation/backup,19,CB,Cornerback,2016
+Javien Elliott,54.12,60.19,61.88,184.0,Buccaneers,Buccaneers,135,Rotation/backup,20,CB,Cornerback,2016
+Brandon Williams,53.53,50.92,64.52,241.0,Cardinals,Cardinals,136,Rotation/backup,21,CB,Cornerback,2016
+Craig Mager,53.39,48.37,60.38,410.0,Chargers,Chargers,137,Rotation/backup,22,CB,Cornerback,2016
+Mike Jordan,50.3,58.1,59.44,177.0,Rams,Rams,138,Rotation/backup,23,CB,Cornerback,2016
+Troy Hill,48.85,50.53,53.6,338.0,Rams,Rams,139,Rotation/backup,24,CB,Cornerback,2016
+Dashaun Phillips,46.93,50.85,57.15,148.0,Commanders,Commanders,140,Rotation/backup,25,CB,Cornerback,2016
+Aaron Donald,94.29,89.96,93.01,830.0,Rams,Rams,1,Elite,1,DI,Defensive Interior,2016
+Leonard Williams,89.4,89.83,84.95,898.0,Jets,Jets,2,Elite,2,DI,Defensive Interior,2016
+Geno Atkins,88.75,86.69,85.96,781.0,Bengals,Bengals,3,Elite,3,DI,Defensive Interior,2016
+J.J. Watt,88.36,77.95,97.9,157.0,Texans,Texans,4,Elite,4,DI,Defensive Interior,2016
+Calais Campbell,88.32,86.78,85.38,831.0,Cardinals,Cardinals,5,Elite,5,DI,Defensive Interior,2016
+Kawann Short,87.99,85.99,85.15,779.0,Panthers,Panthers,6,Elite,6,DI,Defensive Interior,2016
+Ndamukong Suh,86.02,86.5,81.53,1028.0,Dolphins,Dolphins,7,Elite,7,DI,Defensive Interior,2016
+Jurrell Casey,85.26,85.73,81.29,728.0,Titans,Titans,8,Elite,8,DI,Defensive Interior,2016
+Fletcher Cox,85.22,89.16,78.42,772.0,Eagles,Eagles,9,Elite,9,DI,Defensive Interior,2016
+Malik Jackson,85.19,83.19,82.36,718.0,Jaguars,Jaguars,10,Elite,10,DI,Defensive Interior,2016
+Mike Daniels,85.14,83.53,82.04,797.0,Packers,Packers,11,Elite,11,DI,Defensive Interior,2016
+Damon Harrison Sr.,84.71,83.5,81.35,720.0,Giants,Giants,12,Elite,12,DI,Defensive Interior,2016
+Michael Pierce,84.59,76.28,85.97,375.0,Ravens,Ravens,13,Elite,13,DI,Defensive Interior,2016
+Linval Joseph,82.62,84.98,77.82,718.0,Vikings,Vikings,14,Elite,14,DI,Defensive Interior,2016
+Marcell Dareus,80.71,82.11,80.3,417.0,Bills,Bills,15,Elite,15,DI,Defensive Interior,2016
+Gerald McCoy,80.64,85.56,74.66,796.0,Buccaneers,Buccaneers,16,Elite,16,DI,Defensive Interior,2016
+Akiem Hicks,80.59,77.29,78.82,931.0,Bears,Bears,17,Elite,17,DI,Defensive Interior,2016
+DeForest Buckner,79.51,82.8,74.19,1006.0,49ers,49ers,18,Good,1,DI,Defensive Interior,2016
+Chris Baker,79.27,71.45,80.52,782.0,Commanders,Commanders,19,Good,2,DI,Defensive Interior,2016
+Deon Simon,79.09,68.8,82.81,204.0,Jets,Jets,20,Good,3,DI,Defensive Interior,2016
+Derek Wolfe,78.72,78.15,76.28,663.0,Broncos,Broncos,21,Good,4,DI,Defensive Interior,2016
+Danny Shelton,78.63,80.97,72.9,745.0,Browns,Browns,22,Good,5,DI,Defensive Interior,2016
+Brandon Williams,78.08,71.65,78.2,635.0,Ravens,Ravens,23,Good,6,DI,Defensive Interior,2016
+David Irving,77.75,73.93,77.7,530.0,Cowboys,Cowboys,24,Good,7,DI,Defensive Interior,2016
+Dan Williams,77.29,75.31,74.45,397.0,Raiders,Raiders,25,Good,8,DI,Defensive Interior,2016
+Malcom Brown,77.03,69.71,77.74,709.0,Patriots,Patriots,26,Good,9,DI,Defensive Interior,2016
+Timmy Jernigan,76.77,66.8,80.18,631.0,Ravens,Ravens,27,Good,10,DI,Defensive Interior,2016
+Abry Jones,76.39,69.84,77.42,462.0,Jaguars,Jaguars,28,Good,11,DI,Defensive Interior,2016
+Dominique Easley,76.37,74.21,76.25,470.0,Rams,Rams,29,Good,12,DI,Defensive Interior,2016
+Grady Jarrett,76.36,64.03,80.79,763.0,Falcons,Falcons,30,Good,13,DI,Defensive Interior,2016
+Lawrence Guy Sr.,76.31,66.74,78.53,487.0,Ravens,Ravens,31,Good,14,DI,Defensive Interior,2016
+Dean Lowry,75.77,67.24,77.29,211.0,Packers,Packers,32,Good,15,DI,Defensive Interior,2016
+Ra'Shede Hageman,75.56,63.67,79.83,353.0,Falcons,Falcons,33,Good,16,DI,Defensive Interior,2016
+Michael Brockers,75.26,75.71,71.83,419.0,Rams,Rams,34,Good,17,DI,Defensive Interior,2016
+Brent Urban,75.26,65.61,81.43,150.0,Ravens,Ravens,35,Good,18,DI,Defensive Interior,2016
+Nick Fairley,75.23,63.89,80.6,722.0,Saints,Saints,36,Good,19,DI,Defensive Interior,2016
+Eddie Goldman,75.11,72.48,79.6,197.0,Bears,Bears,37,Good,20,DI,Defensive Interior,2016
+Karl Klug,74.97,69.0,75.81,398.0,Titans,Titans,38,Good,21,DI,Defensive Interior,2016
+Cameron Heyward,74.7,71.65,77.25,363.0,Steelers,Steelers,39,Good,22,DI,Defensive Interior,2016
+Sheldon Day,74.57,58.13,81.36,203.0,Jaguars,Jaguars,40,Good,23,DI,Defensive Interior,2016
+Kyle Williams,74.5,63.94,81.23,794.0,Bills,Bills,41,Good,24,DI,Defensive Interior,2016
+Bennie Logan,74.14,60.54,81.22,467.0,Eagles,Eagles,42,Good,25,DI,Defensive Interior,2016
+Johnathan Hankins,73.95,66.57,76.88,816.0,Giants,Giants,43,Starter,1,DI,Defensive Interior,2016
+Kenny Clark,73.71,70.73,71.53,410.0,Packers,Packers,44,Starter,2,DI,Defensive Interior,2016
+Stephon Tuitt,72.89,65.98,73.33,945.0,Steelers,Steelers,45,Starter,3,DI,Defensive Interior,2016
+Jaye Howard Jr.,72.49,59.09,81.43,360.0,Chiefs,Chiefs,46,Starter,4,DI,Defensive Interior,2016
+Alan Branch,72.2,64.85,73.96,760.0,Patriots,Patriots,47,Starter,5,DI,Defensive Interior,2016
+Dan McCullers,72.11,65.08,74.81,206.0,Steelers,Steelers,48,Starter,6,DI,Defensive Interior,2016
+Stephen Paea,71.85,67.47,73.73,320.0,Browns,Browns,49,Starter,7,DI,Defensive Interior,2016
+Henry Anderson,71.84,65.91,77.61,308.0,Colts,Colts,50,Starter,8,DI,Defensive Interior,2016
+DJ Reader,71.82,65.41,71.93,477.0,Texans,Texans,51,Starter,9,DI,Defensive Interior,2016
+Leger Douzable,71.39,55.04,78.12,481.0,Bills,Bills,52,Starter,10,DI,Defensive Interior,2016
+Brandon Mebane,71.38,67.2,74.58,340.0,Chargers,Chargers,53,Starter,11,DI,Defensive Interior,2016
+Corey Liuget,71.3,62.16,74.8,812.0,Chargers,Chargers,54,Starter,12,DI,Defensive Interior,2016
+Adolphus Washington,70.86,58.19,76.18,331.0,Bills,Bills,55,Starter,13,DI,Defensive Interior,2016
+Steve McLendon,70.29,58.32,77.34,382.0,Jets,Jets,56,Starter,14,DI,Defensive Interior,2016
+Javon Hargrave,70.14,57.93,74.11,645.0,Steelers,Steelers,57,Starter,15,DI,Defensive Interior,2016
+Star Lotulelei,70.11,57.42,74.61,701.0,Panthers,Panthers,58,Starter,16,DI,Defensive Interior,2016
+A'Shawn Robinson,70.03,59.0,73.21,446.0,Lions,Lions,59,Starter,17,DI,Defensive Interior,2016
+Arik Armstead,69.83,63.23,75.26,332.0,49ers,49ers,60,Starter,18,DI,Defensive Interior,2016
+Vincent Valentine,69.41,55.46,74.55,319.0,Patriots,Patriots,61,Starter,19,DI,Defensive Interior,2016
+C.J. Wilson,69.35,62.52,76.18,128.0,Bears,Bears,62,Starter,20,DI,Defensive Interior,2016
+Ricky Jean Francois,69.23,57.41,72.94,442.0,Commanders,Commanders,63,Starter,21,DI,Defensive Interior,2016
+Stacy McGee,68.91,68.64,69.09,242.0,Raiders,Raiders,64,Starter,22,DI,Defensive Interior,2016
+Zach Kerr,68.85,55.87,77.51,317.0,Colts,Colts,65,Starter,23,DI,Defensive Interior,2016
+Christian Covington,68.67,60.3,70.08,475.0,Texans,Texans,66,Starter,24,DI,Defensive Interior,2016
+Dontari Poe,68.48,64.1,67.24,876.0,Chiefs,Chiefs,67,Starter,25,DI,Defensive Interior,2016
+Cedric Thornton,68.21,54.43,75.21,291.0,Cowboys,Cowboys,68,Starter,26,DI,Defensive Interior,2016
+Beau Allen,68.07,56.91,71.34,412.0,Eagles,Eagles,69,Starter,27,DI,Defensive Interior,2016
+Paul Soliai,68.06,55.15,76.46,152.0,Panthers,Panthers,70,Starter,28,DI,Defensive Interior,2016
+Rodney Gunter,67.99,58.36,70.24,244.0,Cardinals,Cardinals,71,Starter,29,DI,Defensive Interior,2016
+Pat Sims,67.85,53.81,75.23,409.0,Bengals,Bengals,72,Starter,30,DI,Defensive Interior,2016
+Haloti Ngata,67.72,56.96,72.81,577.0,Lions,Lions,73,Starter,31,DI,Defensive Interior,2016
+Tyson Jackson,67.68,58.51,69.63,389.0,Falcons,Falcons,74,Starter,32,DI,Defensive Interior,2016
+Rakeem Nunez-Roches,67.52,53.49,79.6,313.0,Chiefs,Chiefs,75,Starter,33,DI,Defensive Interior,2016
+DaQuan Jones,67.51,65.39,66.64,673.0,Titans,Titans,76,Starter,34,DI,Defensive Interior,2016
+Quinton Dial,67.34,57.64,71.41,478.0,49ers,49ers,77,Starter,35,DI,Defensive Interior,2016
+Sealver Siliga,67.32,56.73,74.89,160.0,Buccaneers,Buccaneers,78,Starter,36,DI,Defensive Interior,2016
+David Parry,67.03,56.13,70.13,644.0,Colts,Colts,79,Starter,37,DI,Defensive Interior,2016
+Tony McDaniel,67.02,50.89,74.24,501.0,Seahawks,Seahawks,80,Starter,38,DI,Defensive Interior,2016
+Tom Johnson,66.91,51.57,74.0,476.0,Vikings,Vikings,81,Starter,39,DI,Defensive Interior,2016
+Frostee Rucker,66.69,48.73,76.38,304.0,Cardinals,Cardinals,82,Starter,40,DI,Defensive Interior,2016
+Al Woods,66.57,54.28,73.29,245.0,Titans,Titans,83,Starter,41,DI,Defensive Interior,2016
+Corey Peters,66.53,57.16,69.64,498.0,Cardinals,Cardinals,84,Starter,42,DI,Defensive Interior,2016
+Sylvester Williams,66.49,57.78,68.13,644.0,Broncos,Broncos,85,Starter,43,DI,Defensive Interior,2016
+Jamie Meder,66.25,60.99,68.73,722.0,Browns,Browns,86,Starter,44,DI,Defensive Interior,2016
+Clinton McDonald,66.1,53.68,76.05,485.0,Buccaneers,Buccaneers,87,Starter,45,DI,Defensive Interior,2016
+Tyrunn Walker,66.1,54.76,73.24,377.0,Lions,Lions,88,Starter,46,DI,Defensive Interior,2016
+Cullen Jenkins,66.06,50.32,73.74,308.0,Commanders,Commanders,89,Starter,47,DI,Defensive Interior,2016
+Ahtyba Rubin,65.84,52.22,71.39,675.0,Seahawks,Seahawks,90,Starter,48,DI,Defensive Interior,2016
+Letroy Guion,65.84,53.8,70.02,524.0,Packers,Packers,91,Starter,49,DI,Defensive Interior,2016
+Sen'Derrick Marks,65.79,54.06,73.19,543.0,Jaguars,Jaguars,92,Starter,50,DI,Defensive Interior,2016
+Chris Jones,65.77,53.72,71.2,916.0,Chiefs,"49ers, Chiefs",93,Starter,51,DI,Defensive Interior,2016
+Stefan Charles,65.7,53.84,72.45,235.0,Lions,Lions,94,Starter,52,DI,Defensive Interior,2016
+Jarran Reed,65.69,52.98,69.99,545.0,Seahawks,Seahawks,95,Starter,53,DI,Defensive Interior,2016
+Tyson Alualu,65.61,58.14,67.46,507.0,Jaguars,Jaguars,96,Starter,54,DI,Defensive Interior,2016
+T.Y. McGill,65.46,60.96,67.81,302.0,Colts,Colts,97,Starter,55,DI,Defensive Interior,2016
+Justin Ellis,65.4,62.29,64.56,352.0,Raiders,Raiders,98,Starter,56,DI,Defensive Interior,2016
+Jonathan Bullard,65.33,53.24,71.31,296.0,Bears,Bears,99,Starter,57,DI,Defensive Interior,2016
+Jared Odrick,65.29,59.75,70.02,261.0,Jaguars,Jaguars,100,Starter,58,DI,Defensive Interior,2016
+Earl Mitchell,64.98,53.31,72.96,334.0,Dolphins,Dolphins,101,Starter,59,DI,Defensive Interior,2016
+Cam Thomas,64.95,53.37,68.5,391.0,Rams,Rams,102,Starter,60,DI,Defensive Interior,2016
+Billy Winn,64.92,53.18,70.47,341.0,Broncos,Broncos,103,Starter,61,DI,Defensive Interior,2016
+Hassan Ridgeway,64.83,54.64,67.45,442.0,Colts,Colts,104,Starter,62,DI,Defensive Interior,2016
+Denico Autry,64.75,47.87,72.62,742.0,Raiders,Raiders,105,Starter,63,DI,Defensive Interior,2016
+Arthur Jones,64.62,51.92,74.76,322.0,Colts,Colts,106,Starter,64,DI,Defensive Interior,2016
+Vince Wilfork,64.42,48.35,70.97,588.0,Texans,Texans,107,Starter,65,DI,Defensive Interior,2016
+John Jenkins,64.38,55.5,70.71,217.0,Seahawks,Seahawks,108,Starter,66,DI,Defensive Interior,2016
+Jonathan Babineaux,64.2,47.62,71.28,533.0,Falcons,Falcons,109,Starter,67,DI,Defensive Interior,2016
+Austin Johnson,64.17,58.21,70.22,190.0,Titans,Titans,110,Starter,68,DI,Defensive Interior,2016
+Destiny Vaeao,64.1,51.64,68.24,268.0,Eagles,Eagles,111,Starter,69,DI,Defensive Interior,2016
+Allen Bailey,64.09,57.89,70.83,181.0,Chiefs,Chiefs,112,Starter,70,DI,Defensive Interior,2016
+Jared Crick,64.04,50.41,68.96,938.0,Broncos,Broncos,113,Starter,71,DI,Defensive Interior,2016
+Jarvis Jenkins,64.01,55.14,66.08,266.0,Chiefs,Chiefs,114,Starter,72,DI,Defensive Interior,2016
+Derrick Shelby,63.82,49.47,76.12,244.0,Falcons,Falcons,115,Starter,73,DI,Defensive Interior,2016
+Vernon Butler,63.78,57.03,70.36,226.0,Panthers,Panthers,116,Starter,74,DI,Defensive Interior,2016
+Roy Miller,63.65,58.09,68.83,156.0,Jaguars,Jaguars,117,Starter,75,DI,Defensive Interior,2016
+Domata Peko Sr.,63.65,47.67,70.13,593.0,Bengals,Bengals,118,Starter,76,DI,Defensive Interior,2016
+Antonio Smith,63.0,43.89,72.09,277.0,Texans,Texans,119,Starter,77,DI,Defensive Interior,2016
+Tenny Palepoi,62.86,53.06,67.18,377.0,Chargers,Chargers,120,Starter,78,DI,Defensive Interior,2016
+Kendall Reyes,62.81,53.83,66.19,249.0,Chiefs,Chiefs,121,Starter,79,DI,Defensive Interior,2016
+Angelo Blackson,62.74,53.52,66.67,248.0,Titans,Titans,122,Starter,80,DI,Defensive Interior,2016
+Maliek Collins,62.53,47.51,68.37,697.0,Cowboys,Cowboys,123,Starter,81,DI,Defensive Interior,2016
+Terrell McClain,62.46,54.46,68.41,500.0,Cowboys,Cowboys,124,Starter,82,DI,Defensive Interior,2016
+Mike Purcell,62.29,55.58,69.05,280.0,49ers,49ers,125,Starter,83,DI,Defensive Interior,2016
+Jay Bromley,62.17,54.87,64.54,264.0,Giants,Giants,126,Starter,84,DI,Defensive Interior,2016
+Jordan Phillips,62.08,52.5,64.69,653.0,Dolphins,Dolphins,127,Starter,85,DI,Defensive Interior,2016
+Caraun Reid,62.05,56.2,67.93,112.0,Chargers,Chargers,128,Starter,86,DI,Defensive Interior,2016
+Kendall Langford,62.02,51.82,69.33,300.0,Colts,Colts,129,Starter,87,DI,Defensive Interior,2016
+Jerel Worthy,61.94,55.82,68.2,150.0,Bills,Bills,130,Rotation/backup,1,DI,Defensive Interior,2016
+Will Sutton III,61.84,60.27,64.04,174.0,Bears,Bears,131,Rotation/backup,2,DI,Defensive Interior,2016
+Akeem Spence,61.5,48.08,67.94,724.0,Buccaneers,Buccaneers,132,Rotation/backup,3,DI,Defensive Interior,2016
+Darius Philon,61.5,54.44,66.47,267.0,Chargers,Chargers,133,Rotation/backup,4,DI,Defensive Interior,2016
+Joel Heath,61.46,52.54,65.32,277.0,Texans,Texans,134,Rotation/backup,5,DI,Defensive Interior,2016
+Mitch Unrein,61.34,53.74,66.21,436.0,Bears,Bears,135,Rotation/backup,6,DI,Defensive Interior,2016
+Sheldon Rankins,61.33,54.44,69.06,335.0,Saints,Saints,136,Rotation/backup,7,DI,Defensive Interior,2016
+Glenn Dorsey,61.29,46.45,70.99,402.0,49ers,49ers,137,Rotation/backup,8,DI,Defensive Interior,2016
+Xavier Cooper,61.08,53.41,64.76,448.0,Browns,Browns,138,Rotation/backup,9,DI,Defensive Interior,2016
+Kyle Love,60.39,50.59,69.0,224.0,Panthers,Panthers,139,Rotation/backup,10,DI,Defensive Interior,2016
+Ricardo Mathews,60.37,51.01,63.28,330.0,Steelers,Steelers,140,Rotation/backup,11,DI,Defensive Interior,2016
+Corbin Bryant,59.84,53.44,64.1,233.0,Bills,Bills,141,Rotation/backup,12,DI,Defensive Interior,2016
+Adam Gotsis,59.75,54.25,59.25,221.0,Broncos,Broncos,142,Rotation/backup,13,DI,Defensive Interior,2016
+Ed Stinson,59.64,54.87,66.16,116.0,Cardinals,Cardinals,143,Rotation/backup,14,DI,Defensive Interior,2016
+Matt Ioannidis,59.38,57.8,63.57,103.0,Commanders,Commanders,144,Rotation/backup,15,DI,Defensive Interior,2016
+Darius Latham,58.81,51.75,60.38,319.0,Raiders,Raiders,145,Rotation/backup,16,DI,Defensive Interior,2016
+Cornelius Washington,58.16,52.02,64.61,364.0,Bears,Bears,146,Rotation/backup,17,DI,Defensive Interior,2016
+Khyri Thornton,57.74,49.64,64.18,328.0,Lions,Lions,147,Rotation/backup,18,DI,Defensive Interior,2016
+David Onyemata,57.3,52.13,56.58,393.0,Saints,Saints,148,Rotation/backup,19,DI,Defensive Interior,2016
+Damion Square,57.17,54.35,61.65,362.0,Chargers,Chargers,149,Rotation/backup,20,DI,Defensive Interior,2016
+Shamar Stephen,56.97,49.25,61.38,551.0,Vikings,Vikings,150,Rotation/backup,21,DI,Defensive Interior,2016
+Jihad Ward,56.53,45.58,59.66,637.0,Raiders,Raiders,151,Rotation/backup,22,DI,Defensive Interior,2016
+Tyeler Davison,56.45,51.55,56.2,438.0,Saints,Saints,152,Rotation/backup,23,DI,Defensive Interior,2016
+Xavier Williams,54.04,56.96,57.82,118.0,Cardinals,Cardinals,153,Rotation/backup,24,DI,Defensive Interior,2016
+Anthony Johnson,53.3,55.4,54.9,127.0,Jets,Jets,154,Rotation/backup,25,DI,Defensive Interior,2016
+Von Miller,94.99,96.41,89.87,930.0,Broncos,Broncos,1,Elite,1,ED,Edge,2016
+Khalil Mack,91.33,97.42,83.1,1023.0,Raiders,Raiders,2,Elite,2,ED,Edge,2016
+Joey Bosa,89.82,90.92,89.08,563.0,Chargers,Chargers,3,Elite,3,ED,Edge,2016
+Whitney Mercilus,87.54,88.05,83.24,1008.0,Texans,Texans,4,Elite,4,ED,Edge,2016
+Brandon Graham,87.4,90.4,81.24,764.0,Eagles,Eagles,5,Elite,5,ED,Edge,2016
+Danielle Hunter,85.66,82.66,83.88,602.0,Vikings,Vikings,6,Elite,6,ED,Edge,2016
+Justin Houston,84.26,79.63,89.33,349.0,Chiefs,Chiefs,7,Elite,7,ED,Edge,2016
+Ezekiel Ansah,82.91,78.25,82.88,540.0,Lions,Lions,8,Elite,8,ED,Edge,2016
+Pernell McPhee,82.16,77.01,85.69,273.0,Bears,Bears,9,Elite,9,ED,Edge,2016
+Cameron Wake,82.01,72.87,86.75,626.0,Dolphins,Dolphins,10,Elite,10,ED,Edge,2016
+Frank Clark,81.97,80.53,78.76,751.0,Seahawks,Seahawks,11,Elite,11,ED,Edge,2016
+Michael Bennett,81.72,87.02,75.59,675.0,Seahawks,Seahawks,12,Elite,12,ED,Edge,2016
+James Harrison,81.7,69.75,86.33,758.0,Steelers,Steelers,13,Elite,13,ED,Edge,2016
+Olivier Vernon,81.68,87.58,73.58,1112.0,Giants,Giants,14,Elite,14,ED,Edge,2016
+Carlos Dunlap,81.6,81.63,77.41,840.0,Bengals,Bengals,15,Elite,15,ED,Edge,2016
+Markus Golden,81.34,73.79,82.21,762.0,Cardinals,Cardinals,16,Elite,16,ED,Edge,2016
+Cameron Jordan,80.45,88.99,70.59,963.0,Saints,Saints,17,Elite,17,ED,Edge,2016
+Chandler Jones,80.01,82.53,74.79,939.0,Cardinals,Cardinals,18,Elite,18,ED,Edge,2016
+Cliff Avril,78.98,68.7,81.67,926.0,Seahawks,Seahawks,19,Good,1,ED,Edge,2016
+Melvin Ingram III,78.66,76.63,77.31,960.0,Chargers,Chargers,20,Good,2,ED,Edge,2016
+Nick Perry,78.34,74.62,76.65,704.0,Packers,Packers,21,Good,3,ED,Edge,2016
+Jabaal Sheard,77.79,83.5,70.14,670.0,Patriots,Patriots,22,Good,4,ED,Edge,2016
+Ryan Kerrigan,77.73,67.56,80.34,787.0,Commanders,Commanders,23,Good,5,ED,Edge,2016
+DeMarcus Ware,77.66,64.81,85.81,315.0,Broncos,Broncos,24,Good,6,ED,Edge,2016
+Charles Johnson,77.49,69.53,81.45,542.0,Panthers,Panthers,25,Good,7,ED,Edge,2016
+William Hayes,77.3,77.26,74.19,514.0,Rams,Rams,26,Good,8,ED,Edge,2016
+Shaquil Barrett,76.56,70.98,76.11,415.0,Broncos,Broncos,27,Good,9,ED,Edge,2016
+Robert Quinn,75.72,75.13,78.09,370.0,Rams,Rams,28,Good,10,ED,Edge,2016
+Everson Griffen,75.27,69.65,74.85,888.0,Vikings,Vikings,29,Good,11,ED,Edge,2016
+Shane Ray,75.09,63.28,78.79,664.0,Broncos,Broncos,30,Good,12,ED,Edge,2016
+Vic Beasley Jr.,75.06,69.64,74.5,822.0,Falcons,Falcons,31,Good,13,ED,Edge,2016
+Leonard Floyd,74.8,61.29,83.8,537.0,Bears,Bears,32,Good,14,ED,Edge,2016
+Elvis Dumervil,74.65,61.88,83.16,272.0,Ravens,Ravens,33,Good,15,ED,Edge,2016
+Derrick Morgan,74.27,65.48,78.37,768.0,Titans,Titans,34,Good,16,ED,Edge,2016
+Robert Ayers,74.17,75.34,73.39,577.0,Buccaneers,Buccaneers,35,Good,17,ED,Edge,2016
+Jadeveon Clowney,73.96,88.83,63.32,871.0,Texans,Texans,36,Starter,1,ED,Edge,2016
+Jason Pierre-Paul,73.49,78.18,70.78,793.0,Giants,Giants,37,Starter,2,ED,Edge,2016
+Lorenzo Alexander,73.14,55.1,86.84,788.0,Bills,Bills,38,Starter,3,ED,Edge,2016
+Mario Addison,72.99,59.97,78.53,433.0,Panthers,Panthers,39,Starter,4,ED,Edge,2016
+Trent Murphy,72.83,68.16,71.97,676.0,Commanders,Commanders,40,Starter,5,ED,Edge,2016
+Jerry Hughes,72.81,64.33,74.29,857.0,Bills,Bills,41,Starter,6,ED,Edge,2016
+Vinny Curry,72.53,63.22,74.57,436.0,Eagles,Eagles,42,Starter,7,ED,Edge,2016
+Bruce Irvin,72.35,59.22,76.93,997.0,Raiders,Raiders,43,Starter,8,ED,Edge,2016
+Cam Johnson,71.76,60.01,85.33,350.0,Browns,Browns,44,Starter,9,ED,Edge,2016
+Willie Young,71.66,59.11,76.37,715.0,Bears,Bears,45,Starter,10,ED,Edge,2016
+Mario Williams,71.12,60.03,75.7,453.0,Dolphins,Dolphins,46,Starter,11,ED,Edge,2016
+Jordan Jenkins,71.05,60.12,76.25,514.0,Jets,Jets,47,Starter,12,ED,Edge,2016
+Julius Peppers,70.9,59.17,74.55,715.0,Packers,Packers,48,Starter,13,ED,Edge,2016
+Aaron Lynch,70.86,60.41,78.98,222.0,49ers,49ers,49,Starter,14,ED,Edge,2016
+Clay Matthews,70.7,52.54,79.15,630.0,Packers,Packers,50,Starter,15,ED,Edge,2016
+Dee Ford,70.5,59.62,74.62,855.0,Chiefs,Chiefs,51,Starter,16,ED,Edge,2016
+Brian Orakpo,70.42,58.26,76.24,868.0,Titans,Titans,52,Starter,17,ED,Edge,2016
+Kerry Hyder Jr.,69.94,63.21,76.13,709.0,Lions,Lions,53,Starter,18,ED,Edge,2016
+Alex Okafor,69.88,62.91,72.24,231.0,Cardinals,Cardinals,54,Starter,19,ED,Edge,2016
+Matthew Judon,69.26,59.67,73.57,308.0,Ravens,Ravens,55,Starter,20,ED,Edge,2016
+Connor Barwin,69.21,54.21,75.04,705.0,Eagles,Eagles,56,Starter,21,ED,Edge,2016
+John Simon,69.17,61.83,73.75,516.0,Texans,Texans,57,Starter,22,ED,Edge,2016
+Lorenzo Mauldin IV,68.91,61.08,74.0,354.0,Jets,Jets,58,Starter,23,ED,Edge,2016
+Arthur Moats,68.54,55.03,73.9,401.0,Steelers,Steelers,59,Starter,24,ED,Edge,2016
+Jeremiah Attaochu,68.45,62.03,74.08,178.0,Chargers,Chargers,60,Starter,25,ED,Edge,2016
+Tamba Hali,68.38,60.91,69.2,599.0,Chiefs,Chiefs,61,Starter,26,ED,Edge,2016
+Kyler Fackrell,68.05,58.84,72.1,173.0,Packers,Packers,62,Starter,27,ED,Edge,2016
+Terrell Suggs,67.81,55.21,77.25,697.0,Ravens,Ravens,63,Starter,28,ED,Edge,2016
+Chris Long,67.61,55.5,74.85,741.0,Patriots,Patriots,64,Starter,29,ED,Edge,2016
+Dan Skuta,67.29,53.04,74.8,267.0,Jaguars,Jaguars,65,Starter,30,ED,Edge,2016
+Trey Flowers,67.05,62.15,72.01,726.0,Patriots,Patriots,66,Starter,31,ED,Edge,2016
+Preston Smith,66.78,60.16,67.02,770.0,Commanders,Commanders,67,Starter,32,ED,Edge,2016
+Marcus Smith,66.74,57.82,70.41,220.0,Eagles,Eagles,68,Starter,33,ED,Edge,2016
+Paul Kruger,66.59,55.02,70.66,572.0,Saints,Saints,69,Starter,34,ED,Edge,2016
+Erik Walden,66.36,49.77,73.57,759.0,Colts,Colts,70,Starter,35,ED,Edge,2016
+Dante Fowler Jr.,66.08,64.71,62.82,569.0,Jaguars,Jaguars,71,Starter,36,ED,Edge,2016
+Akeem Ayers,65.72,56.51,68.32,360.0,Colts,Colts,72,Starter,37,ED,Edge,2016
+Dwight Freeney,65.54,49.28,73.14,538.0,Falcons,Falcons,73,Starter,38,ED,Edge,2016
+Trent Cole,65.49,56.9,72.56,237.0,Colts,Colts,74,Starter,39,ED,Edge,2016
+Yannick Ngakoue,65.26,56.46,66.96,706.0,Jaguars,Jaguars,75,Starter,40,ED,Edge,2016
+Ryan Delaire,65.21,59.37,73.79,139.0,Panthers,Panthers,76,Starter,41,ED,Edge,2016
+DeMarcus Lawrence,64.98,67.54,63.69,369.0,Cowboys,Cowboys,77,Starter,42,ED,Edge,2016
+Armonty Bryant,64.97,57.11,72.4,104.0,Lions,Lions,78,Starter,43,ED,Edge,2016
+Noah Spence,64.87,59.83,64.06,569.0,Buccaneers,Buccaneers,79,Starter,44,ED,Edge,2016
+Devon Kennard,64.63,55.96,66.25,549.0,Giants,Giants,80,Starter,45,ED,Edge,2016
+Kony Ealy,64.33,58.09,64.32,624.0,Panthers,Panthers,81,Starter,46,ED,Edge,2016
+Emmanuel Ogbah,64.18,58.76,63.63,849.0,Browns,Browns,82,Starter,47,ED,Edge,2016
+Joe Schobert,63.89,57.55,67.09,246.0,Browns,Browns,83,Starter,48,ED,Edge,2016
+Rob Ninkovich,63.88,49.57,69.77,566.0,Patriots,Patriots,84,Starter,49,ED,Edge,2016
+Darryl Tapp,63.48,56.66,64.38,291.0,Saints,Saints,85,Starter,50,ED,Edge,2016
+Ahmad Brooks,63.38,48.19,70.59,918.0,49ers,49ers,86,Starter,51,ED,Edge,2016
+Damontre Moore,63.23,60.42,67.8,104.0,Seahawks,Seahawks,87,Starter,52,ED,Edge,2016
+Michael Johnson,63.08,59.34,61.82,831.0,Bengals,Bengals,88,Starter,53,ED,Edge,2016
+Tyrone Holmes,62.96,59.66,66.2,124.0,Browns,Browns,89,Starter,54,ED,Edge,2016
+Devin Taylor,62.94,56.68,63.26,715.0,Lions,Lions,90,Starter,55,ED,Edge,2016
+Shea McClellin,62.61,52.66,65.07,441.0,Patriots,Patriots,91,Starter,56,ED,Edge,2016
+Jayrone Elliott,61.75,59.59,66.0,136.0,Packers,Packers,92,Rotation/backup,1,ED,Edge,2016
+Brian Robison,61.74,49.0,66.07,838.0,Vikings,Vikings,93,Rotation/backup,2,ED,Edge,2016
+Ryan Davis Sr.,61.73,58.32,65.99,155.0,Cowboys,Cowboys,94,Rotation/backup,3,ED,Edge,2016
+Brooks Reed,61.15,55.35,61.79,529.0,Falcons,Falcons,95,Rotation/backup,4,ED,Edge,2016
+Ethan Westbrooks,61.01,56.23,60.96,531.0,Rams,Rams,96,Rotation/backup,5,ED,Edge,2016
+Datone Jones,61.0,54.28,61.32,635.0,Packers,Packers,97,Rotation/backup,6,ED,Edge,2016
+Ronald Blair III,60.98,58.78,58.28,307.0,49ers,49ers,98,Rotation/backup,7,ED,Edge,2016
+William Gholston,60.84,59.5,58.82,586.0,Buccaneers,Buccaneers,99,Rotation/backup,8,ED,Edge,2016
+Adrian Clayborn,60.73,57.8,62.68,589.0,Falcons,Falcons,100,Rotation/backup,9,ED,Edge,2016
+Shaq Lawson,60.67,58.37,64.28,237.0,Bills,Bills,101,Rotation/backup,10,ED,Edge,2016
+Lerentee McCray,60.23,59.21,61.64,163.0,Bills,Bills,102,Rotation/backup,11,ED,Edge,2016
+Bud Dupree,60.13,57.11,61.88,509.0,Steelers,Steelers,103,Rotation/backup,12,ED,Edge,2016
+Kasim Edebali,60.09,55.4,59.46,254.0,Saints,Saints,104,Rotation/backup,13,ED,Edge,2016
+Sam Acho,59.91,54.31,59.79,499.0,Bears,Bears,105,Rotation/backup,14,ED,Edge,2016
+Tyrone Crawford,59.75,53.76,60.09,650.0,Cowboys,Cowboys,106,Rotation/backup,15,ED,Edge,2016
+Wallace Gilberry,59.61,53.46,63.2,266.0,Bengals,Bengals,107,Rotation/backup,16,ED,Edge,2016
+Eli Harold,59.4,57.82,56.29,691.0,49ers,49ers,108,Rotation/backup,17,ED,Edge,2016
+Andre Branch,59.36,55.93,59.88,814.0,Dolphins,Dolphins,109,Rotation/backup,18,ED,Edge,2016
+Benson Mayowa,59.26,59.96,57.12,406.0,Cowboys,Cowboys,110,Rotation/backup,19,ED,Edge,2016
+Kyle Emanuel,59.19,55.37,57.95,545.0,Chargers,Chargers,111,Rotation/backup,20,ED,Edge,2016
+Muhammad Wilkerson,59.07,53.16,59.36,848.0,Jets,Jets,112,Rotation/backup,21,ED,Edge,2016
+Jarvis Jones,58.8,56.81,57.63,499.0,Steelers,Steelers,113,Rotation/backup,22,ED,Edge,2016
+Za'Darius Smith,58.67,57.44,57.67,492.0,Ravens,Ravens,114,Rotation/backup,23,ED,Edge,2016
+Robert Mathis,58.67,45.16,65.21,536.0,Colts,Colts,115,Rotation/backup,24,ED,Edge,2016
+David Bass,58.66,58.3,58.29,224.0,Titans,Titans,116,Rotation/backup,25,ED,Edge,2016
+Aaron Wallace,58.21,59.61,61.44,117.0,Titans,Titans,117,Rotation/backup,26,ED,Edge,2016
+Cassius Marsh,58.2,59.61,55.38,438.0,Seahawks,Seahawks,118,Rotation/backup,27,ED,Edge,2016
+Romeo Okwara,58.09,58.43,53.69,427.0,Giants,Giants,119,Rotation/backup,28,ED,Edge,2016
+Anthony Zettel,57.33,57.23,55.32,224.0,Lions,Lions,120,Rotation/backup,29,ED,Edge,2016
+Wes Horton,56.93,56.37,56.98,332.0,Panthers,Panthers,121,Rotation/backup,30,ED,Edge,2016
+Kerry Wynn,56.88,59.11,54.87,131.0,Giants,Giants,122,Rotation/backup,31,ED,Edge,2016
+Will Clarke,56.3,56.32,54.94,374.0,Bengals,Bengals,123,Rotation/backup,32,ED,Edge,2016
+Jack Crawford,56.28,50.63,57.97,548.0,Cowboys,Cowboys,124,Rotation/backup,33,ED,Edge,2016
+Tourek Williams,56.03,55.82,54.19,142.0,Chargers,Chargers,125,Rotation/backup,34,ED,Edge,2016
+Anthony Chickillo,55.59,57.86,57.72,318.0,Steelers,Steelers,126,Rotation/backup,35,ED,Edge,2016
+Carl Nassib,55.52,54.89,53.86,541.0,Browns,Browns,127,Rotation/backup,36,ED,Edge,2016
+Shilique Calhoun,55.46,56.93,56.56,172.0,Raiders,Raiders,128,Rotation/backup,37,ED,Edge,2016
+Frank Zombo,55.34,51.96,57.18,501.0,Chiefs,Chiefs,129,Rotation/backup,38,ED,Edge,2016
+Eugene Sims,55.01,50.41,54.84,537.0,Rams,Rams,130,Rotation/backup,39,ED,Edge,2016
+Terrence Fede,54.33,57.65,53.59,191.0,Dolphins,Dolphins,131,Rotation/backup,40,ED,Edge,2016
+Mike Catapano,53.74,54.71,51.52,210.0,Jets,Jets,132,Rotation/backup,41,ED,Edge,2016
+Kevin Dodd,53.24,57.4,53.6,179.0,Titans,Titans,133,Rotation/backup,42,ED,Edge,2016
+Corey Lemonier,53.11,59.5,52.39,135.0,Jets,Jets,134,Rotation/backup,43,ED,Edge,2016
+Albert McClellan,52.81,45.79,54.25,604.0,Ravens,Ravens,135,Rotation/backup,44,ED,Edge,2016
+Matt Longacre,51.69,59.13,53.36,157.0,Rams,Rams,136,Rotation/backup,45,ED,Edge,2016
+Ryan Russell,50.72,57.43,53.15,174.0,Buccaneers,Buccaneers,137,Rotation/backup,46,ED,Edge,2016
+DaVonte Lambert,49.02,54.13,46.65,374.0,Buccaneers,Buccaneers,138,Rotation/backup,47,ED,Edge,2016
+Brennan Scarlett,48.89,58.26,51.89,119.0,Texans,Texans,139,Rotation/backup,48,ED,Edge,2016
+Freddie Bishop,45.0,56.49,51.28,152.0,Jets,Jets,140,Rotation/backup,49,ED,Edge,2016
+Zack Martin,93.65,89.4,92.31,1126.0,Cowboys,Cowboys,1,Elite,1,G,Guard,2016
+Marshal Yanda,92.33,86.96,91.75,899.0,Ravens,Ravens,2,Elite,2,G,Guard,2016
+David DeCastro,91.02,84.7,91.06,1274.0,Steelers,Steelers,3,Elite,3,G,Guard,2016
+Kelechi Osemele,90.47,84.2,90.48,1110.0,Raiders,Raiders,4,Elite,4,G,Guard,2016
+Andy Levitre,90.35,84.6,90.02,1212.0,Falcons,Falcons,5,Elite,5,G,Guard,2016
+Shaq Mason,89.62,84.6,88.8,1258.0,Patriots,Patriots,6,Elite,6,G,Guard,2016
+Kevin Zeitler,89.18,83.3,88.94,1087.0,Bengals,Bengals,7,Elite,7,G,Guard,2016
+John Greco,88.19,80.84,88.93,746.0,Browns,Browns,8,Elite,8,G,Guard,2016
+Quinton Spain,88.18,82.09,88.08,821.0,Titans,Titans,9,Elite,9,G,Guard,2016
+Brandon Brooks,88.16,82.4,87.84,989.0,Eagles,Eagles,10,Elite,10,G,Guard,2016
+Ramon Foster,87.89,83.6,86.59,1099.0,Steelers,Steelers,11,Elite,11,G,Guard,2016
+Josh Sitton,87.39,80.29,87.95,734.0,Bears,Bears,12,Elite,12,G,Guard,2016
+Larry Warford,87.36,80.3,87.9,1024.0,Lions,Lions,13,Elite,13,G,Guard,2016
+T.J. Lang,86.8,80.96,86.52,964.0,Packers,Packers,14,Elite,14,G,Guard,2016
+Ron Leary,84.75,77.65,85.31,871.0,Cowboys,Cowboys,15,Elite,15,G,Guard,2016
+Brandon Scherff,84.69,77.2,85.52,1045.0,Commanders,Commanders,16,Elite,16,G,Guard,2016
+Justin Pugh,84.48,76.9,85.37,750.0,Giants,Giants,17,Elite,17,G,Guard,2016
+Allen Barbre,84.39,75.69,86.03,672.0,Eagles,Eagles,18,Elite,18,G,Guard,2016
+Richie Incognito,83.86,76.5,84.6,1060.0,Bills,Bills,19,Elite,19,G,Guard,2016
+Andrew Norwell,83.8,77.3,83.96,1108.0,Panthers,Panthers,20,Elite,20,G,Guard,2016
+Evan Mathis,83.55,72.05,87.05,199.0,Cardinals,Cardinals,21,Elite,21,G,Guard,2016
+James Carpenter,82.73,76.2,82.92,994.0,Jets,Jets,22,Elite,22,G,Guard,2016
+Joel Bitonio,82.54,73.68,84.28,331.0,Browns,Browns,23,Elite,23,G,Guard,2016
+Gabe Jackson,82.29,74.7,83.19,1188.0,Raiders,Raiders,24,Elite,24,G,Guard,2016
+Kyle Long,81.52,72.99,83.04,431.0,Bears,Bears,25,Elite,25,G,Guard,2016
+Tim Lelito,81.41,71.78,83.67,406.0,Saints,Saints,26,Elite,26,G,Guard,2016
+Ted Larsen,81.02,69.98,84.22,581.0,Bears,Bears,27,Elite,27,G,Guard,2016
+Rodger Saffold,80.68,72.15,82.2,916.0,Rams,Rams,28,Elite,28,G,Guard,2016
+John Jerry,80.34,72.6,81.33,1123.0,Giants,Giants,29,Elite,29,G,Guard,2016
+A.J. Cann,80.29,72.6,81.25,1113.0,Jaguars,Jaguars,30,Elite,30,G,Guard,2016
+Max Garcia,80.15,72.2,81.28,1074.0,Broncos,Broncos,31,Elite,31,G,Guard,2016
+Chris Chester,79.4,71.0,80.83,1233.0,Falcons,Falcons,32,Good,1,G,Guard,2016
+Brian Winters,78.93,69.5,81.05,806.0,Jets,Jets,33,Good,2,G,Guard,2016
+Mike Iupati,78.71,69.8,80.49,1035.0,Cardinals,Cardinals,34,Good,3,G,Guard,2016
+Laurent Duvernay-Tardif,78.71,71.76,79.18,946.0,Chiefs,Chiefs,35,Good,4,G,Guard,2016
+Josh Kline,78.65,70.1,80.19,929.0,Titans,Titans,36,Good,5,G,Guard,2016
+Spencer Drango,78.55,69.59,80.36,599.0,Browns,Browns,37,Good,6,G,Guard,2016
+Patrick Omameh,78.29,68.89,80.39,454.0,Jaguars,Jaguars,38,Good,7,G,Guard,2016
+Isaac Seumalo,78.25,66.19,82.12,336.0,Eagles,Eagles,39,Good,8,G,Guard,2016
+John Miller,77.85,69.6,79.18,1047.0,Bills,Bills,40,Good,9,G,Guard,2016
+Zach Fulton,77.84,70.45,78.6,857.0,Chiefs,Chiefs,41,Good,10,G,Guard,2016
+Trai Turner,77.73,67.0,80.71,1098.0,Panthers,Panthers,42,Good,11,G,Guard,2016
+Joe Haeg,77.73,67.77,80.21,952.0,Colts,Colts,43,Good,12,G,Guard,2016
+Luke Joeckel,77.41,64.22,82.04,221.0,Jaguars,Jaguars,44,Good,13,G,Guard,2016
+Jahri Evans,77.27,69.0,78.62,1138.0,Saints,Saints,45,Good,14,G,Guard,2016
+Alex Boone,76.71,66.85,79.11,873.0,Vikings,Vikings,46,Good,15,G,Guard,2016
+Xavier Su'a-Filo,76.62,67.6,78.46,1168.0,Texans,Texans,47,Good,16,G,Guard,2016
+Cody Wichmann,76.43,66.06,79.17,594.0,Rams,Rams,48,Good,17,G,Guard,2016
+Parker Ehinger,76.23,64.0,80.21,229.0,Chiefs,Chiefs,49,Good,18,G,Guard,2016
+Dakota Dozier,76.18,67.96,77.5,144.0,Jets,Jets,50,Good,19,G,Guard,2016
+Jack Mewhort,75.82,66.07,78.15,666.0,Colts,Colts,51,Good,20,G,Guard,2016
+Lane Taylor,75.6,66.5,77.5,1239.0,Packers,Packers,52,Good,21,G,Guard,2016
+Andrew Tiller,75.57,65.01,78.44,485.0,49ers,49ers,53,Good,22,G,Guard,2016
+D.J. Fluker,75.5,66.0,77.66,993.0,Chargers,Chargers,54,Good,23,G,Guard,2016
+Joe Thuney,75.49,65.6,77.91,1354.0,Patriots,Patriots,55,Good,24,G,Guard,2016
+Kenny Wiggins,75.11,62.28,79.49,134.0,Chargers,Chargers,56,Good,25,G,Guard,2016
+Mark Glowinski,75.09,64.6,77.91,1186.0,Seahawks,Seahawks,57,Good,26,G,Guard,2016
+Clint Boling,74.97,66.12,76.7,942.0,Bengals,Bengals,58,Good,27,G,Guard,2016
+Senio Kelemete,73.61,62.46,76.88,664.0,Saints,Saints,59,Starter,1,G,Guard,2016
+Brandon Fusco,73.49,63.33,76.09,834.0,Vikings,Vikings,60,Starter,2,G,Guard,2016
+Vladimir Ducasse,72.75,62.33,75.53,555.0,Ravens,Ravens,61,Starter,3,G,Guard,2016
+John Urschel,72.41,61.61,75.45,267.0,Ravens,Ravens,62,Starter,4,G,Guard,2016
+Chris Scott,72.3,62.08,74.95,295.0,Panthers,Panthers,63,Starter,5,G,Guard,2016
+Joshua Garnett,72.15,61.28,75.23,716.0,49ers,49ers,64,Starter,6,G,Guard,2016
+Orlando Franklin,71.92,61.47,74.72,919.0,Chargers,Chargers,65,Starter,7,G,Guard,2016
+Oday Aboushi,71.25,60.18,74.47,358.0,Texans,Texans,66,Starter,8,G,Guard,2016
+Shawn Lauvao,71.11,59.81,74.48,913.0,Commanders,Commanders,67,Starter,9,G,Guard,2016
+Alex Lewis,71.02,60.15,74.1,539.0,Ravens,Ravens,68,Starter,10,G,Guard,2016
+Alvin Bailey,70.23,59.82,73.01,373.0,Browns,Browns,69,Starter,11,G,Guard,2016
+Denver Kirkland,69.44,61.52,70.56,130.0,Raiders,Raiders,70,Starter,12,G,Guard,2016
+Laken Tomlinson,68.54,57.73,71.58,699.0,Lions,Lions,71,Starter,13,G,Guard,2016
+Zane Beadles,67.84,55.3,72.04,1035.0,49ers,49ers,72,Starter,14,G,Guard,2016
+Jeff Allen,67.81,56.32,71.3,968.0,Texans,Texans,73,Starter,15,G,Guard,2016
+Jermon Bushrod,67.36,55.7,70.97,1011.0,Dolphins,Dolphins,74,Starter,16,G,Guard,2016
+Kevin Pamphile,67.35,56.16,70.64,957.0,Buccaneers,Buccaneers,75,Starter,17,G,Guard,2016
+Chance Warmack,67.33,56.35,70.48,134.0,Titans,Titans,76,Starter,18,G,Guard,2016
+Ted Karras,66.12,60.24,65.88,109.0,Patriots,Patriots,77,Starter,19,G,Guard,2016
+Tyler Shatley,63.94,51.67,67.96,316.0,Jaguars,Jaguars,78,Starter,20,G,Guard,2016
+Billy Turner,60.61,48.92,64.23,138.0,Broncos,Broncos,79,Rotation/backup,1,G,Guard,2016
+Arie Kouandjio,59.93,52.44,60.75,128.0,Commanders,Commanders,80,Rotation/backup,2,G,Guard,2016
+Ty Montgomery,83.82,74.38,85.95,307.0,Packers,Packers,1,Elite,1,HB,Running Back,2016
+Jalen Richard,81.04,71.68,83.12,135.0,Raiders,Raiders,2,Elite,2,HB,Running Back,2016
+Jay Ajayi,77.73,73.75,76.21,240.0,Dolphins,Dolphins,3,Good,1,HB,Running Back,2016
+Le'Veon Bell,76.54,78.2,71.26,439.0,Steelers,Steelers,4,Good,2,HB,Running Back,2016
+David Johnson,76.37,79.9,69.85,509.0,Cardinals,Cardinals,5,Good,3,HB,Running Back,2016
+Jordan Howard,76.09,72.32,74.44,303.0,Bears,Bears,6,Good,4,HB,Running Back,2016
+Ezekiel Elliott,75.68,74.97,71.98,288.0,Cowboys,Cowboys,7,Good,5,HB,Running Back,2016
+LeSean McCoy,74.26,76.56,68.56,254.0,Bills,Bills,8,Good,6,HB,Running Back,2016
+Spencer Ware,74.23,70.48,72.56,276.0,Chiefs,Chiefs,9,Good,7,HB,Running Back,2016
+Kenneth Dixon,74.12,67.23,74.54,127.0,Ravens,Ravens,10,Good,8,HB,Running Back,2016
+Darren Sproles,72.43,67.4,71.62,318.0,Eagles,Eagles,11,Starter,1,HB,Running Back,2016
+Chris Thompson,72.41,62.89,74.59,309.0,Commanders,Commanders,12,Starter,2,HB,Running Back,2016
+Mike Gillislee,72.1,70.04,69.3,104.0,Bills,Bills,13,Starter,3,HB,Running Back,2016
+Devonta Freeman,71.61,75.63,64.77,345.0,Falcons,Falcons,14,Starter,4,HB,Running Back,2016
+Bilal Powell,71.56,76.26,64.26,317.0,Jets,Jets,15,Starter,5,HB,Running Back,2016
+DeMarco Murray,71.26,69.31,68.4,355.0,Titans,Titans,16,Starter,6,HB,Running Back,2016
+Mark Ingram II,70.98,68.88,68.22,239.0,Saints,Saints,17,Starter,7,HB,Running Back,2016
+Thomas Rawls,70.94,69.29,67.88,142.0,Seahawks,Seahawks,18,Starter,8,HB,Running Back,2016
+DeAndre Washington,70.84,63.01,71.9,127.0,Raiders,Raiders,19,Starter,9,HB,Running Back,2016
+Dion Lewis,70.29,62.51,71.31,104.0,Patriots,Patriots,20,Starter,10,HB,Running Back,2016
+Duke Johnson Jr.,70.16,63.93,70.15,277.0,Browns,Browns,21,Starter,11,HB,Running Back,2016
+Carlos Hyde,70.09,62.79,70.79,229.0,49ers,49ers,22,Starter,12,HB,Running Back,2016
+Rex Burkhead,69.96,68.48,66.78,108.0,Bengals,Bengals,23,Starter,13,HB,Running Back,2016
+Theo Riddick,69.05,70.69,63.79,254.0,Lions,Lions,24,Starter,14,HB,Running Back,2016
+Jacquizz Rodgers,68.99,69.81,64.28,142.0,Buccaneers,Buccaneers,25,Starter,15,HB,Running Back,2016
+Jonathan Stewart,68.47,62.44,68.32,179.0,Panthers,Panthers,26,Starter,16,HB,Running Back,2016
+Tevin Coleman,68.43,70.62,62.81,201.0,Falcons,Falcons,27,Starter,17,HB,Running Back,2016
+Damien Williams,68.18,67.87,64.22,106.0,Dolphins,Dolphins,28,Starter,18,HB,Running Back,2016
+C.J. Anderson,68.12,61.47,68.38,146.0,Broncos,Broncos,29,Starter,19,HB,Running Back,2016
+Giovani Bernard,68.11,65.47,65.71,218.0,Bengals,Bengals,30,Starter,20,HB,Running Back,2016
+DeAngelo Williams,67.71,66.3,64.49,175.0,Steelers,Steelers,31,Starter,21,HB,Running Back,2016
+Rob Kelley,67.43,59.84,68.32,110.0,Commanders,Commanders,32,Starter,22,HB,Running Back,2016
+Melvin Gordon III,67.37,68.04,62.76,310.0,Chargers,Chargers,33,Starter,23,HB,Running Back,2016
+Matt Forte,67.22,63.15,65.77,194.0,Jets,Jets,34,Starter,24,HB,Running Back,2016
+T.J. Yeldon,67.08,65.46,63.99,305.0,Jaguars,Jaguars,35,Starter,25,HB,Running Back,2016
+Isaiah Crowell,66.83,65.6,63.49,212.0,Browns,Browns,36,Starter,26,HB,Running Back,2016
+Chris Ivory,66.78,55.93,69.84,140.0,Jaguars,Jaguars,37,Starter,27,HB,Running Back,2016
+Lance Dunbar,66.73,56.86,69.15,101.0,Cowboys,Cowboys,38,Starter,28,HB,Running Back,2016
+Doug Martin,66.71,61.22,66.21,106.0,Buccaneers,Buccaneers,39,Starter,29,HB,Running Back,2016
+Terrance West,66.55,68.88,60.83,155.0,Ravens,Ravens,40,Starter,30,HB,Running Back,2016
+Latavius Murray,66.43,65.21,63.07,230.0,Raiders,Raiders,41,Starter,31,HB,Running Back,2016
+James White,66.36,72.7,57.96,384.0,Patriots,Patriots,42,Starter,32,HB,Running Back,2016
+LeGarrette Blount,66.24,59.04,66.87,155.0,Patriots,Patriots,43,Starter,33,HB,Running Back,2016
+Christine Michael,66.16,58.84,66.88,178.0,Packers,Packers,44,Starter,34,HB,Running Back,2016
+Jerick McKinnon,64.8,59.43,64.22,254.0,Vikings,Vikings,45,Starter,35,HB,Running Back,2016
+Jeremy Hill,64.66,62.21,62.13,160.0,Bengals,Bengals,46,Starter,36,HB,Running Back,2016
+Robert Turbin,64.63,64.03,60.87,166.0,Colts,Colts,47,Starter,37,HB,Running Back,2016
+Lamar Miller,64.6,60.92,62.88,283.0,Texans,Texans,48,Starter,38,HB,Running Back,2016
+Jonathan Grimes,64.59,65.35,59.92,123.0,Texans,Texans,49,Starter,39,HB,Running Back,2016
+Justin Forsett,64.25,54.89,66.32,130.0,Broncos,Broncos,50,Starter,40,HB,Running Back,2016
+Benny Cunningham,63.97,59.06,63.08,116.0,Rams,Rams,51,Starter,41,HB,Running Back,2016
+Todd Gurley II,63.96,57.47,64.12,333.0,Rams,Rams,52,Starter,42,HB,Running Back,2016
+Frank Gore,63.91,59.64,62.59,263.0,Colts,Colts,53,Starter,43,HB,Running Back,2016
+Tim Hightower,63.22,57.41,62.92,102.0,Saints,Saints,54,Starter,44,HB,Running Back,2016
+Charles Sims,63.08,59.04,61.6,123.0,Buccaneers,Buccaneers,55,Starter,45,HB,Running Back,2016
+Paul Perkins,62.84,62.02,59.22,152.0,Giants,Giants,56,Starter,46,HB,Running Back,2016
+Zach Zenner,62.82,61.06,59.83,166.0,Lions,Lions,57,Starter,47,HB,Running Back,2016
+Rashad Jennings,62.76,56.17,62.99,198.0,Giants,Giants,58,Starter,48,HB,Running Back,2016
+James Starks,62.5,54.23,63.84,140.0,Packers,Packers,59,Starter,49,HB,Running Back,2016
+Fozzy Whittaker,62.31,60.39,59.42,160.0,Panthers,Panthers,60,Starter,50,HB,Running Back,2016
+Charcandrick West,61.35,59.07,58.71,228.0,Chiefs,Chiefs,61,Rotation/backup,1,HB,Running Back,2016
+Travaris Cadet,61.14,64.04,55.04,213.0,Saints,Saints,62,Rotation/backup,2,HB,Running Back,2016
+Devontae Booker,60.89,56.37,59.74,227.0,Broncos,Broncos,63,Rotation/backup,3,HB,Running Back,2016
+Matt Asiata,60.58,59.52,57.12,179.0,Vikings,Vikings,64,Rotation/backup,4,HB,Running Back,2016
+Shaun Draughn,59.92,60.76,55.19,182.0,49ers,49ers,65,Rotation/backup,5,HB,Running Back,2016
+Jeremy Langford,58.16,56.66,55.0,135.0,Bears,Bears,66,Rotation/backup,6,HB,Running Back,2016
+Dwayne Washington,57.66,56.29,54.4,101.0,Lions,Lions,67,Rotation/backup,7,HB,Running Back,2016
+Jerrell Freeman,86.37,90.74,82.52,806.0,Bears,Bears,1,Elite,1,LB,Linebacker,2016
+Luke Kuechly,85.71,89.04,82.46,656.0,Panthers,Panthers,2,Elite,2,LB,Linebacker,2016
+Bobby Wagner,83.06,86.4,77.09,1195.0,Seahawks,Seahawks,3,Elite,3,LB,Linebacker,2016
+Jordan Hicks,80.22,88.4,74.11,971.0,Eagles,Eagles,4,Elite,4,LB,Linebacker,2016
+Paul Posluszny,78.42,82.0,74.36,1057.0,Jaguars,Jaguars,5,Good,1,LB,Linebacker,2016
+Sean Lee,78.35,78.5,75.75,1041.0,Cowboys,Cowboys,6,Good,2,LB,Linebacker,2016
+Mason Foster,77.7,79.01,75.8,771.0,Commanders,Commanders,7,Good,3,LB,Linebacker,2016
+K.J. Wright,77.44,75.6,74.5,1174.0,Seahawks,Seahawks,8,Good,4,LB,Linebacker,2016
+C.J. Mosley,77.4,76.3,75.0,875.0,Ravens,Ravens,9,Good,5,LB,Linebacker,2016
+Vincent Rey,77.09,75.69,73.86,590.0,Bengals,Bengals,10,Good,6,LB,Linebacker,2016
+Shaq Thompson,76.45,75.0,74.55,533.0,Panthers,Panthers,11,Good,7,LB,Linebacker,2016
+Vontaze Burfict,75.8,81.99,73.95,674.0,Bengals,Bengals,12,Good,8,LB,Linebacker,2016
+Brandon Marshall,75.24,75.77,73.54,596.0,Broncos,Broncos,13,Good,9,LB,Linebacker,2016
+Nigel Bradham,74.91,75.9,72.07,989.0,Eagles,Eagles,14,Good,10,LB,Linebacker,2016
+Dont'a Hightower,74.57,78.2,68.82,864.0,Patriots,Patriots,15,Good,11,LB,Linebacker,2016
+Benardrick McKinney,74.16,72.0,72.22,1044.0,Texans,Texans,16,Good,12,LB,Linebacker,2016
+Gerald Hodges,74.15,75.53,71.34,584.0,49ers,49ers,17,Good,13,LB,Linebacker,2016
+Zach Brown,73.93,75.7,71.71,978.0,Bills,Bills,18,Starter,1,LB,Linebacker,2016
+Wesley Woodyard,73.23,73.05,69.19,614.0,Titans,Titans,19,Starter,2,LB,Linebacker,2016
+Telvin Smith Sr.,72.89,73.0,69.29,1048.0,Jaguars,Jaguars,20,Starter,3,LB,Linebacker,2016
+Perry Riley,72.88,74.39,72.39,698.0,Raiders,Raiders,21,Starter,4,LB,Linebacker,2016
+Ramik Wilson,72.47,75.62,73.88,591.0,Chiefs,Chiefs,22,Starter,5,LB,Linebacker,2016
+Deion Jones,71.2,70.1,67.76,1114.0,Falcons,Falcons,23,Starter,6,LB,Linebacker,2016
+Jatavis Brown,70.86,75.06,68.06,600.0,Chargers,Chargers,24,Starter,7,LB,Linebacker,2016
+Eric Kendricks,70.61,68.9,68.62,869.0,Vikings,Vikings,25,Starter,8,LB,Linebacker,2016
+Christian Kirksey,70.26,67.5,67.94,1111.0,Browns,Browns,26,Starter,9,LB,Linebacker,2016
+Brian Cushing,70.16,65.17,70.26,754.0,Texans,Texans,27,Starter,10,LB,Linebacker,2016
+David Harris,70.03,65.0,69.73,900.0,Jets,Jets,28,Starter,11,LB,Linebacker,2016
+Kwon Alexander,69.63,68.9,67.52,1023.0,Buccaneers,Buccaneers,29,Starter,12,LB,Linebacker,2016
+Mark Barron,69.57,65.0,68.45,1087.0,Rams,Rams,30,Starter,13,LB,Linebacker,2016
+Avery Williamson,69.56,64.1,69.55,908.0,Titans,Titans,31,Starter,14,LB,Linebacker,2016
+Kevin Minter,69.07,67.6,65.89,1002.0,Cardinals,Cardinals,32,Starter,15,LB,Linebacker,2016
+Korey Toomer,68.94,69.94,70.87,479.0,Chargers,Chargers,33,Starter,16,LB,Linebacker,2016
+Jamie Collins Sr.,68.84,68.8,65.85,980.0,Browns,Browns,34,Starter,17,LB,Linebacker,2016
+Todd Davis,68.79,65.62,68.41,697.0,Broncos,Broncos,35,Starter,18,LB,Linebacker,2016
+Bruce Carter,68.72,68.26,70.38,121.0,Jets,Jets,36,Starter,19,LB,Linebacker,2016
+NaVorro Bowman,68.49,68.64,70.47,251.0,49ers,49ers,37,Starter,20,LB,Linebacker,2016
+Derrick Johnson,68.46,70.5,67.62,841.0,Chiefs,Chiefs,38,Starter,21,LB,Linebacker,2016
+Max Bullough,68.37,64.65,69.39,240.0,Texans,Texans,39,Starter,22,LB,Linebacker,2016
+Joshua Perry,68.27,67.56,72.91,114.0,Chargers,Chargers,40,Starter,23,LB,Linebacker,2016
+Karlos Dansby,68.27,64.93,67.16,782.0,Bengals,Bengals,41,Starter,24,LB,Linebacker,2016
+Thomas Davis Sr.,68.16,66.4,65.16,1008.0,Panthers,Panthers,42,Starter,25,LB,Linebacker,2016
+Anthony Hitchens,67.77,64.04,66.09,632.0,Cowboys,Cowboys,43,Starter,26,LB,Linebacker,2016
+Ryan Shazier,67.38,67.2,65.42,968.0,Steelers,Steelers,44,Starter,27,LB,Linebacker,2016
+Lavonte David,67.28,63.7,65.91,1042.0,Buccaneers,Buccaneers,45,Starter,28,LB,Linebacker,2016
+Sean Spence,67.04,63.29,66.84,503.0,Titans,Titans,46,Starter,29,LB,Linebacker,2016
+Myles Jack,66.73,62.43,67.51,239.0,Jaguars,Jaguars,47,Starter,30,LB,Linebacker,2016
+Jake Ryan,65.71,61.1,66.57,686.0,Packers,Packers,48,Starter,31,LB,Linebacker,2016
+Damien Wilson,65.68,65.7,68.92,289.0,Cowboys,Cowboys,49,Starter,32,LB,Linebacker,2016
+Demario Davis,65.42,61.47,63.88,786.0,Browns,Browns,50,Starter,33,LB,Linebacker,2016
+Elandon Roberts,65.37,61.49,64.82,344.0,Patriots,Patriots,51,Starter,34,LB,Linebacker,2016
+Danny Trevathan,65.35,64.49,68.1,565.0,Bears,Bears,52,Starter,35,LB,Linebacker,2016
+Alec Ogletree,65.26,63.3,66.15,1090.0,Rams,Rams,53,Starter,36,LB,Linebacker,2016
+Preston Brown,64.81,60.2,63.72,1066.0,Bills,Bills,54,Starter,37,LB,Linebacker,2016
+Corey Nelson,64.77,61.14,65.73,543.0,Broncos,Broncos,55,Starter,38,LB,Linebacker,2016
+Kiko Alonso,64.76,61.3,64.46,1106.0,Dolphins,Dolphins,56,Starter,39,LB,Linebacker,2016
+Lawrence Timmons,64.7,59.2,64.2,1145.0,Steelers,Steelers,57,Starter,40,LB,Linebacker,2016
+Vince Williams,64.46,61.54,65.26,268.0,Steelers,Steelers,58,Starter,41,LB,Linebacker,2016
+Deone Bucannon,64.38,61.4,65.33,819.0,Cardinals,Cardinals,59,Starter,42,LB,Linebacker,2016
+DeAndre Levy,64.16,63.57,70.29,248.0,Lions,Lions,60,Starter,43,LB,Linebacker,2016
+Jonathan Casillas,64.12,59.7,64.25,850.0,Giants,Giants,61,Starter,44,LB,Linebacker,2016
+Spencer Paysinger,64.08,63.25,64.63,334.0,Dolphins,Dolphins,62,Starter,45,LB,Linebacker,2016
+Blake Martinez,63.93,58.32,63.51,480.0,Packers,Packers,63,Starter,46,LB,Linebacker,2016
+Mychal Kendricks,63.88,62.98,62.6,273.0,Eagles,Eagles,64,Starter,47,LB,Linebacker,2016
+Craig Robertson,63.87,59.9,64.12,970.0,Saints,Saints,65,Starter,48,LB,Linebacker,2016
+Paul Worrilow,63.64,59.82,65.45,167.0,Falcons,Falcons,66,Starter,49,LB,Linebacker,2016
+Daryl Smith,63.61,57.86,63.28,476.0,Buccaneers,Buccaneers,67,Starter,50,LB,Linebacker,2016
+Philip Wheeler,63.27,59.53,64.0,367.0,Falcons,Falcons,68,Starter,51,LB,Linebacker,2016
+Michael Morgan,63.22,62.13,66.44,175.0,Seahawks,Seahawks,69,Starter,52,LB,Linebacker,2016
+Joe Thomas,62.95,57.02,62.74,809.0,Packers,Packers,70,Starter,53,LB,Linebacker,2016
+Kyle Van Noy,62.6,61.22,62.37,624.0,Patriots,Patriots,71,Starter,54,LB,Linebacker,2016
+Antonio Morrison,62.43,57.51,63.63,333.0,Colts,Colts,72,Starter,55,LB,Linebacker,2016
+Sio Moore,62.39,63.04,65.19,411.0,Cardinals,Cardinals,73,Starter,56,LB,Linebacker,2016
+Brock Coyle,62.33,62.32,68.81,128.0,Seahawks,Seahawks,74,Starter,57,LB,Linebacker,2016
+Malcolm Smith,62.03,55.5,63.47,971.0,Raiders,Raiders,75,Starter,58,LB,Linebacker,2016
+Denzel Perryman,61.86,59.46,63.08,481.0,Chargers,Chargers,76,Rotation/backup,1,LB,Linebacker,2016
+Justin Durant,61.37,56.74,64.36,298.0,Cowboys,Cowboys,77,Rotation/backup,2,LB,Linebacker,2016
+Akeem Dent,61.36,59.92,65.34,115.0,Texans,Texans,78,Rotation/backup,3,LB,Linebacker,2016
+Edwin Jackson,61.32,60.16,64.18,495.0,Colts,Colts,79,Rotation/backup,4,LB,Linebacker,2016
+Nick Kwiatkoski,61.31,59.33,61.6,458.0,Bears,Bears,80,Rotation/backup,5,LB,Linebacker,2016
+Chad Greenway,60.94,56.37,60.66,399.0,Vikings,Vikings,81,Rotation/backup,6,LB,Linebacker,2016
+Josh Bynes,60.4,57.92,61.85,421.0,Lions,Lions,82,Rotation/backup,7,LB,Linebacker,2016
+Donald Butler,60.25,51.92,63.52,379.0,Dolphins,Dolphins,83,Rotation/backup,8,LB,Linebacker,2016
+Koa Misi,59.86,60.19,64.23,128.0,Dolphins,Dolphins,84,Rotation/backup,9,LB,Linebacker,2016
+De'Vondre Campbell,59.63,55.98,59.98,715.0,Falcons,Falcons,85,Rotation/backup,10,LB,Linebacker,2016
+Neville Hewitt,59.5,52.84,61.72,374.0,Dolphins,Dolphins,86,Rotation/backup,11,LB,Linebacker,2016
+Will Compton,59.46,53.7,60.49,937.0,Commanders,Commanders,87,Rotation/backup,12,LB,Linebacker,2016
+Zachary Orr,59.23,54.8,62.38,961.0,Ravens,Ravens,88,Rotation/backup,13,LB,Linebacker,2016
+Keenan Robinson,58.54,49.8,62.09,844.0,Giants,Giants,89,Rotation/backup,14,LB,Linebacker,2016
+Tahir Whitehead,58.21,48.8,60.31,998.0,Lions,Lions,90,Rotation/backup,15,LB,Linebacker,2016
+Nick Bellore,58.02,59.36,62.12,692.0,49ers,49ers,91,Rotation/backup,16,LB,Linebacker,2016
+Cory Littleton,57.98,58.16,59.94,123.0,Rams,Rams,92,Rotation/backup,17,LB,Linebacker,2016
+Nate Stupar,57.9,54.71,60.44,377.0,Saints,Saints,93,Rotation/backup,18,LB,Linebacker,2016
+Michael Wilhoite,57.64,48.01,62.18,510.0,49ers,49ers,94,Rotation/backup,19,LB,Linebacker,2016
+Sean Weatherspoon,57.6,58.41,61.02,190.0,Falcons,Falcons,95,Rotation/backup,20,LB,Linebacker,2016
+LaRoy Reynolds,57.55,54.91,62.32,143.0,Falcons,Falcons,96,Rotation/backup,21,LB,Linebacker,2016
+Dannell Ellerbe,57.47,58.97,62.2,443.0,Saints,Saints,97,Rotation/backup,22,LB,Linebacker,2016
+A.J. Klein,56.86,51.44,58.8,350.0,Panthers,Panthers,98,Rotation/backup,23,LB,Linebacker,2016
+Anthony Barr,56.78,50.6,57.89,1025.0,Vikings,Vikings,99,Rotation/backup,24,LB,Linebacker,2016
+Ben Heeney,56.74,57.73,61.3,135.0,Raiders,Raiders,100,Rotation/backup,25,LB,Linebacker,2016
+D'Qwell Jackson,56.6,49.85,59.02,708.0,Colts,Colts,101,Rotation/backup,26,LB,Linebacker,2016
+Nick Vigil,56.42,54.56,58.69,111.0,Bengals,Bengals,102,Rotation/backup,27,LB,Linebacker,2016
+Justin March-Lillard,56.32,60.53,65.31,159.0,Chiefs,Chiefs,103,Rotation/backup,28,LB,Linebacker,2016
+Mike Hull,56.21,59.2,64.05,111.0,Dolphins,Dolphins,104,Rotation/backup,29,LB,Linebacker,2016
+Cory James,55.96,50.17,58.78,410.0,Raiders,Raiders,105,Rotation/backup,30,LB,Linebacker,2016
+Darron Lee,55.22,47.18,59.54,641.0,Jets,Jets,106,Rotation/backup,31,LB,Linebacker,2016
+Antwione Williams,55.02,53.27,56.18,204.0,Lions,Lions,107,Rotation/backup,32,LB,Linebacker,2016
+Stephone Anthony,54.4,50.01,58.36,133.0,Saints,Saints,108,Rotation/backup,33,LB,Linebacker,2016
+Kelvin Sheppard,54.36,44.36,58.94,459.0,Giants,Giants,109,Rotation/backup,34,LB,Linebacker,2016
+Manti Te'o,54.05,55.38,58.27,142.0,Chargers,Chargers,110,Rotation/backup,35,LB,Linebacker,2016
+Rey Maualuga,53.94,45.69,56.94,326.0,Bengals,Bengals,111,Rotation/backup,36,LB,Linebacker,2016
+John Timu,53.51,55.88,59.34,184.0,Bears,Bears,112,Rotation/backup,37,LB,Linebacker,2016
+Martrell Spaight,53.49,53.24,56.85,150.0,Commanders,Commanders,113,Rotation/backup,38,LB,Linebacker,2016
+Erin Henderson,52.57,48.11,58.77,168.0,Jets,Jets,114,Rotation/backup,39,LB,Linebacker,2016
+Josh McNary,51.54,47.65,56.63,178.0,Colts,Colts,115,Rotation/backup,40,LB,Linebacker,2016
+Jelani Jenkins,49.04,40.0,55.17,406.0,Dolphins,Dolphins,116,Rotation/backup,41,LB,Linebacker,2016
+Julian Stanford,46.9,43.36,54.16,244.0,Jets,Jets,117,Rotation/backup,42,LB,Linebacker,2016
+Matt Ryan,87.67,87.96,82.88,738.0,Falcons,Falcons,1,Elite,1,QB,Quarterback,2016
+Tom Brady,87.57,91.97,79.43,654.0,Patriots,Patriots,2,Elite,2,QB,Quarterback,2016
+Aaron Rodgers,82.89,86.42,75.46,882.0,Packers,Packers,3,Elite,3,QB,Quarterback,2016
+Drew Brees,82.68,83.65,77.34,739.0,Saints,Saints,4,Elite,4,QB,Quarterback,2016
+Ben Roethlisberger,81.03,82.47,75.61,674.0,Steelers,Steelers,5,Elite,5,QB,Quarterback,2016
+Russell Wilson,80.43,81.58,74.95,741.0,Seahawks,Seahawks,6,Elite,6,QB,Quarterback,2016
+Andrew Luck,78.76,82.27,73.4,677.0,Colts,Colts,7,Good,1,QB,Quarterback,2016
+Kirk Cousins,78.65,76.93,76.69,675.0,Commanders,Commanders,8,Good,2,QB,Quarterback,2016
+Derek Carr,78.07,81.21,71.24,643.0,Raiders,Raiders,9,Good,3,QB,Quarterback,2016
+Sam Bradford,76.68,75.74,74.39,626.0,Vikings,Vikings,10,Good,4,QB,Quarterback,2016
+Carson Palmer,74.98,77.26,69.67,694.0,Cardinals,Cardinals,11,Good,5,QB,Quarterback,2016
+Matthew Stafford,74.48,74.44,69.96,742.0,Lions,Lions,12,Good,6,QB,Quarterback,2016
+Andy Dalton,73.61,71.7,72.08,660.0,Bengals,Bengals,13,Starter,1,QB,Quarterback,2016
+Alex Smith,73.27,74.94,68.12,607.0,Chiefs,Chiefs,14,Starter,2,QB,Quarterback,2016
+Ryan Tannehill,72.81,70.81,73.27,456.0,Dolphins,Dolphins,15,Starter,3,QB,Quarterback,2016
+Philip Rivers,72.37,70.52,69.33,659.0,Chargers,Chargers,16,Starter,4,QB,Quarterback,2016
+Dak Prescott,72.33,81.38,76.0,586.0,Cowboys,Cowboys,17,Starter,5,QB,Quarterback,2016
+Jameis Winston,70.99,70.93,66.58,689.0,Buccaneers,Buccaneers,18,Starter,6,QB,Quarterback,2016
+Cam Newton,70.96,74.12,64.86,596.0,Panthers,Panthers,19,Starter,7,QB,Quarterback,2016
+Tyrod Taylor,70.9,74.29,67.88,567.0,Bills,Bills,20,Starter,8,QB,Quarterback,2016
+Marcus Mariota,69.72,65.44,72.56,541.0,Titans,Titans,21,Starter,9,QB,Quarterback,2016
+Eli Manning,67.19,64.31,65.0,705.0,Giants,Giants,22,Starter,10,QB,Quarterback,2016
+Joe Flacco,66.44,66.35,63.29,759.0,Ravens,Ravens,23,Starter,11,QB,Quarterback,2016
+Brian Hoyer,64.95,65.14,69.75,216.0,Bears,Bears,24,Starter,12,QB,Quarterback,2016
+Carson Wentz,64.69,68.3,60.24,700.0,Eagles,Eagles,25,Starter,13,QB,Quarterback,2016
+Cody Kessler,61.86,67.48,68.45,235.0,Browns,Browns,26,Rotation/backup,1,QB,Quarterback,2016
+Matt Moore,61.76,59.16,76.87,136.0,Dolphins,Dolphins,27,Rotation/backup,2,QB,Quarterback,2016
+Jay Cutler,61.44,62.48,65.4,167.0,Bears,Bears,28,Rotation/backup,3,QB,Quarterback,2016
+Blake Bortles,61.0,56.45,60.35,745.0,Jaguars,Jaguars,29,Rotation/backup,4,QB,Quarterback,2016
+Matt Barkley,60.67,68.24,64.88,241.0,Bears,Bears,30,Rotation/backup,5,QB,Quarterback,2016
+Trevor Siemian,59.99,56.36,64.85,566.0,Broncos,Broncos,31,Rotation/backup,6,QB,Quarterback,2016
+Colin Kaepernick,59.69,55.34,65.12,421.0,49ers,49ers,32,Rotation/backup,7,QB,Quarterback,2016
+Ryan Fitzpatrick,59.18,57.82,59.72,466.0,Jets,Jets,33,Rotation/backup,8,QB,Quarterback,2016
+Case Keenum,58.35,59.48,61.21,373.0,Rams,Rams,34,Rotation/backup,9,QB,Quarterback,2016
+Paxton Lynch,56.58,55.92,58.59,107.0,Broncos,Broncos,35,Rotation/backup,10,QB,Quarterback,2016
+Josh McCown,55.78,58.65,59.81,199.0,Browns,Browns,36,Rotation/backup,11,QB,Quarterback,2016
+Bryce Petty,55.61,53.52,56.67,157.0,Jets,Jets,37,Rotation/backup,12,QB,Quarterback,2016
+Blaine Gabbert,55.46,55.51,56.94,198.0,49ers,49ers,38,Rotation/backup,13,QB,Quarterback,2016
+Robert Griffin III,55.33,58.54,59.22,194.0,Browns,Browns,39,Rotation/backup,14,QB,Quarterback,2016
+Brock Osweiler,54.96,52.35,56.47,659.0,Texans,Texans,40,Rotation/backup,15,QB,Quarterback,2016
+Jared Goff,54.73,48.95,54.38,253.0,Rams,Rams,41,Rotation/backup,16,QB,Quarterback,2016
+Devin McCourty,94.97,92.1,92.72,1209.0,Patriots,Patriots,1,Elite,1,S,Safety,2016
+Eric Weddle,92.27,88.7,91.42,1031.0,Ravens,Ravens,2,Elite,2,S,Safety,2016
+Eric Berry,90.67,90.3,88.83,1151.0,Chiefs,Chiefs,3,Elite,3,S,Safety,2016
+Ricardo Allen,87.2,85.8,83.97,1322.0,Falcons,Falcons,4,Elite,4,S,Safety,2016
+Keith Tandy,86.18,81.29,88.4,402.0,Buccaneers,Buccaneers,5,Elite,5,S,Safety,2016
+Quintin Demps,84.66,81.41,84.23,709.0,Texans,Texans,6,Elite,6,S,Safety,2016
+Barry Church,82.62,80.05,82.05,724.0,Cowboys,Cowboys,7,Elite,7,S,Safety,2016
+Glover Quin,82.59,79.3,80.61,1099.0,Lions,Lions,8,Elite,8,S,Safety,2016
+Kam Chancellor,82.49,78.5,82.97,854.0,Seahawks,Seahawks,9,Elite,9,S,Safety,2016
+D.J. Swearinger Sr.,82.43,82.8,79.9,839.0,Cardinals,Cardinals,10,Elite,10,S,Safety,2016
+Reshad Jones,82.11,82.09,84.01,437.0,Dolphins,Dolphins,11,Elite,11,S,Safety,2016
+J.J. Wilcox,81.6,78.75,80.36,573.0,Cowboys,Cowboys,12,Elite,12,S,Safety,2016
+Keanu Neal,80.83,80.3,77.02,1136.0,Falcons,Falcons,13,Elite,13,S,Safety,2016
+Landon Collins,80.15,73.4,80.49,1176.0,Giants,Giants,14,Elite,14,S,Safety,2016
+Earl Thomas III,78.56,79.28,76.51,693.0,Seahawks,Seahawks,15,Good,1,S,Safety,2016
+Tavon Wilson,78.33,72.99,77.72,775.0,Lions,Lions,16,Good,2,S,Safety,2016
+Ron Parker,77.48,74.5,75.3,1168.0,Chiefs,Chiefs,17,Good,3,S,Safety,2016
+Mike Mitchell,77.46,71.2,77.46,1197.0,Steelers,Steelers,18,Good,4,S,Safety,2016
+Kurt Coleman,77.44,72.5,77.3,996.0,Panthers,Panthers,19,Good,5,S,Safety,2016
+Daniel Sorensen,77.26,77.08,77.38,573.0,Chiefs,Chiefs,20,Good,6,S,Safety,2016
+Morgan Burnett,77.22,71.3,77.93,1096.0,Packers,Packers,21,Good,7,S,Safety,2016
+Maurice Alexander,77.13,79.8,73.79,920.0,Rams,Rams,22,Good,8,S,Safety,2016
+Jeff Heath,76.82,70.45,79.81,263.0,Cowboys,Cowboys,23,Good,9,S,Safety,2016
+Jahleel Addae,76.71,75.96,79.2,510.0,Chargers,Chargers,24,Good,10,S,Safety,2016
+Justin Simmons,76.32,69.19,81.07,294.0,Broncos,Broncos,25,Good,11,S,Safety,2016
+Malcolm Jenkins,76.02,74.7,72.74,1018.0,Eagles,Eagles,26,Good,12,S,Safety,2016
+Darian Stewart,75.59,72.8,73.29,1080.0,Broncos,Broncos,27,Good,13,S,Safety,2016
+Dwight Lowery,75.34,73.1,72.66,1003.0,Chargers,Chargers,28,Good,14,S,Safety,2016
+Eddie Pleasant,75.29,73.81,74.19,285.0,Texans,Texans,29,Good,15,S,Safety,2016
+Mike Adams,75.21,70.1,75.91,997.0,Colts,Colts,30,Good,16,S,Safety,2016
+Reggie Nelson,75.04,69.3,74.7,1121.0,Raiders,Raiders,31,Good,17,S,Safety,2016
+Jairus Byrd,75.03,70.5,77.31,900.0,Saints,Saints,32,Good,18,S,Safety,2016
+George Iloka,74.72,69.4,75.03,1050.0,Bengals,Bengals,33,Good,19,S,Safety,2016
+Rodney McLeod,74.57,70.1,73.39,1014.0,Eagles,Eagles,34,Good,20,S,Safety,2016
+Duron Harmon,73.99,70.38,72.23,617.0,Patriots,Patriots,35,Starter,1,S,Safety,2016
+Harrison Smith,73.97,68.5,75.11,894.0,Vikings,Vikings,36,Starter,2,S,Safety,2016
+Ha Ha Clinton-Dix,73.77,63.1,76.72,1231.0,Packers,Packers,37,Starter,3,S,Safety,2016
+Adrian Amos,73.52,70.3,72.54,938.0,Bears,Bears,38,Starter,4,S,Safety,2016
+Isa Abdul-Quddus,73.37,70.2,72.47,952.0,Dolphins,Dolphins,39,Starter,5,S,Safety,2016
+Shawn Williams,72.14,67.0,73.49,912.0,Bengals,Bengals,40,Starter,6,S,Safety,2016
+Rontez Miles,72.01,64.42,75.41,393.0,Jets,Jets,41,Starter,7,S,Safety,2016
+Karl Joseph,71.86,66.17,76.69,623.0,Raiders,Raiders,42,Starter,8,S,Safety,2016
+Corey Graham,71.08,67.9,69.04,1053.0,Bills,Bills,43,Starter,9,S,Safety,2016
+Kevin Byard,70.96,65.44,70.47,656.0,Titans,Titans,44,Starter,10,S,Safety,2016
+Tre Boston,70.14,65.4,71.01,840.0,Panthers,Panthers,45,Starter,11,S,Safety,2016
+Da'Norris Searcy,70.05,65.65,70.39,553.0,Titans,Titans,46,Starter,12,S,Safety,2016
+T.J. McDonald,69.66,68.8,67.63,1072.0,Rams,Rams,47,Starter,13,S,Safety,2016
+Dexter McCoil,69.18,66.69,71.87,248.0,Chargers,Chargers,48,Starter,14,S,Safety,2016
+Tony Jefferson,69.04,59.5,72.27,931.0,Cardinals,Cardinals,49,Starter,15,S,Safety,2016
+Clayton Geathers,68.35,64.53,72.07,559.0,Colts,Colts,50,Starter,16,S,Safety,2016
+T.J. Ward,68.16,65.2,67.31,984.0,Broncos,Broncos,51,Starter,17,S,Safety,2016
+Bradley McDougald,67.99,62.9,67.63,1012.0,Buccaneers,Buccaneers,52,Starter,18,S,Safety,2016
+Corey Moore,67.85,60.7,70.53,501.0,Texans,Texans,53,Starter,19,S,Safety,2016
+Miles Killebrew,67.69,62.1,68.29,158.0,Lions,Lions,54,Starter,20,S,Safety,2016
+Kentrell Brice,67.22,60.06,67.82,334.0,Packers,Packers,55,Starter,21,S,Safety,2016
+Marcus Gilchrist,67.15,60.2,69.18,819.0,Jets,Jets,56,Starter,22,S,Safety,2016
+Chris Prosinski,67.11,60.92,73.42,173.0,Bears,Bears,57,Starter,23,S,Safety,2016
+Johnathan Cyprien,67.02,59.1,68.97,1070.0,Jaguars,Jaguars,58,Starter,24,S,Safety,2016
+Kenny Vaccaro,66.56,61.68,68.47,720.0,Saints,Saints,59,Starter,25,S,Safety,2016
+Harold Jones-Quartey,65.21,57.27,67.37,731.0,Bears,Bears,60,Starter,26,S,Safety,2016
+Tyrann Mathieu,64.96,60.33,67.43,561.0,Cardinals,Cardinals,61,Starter,27,S,Safety,2016
+Nate Allen,64.91,62.59,70.62,232.0,Raiders,Raiders,62,Starter,28,S,Safety,2016
+Rashad Johnson,64.85,60.54,64.59,555.0,Titans,Titans,63,Starter,29,S,Safety,2016
+Andre Hal,64.71,59.5,64.33,949.0,Texans,Texans,64,Starter,30,S,Safety,2016
+Rafael Bush,64.17,60.24,68.55,512.0,Lions,Lions,65,Starter,31,S,Safety,2016
+Daimion Stafford,64.06,59.05,65.12,613.0,Titans,Titans,66,Starter,32,S,Safety,2016
+Jaylen Watkins,63.75,55.69,65.48,387.0,Eagles,Eagles,67,Starter,33,S,Safety,2016
+Jaquiski Tartt,63.4,59.22,63.06,612.0,49ers,49ers,68,Starter,34,S,Safety,2016
+Andrew Sendejo,63.37,60.4,64.1,855.0,Vikings,Vikings,69,Starter,35,S,Safety,2016
+Sean Davis,63.31,60.5,61.01,930.0,Steelers,Steelers,70,Starter,36,S,Safety,2016
+Cody Davis,63.29,62.79,66.03,278.0,Rams,Rams,71,Starter,37,S,Safety,2016
+Antoine Bethea,62.82,54.1,67.28,1125.0,49ers,49ers,72,Starter,38,S,Safety,2016
+Eric Reid,62.24,56.02,65.55,742.0,49ers,49ers,73,Starter,39,S,Safety,2016
+Kemal Ishmael,62.22,57.43,64.48,310.0,Falcons,Falcons,74,Starter,40,S,Safety,2016
+Duke Ihenacho,62.0,66.51,63.67,638.0,Commanders,Commanders,75,Starter,41,S,Safety,2016
+Donte Whitner,61.99,53.55,66.69,564.0,Commanders,Commanders,76,Rotation/backup,1,S,Safety,2016
+Jordan Dangerfield,61.94,64.02,63.69,145.0,Steelers,Steelers,77,Rotation/backup,2,S,Safety,2016
+Jordan Poyer,61.91,56.0,68.98,354.0,Browns,Browns,78,Rotation/backup,3,S,Safety,2016
+Will Parks,61.73,56.07,62.37,268.0,Broncos,Broncos,79,Rotation/backup,4,S,Safety,2016
+Derron Smith,61.33,60.8,65.98,103.0,Bengals,Bengals,80,Rotation/backup,5,S,Safety,2016
+Tashaun Gipson Sr.,60.19,47.4,66.53,1040.0,Jaguars,Jaguars,81,Rotation/backup,6,S,Safety,2016
+Deon Bush,60.13,61.33,63.5,333.0,Bears,Bears,82,Rotation/backup,7,S,Safety,2016
+Michael Thomas,59.61,53.85,61.16,620.0,Dolphins,Dolphins,83,Rotation/backup,8,S,Safety,2016
+Vonn Bell,59.19,44.6,65.79,889.0,Saints,Saints,84,Rotation/backup,9,S,Safety,2016
+Robert Blanton,59.16,55.82,61.8,270.0,Bills,Bills,85,Rotation/backup,10,S,Safety,2016
+Roman Harper,59.09,57.23,58.24,300.0,Saints,Saints,86,Rotation/backup,11,S,Safety,2016
+Patrick Chung,58.88,48.3,61.77,1176.0,Patriots,Patriots,87,Rotation/backup,12,S,Safety,2016
+Adrian Phillips,58.47,48.81,62.83,542.0,Chargers,Chargers,88,Rotation/backup,13,S,Safety,2016
+Derrick Kindred,58.27,55.4,60.18,538.0,Browns,Browns,89,Rotation/backup,14,S,Safety,2016
+James Ihedigbo,58.22,59.15,60.42,146.0,Bills,Bills,90,Rotation/backup,15,S,Safety,2016
+Michael Griffin,57.61,55.31,57.9,284.0,Panthers,Panthers,91,Rotation/backup,16,S,Safety,2016
+Aaron Williams,57.29,56.62,62.54,340.0,Bills,Bills,92,Rotation/backup,17,S,Safety,2016
+Robert Golden,57.23,53.47,59.93,382.0,Steelers,Steelers,93,Rotation/backup,18,S,Safety,2016
+Chris Conte,55.98,49.09,58.9,718.0,Buccaneers,Buccaneers,94,Rotation/backup,19,S,Safety,2016
+Ed Reynolds Jr.,55.79,52.65,62.05,505.0,Browns,Browns,95,Rotation/backup,20,S,Safety,2016
+Bacarri Rambo,55.2,50.91,59.41,525.0,Dolphins,Dolphins,96,Rotation/backup,21,S,Safety,2016
+Calvin Pryor,55.11,46.55,58.32,814.0,Jets,Jets,97,Rotation/backup,22,S,Safety,2016
+Anthony Harris,55.01,51.09,64.39,235.0,Vikings,Vikings,98,Rotation/backup,23,S,Safety,2016
+Ibraheim Campbell,53.65,53.74,57.62,418.0,Browns,Browns,99,Rotation/backup,24,S,Safety,2016
+Keith McGill,53.26,51.73,53.76,150.0,Raiders,Raiders,100,Rotation/backup,25,S,Safety,2016
+Kelcie McCray,52.3,50.44,55.94,344.0,Seahawks,Seahawks,101,Rotation/backup,26,S,Safety,2016
+Nat Berhe,52.2,54.14,56.5,165.0,Giants,Giants,102,Rotation/backup,27,S,Safety,2016
+T.J. Green,48.67,40.0,51.32,478.0,Colts,Colts,103,Rotation/backup,28,S,Safety,2016
+Blake Countess,45.0,47.1,55.63,142.0,Rams,Rams,104,Rotation/backup,29,S,Safety,2016
+Trent Williams,95.96,90.71,95.29,795.0,Commanders,Commanders,1,Elite,1,T,Tackle,2016
+Donald Penn,94.82,90.0,93.86,1108.0,Raiders,Raiders,2,Elite,2,T,Tackle,2016
+Taylor Lewan,93.12,87.0,93.03,991.0,Titans,Titans,3,Elite,3,T,Tackle,2016
+Marcus Cannon,92.74,86.6,92.67,1272.0,Patriots,Patriots,4,Elite,4,T,Tackle,2016
+Jason Peters,92.06,86.9,91.33,1098.0,Eagles,Eagles,5,Elite,5,T,Tackle,2016
+Ryan Schraeder,90.53,83.4,91.12,1223.0,Falcons,Falcons,6,Elite,6,T,Tackle,2016
+Tyron Smith,90.34,85.23,89.58,902.0,Cowboys,Cowboys,7,Elite,7,T,Tackle,2016
+Joe Thomas,89.94,87.0,87.73,1030.0,Browns,Browns,8,Elite,8,T,Tackle,2016
+Duane Brown,89.71,85.66,88.25,918.0,Texans,Texans,9,Elite,9,T,Tackle,2016
+Andrew Whitworth,89.29,84.0,88.65,1064.0,Bengals,Bengals,10,Elite,10,T,Tackle,2016
+David Bakhtiari,89.02,86.6,86.47,1257.0,Packers,Packers,11,Elite,11,T,Tackle,2016
+Lane Johnson,88.88,79.17,91.18,407.0,Eagles,Eagles,12,Elite,12,T,Tackle,2016
+Anthony Castonzo,87.77,83.4,86.51,1074.0,Colts,Colts,13,Elite,13,T,Tackle,2016
+Nate Solder,87.57,82.2,86.99,1270.0,Patriots,Patriots,14,Elite,14,T,Tackle,2016
+Taylor Decker,87.0,81.9,86.23,1089.0,Lions,Lions,15,Elite,15,T,Tackle,2016
+Jack Conklin,86.66,80.6,86.54,1062.0,Titans,Titans,16,Elite,16,T,Tackle,2016
+Marcus Gilbert,86.01,78.5,86.85,1038.0,Steelers,Steelers,17,Elite,17,T,Tackle,2016
+Joe Staley,85.97,80.17,85.67,845.0,49ers,49ers,18,Elite,18,T,Tackle,2016
+Terron Armstead,85.82,77.65,87.1,397.0,Saints,Saints,19,Elite,19,T,Tackle,2016
+Eric Fisher,85.59,77.7,86.68,1078.0,Chiefs,Chiefs,20,Elite,20,T,Tackle,2016
+Alejandro Villanueva,85.47,79.9,85.02,1276.0,Steelers,Steelers,21,Elite,21,T,Tackle,2016
+Zach Strief,84.69,77.4,85.38,1125.0,Saints,Saints,22,Elite,22,T,Tackle,2016
+Morgan Moses,84.5,76.8,85.46,1017.0,Commanders,Commanders,23,Elite,23,T,Tackle,2016
+Cordy Glenn,84.35,76.11,85.67,657.0,Bills,Bills,24,Elite,24,T,Tackle,2016
+Bryan Bulaga,83.74,78.1,83.33,1256.0,Packers,Packers,25,Elite,25,T,Tackle,2016
+Demar Dotson,83.61,74.01,85.85,942.0,Buccaneers,Buccaneers,26,Elite,26,T,Tackle,2016
+Ja'Wuan James,83.59,75.2,85.02,1000.0,Dolphins,Dolphins,27,Elite,27,T,Tackle,2016
+Jared Veldheer,83.14,74.18,84.94,578.0,Cardinals,Cardinals,28,Elite,28,T,Tackle,2016
+Jermey Parnell,82.91,73.0,85.35,1113.0,Jaguars,Jaguars,29,Elite,29,T,Tackle,2016
+Mitchell Schwartz,82.29,73.4,84.05,1078.0,Chiefs,Chiefs,30,Elite,30,T,Tackle,2016
+Ty Nsekhe,82.1,71.44,85.04,385.0,Commanders,Commanders,31,Elite,31,T,Tackle,2016
+Russell Okung,82.03,74.0,83.21,1061.0,Broncos,Broncos,32,Elite,32,T,Tackle,2016
+Ronnie Stanley,81.74,73.62,82.98,834.0,Ravens,Ravens,33,Elite,33,T,Tackle,2016
+Rick Wagner,81.37,73.74,82.29,926.0,Ravens,Ravens,34,Elite,34,T,Tackle,2016
+Cam Fleming,81.34,67.52,86.39,301.0,Patriots,Patriots,35,Elite,35,T,Tackle,2016
+Austin Pasztor,80.42,71.8,82.0,1020.0,Browns,Browns,36,Elite,36,T,Tackle,2016
+Mike Remmers,80.14,71.2,81.94,1106.0,Panthers,Panthers,37,Elite,37,T,Tackle,2016
+Jake Matthews,80.08,71.9,81.37,1172.0,Falcons,Falcons,38,Elite,38,T,Tackle,2016
+Cyrus Kouandjio,79.82,69.5,82.53,406.0,Bills,Bills,39,Good,1,T,Tackle,2016
+Ereck Flowers,79.51,69.4,82.08,1125.0,Giants,Giants,40,Good,2,T,Tackle,2016
+D.J. Humphries,79.18,68.03,82.45,922.0,Cardinals,Cardinals,41,Good,3,T,Tackle,2016
+Charles Leno Jr.,79.18,70.1,81.06,1011.0,Bears,Bears,42,Good,4,T,Tackle,2016
+Riley Reiff,78.08,68.82,80.08,888.0,Lions,Lions,43,Good,5,T,Tackle,2016
+Doug Free,77.93,67.5,80.72,1126.0,Cowboys,Cowboys,44,Good,6,T,Tackle,2016
+Austin Howard,77.3,66.75,80.16,792.0,Raiders,Raiders,45,Good,7,T,Tackle,2016
+Halapoulivaati Vaitai,77.3,65.75,80.84,421.0,Eagles,Eagles,46,Good,8,T,Tackle,2016
+Menelik Watson,77.29,62.54,82.95,328.0,Raiders,Raiders,47,Good,9,T,Tackle,2016
+Marshall Newhouse,76.88,64.08,81.24,524.0,Giants,Giants,48,Good,10,T,Tackle,2016
+Daryl Williams,76.64,66.08,79.52,647.0,Panthers,Panthers,49,Good,11,T,Tackle,2016
+King Dunlap,76.57,67.55,78.42,775.0,Chargers,Chargers,50,Good,12,T,Tackle,2016
+Bobby Massie,76.45,66.56,78.88,916.0,Bears,Bears,51,Good,13,T,Tackle,2016
+Eric Winston,76.39,63.82,80.61,282.0,Bengals,Bengals,52,Good,14,T,Tackle,2016
+Donovan Smith,76.01,63.9,79.91,1135.0,Buccaneers,Buccaneers,53,Good,15,T,Tackle,2016
+Kendall Lamm,75.3,63.5,79.0,167.0,Texans,Texans,54,Good,16,T,Tackle,2016
+Ryan Clady,75.3,64.89,78.08,537.0,Jets,Jets,55,Good,17,T,Tackle,2016
+Le'Raven Clark,75.11,61.94,79.72,201.0,Colts,Colts,56,Good,18,T,Tackle,2016
+Brent Qvale,74.6,61.42,79.22,347.0,Jets,Jets,57,Good,19,T,Tackle,2016
+Trent Brown,74.31,61.9,78.42,1035.0,49ers,49ers,58,Good,20,T,Tackle,2016
+Chris Hubbard,74.16,64.78,76.25,351.0,Steelers,Steelers,59,Good,21,T,Tackle,2016
+Ben Ijalana,73.96,63.57,76.72,867.0,Jets,Jets,60,Starter,1,T,Tackle,2016
+Jake Long,73.39,61.83,76.93,209.0,Vikings,Vikings,61,Starter,2,T,Tackle,2016
+Derek Newton,73.32,60.99,77.38,358.0,Texans,Texans,62,Starter,3,T,Tackle,2016
+Jordan Mills,72.97,61.8,76.25,1033.0,Bills,Bills,63,Starter,4,T,Tackle,2016
+Vadal Alexander,72.91,57.27,79.17,306.0,Raiders,Raiders,64,Starter,5,T,Tackle,2016
+Cedric Ogbuehi,72.87,60.5,76.95,677.0,Bengals,Bengals,65,Starter,6,T,Tackle,2016
+Dennis Kelly,72.73,60.28,76.86,146.0,Titans,Titans,66,Starter,7,T,Tackle,2016
+Kelvin Beachum,72.56,61.4,75.83,1024.0,Jaguars,Jaguars,67,Starter,8,T,Tackle,2016
+Michael Oher,72.38,61.55,75.43,232.0,Panthers,Panthers,68,Starter,9,T,Tackle,2016
+Branden Albert,72.29,61.4,75.38,786.0,Dolphins,Dolphins,69,Starter,10,T,Tackle,2016
+John Wetzel,72.12,59.11,76.63,647.0,Cardinals,Cardinals,70,Starter,11,T,Tackle,2016
+James Hurst,72.0,60.5,75.5,305.0,Ravens,Ravens,71,Starter,12,T,Tackle,2016
+Jah Reid,71.85,58.52,76.57,101.0,Chiefs,Chiefs,72,Starter,13,T,Tackle,2016
+Andrew Donnal,71.79,61.92,74.21,297.0,Rams,Rams,73,Starter,14,T,Tackle,2016
+Chris Hairston,71.66,60.0,75.27,327.0,Chargers,Chargers,74,Starter,15,T,Tackle,2016
+Greg Robinson,71.29,59.9,74.72,892.0,Rams,Rams,75,Starter,16,T,Tackle,2016
+Sam Young,71.21,59.64,74.76,146.0,Dolphins,Dolphins,76,Starter,17,T,Tackle,2016
+Bobby Hart,70.99,56.53,76.46,868.0,Giants,Giants,77,Starter,18,T,Tackle,2016
+Ulrick John,70.82,56.29,76.34,212.0,Cardinals,Cardinals,78,Starter,19,T,Tackle,2016
+Chris Clark,70.56,56.9,75.5,1219.0,Texans,Texans,79,Starter,20,T,Tackle,2016
+Brandon Shell,70.54,66.1,69.34,204.0,Jets,Jets,80,Starter,21,T,Tackle,2016
+Garry Gilliam,70.09,56.78,74.8,939.0,Seahawks,Seahawks,81,Starter,22,T,Tackle,2016
+Joe Barksdale,70.08,56.32,75.08,967.0,Chargers,Chargers,82,Starter,23,T,Tackle,2016
+Corey Robinson,69.45,56.64,73.82,165.0,Lions,Lions,83,Starter,24,T,Tackle,2016
+Jake Fisher,69.31,53.26,75.85,296.0,Bengals,Bengals,84,Starter,25,T,Tackle,2016
+Matt Kalil,68.88,55.14,73.87,121.0,Vikings,Vikings,85,Starter,26,T,Tackle,2016
+Bradley Sowell,68.63,54.65,73.78,629.0,Seahawks,Seahawks,86,Starter,27,T,Tackle,2016
+Breno Giacomini,68.27,55.22,72.81,266.0,Jets,Jets,87,Starter,28,T,Tackle,2016
+Gosder Cherilus,65.81,49.35,72.61,219.0,Buccaneers,Buccaneers,88,Starter,29,T,Tackle,2016
+T.J. Clemmings,65.5,47.6,73.26,882.0,Vikings,Vikings,89,Starter,30,T,Tackle,2016
+Jason Spriggs,65.37,54.23,68.63,276.0,Packers,Packers,90,Starter,31,T,Tackle,2016
+Donald Stephenson,65.31,46.18,73.9,744.0,Broncos,Broncos,91,Starter,32,T,Tackle,2016
+Ty Sambrailo,65.25,50.91,70.64,243.0,Broncos,Broncos,92,Starter,33,T,Tackle,2016
+George Fant,62.22,44.49,69.88,792.0,Seahawks,Seahawks,93,Starter,34,T,Tackle,2016
+Rob Gronkowski,85.68,82.4,83.7,214.0,Patriots,Patriots,1,Elite,1,TE,Tight End,2016
+Travis Kelce,85.1,88.19,78.87,607.0,Chiefs,Chiefs,2,Elite,2,TE,Tight End,2016
+Jimmy Graham,83.95,84.73,79.27,603.0,Seahawks,Seahawks,3,Elite,3,TE,Tight End,2016
+Greg Olsen,81.83,82.72,77.07,598.0,Panthers,Panthers,4,Elite,4,TE,Tight End,2016
+Hunter Henry,80.89,75.25,80.49,290.0,Chargers,Chargers,5,Elite,5,TE,Tight End,2016
+Erik Swoope,79.57,65.78,84.59,108.0,Colts,Colts,6,Good,1,TE,Tight End,2016
+Jordan Reed,79.14,80.32,74.18,390.0,Commanders,Commanders,7,Good,2,TE,Tight End,2016
+Cameron Brate,79.13,77.11,76.31,460.0,Buccaneers,Buccaneers,8,Good,3,TE,Tight End,2016
+Jared Cook,77.88,73.37,76.72,340.0,Packers,Packers,9,Good,4,TE,Tight End,2016
+Delanie Walker,77.83,74.58,75.83,479.0,Titans,Titans,10,Good,5,TE,Tight End,2016
+Jeff Heuerman,76.93,66.75,79.55,130.0,Broncos,Broncos,11,Good,6,TE,Tight End,2016
+Ladarius Green,76.89,67.65,78.88,114.0,Steelers,Steelers,12,Good,7,TE,Tight End,2016
+Vernon Davis,76.66,73.46,74.63,357.0,Commanders,Commanders,13,Good,8,TE,Tight End,2016
+Martellus Bennett,76.06,75.13,72.51,608.0,Patriots,Patriots,14,Good,9,TE,Tight End,2016
+Tyler Eifert,75.96,76.21,71.62,269.0,Bengals,Bengals,15,Good,10,TE,Tight End,2016
+C.J. Fiedorowicz,75.34,74.31,71.86,395.0,Texans,Texans,16,Good,11,TE,Tight End,2016
+Gary Barnidge,75.02,68.5,75.2,635.0,Browns,Browns,17,Good,12,TE,Tight End,2016
+Kyle Rudolph,74.98,72.96,72.16,621.0,Vikings,Vikings,18,Good,13,TE,Tight End,2016
+Anthony Fasano,74.89,73.38,71.73,187.0,Titans,Titans,19,Good,14,TE,Tight End,2016
+Zach Ertz,74.76,70.38,73.51,560.0,Eagles,Eagles,20,Good,15,TE,Tight End,2016
+Zach Miller,74.7,70.76,73.16,335.0,Bears,Bears,21,Good,16,TE,Tight End,2016
+Austin Hooper,74.35,65.81,75.87,308.0,Falcons,Falcons,22,Good,17,TE,Tight End,2016
+Antonio Gates,73.55,71.68,70.63,431.0,Chargers,Chargers,23,Starter,1,TE,Tight End,2016
+Charles Clay,72.42,67.56,71.49,500.0,Bills,Bills,24,Starter,2,TE,Tight End,2016
+Jacob Tamme,72.38,67.61,71.4,202.0,Falcons,Falcons,25,Starter,3,TE,Tight End,2016
+Coby Fleener,72.36,61.11,75.7,513.0,Saints,Saints,26,Starter,4,TE,Tight End,2016
+Eric Ebron,72.33,64.95,73.09,555.0,Lions,Lions,27,Starter,5,TE,Tight End,2016
+Austin Seferian-Jenkins,72.17,60.92,75.51,126.0,Jets,Jets,28,Starter,6,TE,Tight End,2016
+Jason Witten,72.1,68.47,70.36,580.0,Cowboys,Cowboys,29,Starter,7,TE,Tight End,2016
+Darren Fells,71.81,61.64,74.43,198.0,Cardinals,Cardinals,30,Starter,8,TE,Tight End,2016
+Brent Celek,71.71,63.89,72.75,188.0,Eagles,Eagles,31,Starter,9,TE,Tight End,2016
+Marcedes Lewis,71.67,64.35,72.39,167.0,Jaguars,Jaguars,32,Starter,10,TE,Tight End,2016
+Vance McDonald,71.49,65.48,71.33,262.0,49ers,49ers,33,Starter,11,TE,Tight End,2016
+Jack Doyle,71.01,72.06,66.14,421.0,Colts,Colts,34,Starter,12,TE,Tight End,2016
+Rhett Ellison,70.9,63.73,71.51,106.0,Vikings,Vikings,35,Starter,13,TE,Tight End,2016
+Mychal Rivera,70.33,62.7,71.25,201.0,Raiders,Raiders,36,Starter,14,TE,Tight End,2016
+Virgil Green,70.03,64.88,69.29,287.0,Broncos,Broncos,37,Starter,15,TE,Tight End,2016
+Clive Walford,70.01,58.58,73.46,409.0,Raiders,Raiders,38,Starter,16,TE,Tight End,2016
+Luke Willson,69.67,60.34,71.73,210.0,Seahawks,Seahawks,39,Starter,17,TE,Tight End,2016
+Lance Kendricks,69.44,63.21,69.43,498.0,Rams,Rams,40,Starter,18,TE,Tight End,2016
+A.J. Derby,69.35,59.31,71.87,139.0,Broncos,Broncos,41,Starter,19,TE,Tight End,2016
+Nick O'Leary,69.14,63.41,68.8,206.0,Bills,Bills,42,Starter,20,TE,Tight End,2016
+Trey Burton,69.06,63.37,68.68,231.0,Eagles,Eagles,43,Starter,21,TE,Tight End,2016
+Ben Koyack,68.57,61.01,69.44,188.0,Jaguars,Jaguars,44,Starter,22,TE,Tight End,2016
+Neal Sterling,68.37,59.58,70.07,118.0,Jaguars,Jaguars,45,Starter,23,TE,Tight End,2016
+Jesse James,68.18,64.5,66.46,580.0,Steelers,Steelers,46,Starter,24,TE,Tight End,2016
+Ed Dickson,67.78,61.43,67.85,216.0,Panthers,Panthers,47,Starter,25,TE,Tight End,2016
+Dwayne Allen,67.7,63.9,66.06,368.0,Colts,Colts,48,Starter,26,TE,Tight End,2016
+Jerell Adams,67.69,57.88,70.07,123.0,Giants,Giants,49,Starter,27,TE,Tight End,2016
+Levine Toilolo,67.24,64.28,65.05,325.0,Falcons,Falcons,50,Starter,28,TE,Tight End,2016
+Richard Rodgers,67.04,57.81,69.02,405.0,Packers,Packers,51,Starter,29,TE,Tight End,2016
+Will Tye,67.02,58.3,68.67,434.0,Giants,Giants,52,Starter,30,TE,Tight End,2016
+Josh Hill,66.91,58.91,68.08,179.0,Saints,Saints,53,Starter,31,TE,Tight End,2016
+Julius Thomas,66.89,61.49,66.33,339.0,Jaguars,Jaguars,54,Starter,32,TE,Tight End,2016
+Garrett Celek,66.87,58.83,68.07,315.0,49ers,49ers,55,Starter,33,TE,Tight End,2016
+Jermaine Gresham,66.74,63.46,64.76,477.0,Cardinals,Cardinals,56,Starter,34,TE,Tight End,2016
+Ryan Griffin,66.58,57.88,68.22,354.0,Texans,Texans,57,Starter,35,TE,Tight End,2016
+Dennis Pitta,66.5,61.75,65.5,605.0,Ravens,Ravens,58,Starter,36,TE,Tight End,2016
+Brandon Myers,66.38,54.33,70.24,196.0,Buccaneers,Buccaneers,59,Starter,37,TE,Tight End,2016
+John Phillips,65.74,59.95,65.43,179.0,Saints,Saints,60,Starter,38,TE,Tight End,2016
+Tyler Kroft,65.59,58.32,66.27,162.0,Bengals,Bengals,61,Starter,39,TE,Tight End,2016
+Dion Sims,65.42,60.66,64.42,447.0,Dolphins,Dolphins,62,Starter,40,TE,Tight End,2016
+Larry Donnell,65.13,51.74,69.89,133.0,Giants,Giants,63,Starter,41,TE,Tight End,2016
+C.J. Uzomah,65.12,61.88,63.11,260.0,Bengals,Bengals,64,Starter,42,TE,Tight End,2016
+Xavier Grimble,65.12,60.1,64.3,154.0,Steelers,Steelers,65,Starter,43,TE,Tight End,2016
+Logan Paulsen,63.63,54.37,65.63,161.0,Bears,Bears,66,Starter,44,TE,Tight End,2016
+Kellen Davis,63.58,54.4,65.54,123.0,Jets,Jets,67,Starter,45,TE,Tight End,2016
+Darren Waller,62.2,56.76,61.66,134.0,Ravens,Ravens,68,Starter,46,TE,Tight End,2016
+Daniel Brown,61.86,59.79,59.08,181.0,Bears,Bears,69,Rotation/backup,1,TE,Tight End,2016
+Randall Telfer,61.61,57.4,60.25,112.0,Browns,Browns,70,Rotation/backup,2,TE,Tight End,2016
+Tyler Higbee,61.02,51.3,63.33,231.0,Rams,Rams,71,Rotation/backup,3,TE,Tight End,2016
+Demetrius Harris,58.83,52.14,59.13,253.0,Chiefs,Chiefs,72,Rotation/backup,4,TE,Tight End,2016
+Julio Jones,90.09,92.1,84.58,571.0,Falcons,Falcons,1,Elite,1,WR,Wide Receiver,2016
+Antonio Brown,86.9,88.4,81.73,711.0,Steelers,Steelers,2,Elite,2,WR,Wide Receiver,2016
+A.J. Green,86.28,85.31,82.76,361.0,Bengals,Bengals,3,Elite,3,WR,Wide Receiver,2016
+T.Y. Hilton,85.51,86.69,80.56,659.0,Colts,Colts,4,Elite,4,WR,Wide Receiver,2016
+Mike Evans,85.44,91.26,77.39,630.0,Buccaneers,Buccaneers,5,Elite,5,WR,Wide Receiver,2016
+Odell Beckham Jr.,84.62,84.6,80.47,680.0,Giants,Giants,6,Elite,6,WR,Wide Receiver,2016
+Doug Baldwin,83.06,86.1,76.87,692.0,Seahawks,Seahawks,7,Elite,7,WR,Wide Receiver,2016
+Michael Thomas,82.94,84.9,77.47,587.0,Saints,Saints,8,Elite,8,WR,Wide Receiver,2016
+Dez Bryant,82.72,81.42,79.42,480.0,Cowboys,Cowboys,9,Elite,9,WR,Wide Receiver,2016
+Emmanuel Sanders,82.39,80.64,79.39,575.0,Broncos,Broncos,10,Elite,10,WR,Wide Receiver,2016
+Jordy Nelson,82.23,82.2,78.09,773.0,Packers,Packers,11,Elite,11,WR,Wide Receiver,2016
+Jarvis Landry,81.71,83.58,76.29,572.0,Dolphins,Dolphins,12,Elite,12,WR,Wide Receiver,2016
+Rishard Matthews,81.53,78.15,79.61,475.0,Titans,Titans,13,Elite,13,WR,Wide Receiver,2016
+Taylor Gabriel,81.41,78.06,79.47,321.0,Falcons,Falcons,14,Elite,14,WR,Wide Receiver,2016
+Pierre Garcon,81.37,84.31,75.24,561.0,Commanders,Commanders,15,Elite,15,WR,Wide Receiver,2016
+DeSean Jackson,80.88,72.12,82.55,520.0,Commanders,Commanders,16,Elite,16,WR,Wide Receiver,2016
+Adam Thielen,80.44,77.75,78.07,525.0,Vikings,Vikings,17,Elite,17,WR,Wide Receiver,2016
+Demaryius Thomas,80.03,79.73,76.07,590.0,Broncos,Broncos,18,Elite,18,WR,Wide Receiver,2016
+Larry Fitzgerald,79.95,83.3,73.55,701.0,Cardinals,Cardinals,19,Good,1,WR,Wide Receiver,2016
+Cole Beasley,79.81,81.62,74.44,460.0,Cowboys,Cowboys,20,Good,2,WR,Wide Receiver,2016
+Willie Snead IV,79.59,78.18,76.36,510.0,Saints,Saints,21,Good,3,WR,Wide Receiver,2016
+DeAndre Hopkins,79.38,77.8,76.27,731.0,Texans,Texans,22,Good,4,WR,Wide Receiver,2016
+Tyrell Williams,79.11,74.86,77.78,599.0,Chargers,Chargers,23,Good,5,WR,Wide Receiver,2016
+Alshon Jeffery,79.05,73.08,78.86,462.0,Bears,Bears,24,Good,6,WR,Wide Receiver,2016
+Kenny Britt,78.85,73.12,78.5,529.0,Rams,Rams,25,Good,7,WR,Wide Receiver,2016
+Amari Cooper,78.64,76.7,75.77,678.0,Raiders,Raiders,26,Good,8,WR,Wide Receiver,2016
+Brandin Cooks,78.47,72.89,78.03,641.0,Saints,Saints,27,Good,9,WR,Wide Receiver,2016
+Julian Edelman,78.46,80.3,73.06,757.0,Patriots,Patriots,28,Good,10,WR,Wide Receiver,2016
+Kelvin Benjamin,78.46,75.29,76.4,508.0,Panthers,Panthers,29,Good,11,WR,Wide Receiver,2016
+Stefon Diggs,78.3,77.59,74.6,498.0,Vikings,Vikings,30,Good,12,WR,Wide Receiver,2016
+DeVante Parker,78.23,73.13,77.46,499.0,Dolphins,Dolphins,31,Good,13,WR,Wide Receiver,2016
+Sammy Watkins,78.12,70.38,79.12,235.0,Bills,Bills,32,Good,14,WR,Wide Receiver,2016
+Steve Smith,77.75,73.31,76.54,492.0,Ravens,Ravens,33,Good,15,WR,Wide Receiver,2016
+Marvin Jones Jr.,77.25,72.48,76.26,657.0,Lions,Lions,34,Good,16,WR,Wide Receiver,2016
+Terrance Williams,76.82,71.42,76.26,509.0,Cowboys,Cowboys,35,Good,17,WR,Wide Receiver,2016
+Mohamed Sanu,76.53,78.73,70.89,579.0,Falcons,Falcons,36,Good,18,WR,Wide Receiver,2016
+John Brown,76.29,70.06,76.27,426.0,Cardinals,Cardinals,37,Good,19,WR,Wide Receiver,2016
+Terrelle Pryor Sr.,76.25,74.35,73.35,629.0,Browns,Browns,38,Good,20,WR,Wide Receiver,2016
+J.J. Nelson,76.23,67.06,78.17,364.0,Cardinals,Cardinals,39,Good,21,WR,Wide Receiver,2016
+Randall Cobb,76.17,74.0,73.45,601.0,Packers,Packers,40,Good,22,WR,Wide Receiver,2016
+Cameron Meredith,76.06,71.38,75.01,455.0,Bears,Bears,41,Good,23,WR,Wide Receiver,2016
+Aldrick Robinson,76.06,67.14,77.84,174.0,Falcons,Falcons,42,Good,24,WR,Wide Receiver,2016
+Kenny Stills,75.77,68.28,76.59,536.0,Dolphins,Dolphins,43,Good,25,WR,Wide Receiver,2016
+Tyreek Hill,75.68,72.81,73.43,285.0,Chiefs,Chiefs,44,Good,26,WR,Wide Receiver,2016
+Kendall Wright,75.51,69.22,75.53,240.0,Titans,Titans,45,Good,27,WR,Wide Receiver,2016
+Michael Crabtree,75.36,78.16,69.33,609.0,Raiders,Raiders,46,Good,28,WR,Wide Receiver,2016
+Dontrelle Inman,75.17,71.84,73.23,612.0,Chargers,Chargers,47,Good,29,WR,Wide Receiver,2016
+Russell Shepard,75.07,71.1,73.55,240.0,Buccaneers,Buccaneers,48,Good,30,WR,Wide Receiver,2016
+Mike Wallace,75.02,70.0,74.2,617.0,Ravens,Ravens,49,Good,31,WR,Wide Receiver,2016
+Tyler Lockett,75.01,67.82,75.64,420.0,Seahawks,Seahawks,50,Good,32,WR,Wide Receiver,2016
+Chris Hogan,74.99,65.7,77.02,637.0,Patriots,Patriots,51,Good,33,WR,Wide Receiver,2016
+Geronimo Allison,74.85,63.8,78.05,225.0,Packers,Packers,52,Good,34,WR,Wide Receiver,2016
+Golden Tate,74.84,70.6,73.5,676.0,Lions,Lions,53,Good,35,WR,Wide Receiver,2016
+Paul Richardson Jr.,74.81,70.44,73.56,274.0,Seahawks,Seahawks,54,Good,36,WR,Wide Receiver,2016
+Allen Robinson II,74.8,69.8,73.97,711.0,Jaguars,Jaguars,55,Good,37,WR,Wide Receiver,2016
+Ted Ginn Jr.,74.8,68.29,74.97,461.0,Panthers,Panthers,56,Good,38,WR,Wide Receiver,2016
+Marqise Lee,74.72,71.23,72.88,588.0,Jaguars,Jaguars,57,Good,39,WR,Wide Receiver,2016
+Brandon Marshall,74.48,68.85,74.06,580.0,Jets,Jets,58,Good,40,WR,Wide Receiver,2016
+Davante Adams,74.31,72.6,71.29,768.0,Packers,Packers,59,Good,41,WR,Wide Receiver,2016
+Brandon LaFell,74.19,69.39,73.22,635.0,Bengals,Bengals,60,Good,42,WR,Wide Receiver,2016
+Eric Decker,74.05,67.67,74.14,131.0,Jets,Jets,61,Good,43,WR,Wide Receiver,2016
+Travis Benjamin,74.04,65.68,75.45,411.0,Chargers,Chargers,62,Good,44,WR,Wide Receiver,2016
+Donte Moncrief,73.3,70.85,70.77,308.0,Colts,Colts,63,Starter,1,WR,Wide Receiver,2016
+Quincy Enunwa,73.24,69.25,71.74,565.0,Jets,Jets,64,Starter,2,WR,Wide Receiver,2016
+Jamison Crowder,72.98,66.38,73.22,549.0,Commanders,Commanders,65,Starter,3,WR,Wide Receiver,2016
+Jeremy Maclin,72.97,61.6,76.38,440.0,Chiefs,Chiefs,66,Starter,4,WR,Wide Receiver,2016
+Breshad Perriman,72.48,63.05,74.6,348.0,Ravens,Ravens,67,Starter,5,WR,Wide Receiver,2016
+Jordan Matthews,72.45,67.19,71.79,522.0,Eagles,Eagles,68,Starter,6,WR,Wide Receiver,2016
+Michael Floyd,72.35,65.25,72.91,530.0,Patriots,Patriots,69,Starter,7,WR,Wide Receiver,2016
+Sammie Coates,72.07,58.85,76.72,241.0,Steelers,Steelers,70,Starter,8,WR,Wide Receiver,2016
+Eli Rogers,71.78,64.87,72.22,499.0,Steelers,Steelers,71,Starter,9,WR,Wide Receiver,2016
+Robert Woods,71.56,68.66,69.32,381.0,Bills,Bills,72,Starter,10,WR,Wide Receiver,2016
+Devin Funchess,71.47,62.92,73.0,291.0,Panthers,Panthers,73,Starter,11,WR,Wide Receiver,2016
+Jaron Brown,71.46,62.59,73.2,119.0,Cardinals,Cardinals,74,Starter,12,WR,Wide Receiver,2016
+Adam Humphries,71.46,65.11,71.53,478.0,Buccaneers,Buccaneers,75,Starter,13,WR,Wide Receiver,2016
+Andre Holmes,71.42,67.19,70.08,160.0,Raiders,Raiders,76,Starter,14,WR,Wide Receiver,2016
+Deonte Thompson,71.21,65.69,70.72,194.0,Bears,Bears,77,Starter,15,WR,Wide Receiver,2016
+Victor Cruz,71.13,60.93,73.76,523.0,Giants,Giants,78,Starter,16,WR,Wide Receiver,2016
+Cody Core,71.04,60.32,74.02,138.0,Bengals,Bengals,79,Starter,17,WR,Wide Receiver,2016
+Jeremy Kerley,70.95,67.9,68.81,520.0,49ers,49ers,80,Starter,18,WR,Wide Receiver,2016
+Brandon Coleman,70.79,65.16,70.38,199.0,Saints,Saints,81,Starter,19,WR,Wide Receiver,2016
+Vincent Jackson,70.76,60.6,73.37,221.0,Buccaneers,Buccaneers,82,Starter,20,WR,Wide Receiver,2016
+Rashard Higgins,70.6,60.62,73.08,112.0,Browns,Browns,83,Starter,21,WR,Wide Receiver,2016
+Marquise Goodwin,70.6,61.82,72.29,414.0,Bills,Bills,84,Starter,22,WR,Wide Receiver,2016
+Jordan Taylor,70.59,61.09,72.75,178.0,Broncos,Broncos,85,Starter,23,WR,Wide Receiver,2016
+Harry Douglas,70.55,63.17,71.31,167.0,Titans,Titans,86,Starter,24,WR,Wide Receiver,2016
+Charles Johnson,70.54,60.26,73.22,271.0,Vikings,Vikings,87,Starter,25,WR,Wide Receiver,2016
+Justin Hunter,70.31,61.28,72.16,205.0,Bills,Bills,88,Starter,26,WR,Wide Receiver,2016
+Tyler Boyd,70.27,64.48,69.97,510.0,Bengals,Bengals,89,Starter,27,WR,Wide Receiver,2016
+Eddie Royal,70.21,63.88,70.27,239.0,Bears,Bears,90,Starter,28,WR,Wide Receiver,2016
+Josh Bellamy,70.07,65.7,68.81,184.0,Bears,Bears,91,Starter,29,WR,Wide Receiver,2016
+Danny Amendola,70.03,66.91,67.94,285.0,Patriots,Patriots,92,Starter,30,WR,Wide Receiver,2016
+Jalin Marshall,69.9,62.38,70.75,115.0,Jets,Jets,93,Starter,31,WR,Wide Receiver,2016
+Allen Hurns,69.85,57.4,73.98,454.0,Jaguars,Jaguars,94,Starter,32,WR,Wide Receiver,2016
+Justin Hardy,69.84,69.12,66.16,217.0,Falcons,Falcons,95,Starter,33,WR,Wide Receiver,2016
+Cordarrelle Patterson,69.83,63.44,69.92,385.0,Vikings,Vikings,96,Starter,34,WR,Wide Receiver,2016
+Paul Turner,69.77,60.49,71.79,112.0,Eagles,Eagles,97,Starter,35,WR,Wide Receiver,2016
+Anquan Boldin,69.68,64.82,68.76,625.0,Lions,Lions,98,Starter,36,WR,Wide Receiver,2016
+Malcolm Mitchell,69.61,64.56,68.81,408.0,Patriots,Patriots,99,Starter,37,WR,Wide Receiver,2016
+Cobi Hamilton,69.39,62.02,70.14,300.0,Steelers,Steelers,100,Starter,38,WR,Wide Receiver,2016
+Brice Butler,69.36,59.75,71.6,248.0,Cowboys,Cowboys,101,Starter,39,WR,Wide Receiver,2016
+Brian Quick,69.33,60.42,71.1,470.0,Rams,Rams,102,Starter,40,WR,Wide Receiver,2016
+Will Fuller V,69.0,61.56,69.8,627.0,Texans,Texans,103,Starter,41,WR,Wide Receiver,2016
+Kevin White,68.98,62.74,68.98,138.0,Bears,Bears,104,Starter,42,WR,Wide Receiver,2016
+Sterling Shepard,68.94,66.2,66.6,692.0,Giants,Giants,105,Starter,43,WR,Wide Receiver,2016
+Chester Rogers,68.88,59.45,71.0,315.0,Colts,Colts,106,Starter,44,WR,Wide Receiver,2016
+Kamar Aiken,68.87,60.44,70.32,425.0,Ravens,Ravens,107,Starter,45,WR,Wide Receiver,2016
+Bryan Walters,68.84,61.71,69.43,230.0,Jaguars,Jaguars,108,Starter,46,WR,Wide Receiver,2016
+Corey Brown,68.82,58.12,71.79,372.0,Panthers,Panthers,109,Starter,47,WR,Wide Receiver,2016
+Tajae Sharpe,68.8,60.71,70.03,522.0,Titans,Titans,110,Starter,48,WR,Wide Receiver,2016
+Darrius Heyward-Bey,68.79,56.64,72.72,182.0,Steelers,Steelers,111,Starter,49,WR,Wide Receiver,2016
+Phillip Dorsett,68.54,56.76,72.23,567.0,Colts,Colts,112,Starter,50,WR,Wide Receiver,2016
+Quinton Patton,68.34,61.75,68.57,417.0,49ers,49ers,113,Starter,51,WR,Wide Receiver,2016
+Chris Conley,68.06,61.39,68.34,568.0,Chiefs,Chiefs,114,Starter,52,WR,Wide Receiver,2016
+Corey Coleman,68.04,61.29,68.38,379.0,Browns,Browns,115,Starter,53,WR,Wide Receiver,2016
+Rod Streater,68.04,63.71,66.76,166.0,49ers,49ers,116,Starter,54,WR,Wide Receiver,2016
+Dorial Green-Beckham,68.01,59.92,69.23,446.0,Eagles,Eagles,117,Starter,55,WR,Wide Receiver,2016
+Andre Roberts,67.72,60.16,68.59,185.0,Lions,Lions,118,Starter,56,WR,Wide Receiver,2016
+Jermaine Kearse,67.67,55.59,71.55,635.0,Seahawks,Seahawks,119,Starter,57,WR,Wide Receiver,2016
+Cecil Shorts,67.57,60.5,68.11,181.0,Buccaneers,Buccaneers,120,Starter,58,WR,Wide Receiver,2016
+Andrew Hawkins,67.48,58.28,69.45,472.0,Browns,Browns,121,Starter,59,WR,Wide Receiver,2016
+James Wright,67.37,62.22,66.63,120.0,Bengals,Bengals,122,Starter,60,WR,Wide Receiver,2016
+Bennie Fowler,67.33,56.66,70.28,159.0,Broncos,Broncos,123,Starter,61,WR,Wide Receiver,2016
+Torrey Smith,67.31,54.78,71.49,380.0,49ers,49ers,124,Starter,62,WR,Wide Receiver,2016
+Brittan Golden,67.27,59.19,68.49,109.0,Cardinals,Cardinals,125,Starter,63,WR,Wide Receiver,2016
+Aaron Burbridge,66.66,57.93,68.31,139.0,49ers,49ers,126,Starter,64,WR,Wide Receiver,2016
+Jeff Janis,66.21,55.89,68.92,179.0,Packers,Packers,127,Starter,65,WR,Wide Receiver,2016
+Christopher Harper,66.12,60.18,65.92,133.0,49ers,49ers,128,Starter,66,WR,Wide Receiver,2016
+Ricardo Louis,65.71,58.78,66.16,222.0,Browns,Browns,129,Starter,67,WR,Wide Receiver,2016
+Tavon Austin,65.56,61.12,64.36,492.0,Rams,Rams,130,Starter,68,WR,Wide Receiver,2016
+Cody Latimer,65.46,60.22,64.78,132.0,Broncos,Broncos,131,Starter,69,WR,Wide Receiver,2016
+Albert Wilson,65.07,55.03,67.59,353.0,Chiefs,Chiefs,132,Starter,70,WR,Wide Receiver,2016
+Charone Peake,65.03,59.4,64.61,239.0,Jets,Jets,133,Starter,71,WR,Wide Receiver,2016
+Jaelen Strong,64.76,57.29,65.57,202.0,Texans,Texans,134,Starter,72,WR,Wide Receiver,2016
+Jordan Norwood,64.26,53.88,67.02,342.0,Broncos,Broncos,135,Starter,73,WR,Wide Receiver,2016
+Ryan Grant,64.09,57.49,64.32,128.0,Commanders,Commanders,136,Starter,74,WR,Wide Receiver,2016
+Seth Roberts,63.89,56.31,64.78,590.0,Raiders,Raiders,137,Starter,75,WR,Wide Receiver,2016
+Roger Lewis Jr.,63.73,56.3,64.51,131.0,Giants,Giants,138,Starter,76,WR,Wide Receiver,2016
+Walter Powell,62.29,58.66,60.55,191.0,Bills,Bills,139,Starter,77,WR,Wide Receiver,2016
+Pharoh Cooper,61.56,56.71,60.62,138.0,Rams,Rams,140,Rotation/backup,1,WR,Wide Receiver,2016
+Nelson Agholor,61.16,53.15,62.33,565.0,Eagles,Eagles,141,Rotation/backup,2,WR,Wide Receiver,2016
+Braxton Miller,60.04,54.44,59.6,241.0,Texans,Texans,142,Rotation/backup,3,WR,Wide Receiver,2016
+Chris Moore,58.66,56.12,56.19,101.0,Ravens,Ravens,143,Rotation/backup,4,WR,Wide Receiver,2016

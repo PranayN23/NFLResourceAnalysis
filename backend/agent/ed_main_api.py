@@ -19,10 +19,12 @@ from typing import Optional
 
 _thread_pool = ThreadPoolExecutor(max_workers=2)
 from backend.agent.ed_agent_graph import ed_gm_agent, ED_CSV_PATH
+from backend.agent.api_year_utils import clamp_analysis_year, history_as_of_year
+from backend.agent.team_summary import build_team_year_summary, build_team_position_rankings, build_player_directory
 from backend.agent.team_context import (
     get_team_roster, compute_positional_need, get_team_cap,
-    get_all_teams, aav_to_cap_pcts, is_player_on_team,
-    get_roster_without_player,
+    get_all_teams, aav_to_cap_pcts, league_cap_millions,
+    is_player_on_team, get_roster_without_player,
 )
 import pandas as pd
 import uvicorn
@@ -57,27 +59,48 @@ async def get_ed_players():
     if df_players.empty:
         raise HTTPException(status_code=503, detail="Player database not loaded.")
     names = sorted(df_players["player"].dropna().unique().tolist())
-    return {"players": names}
+    years = pd.to_numeric(df_players.get("Year"), errors="coerce").dropna() if "Year" in df_players.columns else pd.Series(dtype=float)
+    min_year = int(years.min()) if not years.empty else 2025
+    max_data_year = int(years.max()) if not years.empty else 2025
+    return {"players": names, "analysis_year_min": min_year, "analysis_year_max": 2025, "max_data_year": max_data_year}
 
 
 @app.get("/teams")
-async def get_teams():
+async def get_teams(analysis_year: int = Query(2025)):
     """Return sorted list of all 32 team names from cap data."""
-    teams = get_all_teams()
+    teams = get_all_teams(reference_year=analysis_year)
     if not teams:
         teams = sorted(df_players["Team"].dropna().unique().tolist()) if not df_players.empty else []
     return {"teams": teams}
 
 
+
+
+@app.get("/team-summary")
+async def team_summary(team: str = Query(...), analysis_year: int = Query(2025)):
+    return build_team_year_summary(team, analysis_year)
+
+
+
+
+@app.get("/player-directory")
+async def player_directory(analysis_year: int = Query(2025)):
+    return build_player_directory(analysis_year)
+@app.get("/team-rankings")
+async def team_rankings(team: str = Query(...), analysis_year: int = Query(2025)):
+    return build_team_position_rankings(team, analysis_year)
 @app.get("/team-roster")
-async def team_roster(team: str = Query(..., description="Team name")):
+async def team_roster(team: str = Query(..., description="Team name"), analysis_year: int = Query(2025)):
     """Return the team's ED players, cap summary, and positional need."""
     if df_players.empty:
         raise HTTPException(status_code=503, detail="Player database not loaded.")
 
-    roster = get_team_roster(team, df_players)
-    need_score, need_label = compute_positional_need(roster, position_df=df_players, team=team)
-    allocated_pct, available_pct = get_team_cap(team)
+    roster = get_team_roster(team, df_players, reference_year=analysis_year)
+    need_score, need_label = compute_positional_need(
+        roster, position_df=df_players, team=team, reference_year=analysis_year, position_key="ED",
+    )
+    allocated_pct, available_pct = get_team_cap(team, reference_year=analysis_year)
+    ay = int(analysis_year)
 
     return {
         "team": team,
@@ -86,6 +109,8 @@ async def team_roster(team: str = Query(..., description="Team name")):
         "need_label": need_label,
         "allocated_cap_pct": allocated_pct,
         "available_cap_pct": available_pct,
+        "league_cap_millions": round(league_cap_millions(ay), 2),
+        "salary_cap_year": ay,
     }
 
 
@@ -95,18 +120,25 @@ class EvaluationRequest(BaseModel):
     contract_years: int = Field(default=1, ge=1, le=10)
     team:              str   = ""
     cap_available_pct: float = 0.0
+    analysis_year:    int = Field(default=2025, ge=1900, le=2025)
+    is_extension:   bool  = False
+    years_remaining: int  = Field(default=0, ge=0, le=10)
+    current_aav:    float = 0.0
 
 
 @app.post("/evaluate")
 async def evaluate_player(req: EvaluationRequest):
     """
-    Evaluate an Edge Defender free agent.
+    Evaluate an Edge Defender free agent or contract extension.
 
     Runs the ED GM agent workflow accounting for contract length,
     age-based performance decay, and time discounting.
     Returns a SIGN / PASS recommendation with per-year breakdown.
     """
-    player_data = df_players[df_players["player"] == req.player_name].copy()
+    analysis_year = clamp_analysis_year(req.analysis_year)
+    effective_year = max(1900, min(2032, analysis_year + req.years_remaining)) if req.is_extension else analysis_year
+    player_full = df_players[df_players["player"] == req.player_name].copy()
+    player_data = history_as_of_year(player_full, analysis_year)
 
     if len(player_data) == 0:
         raise HTTPException(
@@ -127,14 +159,14 @@ async def evaluate_player(req: EvaluationRequest):
     }
 
     if req.team:
-        roster = get_team_roster(req.team, df_players)
-        re_signing = is_player_on_team(req.player_name, req.team, df_players)
+        roster = get_team_roster(req.team, df_players, reference_year=analysis_year)
+        re_signing = is_player_on_team(req.player_name, req.team, df_players, reference_year=analysis_year)
 
         if re_signing:
             roster_without = get_roster_without_player(roster, req.player_name)
             need_score, need_label = compute_positional_need(
                 roster_without, position_df=df_players, team=req.team,
-                exclude_player=req.player_name,
+                exclude_player=req.player_name, reference_year=analysis_year, position_key="ED",
             )
             player_cap = next(
                 (p["cap_pct"] for p in roster if p["player"].strip().lower() == req.player_name.strip().lower()),
@@ -143,15 +175,15 @@ async def evaluate_player(req: EvaluationRequest):
         else:
             roster_without = roster
             need_score, need_label = compute_positional_need(
-                roster, position_df=df_players, team=req.team,
+                roster, position_df=df_players, team=req.team, reference_year=analysis_year, position_key="ED",
             )
             player_cap = 0.0
 
-        allocated_pct, available_pct = get_team_cap(req.team)
+        allocated_pct, available_pct = get_team_cap(req.team, reference_year=analysis_year)
         cap_avail = req.cap_available_pct if req.cap_available_pct > 0 else available_pct
         if re_signing:
             cap_avail = cap_avail + player_cap
-        signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years)
+        signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years, analysis_year)
 
         team_state_fields = {
             "team_name": req.team,
@@ -172,14 +204,28 @@ async def evaluate_player(req: EvaluationRequest):
             "current_roster": roster_without if re_signing else roster,
             "is_re_signing": re_signing,
             "freed_cap_pct": player_cap,
+            "league_cap_millions": round(league_cap_millions(analysis_year), 2),
+            "salary_cap_year": int(analysis_year),
         }
+
+    if req.is_extension and team_ctx:
+        ext_signing_pcts = aav_to_cap_pcts(req.salary_ask, req.contract_years, effective_year)
+        team_state_fields["team_cap_available_pct"] = 100.0
+        team_state_fields["signing_cap_pcts"] = ext_signing_pcts
+        team_ctx["available_cap_pct"] = 100.0
+        team_ctx["signing_cap_pcts"] = ext_signing_pcts
+        team_ctx["league_cap_millions"] = round(league_cap_millions(effective_year), 2)
+        team_ctx["salary_cap_year"] = int(effective_year)
 
     initial_state = {
         "player_name":    req.player_name,
         "salary_ask":     req.salary_ask,
         "contract_years": req.contract_years,
+            "analysis_year": effective_year,
         "player_history": player_data,
+        "player_history_full": player_full,
         "predicted_tier":    "",
+        "projected_tier":    "",
         "confidence":        {},
         "current_age":       28,
         "last_season_stats": {},
@@ -210,8 +256,15 @@ async def evaluate_player(req: EvaluationRequest):
         "reasoning":      final_state["reasoning"],
         "data": {
             "predicted_tier":       final_state["predicted_tier"],
+            "projected_tier":       final_state.get("projected_tier", final_state["predicted_tier"]),
             "current_age":          final_state["current_age"],
             "contract_years":       req.contract_years,
+            "analysis_year":        analysis_year,
+            "effective_year":       effective_year,
+            "is_extension":         req.is_extension,
+            "extension_start_year": effective_year if req.is_extension else None,
+            "years_remaining":      req.years_remaining if req.is_extension else None,
+            "current_aav":          req.current_aav if req.is_extension else None,
             "effective_fair_aav":   final_state["valuation"],
             "effective_cap_burden": final_state["effective_cap_burden"],
             "total_nominal_value":  final_state["total_nominal_value"],

@@ -190,6 +190,5 @@ class PlayerModelInference:
             return min(base_penalty + additional, 10.0)  # Cap at 10 pts max
 
     def get_tier(self, grade):
-        if grade >= 80.0: return "Elite"
-        elif grade >= 60.0: return "Starter"
-        else: return "Reserve/Poor"
+        from backend.agent.grade_projection import grade_to_tier_universal
+        return grade_to_tier_universal(grade)
