@@ -285,7 +285,7 @@ export const POSITION_FREE_AGENCY = {
       'Welcome to the Quarterback Free Agency Evaluator. Select a player, set contract AAV and length, then Analyze. Toggle Team Simulation Mode to factor roster strength, positional need, and cap space.',
     legend: buildMarketTierLegend(
       'QB',
-      'Composite: 40% model pass grade + 60% stats grade. Stats: 35% passer rating, 30% YPA, 25% EPA/db, 10% comp%. Last 1–3 seasons use recency × dropback weights (higher-snap years count more).'
+      'Composite: 45% model pass grade + 55% stats. Stats mix: 28% passer rating, 24% YPA, 10% BTT%, 8% comp%, 30% EPA/db.'
     ),
     statRows: [
       { key: 'yards', label: 'Pass Yards' },
@@ -294,6 +294,7 @@ export const POSITION_FREE_AGENCY = {
       { key: 'ypa', label: 'YPA' },
       { key: 'qb_rating', label: 'Passer Rating' },
       { key: 'completion_pct', label: 'Comp %', fmt: FMT.pct },
+      { key: 'btt_rate', label: 'BTT Rate', fmt: FMT.btt },
       { key: 'run_grade', label: 'Run Grade' },
       { key: 'pass_grade', label: 'Pass Grade' },
       { key: 'overall_grade', label: 'Overall Grade', projKey: 'projected_grade', noDelta: true },

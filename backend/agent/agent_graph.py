@@ -4,9 +4,8 @@ QB GM Agent — Quarterback Free Agency Evaluator
 LangGraph agent that evaluates a QB free agent and returns a
 SIGN / PASS recommendation with full year-by-year contract breakdown.
 
-Stats grade: see ``QB_STATS_WEIGHTS`` — passer rating, YPA, EPA/db, comp%.
-Last 1–3 seasons are blended with recency × dropback weights so high-snap years
-dominate (reduces backup-season efficiency inflation).
+Stats grade weighted by: passer_rating 28%, ypa 24%, btt_rate 10%,
+completion_pct 8%, epa_per_dropback 30%.
 Composite grade: model pass grade 40%, stats grade 60%.
 """
 
@@ -55,33 +54,38 @@ def grade_to_market_value(grade: float) -> float:
 # Empirical anchors (snap-normalised, league-wide, 17-game basis):
 #   passer_rating: Reserve~72, Rotation~82, Starter~92, Elite~105
 #   ypa: Reserve~5.8, Rotation~6.8, Starter~7.5, Elite~8.5
+#   btt_rate: Reserve~3%, Rotation~4%, Starter~5%, Elite~7%
 #   completion_pct: Reserve~60%, Rotation~64%, Starter~67%, Elite~70%
 #   epa_per_db: Reserve~-0.1, Rotation~0.0, Starter~0.10, Elite~0.20
 # ─────────────────────────────────────────────
 # Weights (sum to 1.0) — exposed for API / UI documentation.
 QB_STATS_WEIGHTS = {
-    "passer_rating": 0.35,
-    "ypa": 0.30,
-    "epa_per_db": 0.25,
-    "completion_pct": 0.10,
+    "passer_rating": 0.28,
+    "ypa": 0.24,
+    "btt_rate": 0.10,
+    "completion_pct": 0.08,
+    "epa_per_db": 0.30,
 }
 
 _QBR_ANCHORS   = [0.0,  72.0,  82.0,  92.0, 105.0, 130.0]
 _YPA_ANCHORS   = [0.0,   5.8,   6.8,   7.5,   8.5,  11.0]
+_BTT_ANCHORS   = [0.0,  0.03,  0.04,  0.05,  0.07,  0.10]
 _CMP_ANCHORS   = [0.0,  60.0,  64.0,  67.0,  70.0,  78.0]
 _EPA_DB_ANCHORS= [-0.4, -0.10,  0.00,  0.10,  0.20,  0.35]
 _STAT_GRD_SCALE= [45.0, 55.0,  65.0,  75.0,  85.0,  99.0]
 
 
-def _stats_grade(passer_rating, ypa, cmp_pct, epa_per_db):
+def _stats_grade(passer_rating, ypa, btt_rate, cmp_pct, epa_per_db):
     w = QB_STATS_WEIGHTS
     pr = float(np.interp(passer_rating, _QBR_ANCHORS, _STAT_GRD_SCALE))
     ya = float(np.interp(ypa, _YPA_ANCHORS, _STAT_GRD_SCALE))
+    bt = float(np.interp(btt_rate, _BTT_ANCHORS, _STAT_GRD_SCALE))
     cp = float(np.interp(cmp_pct, _CMP_ANCHORS, _STAT_GRD_SCALE))
     ep = float(np.interp(epa_per_db, _EPA_DB_ANCHORS, _STAT_GRD_SCALE))
     return round(
         w["passer_rating"] * pr
         + w["ypa"] * ya
+        + w["btt_rate"] * bt
         + w["completion_pct"] * cp
         + w["epa_per_db"] * ep,
         2,
@@ -161,22 +165,6 @@ def _qb_recency_weights_n(n: int) -> List[float]:
     w = list(tpl[-n:])
     s = sum(w)
     return [x / s for x in w]
-
-
-def _qb_recency_dropback_weights(recent_rows: pd.DataFrame) -> List[float]:
-    """
-    Blend last 1–3 seasons with (recency weight × dropbacks), renormalized.
-    Emphasizes seasons with more pass volume so backup samples do not dominate rates.
-    """
-    n = len(recent_rows)
-    w_rec = _qb_recency_weights_n(n)
-    raw: List[float] = []
-    for i, (_, r) in enumerate(recent_rows.iterrows()):
-        db_raw = max(0.0, _safe_float(r.get("dropbacks"), 0.0))
-        db = max(1.0, db_raw) if db_raw > 0 else 1.0
-        raw.append(w_rec[i] * db)
-    s = sum(raw)
-    return [x / s for x in raw] if s > 0 else w_rec
 
 
 def _qb_ints_from_row(row) -> float:
@@ -328,7 +316,7 @@ def extract_career_stats(history: pd.DataFrame) -> List[dict]:
             "btt_rate":         round(_safe_float(row.get("btt_rate")), 4),
             "big_time_throws":  round(_safe_float(row.get("big_time_throws")), 0),
             "epa":              round(_safe_float(row.get("Net EPA")), 2),
-            "run_grade":      round(_safe_float(row.get("grades_run")), 1),
+            "run_grade":        round(_safe_float(row.get("grades_run")), 1),
             "dropbacks":        round(dropbacks, 0),
             "pass_grade":       round(_safe_float(row.get("grades_pass")), 1),
             "overall_grade":    round(_safe_float(row.get("grades_offense")), 1),
@@ -350,16 +338,18 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     avail = round(games / max_g, 3)
     dropbacks = max(1.0, _safe_float(row.get("dropbacks"), 1.0))
 
-    # Last 1–3 seasons: recency × dropback weights (high-snap years count more).
-    c_epa = c_dbs = c_yards = c_tds = c_ints = c_btts = c_games = 0.0
+    # Recent-weighted rates (last 3 seasons) so older prime years don't dominate.
+    # ``Net EPA`` in QB.csv is already **per dropback** (not season EPA total). Blend
+    # it with the same recency weights only — do not divide again by dropbacks.
+    c_epa_db_blend = 0.0
+    c_dbs = c_yards = c_tds = c_ints = c_btts = c_games = 0.0
     c_cmp = c_att = c_sacks = 0.0
-    c_qbr = 0.0
     recent_att_17_w = 0.0
     att_pg_vals: List[float] = []
     peak_dbs_17: List[float] = []
     proj_dbs_pace_w = 0.0
     n_recent = len(recent_rows)
-    w_recent = _qb_recency_dropback_weights(recent_rows)
+    w_recent = _qb_recency_weights_n(n_recent)
     for (_, r), rw in zip(recent_rows.iterrows(), w_recent):
         yr = int(_safe_float(r.get("Year"), 2024))
         yr_g = _max_games_for_year(yr)
@@ -370,7 +360,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
             peak_dbs_17.append(round((db_raw / max(g, 0.01)) * 17.0))
         proj_dbs_pace_w += (db_raw / g) * 17.0 * rw
         db = max(1.0, db_raw) if db_raw > 0 else 1.0
-        c_epa   += _safe_float(r.get("Net EPA")) * rw
+        c_epa_db_blend += _safe_float(r.get("Net EPA")) * rw
         c_dbs   += db * rw
         c_yards += _safe_float(r.get("yards")) * rw
         c_tds   += _safe_float(r.get("touchdowns")) * rw
@@ -380,7 +370,6 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         c_att   += _safe_float(r.get("attempts")) * rw
         c_sacks += _safe_float(r.get("sacks")) * rw
         c_games += g * rw
-        c_qbr += _safe_float(r.get("qb_rating")) * rw
         att_pg = _safe_float(r.get("attempts")) / max(g, 1.0)
         att_pg_vals.append(att_pg)
         recent_att_17_w += (att_pg * 17.0) * rw
@@ -389,7 +378,7 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
     c_att  = max(c_att, 1.0)
     c_games = max(c_games, 1.0)
 
-    career_epa_per_db  = c_epa / c_dbs
+    career_epa_per_db  = c_epa_db_blend
     career_ypa         = (c_yards / c_att) if c_att > 0 else _safe_float(row.get("ypa"))
     career_cmp_pct     = (c_cmp / c_att * 100) if c_att > 0 else _safe_float(row.get("completion_percent"))
     career_btt_rate    = (c_btts / c_dbs) if c_dbs > 0 else _safe_float(row.get("btt_rate"))
@@ -428,8 +417,8 @@ def extract_last_season_stats(history: pd.DataFrame) -> dict:
         "dropbacks":      round(dropbacks),
         "pass_grade":     round(_safe_float(row.get("grades_pass")), 1),
         "run_grade":      round(_safe_float(row.get("grades_run")), 1),
-        # Career rates (stats grade uses recency × dropback–weighted last 1–3 seasons)
-        "qb_rating":      round(c_qbr, 1),
+        # Career rates (used for stats grade); passer rating from latest season row.
+        "qb_rating":      round(_safe_float(row.get("qb_rating")), 1),
         "ypa":            round(career_ypa, 2),
         "completion_pct": round(career_cmp_pct, 2),
         "btt_rate":       round(career_btt_rate, 4),
@@ -537,6 +526,7 @@ def project_stats(
             "interceptions":  proj_ints,
             "ypa":            round(proj_ypa, 2),
             "qb_rating":      proj_qbr,
+            "btt_rate":       round(min(0.12, last_stats["btt_rate"] * scale), 4),
             "completion_pct": round(proj_cmp_pct, 1),
             "pass_grade":     round(min(99, last_stats["pass_grade"] * scale), 1),
             "run_grade":      round(rg_disp, 1),
@@ -706,6 +696,7 @@ def predict_performance(state: QBAgentState):
     sg = _stats_grade(
         last_stats["qb_rating"],
         last_stats["ypa"],
+        last_stats["btt_rate"],
         last_stats["completion_pct"],
         last_stats["epa_per_db"],
     )
