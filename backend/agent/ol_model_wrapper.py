@@ -9,6 +9,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.ML.OL_Pranay_Transformers.Player_Model_OL import PlayerTransformerRegressor
+from backend.agent.exceptions import UngradablePlayerError
 
 class OLModelInference:
     def __init__(self, transformer_path, scaler_path=None, xgb_path=None):
@@ -86,20 +87,49 @@ class OLModelInference:
     def _prepare_features(self, player_history):
         df = player_history.copy()
 
-        # Convert numeric columns
-        numeric_cols = self.transformer_features + ['grades_offense', 'grades_run_block', 'grades_pass_block', 'Net EPA']
+        numeric_cols = [
+            'grades_offense', 'grades_run_block', 'grades_pass_block', 'Net EPA',
+            'sacks_allowed', 'hits_allowed', 'hurries_allowed', 'pressures_allowed', 
+            'penalties', 'pbe', 'age', 'adjusted_value', 'Cap_Space',
+            'snap_counts_offense', 'snap_counts_block', 'snap_counts_run_block', 'snap_counts_pass_block'
+        ]
         for col in numeric_cols:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
 
         df = df.sort_values('Year')
 
-        # Engineering
+        # Engineering: Basic
         df["years_in_league"] = range(len(df))
         df["delta_grade"] = df["grades_offense"].diff().fillna(0)
         df["delta_run_block"] = df["grades_run_block"].diff().fillna(0)
         df["delta_pass_block"] = df["grades_pass_block"].diff().fillna(0)
         df['team_performance_proxy'] = df.groupby(['Team', 'Year'])['Net EPA'].transform('mean')
+
+        # Engineering: Rates with Safe Division
+        def safe_div(a, b):
+            return np.divide(a, b, out=np.zeros_like(a, dtype=float), where=b != 0)
+
+        pass_snaps = df['snap_counts_pass_block'].values
+        total_snaps = df['snap_counts_offense'].values
+
+        df['sacks_allowed_rate'] = safe_div(df['sacks_allowed'].values, pass_snaps)
+        df['hits_allowed_rate'] = safe_div(df['hits_allowed'].values, pass_snaps)
+        df['hurries_allowed_rate'] = safe_div(df['hurries_allowed'].values, pass_snaps)
+        df['pressures_allowed_rate'] = safe_div(df['pressures_allowed'].values, pass_snaps)
+        df['penalties_rate'] = safe_div(df['penalties'].values, total_snaps)
+        df['pass_block_efficiency'] = df['pbe']  # Keep as raw percentage (90-100) to match scaler
+
+        df['snap_counts_block_share'] = safe_div(df['snap_counts_block'].values, total_snaps)
+        df['snap_counts_run_block_share'] = safe_div(df['snap_counts_run_block'].values, total_snaps)
+        df['snap_counts_pass_block_share'] = safe_div(df['snap_counts_pass_block'].values, total_snaps)
+
+        # Engineering: Positional One-Hot
+        # Current position from the last row (or most frequent)
+        pos = df['position'].iloc[-1].upper() if 'position' in df.columns else 'T'
+        df['pos_T'] = 1.0 if 'T' in pos else 0.0
+        df['pos_G'] = 1.0 if 'G' in pos else 0.0
+        df['pos_C'] = 1.0 if 'C' in pos else 0.0
 
         # Lagged for XGBoost
         row_last = df.iloc[-1]
@@ -107,9 +137,9 @@ class OLModelInference:
         transformer_signal = self._compute_transformer_signal(df)
 
         xgb_input = {
-            'lag_grades_offense': float(row_prev['grades_offense']),          # last year's grade
-            'lag_grades_run_block': float(row_prev['grades_run_block']),      # last year's grade
-            'lag_grades_pass_block': float(row_prev['grades_pass_block']),    # last year's grade
+            'lag_grades_offense': float(row_last['grades_offense']),
+            'lag_grades_run_block': float(row_last['grades_run_block']),
+            'lag_grades_pass_block': float(row_last['grades_pass_block']),
             'adjusted_value': float(row_last['adjusted_value']),
             'age': float(row_last['age']) + 1,
             'years_in_league': int(row_last['years_in_league']) + 1,
@@ -121,7 +151,6 @@ class OLModelInference:
             self.t2v_signal_feature: float(transformer_signal)
         }
 
-
         return df, pd.DataFrame([xgb_input])
 
     def predict(self, player_history, mode="ensemble", apply_calibration=True):
@@ -132,6 +161,10 @@ class OLModelInference:
 
         # Transformer (includes Time2Vec representation internally)
         transformer_grade = self._compute_transformer_signal(df_history)
+
+        # Check if transformer grade is valid
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
 
         # XGBoost
         xgb_grade = 0.0

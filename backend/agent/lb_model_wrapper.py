@@ -8,6 +8,7 @@ from sklearn.metrics import mean_absolute_error
 from collections import defaultdict
 import os
 import joblib
+from backend.agent.exceptions import UngradablePlayerError
 
 # ==========================
 # DEVICE
@@ -40,6 +41,163 @@ SCALER_OUT     = "backend/ML/LB_Pranay_Transformers/lb_player_scaler.joblib"
 MODEL_OUT      = "backend/ML/LB_Pranay_Transformers/lb_best_classifier.pth"
 # Career means saved so inference wrapper can reconstruct absolute grade
 CAREER_MEAN_OUT = "backend/ML/LB_Pranay_Transformers/lb_career_means.joblib"
+
+
+class LBModelInference:
+    def __init__(self, transformer_path, scaler_path=None, xgb_path=None):
+        self.device = torch.device('cpu')
+
+        self.transformer_features = [
+            "grades_defense", "pressure_rate", "sack_rate", "hit_rate", "hurry_rate",
+            "stop_rate", "tfl_rate", "penalty_rate", "missed_tackle_rate", "target_rate",
+            "int_rate", "pbu_rate", "box_share", "offball_share", "age", "years_in_league",
+            "adjusted_value", "Cap_Space", "team_performance_proxy", "delta_grade",
+        ]
+
+        from backend.ML.LB_Pranay_Transformers.Player_Model_LB import PlayerTransformerRegressor
+
+        self.max_seq_len = SEQ_LEN
+        self.model = PlayerTransformerRegressor(
+            input_dim=len(self.transformer_features),
+            seq_len=self.max_seq_len,
+            num_layers=2,
+            ff_dim=128,
+            dropout=0.2,
+        ).to(self.device)
+        self.model.load_state_dict(torch.load(transformer_path, map_location=self.device))
+        self.model.eval()
+
+        self.scaler = None
+        if scaler_path and os.path.exists(scaler_path):
+            self.scaler = joblib.load(scaler_path)
+
+        self.xgb_model = None
+        if xgb_path and os.path.exists(xgb_path):
+            self.xgb_model = joblib.load(xgb_path)
+
+    def _prepare_features(self, player_history):
+        df = player_history.copy()
+
+        numeric_cols = [
+            "grades_defense", "grades_run_defense", "grades_pass_rush_defense",
+            "total_pressures", "sacks", "hits", "hurries", "stops",
+            "tackles_for_loss", "missed_tackles", "targets", "interceptions", 
+            "pass_break_ups", "penalties", "snap_counts_defense",
+            "snap_counts_box", "snap_counts_offball", "snap_counts_run_defense",
+            "adjusted_value", "Cap_Space", "Net EPA", "age",
+        ]
+
+        for col in numeric_cols:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+
+        if "Year" in df.columns:
+            df = df.sort_values("Year").reset_index(drop=True)
+
+        df["years_in_league"] = range(len(df))
+        df["delta_grade"] = df["grades_defense"].diff().fillna(0)
+
+        if "Team" in df.columns and "Net EPA" in df.columns:
+            df["team_performance_proxy"] = df.groupby(["Team", "Year"]) ["Net EPA"].transform("mean")
+        else:
+            df["team_performance_proxy"] = 0.0
+
+        def safe_div(a, b):
+            return np.where(b == 0, 0.0, a / b)
+
+        snap = df.get("snap_counts_defense", pd.Series(0)).astype(float)
+        df["pressure_rate"] = safe_div(df.get("total_pressures", 0).astype(float), snap)
+        df["sack_rate"] = safe_div(df.get("sacks", 0).astype(float), snap)
+        df["hit_rate"] = safe_div(df.get("hits", 0).astype(float), snap)
+        df["hurry_rate"] = safe_div(df.get("hurries", 0).astype(float), snap)
+        df["stop_rate"] = safe_div(df.get("stops", 0).astype(float), snap)
+        df["tfl_rate"] = safe_div(df.get("tackles_for_loss", 0).astype(float), snap)
+        df["penalty_rate"] = safe_div(df.get("penalties", 0).astype(float), snap)
+        df["missed_tackle_rate"] = safe_div(df.get("missed_tackles", 0).astype(float), snap)
+        df["target_rate"] = safe_div(df.get("targets", 0).astype(float), snap)
+        df["int_rate"] = safe_div(df.get("interceptions", 0).astype(float), snap)
+        df["pbu_rate"] = safe_div(df.get("pass_break_ups", 0).astype(float), snap)
+        df["box_share"] = safe_div(df.get("snap_counts_box", 0).astype(float), snap)
+        df["offball_share"] = safe_div(df.get("snap_counts_offball", 0).astype(float), snap)
+
+        return df, pd.DataFrame()
+
+    def predict(self, player_history, mode="ensemble", apply_calibration=True):
+        if player_history.empty:
+            return "No Data", {"error": "History is empty"}
+
+        df_history, _ = self._prepare_features(player_history)
+        p_history_tail = df_history.tail(self.max_seq_len)
+
+        if self.scaler is None:
+            raise FileNotFoundError("Scaler is required for LBModelInference but was not loaded.")
+
+        input_vals = self.scaler.transform(p_history_tail[self.transformer_features])
+        actual_len = len(input_vals)
+        pad = np.zeros((self.max_seq_len - actual_len, len(self.transformer_features)))
+        padded = np.vstack([pad, input_vals])
+
+        mask = [True] * (self.max_seq_len - actual_len) + [False] * actual_len
+
+        with torch.no_grad():
+            x = torch.tensor(padded, dtype=torch.float32).unsqueeze(0)
+            m = torch.tensor(mask, dtype=torch.bool).unsqueeze(0)
+            transformer_grade = self.model(x, mask=m).item()
+
+        # Check if transformer grade is valid
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
+
+        final_grade = transformer_grade
+
+        age_adjustment = 0.0
+        if "age" in df_history.columns:
+            current_age = float(df_history.iloc[-1]["age"])
+            age_adjustment = self.get_age_decay_factor(current_age)
+            final_grade -= age_adjustment
+
+        tier = self.get_tier(final_grade)
+        vol_score = self.get_volatility_score(df_history)
+
+        return tier, {
+            "predicted_grade": round(final_grade, 2),
+            "transformer_grade": round(transformer_grade, 2),
+            "xgb_grade": None,
+            "age_adjustment": round(age_adjustment, 2),
+            "volatility_index": round(vol_score, 3),
+            "confidence_interval": self.get_confidence_interval(final_grade, vol_score),
+        }
+
+    def get_prediction(self, player_history, mode="ensemble", apply_calibration=True):
+        return self.predict(player_history, mode=mode, apply_calibration=apply_calibration)
+
+    def get_volatility_score(self, df_history):
+        if len(df_history) < 2:
+            return 0.5
+        grade_std = df_history["grades_defense"].std()
+        return min(1.0, grade_std / 15.0)
+
+    def get_confidence_interval(self, grade, vol_score):
+        base_mae = 8.0
+        bound = base_mae * (1.0 + vol_score)
+        return (round(grade - bound, 2), round(grade + bound, 2))
+
+    def get_age_decay_factor(self, age):
+        if age <= 28:
+            return 0.0
+        if age <= 33:
+            return (age - 28) * 1.2
+        return min((age - 33) * 2.0 + 6.0, 15.0)
+
+    def get_tier(self, grade):
+        if grade >= 80.0:
+            return "Elite"
+        elif grade >= 65.0:
+            return "Starter"
+        elif grade >= 55.0:
+            return "Rotation"
+        else:
+            return "Reserve/Poor"
 
 
 # ==========================

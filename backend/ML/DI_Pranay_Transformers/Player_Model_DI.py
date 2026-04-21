@@ -25,7 +25,7 @@ TEST_YEAR      = 2024   # Hold-out test on 2024
 # ==========================
 # TRAINING HYPERPARAMETERS
 # ==========================
-SEQ_LEN       = 3       # Look-back window — must match wrapper + ensemble
+SEQ_LEN       = 6       # Look-back window — must match wrapper + ensemble (was 3)
 EPOCHS        = 150
 LR            = 0.0001
 BATCH_SIZE    = 32

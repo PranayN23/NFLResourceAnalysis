@@ -12,6 +12,7 @@ from backend.ML.DI_Pranay_Transformers.Player_Model_DI import (
     PlayerTransformerRegressor,
     SEQ_LEN,
 )
+from backend.agent.exceptions import UngradablePlayerError
 
 
 class DIModelInference:
@@ -146,7 +147,6 @@ class DIModelInference:
         """
         df = player_history.copy()
 
-        # Coerce all raw columns we'll derive from
         numeric_cols = [
             "grades_defense", "grades_run_defense", "grades_pass_rush_defense",
             "total_pressures", "sacks", "hits", "hurries", "stops",
@@ -175,7 +175,7 @@ class DIModelInference:
 
         # Per-snap rate features
         def safe_div(a, b):
-            return np.where(b == 0, 0.0, a / b)
+            return np.divide(a, b, out=np.zeros_like(a, dtype=float), where=b != 0)
 
         snap    = df["snap_counts_defense"].values
         snap_dl = df["snap_counts_dl"].values
@@ -262,6 +262,9 @@ class DIModelInference:
 
         # Transformer grade (raw, compressed to ~50-74)
         transformer_grade = self._transformer_predict(df_eng)
+        
+        if np.isnan(transformer_grade):
+            raise UngradablePlayerError("Transformer model returned NaN")
 
         # Stretch-calibrate back to PFF grade scale (30-90)
         # Raw output regresses to mean — this restores the variance
