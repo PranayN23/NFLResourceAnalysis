@@ -245,12 +245,5 @@ class OLModelInference:
 
 
     def get_tier(self, grade):
-        # Optimized thresholds from 2023 validation tuning: Elite≥83, Starter≥61, Rotation≥58 (+2.07% accuracy)
-        if grade >= 83.0:
-            return "Elite"
-        elif grade >= 61.0:
-            return "Starter"
-        elif grade >= 58.0:
-            return "Rotation"
-        else:
-            return "Reserve/Poor"
+        from backend.agent.grade_projection import grade_to_tier_universal
+        return grade_to_tier_universal(grade)
