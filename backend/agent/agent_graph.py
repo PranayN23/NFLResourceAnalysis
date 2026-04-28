@@ -101,10 +101,19 @@ def _grade_to_tier(grade):
 # consecutive ML/QB.csv seasons, age k → k+1 keyed by k). Regenerate via
 # backend/agent/compute_position_age_curves.py
 # ─────────────────────────────────────────────
+# Empirical median YoY grade deltas from QB.csv consecutive starter seasons.
+# Ages 30-35 blended between raw empirical and a conservative prior to avoid
+# survivor-bias over-projection for mid-tier QBs (only elite QBs play at 35+).
+# Key fixes vs original:
+#   34: was +3.1 (wrong direction), empirical -2.8 → set -2.0
+#   35: was -4.5 (too harsh), empirical +3.3 (survivor bias) → set -1.5
+#   33: was -4.8 (too harsh), empirical -0.6 → set -2.0
+#   30: was -2.1 (wrong direction), empirical +4.9 → set -0.5 (conservative)
+#   31: was -1.6 (too soft), empirical -5.3 → set -2.5
 _AGE_DELTAS = {
     20: +4.9, 21: +4.9, 22: +2.7, 23: -0.8, 24: -1.0, 25: -3.2, 26: +5.3,
-    27: -3.3, 28: -0.2, 29: +2.9, 30: -2.1, 31: -1.6, 32: -0.9, 33: -4.8,
-    34: +3.1, 35: -4.5, 36: -6.1, 37: +5.6, 38: -2.8,
+    27: -3.3, 28: -0.2, 29: +2.9, 30: -0.5, 31: -2.5, 32: -1.5, 33: -2.0,
+    34: -2.0, 35: -1.5, 36: -6.1, 37: +5.6, 38: -2.8,
 }
 
 
@@ -128,9 +137,10 @@ def _max_games_for_year(year: int) -> float:
 
 def _infer_games_played(row, max_g: float) -> float:
     """
-    QB.csv often omits player_game_count. Defaulting missing values to max_g
-    treats backup seasons as full 17-game samples and crushes per-game volume.
-    Infer games from dropbacks (~38 DB/gm full-time) or attempts when missing.
+    QB.csv often omits player_game_count — especially for 2010–2015 seasons.
+    Infer games from dropbacks (~34 DB/gm) or attempts when missing.
+    Fall back to half the season (not 1.0) so early-era QBs aren't penalized
+    as if they played one game.
     """
     pg = _safe_float(row.get("player_game_count"), float("nan"))
     if not np.isnan(pg) and pg > 0:
@@ -138,9 +148,12 @@ def _infer_games_played(row, max_g: float) -> float:
     db = max(0.0, _safe_float(row.get("dropbacks"), 0.0))
     att = max(0.0, _safe_float(row.get("attempts"), 0.0))
     if db <= 0 and att <= 0:
-        return 1.0
+        # No volume data: assume half a season rather than 1 game.
+        return max_g * 0.5
+    # Use 34 DB/game as the per-game reference (slightly lower than 38 to avoid
+    # underestimating games for QBs with lower attempt rates in older eras).
     base = max(db, att * 0.98)
-    inferred = max(1.0, min(max_g, base / 38.0))
+    inferred = max(1.0, min(max_g, base / 34.0))
     return inferred
 
 
@@ -237,11 +250,13 @@ def _apply_qb_volume_from_rates(last_stats: dict, proj_dbs: float) -> None:
 
 
 def _has_valid_stats(row):
+    # Require at least one meaningful non-zero value — early-2000s rows with all-zero
+    # columns should not be treated as valid season data.
     for col in ("yards", "touchdowns", "dropbacks", "grades_offense", "grades_pass"):
         val = row.get(col)
         try:
             f = float(val)
-            if not np.isnan(f):
+            if not np.isnan(f) and abs(f) > 1e-6:
                 return True
         except Exception:
             pass
@@ -496,8 +511,11 @@ def project_stats(
         trend_mult = projection_trend_multiplier("QB", age, yr, player_yoy)
         scale = max(0.25, min(1.8, base_scale * trend_mult))
         base_atts_17 = float(last_stats.get("proj_atts_17g") or 0.0)
-        proj_atts_y = max(40.0, min(660.0, base_atts_17 * scale))
+        # Attempts scale with volume/grade progression but are capped at realistic starter max.
+        # High-YPA QBs (deep-ball style) tend to throw fewer attempts — apply mild inverse correction.
         base_ypa = float(last_stats.get("ypa") or 0.0)
+        ypa_att_correction = max(0.90, 1.0 - max(0.0, base_ypa - 7.8) * 0.025)
+        proj_atts_y = max(40.0, min(580.0, base_atts_17 * scale * ypa_att_correction))
         sack_rate_db = max(0.02, min(0.18, float(last_stats.get("sack_rate_db") or 0.065)))
         proj_dbs_y = max(1.0, proj_atts_y / max(1e-6, (1.0 - sack_rate_db)))
         # Turnovers: stabilized per-DB rates × load; grade decline vs composite raises INT risk
@@ -509,21 +527,30 @@ def project_stats(
         td_eff = max(0.82, min(1.15, 1.0 + (grade - composite_gr) * 0.009))
         proj_tds = round(min(60.0, td_rate * proj_dbs_y * td_eff), 1)
         proj_atts = proj_atts_y
-        proj_cmp_pct = max(52.0, min(78.0, float(last_stats["completion_pct"]) * (0.55 + 0.45 * scale)))
+        # Completion % tracks grade delta additively rather than multiplicatively with scale.
+        grade_delta = grade - float(composite_gr)
+        cmp_grade_adj = max(-6.0, min(3.0, grade_delta * 0.15))
+        proj_cmp_pct = max(52.0, min(78.0, float(last_stats["completion_pct"]) + cmp_grade_adj))
         proj_cmp = max(1.0, proj_atts * (proj_cmp_pct / 100.0))
-        proj_ypa = max(4.8, min(9.8, base_ypa * (0.78 + 0.22 * scale)))
+        # YPA is an efficiency metric — decouple from attempt volume scaling.
+        # Track grade improvement/decline additively: ±0.028 ypa per grade point.
+        ypa_grade_adj = max(-1.2, min(0.6, grade_delta * 0.028))
+        proj_ypa = max(4.8, min(9.8, base_ypa + ypa_grade_adj))
         proj_yards = round(min(5800.0, proj_atts * proj_ypa))
         td_rate_att = float(proj_tds) / max(proj_atts, 1.0)
         int_rate_att = float(proj_ints) / max(proj_atts, 1.0)
         proj_qbr = round(min(125.0, _nfl_passer_rating(proj_cmp_pct, proj_ypa, td_rate_att, int_rate_att)), 1)
-        # Soft caps: scale with attempt volume so full-season starters are not pinned ~2500 yds.
-        att_scale = max(0.88, min(1.12, float(proj_atts) / 485.0))
-        if proj_qbr < 85.0:
+        # Soft caps: grade-tier-aware yards ceiling keeps projections realistic.
+        # Reference: ~500 attempts × YPA. Elite QBs: 4200–5100 yds; starters: 3200–4500 yds.
+        att_scale = max(0.85, min(1.10, float(proj_atts) / 490.0))
+        if grade >= 80.0:
+            proj_yards = min(proj_yards, int(5100 * att_scale))
+        elif grade >= 74.0:
+            proj_yards = min(proj_yards, int(4600 * att_scale))
+        elif grade >= 62.0:
             proj_yards = min(proj_yards, int(4100 * att_scale))
-        elif proj_qbr < 90.0:
-            proj_yards = min(proj_yards, int(4550 * att_scale))
-        elif proj_qbr < 95.0:
-            proj_yards = min(proj_yards, int(5050 * att_scale))
+        else:
+            proj_yards = min(proj_yards, int(3500 * att_scale))
         rg_disp = float(last_stats.get("run_grade", 60.0))
         projections.append({
             "year":           yr,
@@ -654,7 +681,17 @@ def predict_performance(state: QBAgentState):
     last_stats   = extract_last_season_stats(history)
     career_stats = extract_career_stats(history)
     health_adj, avg_avail = _compute_health_factor(history)
-    inactivity_adj, inactivity_meta = inactivity_retirement_penalty(history, current_year=current_year)
+
+    # For extensions, current_year is the extension start (e.g. 2028) but data only
+    # runs to the CSV cutoff (e.g. 2024). Don't treat those future years as inactivity —
+    # cap the reference at data_max + 1 so actively playing players aren't penalised.
+    data_max_year = current_year
+    if "Year" in history.columns:
+        _yr_series = pd.to_numeric(history["Year"], errors="coerce").dropna()
+        if not _yr_series.empty:
+            data_max_year = int(_yr_series.max())
+    inact_ref_year = min(current_year, data_max_year + 2)
+    inactivity_adj, inactivity_meta = inactivity_retirement_penalty(history, current_year=inact_ref_year)
 
     # Model grade = recent-weighted (last 3) pass grade with latest-season emphasis.
     valid_rows = _aggregate_qb_history_by_year(history).sort_values("Year")
@@ -834,8 +871,8 @@ def make_decision(state: QBAgentState):
     )
 
     if age <= 26:   trajectory = "still developing"
-    elif age <= 30: trajectory = "in his prime"
-    elif age <= 33: trajectory = "entering post-prime"
+    elif age <= 34: trajectory = "in his prime"
+    elif age <= 36: trajectory = "entering post-prime"
     else:           trajectory = "in steep age-related decline"
 
     total_ask = round(ask * years, 2)

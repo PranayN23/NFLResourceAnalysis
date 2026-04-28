@@ -30,14 +30,19 @@ MARKET_CALIBRATION_FACTOR = 1.0
 
 # Fair AAV ($M) at VALUE_ANCHOR_CALIBRATION_YEAR — veteran market, not rookie scale.
 VALUE_BY_POSITION: dict[str, list[float]] = {
-    "QB": [0.91, 3.64, 20.93, 25.48, 30.94, 38.22, 50.05, 52.78, 54.60, 56.42, 58.24, 60.06],
+    # QB: anchors calibrated to 2026 OTC data.
+    # Grade 65–80 range raised ~10–15% vs prior version to better match historical contracts
+    # (e.g. grade-73 QBs were earning 14–16% of cap in 2018–2023; prior anchors under-priced that band).
+    # Grade 85+ kept conservatively near actual Mahomes/Hurts/Allen AAV as % of 2026 cap.
+    "QB": [0.91, 3.64, 20.93, 27.50, 33.80, 42.50, 50.50, 53.20, 54.80, 56.60, 58.40, 60.10],
     "HB": [1.20, 2.40, 5.83, 7.77, 9.72, 11.65, 15.53, 18.12, 19.41, 22.02, 24.59, 27.18],
     # WR: fair AAV is (piecewise grade curve) × cap-year × snap reliability, then a multi-year
     # front-weighted average. Top of real WR veteran AAV is ~$45–47M; grade-100 knot sits in that
     # band (below QB). Mid knots (70–80) still support #1 money without implying $50M+ WR deals.
     "WR": [1.49, 3.73, 7.46, 13.0, 20.0, 31.0, 39.5, 42.5, 44.0, 45.0, 46.0, 46.5],
     "TE": [1.94, 4.15, 9.66, 13.12, 14.50, 15.88, 22.10, 24.17, 24.86, 25.55, 26.25, 26.65],
-    "T": [1.21, 3.03, 7.25, 13.30, 18.13, 22.96, 26.58, 30.21, 32.62, 33.84, 35.06, 36.25],
+    # T: grade 80–92 range raised slightly to match Wirfs/Sewell/Thomas tier contracts (~11–13% of cap).
+    "T": [1.21, 3.03, 7.25, 13.30, 18.50, 23.80, 28.00, 32.00, 34.50, 36.20, 37.80, 39.00],
     "G": [0.74, 1.48, 3.20, 5.42, 8.38, 11.33, 14.29, 17.74, 20.20, 23.16, 26.61, 29.57],
     "C": [0.74, 1.48, 3.03, 4.84, 6.04, 7.87, 10.28, 13.30, 15.12, 17.53, 20.54, 23.35],
     "ED": [1.32, 3.30, 6.58, 10.53, 17.12, 23.69, 30.26, 35.54, 40.81, 47.38, 52.64, 56.58],
@@ -70,11 +75,14 @@ SEGMENT_POWER_BY_POSITION: dict[str, list[float]] = {
 
 # Applied as (cap_y / cap_ref) ** exponent — >1 ⇒ market grew faster than cap vs ref.
 CAP_EXPONENT_BY_POSITION: dict[str, float] = {
-    "QB": 1.04,
+    # QB: historically grew faster than the cap (franchise scarcity premium).
+    # 1.06 gives slightly better pre-2022 contract calibration vs prior 1.04.
+    "QB": 1.06,
     "WR": 1.0,
     "HB": 0.96,
     "TE": 1.02,
-    "T": 1.05,
+    # T: raised from 1.05 → 1.08 to better match historical top-OT contracts scaling.
+    "T": 1.08,
     "G": 1.04,
     "C": 1.04,
     "ED": 1.12,

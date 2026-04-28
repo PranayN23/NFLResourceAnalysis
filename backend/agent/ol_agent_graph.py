@@ -353,7 +353,13 @@ def predict_performance(state: OLAgentState):
     last_stats = extract_last_season_stats(history, position)
     career_stats = extract_career_stats(history, position)
     health_adj, avg_avail = _compute_health_factor(history)
-    inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=current_year)
+    # Cap inactivity reference at data_max + 2 so future extension years aren't treated as retirement.
+    _ol_data_max = current_year
+    if "Year" in history.columns:
+        _ys = pd.to_numeric(history["Year"], errors="coerce").dropna()
+        if not _ys.empty:
+            _ol_data_max = int(_ys.max())
+    inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=min(current_year, _ol_data_max + 2))
     raw_mg = _safe_float(history.sort_values("Year").iloc[-1].get("grades_offense"), 60.0)
     model_grade, snap_m = shrink_model_grade_for_season_snap_volume(
         raw_mg,
