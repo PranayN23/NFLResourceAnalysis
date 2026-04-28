@@ -305,21 +305,27 @@ function departureImportanceBoostForSigning(positionKey, classDepartures, depart
   }
   let wAt = 0;
   let wTot = 0;
+  let maxSingleW = 0;
   for (const d of classDepartures) {
     const posW = POS_IMPORTANCE[d.positionKey] || 1;
     const capW = Math.max(0.5, Math.min(1.8, 0.5 + Number(d.freedCapPct || 0) / 25));
     const w = posW * capW;
     wTot += w;
+    if (w > maxSingleW) maxSingleW = w;
     if (d.positionKey === positionKey) wAt += w;
   }
-  const stress = Math.min(
-    1,
-    0.55 * Math.min(1, wTot / 5.5) + 0.45 * Math.min(1, classDepartures.length / 7),
-  );
+  // Use a steeper curve so a single elite departure (e.g. a starting QB) drives meaningful stress.
+  // Single elite departure (w ≈ 2.0+) → stress ≈ 0.55–0.70; multi-departure → stress near 1.0.
+  const singleEliteBoost = Math.min(0.55, maxSingleW / 3.0);
+  const volumeStress = Math.min(0.75, 0.60 * Math.min(1, wTot / 4.5) + 0.40 * Math.min(1, classDepartures.length / 5));
+  const stress = Math.min(1, volumeStress + singleEliteBoost * (1 - volumeStress));
   const directShare = wTot > 0 ? wAt / wTot : 0;
-  const samePosPts = directShare > 0 ? (2.2 + 7.5 * directShare) * stress : 0;
-  const churnPts = 1.1 * stress;
-  const boost = Math.min(10, samePosPts + churnPts);
+  // Single same-position departure for a starter-dominant role (QB, HB, TE) gets a larger floor.
+  const starterDominant = ['QB', 'HB', 'TE'].includes(positionKey);
+  const samePosPtsFloor = directShare > 0 && starterDominant ? 3.5 : 1.5;
+  const samePosPts = directShare > 0 ? Math.max(samePosPtsFloor, (2.2 + 8.5 * directShare) * stress) : 0;
+  const churnPts = 1.2 * stress;
+  const boost = Math.min(12, samePosPts + churnPts);
   return { boost, directShare, stress };
 }
 

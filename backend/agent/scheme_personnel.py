@@ -25,8 +25,11 @@ _SCHEME_DATA_DIR = os.path.join(
     "data",
 )
 
-# Only these positions use personnel-based weight nudges (RB/WR/TE data scope).
-SCHEME_PERSONNEL_POSITION_KEYS = frozenset({"HB", "WR", "TE"})
+# Positions using personnel/scheme-based adjustments.
+# QB: shotgun rate adjusts expected dropback volume and starter-strength weight.
+# T: pass-heavy packages (low heavy-run rate) elevate pass-block value weight.
+# HB/WR/TE: original personnel-rate adjustments (unchanged).
+SCHEME_PERSONNEL_POSITION_KEYS = frozenset({"HB", "WR", "TE", "QB", "T"})
 
 
 def _abbr_for_team(team_name: str) -> str | None:
@@ -139,13 +142,35 @@ def adjust_positional_need_blend_weights(
     p20 = _pct(scheme_row.get("personnel_20_rate", 0))
     p21 = _pct(scheme_row.get("personnel_21_rate", 0))
     p22 = _pct(scheme_row.get("personnel_22_rate", 0))
+    shotgun = _pct(scheme_row.get("shotgun_rate", 60))
 
     two_te = p12 + p13
     heavy_run = p20 + p21 + p22 + 0.35 * two_te
 
     w = [w_star, w_starter, w_prod, w_depth, w_age]
 
-    if position_key == "TE":
+    if position_key == "QB":
+        # High shotgun rate → more pass volume → starter-strength and star-power matter more.
+        # League average shotgun ~60%; teams above 70% are clearly pass-first.
+        if shotgun > 0.60:
+            sq_idx = min(1.0, (shotgun - 0.60) / 0.25)
+            shift = 0.05 * sq_idx
+            w[1] += shift * 0.60   # starter_strength
+            w[0] += shift * 0.40   # star_power
+            w[3] = max(0.02, w[3] - shift * 0.55)   # reduce depth weight
+            w[4] = max(0.02, w[4] - shift * 0.45)   # reduce age weight
+
+    elif position_key == "T":
+        # Pass-heavy teams (low heavy-run, high 11 personnel) elevate the value of a quality
+        # pass-protector — up-weight star/starter, down-weight depth.
+        pass_heavy_idx = max(0.0, min(1.0, (p11 - 0.55) / 0.30)) if p11 > 0.55 else 0.0
+        if pass_heavy_idx > 0:
+            shift = 0.04 * pass_heavy_idx
+            w[0] += shift * 0.55   # star_power
+            w[1] += shift * 0.45   # starter_strength
+            w[3] = max(0.02, w[3] - shift)   # reduce depth
+
+    elif position_key == "TE":
         te_idx = max(0.0, min(1.0, (two_te - 0.22) / 0.38))
         shift = 0.06 * te_idx
         w[1] += shift * 0.65

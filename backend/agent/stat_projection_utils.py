@@ -182,6 +182,24 @@ def pass_block_snap_load_17(
     return min(max_17, max(raw, floor_17))
 
 
+def clamp_inactivity_year(history, current_year: int) -> int:
+    """
+    For extension evaluations the analysis year is the extension start (e.g. 2028)
+    but CSV data only runs to the cutoff year (e.g. 2024). Cap the reference at
+    data_max + 2 so future years don't trigger a false inactivity / retirement penalty.
+    """
+    if history is None or (hasattr(history, "empty") and history.empty):
+        return current_year
+    try:
+        import pandas as _pd
+        ys = _pd.to_numeric(history["Year"] if hasattr(history, "__getitem__") and "Year" in history else [], errors="coerce").dropna()
+        if ys.empty:
+            return current_year
+        return min(int(current_year), int(ys.max()) + 2)
+    except Exception:
+        return current_year
+
+
 def inactivity_retirement_penalty(
     history,
     current_year: int | None = None,

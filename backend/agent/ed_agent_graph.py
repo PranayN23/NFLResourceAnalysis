@@ -24,6 +24,7 @@ from backend.agent.grade_projection import (
     projection_trend_multiplier,
 )
 from backend.agent.stat_projection_utils import (
+    clamp_inactivity_year,
     pass_rush_snap_load_17,
     run_def_snap_load_17,
     inactivity_retirement_penalty,
@@ -494,7 +495,7 @@ def predict_performance(state: EDAgentState):
 
     # Health factor from last 3 seasons' availability (weighted recent-heavy)
     health_adj, avg_avail = _compute_health_factor(history)
-    inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=current_year)
+    inactivity_adj, _ = inactivity_retirement_penalty(history, current_year=clamp_inactivity_year(history, current_year))
 
     model_grade, snap_m = shrink_model_grade_for_season_snap_volume(
         raw_mg,
